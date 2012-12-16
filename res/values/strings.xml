@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SubmatixBTLogger</string>
+    <string name="title_area_detail">Detail</string>
+    <string name="app_description">this app connects with SUBMATIX SPX42 an read logs or read \/write configuration of this device</string>
+
+</resources>

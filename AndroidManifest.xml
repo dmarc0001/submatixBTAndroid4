@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="de.dmarcini.submatix.android4"
+    android:versionCode="1"
+    android:versionName="0.1beta" android:installLocation="auto">
+
+    <uses-sdk
+        android:minSdkVersion="15"
+        android:targetSdkVersion="15" />
+    <!--  Berechtigungen  -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    
+    <!-- Die Anwendungsbeschreibung  -->
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" android:description="@string/app_description">
+        <!-- Die List/Main activity -->
+        <activity
+            android:name="de.dmarcini.submatix.android4.areaListActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="sensorLandscape">            
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- die Detailacivity, bei schmalen screens dann die Hauptactivity -->
+        <activity
+            android:name="de.dmarcini.submatix.android4.areaDetailActivity"
+            android:label="@string/title_area_detail"
+            android:screenOrientation="sensorLandscape">            
+            android:parentActivityName=".areaListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".areaListActivity" />
+        </activity>
+    </application>
+
+</manifest>
