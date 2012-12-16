@@ -45,13 +45,6 @@ public class areaDetailActivity extends FragmentActivity
       fragment.setArguments( arguments );
       getSupportFragmentManager().beginTransaction().add( R.id.area_detail_container, fragment ).commit();
     }
-    if( areaListActivity.btThread == null )
-    {
-      Log.v( TAG, "onCreate: starting btThread..." );
-      areaListActivity.btThread = new BlueThoothCommThread();
-      areaListActivity.btThread.start();
-      Log.v( TAG, "starting btThread...OK" );
-    }
   }
 
   @Override
@@ -59,6 +52,12 @@ public class areaDetailActivity extends FragmentActivity
   {
     super.onPause();
     Log.v( TAG, "onPause..." );
+    if( areaListActivity.btThread != null )
+    {
+      // gib Bescheid
+      Log.v( TAG, "onPause: prepare stop btThread..." );
+      areaListActivity.btThread.prepareStopThread();
+    }
   }
 
   @Override
@@ -66,13 +65,23 @@ public class areaDetailActivity extends FragmentActivity
   {
     super.onResume();
     Log.v( TAG, "onResume..." );
-  }
-
-  @Override
-  public void onRestart()
-  {
-    super.onResume();
-    Log.v( TAG, "onRestart..." );
+    Log.v( TAG, "resume btThread..." );
+    //
+    // der Thread wacht auf (sollte eigentlich nur im single-pane
+    // modus passieren)
+    if( ( areaListActivity.btThread != null ) && ( areaListActivity.btThread.getState() != Thread.State.TERMINATED ) )
+    {
+      // es ist ein Thread am ackern
+      areaListActivity.btThread.threadNotSpopping();
+    }
+    else
+    {
+      // erzeuge einen Thread
+      Log.v( TAG, "onResume: starting btThread..." );
+      areaListActivity.btThread = new BlueThoothCommThread();
+      areaListActivity.btThread.start();
+      Log.v( TAG, "onResume: starting btThread...OK" );
+    }
   }
 
   @Override

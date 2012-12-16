@@ -5,11 +5,13 @@ import android.util.Log;
 
 public class BlueThoothCommThread extends Thread
 {
-  private final static String TAG = BlueThoothCommThread.class.getSimpleName();
-  // Intent request codes
-  private boolean             run = true;
+  private final static String TAG              = BlueThoothCommThread.class.getSimpleName();
+  private volatile boolean    run              = true;
+  // soll nach Timeout der Thread enden?
+  private volatile boolean    shouldTimeoutEnd = false;
+  private long                timeForTimeout   = 0L;
   // private final BluetoothAdapter mBluetoothAdapter = null;
-  private Activity            act = null;
+  private Activity            act              = null;
 
   public void setActivity( Activity ac )
   {
@@ -42,16 +44,69 @@ public class BlueThoothCommThread extends Thread
     run = true;
     while( run )
     {
-      Log.i( TAG, "testThread TICK" );
-      try
+      if( shouldTimeoutEnd )
       {
-        Thread.sleep( 2000 );
+        if( System.currentTimeMillis() >= timeForTimeout )
+        {
+          run = false;
+          Log.w( TAG, "testThread TIMEOUT" );
+        }
+        else
+        {
+          threadSleep();
+        }
       }
-      catch( InterruptedException ex )
+      else
       {
-        Log.e( TAG, "exception while testThread sleeeeeeeeeps" );
+        threadSleep();
+        Log.i( TAG, "testThread TICK" );
       }
     }
+    Log.i( TAG, "testThread ENDS!" );
+  }
+
+  private void threadSleep()
+  {
+    try
+    {
+      Thread.sleep( 2000 );
+    }
+    catch( InterruptedException ex )
+    {
+      Log.e( TAG, "exception while testThread sleeeeeeeeeps" );
+    }
+  }
+
+  /**
+   * 
+   * Wenn nicht Entwarnung kommt, dann stoppe den Thread nach 3 Sekunden
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 16.12.2012
+   */
+  public void prepareStopThread()
+  {
+    Log.v( TAG, "thread waits for timeout..." );
+    timeForTimeout = System.currentTimeMillis() + 3000;
+    shouldTimeoutEnd = true;
+  }
+
+  /**
+   * 
+   * Kein Timeout, der Thread soll weiter laufen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 16.12.2012
+   */
+  public void threadNotSpopping()
+  {
+    shouldTimeoutEnd = false;
   }
 
   public void stopThread()

@@ -23,7 +23,7 @@ public class areaListActivity extends FragmentActivity implements areaListFragme
   /**
    * Whether or not the activity is in two-pane mode, i.e. running on a tablet device.
    */
-  protected boolean                     mTwoPane = false;
+  protected static boolean              mTwoPane = false;
 
   @Override
   protected void onCreate( Bundle savedInstanceState )
@@ -41,13 +41,6 @@ public class areaListActivity extends FragmentActivity implements areaListFragme
       // 'activated' state when touched.
       ( ( areaListFragment )getSupportFragmentManager().findFragmentById( R.id.area_list ) ).setActivateOnItemClick( true );
     }
-    if( btThread == null )
-    {
-      Log.v( TAG, "starting btThread..." );
-      btThread = new BlueThoothCommThread();
-      btThread.start();
-      Log.v( TAG, "starting btThread...OK" );
-    }
     // TODO: If exposing deep links into your app, handle intents here.
   }
 
@@ -56,11 +49,25 @@ public class areaListActivity extends FragmentActivity implements areaListFragme
   {
     super.onPause();
     Log.v( TAG, "onPause..." );
+    //
+    // ist der Tablettmodus aktiv und ein Thread am ackern
+    // App im Hintergrund oder beendet
+    // beende den Thread
+    //
     if( ( btThread != null ) && mTwoPane )
     {
-      Log.v( TAG, "onDestroy: stop btThread..." );
-      btThread.stopThread();
-      btThread = null;
+      if( mTwoPane )
+      {
+        Log.v( TAG, "onPause: stop btThread..." );
+        btThread.stopThread();
+        btThread = null;
+      }
+      else
+      {
+        // gib Bescheid
+        Log.v( TAG, "onPause: prepare stop btThread..." );
+        btThread.prepareStopThread();
+      }
     }
   }
 
@@ -69,22 +76,36 @@ public class areaListActivity extends FragmentActivity implements areaListFragme
   {
     super.onResume();
     Log.v( TAG, "onResume..." );
-  }
-
-  @Override
-  public void onRestart()
-  {
-    super.onResume();
-    Log.v( TAG, "onRestart..." );
+    //
+    // ist ein Thread schon vorhanden
+    //
+    if( ( btThread != null ) && ( btThread.getState() != Thread.State.TERMINATED ) )
+    {
+      // gib bescheid, daß kein ende erforderlich war
+      Log.v( TAG, "resume btThread..." );
+      btThread.threadNotSpopping();
+    }
+    else
+    {
+      // erzeuge einen Thread
+      Log.v( TAG, "onResume: starting btThread..." );
+      btThread = new BlueThoothCommThread();
+      btThread.start();
+      Log.v( TAG, "onResume: starting btThread...OK" );
+    }
   }
 
   @Override
   public void finishFromChild( Activity child )
   {
     Log.i( TAG, "child process called finish()..." );
+    //
+    // wenn eine Clientactivity mit finish() beendet
+    // wurde, ist hier auch schluss
+    //
     if( btThread != null )
     {
-      Log.v( TAG, "onDestroy: stop btThread..." );
+      Log.v( TAG, "finishFromChild: stop btThread..." );
       btThread.stopThread();
     }
     finish();
