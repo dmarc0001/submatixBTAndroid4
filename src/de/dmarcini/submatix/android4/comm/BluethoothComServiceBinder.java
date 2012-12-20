@@ -1,6 +1,7 @@
-package de.dmarcini.android4.comm;
+package de.dmarcini.submatix.android4.comm;
 
 import java.util.ArrayList;
+
 
 import android.bluetooth.BluetoothAdapter;
 import android.os.Binder;

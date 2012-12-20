@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Buildzaehler" default="makeVersion">
+  <description>
+    Einfachs Hohzählen des Builds
+  </description>
+  
+  <property name="versionFile" value="${basedir}\src\de\dmarcini\submatix\android4\utils\BuildVersion.java"/>
+	<property name="counterExec" value ="${basedir}\utils\buildCounter.jar" /> 
+  <property name="buildCounterFile" value ="${basedir}\utils\build.txt" /> 
+
+
+	<target name="makeVersion">
+  	<!--  Version hochzählen-->
+    <echo>Buildnummer hochzählen</echo>
+	  <echo>Version    : ${ant.version}</echo>
+	  <echo>Base Dir   : ${basedir}</echo>
+    <echo>ProjectName: ${ant.project.name}</echo>
+	  <taskdef name="countBuild" classname="de.dmarcini.utils.buildcounter.BuildCounter" classpath="${counterExec}"/>
+	  <countBuild message="${buildCounterFile}#${versionFile}"/>
+	</target>
+</project>

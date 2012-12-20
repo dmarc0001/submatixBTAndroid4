@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="de.dmarcini.submatix.android4"
+    package="de.dmarcini.submatix.android4.gui"
     android:versionCode="1"
     android:versionName="0.1beta" android:installLocation="auto">
 
@@ -19,7 +19,7 @@
         android:theme="@style/AppTheme" android:description="@string/app_description">
         <!-- Die List/Main activity -->
         <activity
-            android:name="de.dmarcini.submatix.android4.areaListActivity"
+            android:name="de.dmarcini.submatix.android4.gui.areaListActivity"
             android:label="@string/app_name"
             android:screenOrientation="sensorLandscape">            
             <intent-filter>
@@ -30,7 +30,7 @@
         </activity>
         <!-- die Detailacivity, bei schmalen screens dann die Hauptactivity -->
         <activity
-            android:name="de.dmarcini.submatix.android4.areaDetailActivity"
+            android:name="de.dmarcini.submatix.android4.gui.areaDetailActivity"
             android:label="@string/title_area_detail"
             android:screenOrientation="sensorLandscape">            
             android:parentActivityName=".areaListActivity" >

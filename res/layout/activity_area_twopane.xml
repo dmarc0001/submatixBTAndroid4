@@ -22,7 +22,7 @@
 
     <fragment
         android:id="@+id/area_list"
-        android:name="de.dmarcini.submatix.android4.areaListFragment"
+        android:name="de.dmarcini.submatix.android4.gui.areaListFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"

@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4;
+package de.dmarcini.submatix.android4.gui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
-import de.dmarcini.android4.comm.BlueThoothCommThread;
+import de.dmarcini.submatix.android4.comm.BlueThoothCommThread;
 
 /**
  * An activity representing a single area detail screen. This activity is only used on handset devices. On tablet-size devices, item details are presented side-by-side with a list

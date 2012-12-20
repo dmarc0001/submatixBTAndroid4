@@ -1,4 +1,4 @@
-package de.dmarcini.android4.comm;
+package de.dmarcini.submatix.android4.comm;
 
 import android.app.Activity;
 import android.util.Log;
@@ -27,7 +27,7 @@ public class BlueThoothCommThread extends Thread
    * 
    * Ist der BT-Adapter überhaupt vorhanden?
    * 
-   * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.utils
+   * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.gui.utils
    * 
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 

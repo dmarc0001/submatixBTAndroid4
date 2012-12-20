@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/configScrollViewContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".areaDetailActivity" >
+
+    <LinearLayout
+        android:id="@+id/configLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/config_detail_headline"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+        <EditText
+            android:id="@+id/editText1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:text="@string/app_name" android:inputType="text">
+
+            <requestFocus />
+        </EditText>
+
+    </LinearLayout>
+
+</ScrollView>

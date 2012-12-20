@@ -5,4 +5,32 @@
     <string name="title_area_detail">Detail</string>
     <string name="app_description">this app connects with SUBMATIX SPX42 an read logs or read \/write configuration of this device</string>
 
+    <!-- Liste der Programmaktivitäten -->
+    <string name="progitem_connect">Connection</string>
+    <string name="progitem_config">SPX42 Config</string>
+    <string name="progitem_logging">Logfiles read</string>
+    <string name="progitem_gaslist">Gases editing</string>
+    <string name="progitem_exit">EXIT</string>
+
+    <!-- Toasts -->
+    <string name="toast_exit">exiting app</string>
+
+    <!-- Dialogboxen  -->
+    <string name="dialog_sure_exit">are you sure?</string>
+    <string name="dialog_exit_button">EXIT</string>
+    <string name="dialog_ok_button">OK</string>
+    <string name="dialog_cancel_button">Cancel</string>
+
+    <!-- Headlines der Details -->
+    <string name="config_detail_headline">Config SPX42</string>
+    
+    <!-- detailseite connect mit spx -->
+    <string name="btDiscoverButtonTitle">Discover BT Devices</string>
+    <string name="btOnOffText">ON/OFF</string>
+    
+    <!-- sonstig  -->
+    <string name="dummy_text">\?</string>
+    <string name="no_device">- no device - \n0\n0\n0\n0</string>
+    
+    
 </resources>

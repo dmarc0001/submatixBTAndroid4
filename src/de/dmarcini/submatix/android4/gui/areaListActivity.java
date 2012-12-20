@@ -1,11 +1,16 @@
-package de.dmarcini.submatix.android4;
+package de.dmarcini.submatix.android4.gui;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
-import de.dmarcini.android4.comm.BlueThoothCommThread;
+import android.widget.Toast;
+import de.dmarcini.submatix.android4.comm.BlueThoothCommThread;
+import de.dmarcini.submatix.android4.content.ContentSwitcher;
+import de.dmarcini.submatix.android4.content.ContentSwitcher.ProgItem;
+import de.dmarcini.submatix.android4.utils.ProjectConst;
 
 /**
  * An activity representing a list of areas. This activity has different presentations for handset and tablet-size devices. On handsets, the activity presents a list of items,
@@ -16,7 +21,7 @@ import de.dmarcini.android4.comm.BlueThoothCommThread;
  * <p>
  * This activity also implements the required {@link areaListFragment.Callbacks} interface to listen for item selections.
  */
-public class areaListActivity extends FragmentActivity implements areaListFragment.Callbacks
+public class areaListActivity extends FragmentActivity implements areaListFragment.Callbacks, AreYouSureDialogFragment.NoticeDialogListener
 {
   protected static BlueThoothCommThread btThread = null;
   private static final String           TAG      = areaListActivity.class.getSimpleName();
@@ -29,7 +34,11 @@ public class areaListActivity extends FragmentActivity implements areaListFragme
   protected void onCreate( Bundle savedInstanceState )
   {
     super.onCreate( savedInstanceState );
+    Log.v( TAG, "onCreate..." );
     setContentView( R.layout.activity_area_list );
+    Log.v( TAG, "onCreate: initStaticContentSwitcher()..." );
+    initStaticContenSwitcher();
+    Log.v( TAG, "onCreate: initStaticContentSwitcher()...OK" );
     if( findViewById( R.id.area_detail_container ) != null )
     {
       // The detail container view will be present only in the
@@ -41,7 +50,30 @@ public class areaListActivity extends FragmentActivity implements areaListFragme
       // 'activated' state when touched.
       ( ( areaListFragment )getSupportFragmentManager().findFragmentById( R.id.area_list ) ).setActivateOnItemClick( true );
     }
-    // TODO: If exposing deep links into your app, handle intents here.
+  }
+
+  /**
+   * 
+   * Erzeuge die Menüeinträge
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 17.12.2012
+   */
+  private void initStaticContenSwitcher()
+  {
+    // zuerst aufräumen
+    ContentSwitcher.clearItems();
+    //
+    // irgendeine Kennung muss der String bekommen, also gibts halt die String-ID
+    //
+    ContentSwitcher.addItem( new ProgItem( R.string.progitem_connect, getString( R.string.progitem_connect ) ) );
+    ContentSwitcher.addItem( new ProgItem( R.string.progitem_config, getString( R.string.progitem_config ) ) );
+    ContentSwitcher.addItem( new ProgItem( R.string.progitem_gaslist, getString( R.string.progitem_gaslist ) ) );
+    ContentSwitcher.addItem( new ProgItem( R.string.progitem_logging, getString( R.string.progitem_logging ) ) );
+    ContentSwitcher.addItem( new ProgItem( R.string.progitem_exit, getString( R.string.progitem_exit ) ) );
   }
 
   @Override
@@ -117,36 +149,89 @@ public class areaListActivity extends FragmentActivity implements areaListFragme
   @Override
   public void onItemSelected( String id )
   {
-    Log.v( TAG, "onItemSelected: <" + id + ">" );
-    if( id.equals( "3" ) )
+    ContentSwitcher.ProgItem mItem = null;
+    android.support.v4.app.Fragment fragment = null;
+    //
+    // zunächst will ich mal wissen, was das werden soll!
+    //
+    Log.v( TAG, "onItemSelected(): ID was: <" + id + ">" );
+    mItem = ContentSwitcher.progItemsMap.get( id );
+    if( mItem == null )
     {
-      Log.i( TAG, "Program exit!" );
-      if( btThread != null )
-      {
-        Log.v( TAG, "onItemSelected: stop btThread..." );
-        btThread.stopThread();
-      }
-      this.finish();
+      Log.e( TAG, "program menu item was NOT explored!" );
       return;
     }
+    Log.v( TAG, "onItemSelected(): item was: " + mItem.content );
+    //
+    // jetzt noch zwischen Tablett mit Schirmsplitt und Smartphone unterscheiden
+    //
     if( mTwoPane )
     {
-      // In two-pane mode, show the detail view in this activity by
-      // adding or replacing the detail fragment using a
-      // fragment transaction.
+      //
+      // zweischirmbetrieb
+      //
       Bundle arguments = new Bundle();
-      arguments.putString( areaDetailFragment.ARG_ITEM_ID, id );
-      areaDetailFragment fragment = new areaDetailFragment();
+      arguments.putString( ProjectConst.ARG_ITEM_ID, id );
+      if( mItem.nId == R.string.progitem_connect )
+      {
+        connectFragment connFragment = new connectFragment();
+        fragment = connFragment;
+      }
+      else if( mItem.nId == R.string.progitem_config )
+      {
+        configSPX42Fragment connFragment = new configSPX42Fragment();
+        fragment = connFragment;
+      }
+      else
+      {
+        Log.e( TAG, "detail fragment for id <" + id + "> not found!" );
+        areaListFragment dFragment = new areaListFragment();
+        fragment = dFragment;
+      }
       fragment.setArguments( arguments );
       getSupportFragmentManager().beginTransaction().replace( R.id.area_detail_container, fragment ).commit();
     }
     else
     {
-      // In single-pane mode, simply start the detail activity
-      // for the selected item ID.
-      Intent detailIntent = new Intent( this, areaDetailActivity.class );
-      detailIntent.putExtra( areaDetailFragment.ARG_ITEM_ID, id );
+      //
+      // kleiner Schirm
+      //
+      Intent detailIntent = new Intent( this, areaListActivity.class );
+      detailIntent.putExtra( ProjectConst.ARG_ITEM_ID, id );
       startActivity( detailIntent );
     }
+  }
+
+  @Override
+  public void onDialogPositiveClick( DialogFragment dialog )
+  {
+    Log.v( TAG, "Positive dialog click!" );
+    //
+    // war es ein AreYouSureDialogFragment Dialog?
+    //
+    if( dialog instanceof AreYouSureDialogFragment )
+    {
+      AreYouSureDialogFragment aDial = ( AreYouSureDialogFragment )dialog;
+      //
+      // War der Tag für den Dialog zum Exit des Programmes?
+      //
+      if( aDial.getTag().equals( "programexit" ) )
+      {
+        Log.i( TAG, "User close app..." );
+        Toast.makeText( this, R.string.toast_exit, Toast.LENGTH_SHORT ).show();
+        if( btThread != null )
+        {
+          Log.v( TAG, "finishFromChild: stop btThread..." );
+          btThread.stopThread();
+        }
+        finish();
+      }
+    }
+  }
+
+  @Override
+  public void onDialogNegativeClick( DialogFragment dialog )
+  {
+    Log.v( TAG, "Negative dialog click!" );
   }
 }

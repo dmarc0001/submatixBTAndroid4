@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/connectOuterLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    tools:context=".areaDetailActivity" >
+    
+
+    <LinearLayout
+        android:id="@+id/connectLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+
+
+
+        <Spinner
+            android:id="@+id/connectBlueToothDeviceSpinner"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1" />
+            
+
+       <ToggleButton
+           android:id="@+id/connectTroggleButton"
+           android:layout_width="118dp"
+           android:layout_height="wrap_content"
+           android:text="@string/btOnOffText" />
+            
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/connectDiscoverButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="@string/btDiscoverButtonTitle" />
+
+</LinearLayout>

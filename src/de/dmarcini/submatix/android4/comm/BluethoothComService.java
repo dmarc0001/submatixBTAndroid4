@@ -1,7 +1,7 @@
 ﻿/**
  * File BluethoothComService.java
  */
-package de.dmarcini.android4.comm;
+package de.dmarcini.submatix.android4.comm;
 
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
