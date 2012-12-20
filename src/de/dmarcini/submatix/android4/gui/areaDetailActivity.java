@@ -2,11 +2,14 @@ package de.dmarcini.submatix.android4.gui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import de.dmarcini.submatix.android4.comm.BlueThoothCommThread;
+import de.dmarcini.submatix.android4.content.ContentSwitcher;
+import de.dmarcini.submatix.android4.utils.ProjectConst;
 
 /**
  * An activity representing a single area detail screen. This activity is only used on handset devices. On tablet-size devices, item details are presented side-by-side with a list
@@ -21,30 +24,69 @@ public class areaDetailActivity extends FragmentActivity
   @Override
   protected void onCreate( Bundle savedInstanceState )
   {
+    String showId = null;
+    ContentSwitcher.ProgItem mItem = null;
+    Fragment fragment = null;
+    int resourceId = R.id.area_detail_container;
+    //
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate:..." );
-    setContentView( R.layout.activity_area_detail );
-    // Show the Up button in the action bar.
-    getActionBar().setDisplayHomeAsUpEnabled( true );
-    // savedInstanceState is non-null when there is fragment state
-    // saved from previous configurations of this activity
-    // (e.g. when rotating the screen from portrait to landscape).
-    // In this case, the fragment will automatically be re-added
-    // to its container so we don't need to manually add it.
-    // For more information, see the Fragments API guide at:
     //
-    // http://developer.android.com/guide/components/fragments.html
+    // was soll ich anzeigen?
     //
-    if( savedInstanceState == null )
+    showId = getIntent().getStringExtra( ProjectConst.ARG_ITEM_ID );
+    // gibt es eine ID?
+    if( showId != null )
     {
-      // Create the detail fragment and add it to the activity
-      // using a fragment transaction.
+      // argumente basteln
       Bundle arguments = new Bundle();
-      arguments.putString( areaDetailFragment.ARG_ITEM_ID, getIntent().getStringExtra( areaDetailFragment.ARG_ITEM_ID ) );
-      areaDetailFragment fragment = new areaDetailFragment();
-      fragment.setArguments( arguments );
-      getSupportFragmentManager().beginTransaction().add( R.id.area_detail_container, fragment ).commit();
+      arguments.putString( ProjectConst.ARG_ITEM_ID, getIntent().getStringExtra( ProjectConst.ARG_ITEM_ID ) );
+      // Welcher Programmmenüpunkt war denn das?
+      mItem = ContentSwitcher.progItemsMap.get( showId );
+      // hab ich einen Eintrag vorrätig?
+      if( mItem != null )
+      {
+        // ok, ich hab eine Id, jetzt guck mal wo das hinführt
+        if( mItem.nId == R.string.progitem_connect )
+        {
+          Log.v( TAG, "create connect fragment..." );
+          connectFragment conFragment = new connectFragment();
+          fragment = conFragment;
+          resourceId = 0;
+          setContentView( R.layout.fragment_connect );
+        }
+        else if( mItem.nId == R.string.progitem_config )
+        {
+          Log.v( TAG, "create config fragment..." );
+          configSPX42Fragment confFragment = new configSPX42Fragment();
+          fragment = confFragment;
+          resourceId = 0;
+          setContentView( R.layout.fragment_spx42config );
+        }
+        else
+        {
+          Log.w( TAG, "Not programitem found for <" + showId + ">" );
+          // Dann ist was faul, und ich zeig DUMMY
+          areaDetailFragment dFragment = new areaDetailFragment();
+          fragment = dFragment;
+          setContentView( R.layout.activity_area_detail );
+        }
+      }
     }
+    else
+    {
+      // Dann ist was faul, und ich zeig DUMMY
+      Log.w( TAG, "Not showId found !" );
+      areaDetailFragment dFragment = new areaDetailFragment();
+      fragment = dFragment;
+      setContentView( R.layout.activity_area_detail );
+    }
+    //
+    // und nun die Seite aufrufen, welche auch immer
+    //
+    Log.v( TAG, "add transaction..." );
+    getSupportFragmentManager().beginTransaction().add( resourceId, fragment ).commit();
+    Log.v( TAG, "add transaction...OK" );
   }
 
   @Override
