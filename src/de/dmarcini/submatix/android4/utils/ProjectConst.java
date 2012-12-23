@@ -22,7 +22,7 @@ public final class ProjectConst
   public static final String GENYEAR                    = "2012";
   public static final String GENMONTH                   = "11";
   public static final String GENDAY                     = "03";
-  
+  public static final boolean CHECK_PHYSICAL_BT         = false; 
   // Datenbankversion
   public static int          DB_VERSION                 = 1;
 
@@ -117,6 +117,8 @@ public final class ProjectConst
   
   // Android: Parameterbezeichnug für Programmmenü-Id
   public static final String ARG_ITEM_ID              = "item_id";
+  // Android: ID für Intentrequests
+  public static final int REQUEST_ENABLE_BT           = 1;
   // Android: gewünschte BT Geräteklasse
   public static final int SPX_BTDEVICE_CLASS          = 0x1F00;
   
