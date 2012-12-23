@@ -1,9 +1,9 @@
 package de.dmarcini.submatix.android4.comm;
 
-import java.util.ArrayList;
-
+import java.util.Set;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.os.Binder;
 import android.os.Handler;
 import android.util.Log;
@@ -42,7 +42,7 @@ public class BluethoothComServiceBinder extends Binder
   {
     if( srv.mIsBusy ) return;
     Log.v( TAG, "BINDER: LOESCHE HANDLER" );
-    srv.mHandler = null;
+    BluethoothComService.mHandler = null;
   }
 
   /**
@@ -58,7 +58,7 @@ public class BluethoothComServiceBinder extends Binder
    */
   public BluetoothAdapter getBTADapter()
   {
-    return srv.mAdapter;
+    return BluethoothComService.mAdapter;
   }
 
   /**
@@ -72,11 +72,10 @@ public class BluethoothComServiceBinder extends Binder
    *         Stand: 07.11.2012
    * @return ArrayList mit bereits gepaarten Geräten
    */
-  public ArrayList<String[]> getPairedDevices()
+  public Set<BluetoothDevice> getPairedDevices()
   {
     if( srv.mIsBusy ) return( null );
-    // return( srv.getPairedBTDevices() );
-    return( null );
+    return( srv.getPairedBTDevices() );
   }
 
   /**
@@ -109,7 +108,7 @@ public class BluethoothComServiceBinder extends Binder
    */
   public Handler getServiceHandler()
   {
-    return srv.mHandler;
+    return BluethoothComService.mHandler;
   }
 
   /**
@@ -125,7 +124,7 @@ public class BluethoothComServiceBinder extends Binder
    */
   public boolean isEnabledBTAdapter()
   {
-    if( ( srv.mAdapter != null ) && srv.mAdapter.isEnabled() ) return( true );
+    if( ( BluethoothComService.mAdapter != null ) && BluethoothComService.mAdapter.isEnabled() ) return( true );
     return false;
   }
 
@@ -143,7 +142,7 @@ public class BluethoothComServiceBinder extends Binder
   public void setServiceHandler( Handler mH )
   {
     Log.v( TAG, "BINDER: setze HANDLER" );
-    srv.mHandler = mH;
+    BluethoothComService.mHandler = mH;
     // srv.sendState();
   }
 }

@@ -8,6 +8,7 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import de.dmarcini.submatix.android4.R;
 
 public class AreYouSureDialogFragment extends DialogFragment
 {

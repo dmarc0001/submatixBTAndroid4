@@ -11,6 +11,7 @@ public class BlueThoothCommThread extends Thread
   private volatile boolean    shouldTimeoutEnd = false;
   private long                timeForTimeout   = 0L;
   // private final BluetoothAdapter mBluetoothAdapter = null;
+  @SuppressWarnings( "unused" )
   private Activity            act              = null;
 
   public void setActivity( Activity ac )
@@ -32,7 +33,6 @@ public class BlueThoothCommThread extends Thread
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 07.11.2012
-   * @return
    */
   @Override
   public void run()

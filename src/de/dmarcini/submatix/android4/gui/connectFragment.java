@@ -1,7 +1,5 @@
 package de.dmarcini.submatix.android4.gui;
 
-import java.util.Set;
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -18,6 +16,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Spinner;
+import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.utils.BluetoothDeviceArrayAdapter;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 
@@ -42,19 +41,6 @@ public class connectFragment extends Fragment
   private Spinner                     devSpinner     = null;
 
   /**
-   * 
-   * Der Konstruktor
-   * 
-   * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 04.11.2012
-   */
-  public connectFragment()
-  {}
-
-  /**
    * Nach dem Erzeugen des Objektes noch Einstellungen....
    */
   @Override
@@ -74,7 +60,7 @@ public class connectFragment extends Fragment
     // Höhe des Views feststellen
     getActivity().getWindowManager().getDefaultDisplay().getMetrics( displayMetrics );
     // Verbindungsseite ausgewählt
-    Log.v( TAG, "item for connect device selected!" );
+    Log.v( TAG, "onCreateView: item for connect device selected!" );
     rootView = makeConnectionView( inflater, container );
     //
     // Register broadcasts während Geräte gesucht werden
@@ -104,27 +90,27 @@ public class connectFragment extends Fragment
     //
     // eine Liste der bereits gepaarten Devices
     //
-    Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
+    // Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
     //
     // Sind dort einige vorhanden, dann ab in den adapter...
     //
-    if( pairedDevices.size() > 0 )
-    {
-      // Alle gepaarten Geräte durch
-      for( BluetoothDevice device : pairedDevices )
-      {
-        // Ist es ein gerät vom gewünschten Typ?
-        if( ( device.getBluetoothClass().getDeviceClass() == ProjectConst.SPX_BTDEVICE_CLASS ) && ( device.getName() != null ) )
-        {
-          btArrayAdapter.add( device.getName() + "\n" + device.getAddress() + "\n" + device.getName() + "\n0" );
-        }
-      }
-    }
-    else
-    {
-      btArrayAdapter.add( getActivity().getString( R.string.no_device ) );
-    }
-    devSpinner.setAdapter( btArrayAdapter );
+    // if( pairedDevices.size() > 0 )
+    // {
+    // // Alle gepaarten Geräte durch
+    // for( BluetoothDevice device : pairedDevices )
+    // {
+    // // Ist es ein gerät vom gewünschten Typ?
+    // if( ( device.getBluetoothClass().getDeviceClass() == ProjectConst.SPX_BTDEVICE_CLASS ) && ( device.getName() != null ) )
+    // {
+    // btArrayAdapter.add( device.getName() + "\n" + device.getAddress() + "\n" + device.getName() + "\n0" );
+    // }
+    // }
+    // }
+    // else
+    // {
+    // btArrayAdapter.add( getActivity().getString( R.string.no_device ) );
+    // }
+    // devSpinner.setAdapter( btArrayAdapter );
   }
 
   @Override

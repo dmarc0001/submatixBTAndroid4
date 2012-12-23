@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.util.Log;
+import de.dmarcini.submatix.android4.R;
 
 /**
  * 
@@ -38,6 +39,7 @@ public class ContentSwitcher
     public String              sId;
     public String              content;
     public int                 nId;
+    public int                 resId;
 
     /**
      * 
@@ -54,6 +56,7 @@ public class ContentSwitcher
     {
       this.sId = id;
       this.content = content;
+      this.resId = R.drawable.placeholder;
       try
       {
         this.nId = Integer.parseInt( id );
@@ -81,6 +84,28 @@ public class ContentSwitcher
       this.sId = String.format( "%d", id );
       this.nId = id;
       this.content = content;
+      this.resId = R.drawable.placeholder;
+    }
+
+    /**
+     * 
+     * Einen Eintrag mit Grafil-Resourcenid einfügen
+     * 
+     * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.content
+     * 
+     * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+     * 
+     *         Stand: 23.12.2012
+     * @param id
+     * @param resId
+     * @param content
+     */
+    public ProgItem( int id, int resId, String content )
+    {
+      this.sId = String.format( "%d", id );
+      this.nId = id;
+      this.content = content;
+      this.resId = resId;
     }
 
     @Override
@@ -124,6 +149,6 @@ public class ContentSwitcher
 
   static
   {
-    addItem( new ProgItem( "first", "dummy 1" ) );
+    addItem( new ProgItem( "1", "dummy 1" ) );
   }
 }

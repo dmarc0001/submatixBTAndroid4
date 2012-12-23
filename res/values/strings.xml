@@ -4,7 +4,10 @@
     <string name="app_name">SubmatixBTLogger</string>
     <string name="title_area_detail">Detail</string>
     <string name="app_description">this app connects with SUBMATIX SPX42 an read logs or read \/write configuration of this device</string>
-
+    <string name="dummy_filler">SUBMATIX BT Config</string>
+    <string name="app_bt_service">BluethootService</string>
+    <string name="dummy_text">\?</string>
+    
     <!-- Liste der Programmaktivitäten -->
     <string name="progitem_connect">Connection</string>
     <string name="progitem_config">SPX42 Config</string>
@@ -14,23 +17,39 @@
 
     <!-- Toasts -->
     <string name="toast_exit">exiting app</string>
-
+    <string name="toast_exit_nobt">exiting app NO BT ADAPTER!</string>
+    <string name="toast_bt_enabled">bluethooth enabled!</string>
+    
     <!-- Dialogboxen  -->
     <string name="dialog_sure_exit">are you sure?</string>
     <string name="dialog_exit_button">EXIT</string>
     <string name="dialog_ok_button">OK</string>
     <string name="dialog_cancel_button">Cancel</string>
 
-    <!-- Headlines der Details -->
-    <string name="config_detail_headline">Config SPX42</string>
+    <!--  DUMMY Detailseite  -->
+    <string name="dummy_headline">dummy page</string>
     
-    <!-- detailseite connect mit spx -->
-    <string name="btDiscoverButtonTitle">Discover BT Devices</string>
-    <string name="btOnOffText">ON/OFF</string>
+    <!-- Detailseite für Konfiguration des SPX42 -->
+    <string name="config_headline">Config SPX42</string>
+    <string name="config_autosetpoint_label">autosetpoint</string>
+    <string name="config_autosetpoint_off">autosetpoint is off</string>
+    <string name="config_autosetpoint_on">autosetpoint is on</string>
+    <string name="config_highsetpoint">value for high setpoint</string>
+    <string name="config_preference_highsetpoint_header">highsetpoint value</string>
+    <string name="config_preference_highsetpoint_values_header">select whished higsetpoint</string>
+    
+    <!-- Detailseite connect mit spx -->
+    <string name="connect_headline">Connection to SPX42</string>
+    <string name="connect_discover_button_title">Discover BT Devices</string>
+    <string name="connect_button_off_text">ON/OFF</string>
+    
+    <!-- Detailseite Gasliste -->
+    <string name="connect_caslist">Gaslist SPX42</string>
+    
     
     <!-- sonstig  -->
-    <string name="dummy_text">\?</string>
     <string name="no_device">- no device - \n0\n0\n0\n0</string>
+    <string name="array_with_pic_adapter_dummy">PROGRAMITEM</string>
     
     
 </resources>

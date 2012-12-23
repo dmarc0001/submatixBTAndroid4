@@ -4,31 +4,21 @@
     android:id="@+id/configScrollViewContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".areaDetailActivity" >
+    tools:context=".gui.configSPX42Fragment" >
 
     <LinearLayout
-        android:id="@+id/configLinearLayout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical" >
+
         
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/configSerialTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/config_detail_headline"
+            android:gravity="center_horizontal"
+            android:text="@string/dummy_filler"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-
-
-        <EditText
-            android:id="@+id/editText1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:text="@string/app_name" android:inputType="text">
-
-            <requestFocus />
-        </EditText>
 
     </LinearLayout>
 

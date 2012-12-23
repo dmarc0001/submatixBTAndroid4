@@ -1,3 +1,7 @@
+/**
+ * Dieses Fraqgment wird nur erzeugt udn aufgerufen, wenn die Hauptactivity keine spezielle Seite finden kann. Es ist also eine Fallback-Seite, die hoffentlich im Normalbetrieb
+ * nicht angezeigt wird
+ */
 package de.dmarcini.submatix.android4.gui;
 
 import android.os.Bundle;
@@ -6,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import de.dmarcini.submatix.android4.R;
 
 /**
  * A fragment representing a single area detail screen. This fragment is either contained in a {@link areaListActivity} in two-pane mode (on tablets) or a
@@ -29,6 +34,7 @@ public class areaDetailFragment extends Fragment
   @Override
   public void onCreate( Bundle savedInstanceState )
   {
+    Log.v( TAG, "onCreate()..." );
     super.onCreate( savedInstanceState );
   }
 
@@ -36,7 +42,8 @@ public class areaDetailFragment extends Fragment
   public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
   {
     Log.v( TAG, "onCreateView()..." );
-    rootView = inflater.inflate( R.layout.activity_area_detail, container, false );
+    // rootView = inflater.inflate( R.layout.activity_area_detail, container, false );
+    rootView = inflater.inflate( R.layout.fragment_dummy, container, false );
     return rootView;
   }
 }

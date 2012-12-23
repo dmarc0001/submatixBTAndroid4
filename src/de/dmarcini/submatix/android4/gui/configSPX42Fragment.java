@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import de.dmarcini.submatix.android4.R;
 
 public class configSPX42Fragment extends Fragment
 {
