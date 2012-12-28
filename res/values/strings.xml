@@ -31,12 +31,45 @@
     
     <!-- Detailseite für Konfiguration des SPX42 -->
     <string name="config_headline">Config SPX42</string>
+    <string name="config_spx42_preferencescreen_summary">select all preferences from your spx42</string>
     <string name="config_autosetpoint_label">autosetpoint</string>
-    <string name="config_autosetpoint_off">autosetpoint is off</string>
-    <string name="config_autosetpoint_on">autosetpoint is on</string>
+    <string name="config_autosetpoint_summary">switch off or select deep for autosetpoint</string>
+    <string name="config_autosetpoint_values_summary">set off or depth for setpoint</string>
     <string name="config_highsetpoint">value for high setpoint</string>
-    <string name="config_preference_highsetpoint_header">highsetpoint value</string>
-    <string name="config_preference_highsetpoint_values_header">select whished higsetpoint</string>
+    <string name="config_highsetpoint_header">highsetpoint value</string>
+    <string name="config_highsetpoint_summary">switch on or set high setpoint</string>
+    <string name="config_highsetpoint_values_header">select whished higsetpoint</string>
+    <string name="config_highsetpoint_values_summary">set value for autosetpoint</string>
+    <string name="config_highsetpoint_value_buttonlabel">set highsetpoint</string>
+    <string name="config_decompression_header">decompression</string>
+    <string name="config_decompression_header_summary">select your prefs for deco</string>
+    <string name="config_decompression_preset_values_header">select preset</string>
+    <string name="config_decompression_presets_values_summary">select your preferences for decompression</string>
+    <string name="config_decompression_gradient_low">set low gradient</string>
+    <string name="config_decompression_gradient_low_summary">set your own low gradient</string>
+    <string name="config_decompression_gradient_high">set high gradient</string>
+    <string name="config_decompression_gradient_high_summary">set your own high gradient</string>
+    <string name="config_decompression_last_stop_header">depth for last stop</string>
+    <string name="config_decompression_last_stop_summary">select the depth for last deco/secure stop</string>
+    <string name="config_decompression_dyn_gradients_header">dyn. gradients</string>
+    <string name="config_decompression_dyn_stops_summary_on">dyn gradients are active</string>
+    <string name="config_decompression_dyn_stops_summary_off">dyn gradients are inactive</string>
+    <string name="config_decompression_deppstops_header">dyn. gradients</string>
+    <string name="config_decompression_deepstops_summary_on">deep stops are active</string>
+    <string name="config_decompression_deppstops_summary_off">deep stops are inactive</string>
+    <string name="config_display_header">DISPLAY ORIENTATION</string>
+    <string name="config_display_luminance_header">luminance</string>
+    <string name="config_luminance_header_summary">select luminance of display from SPX42</string>
+    <string name="config_display_orientation_header">display orientation</string>
+    <string name="config_display_orientation_header_summary">select the orientation from SPX42 display</string>
+    <string name="config_units_header">SPX42 units</string>
+    <string name="config_units_summary">select the units fpr SPX42 metric or imperial</string>
+    <string name="config_units_temp_header">unit for temperature</string>
+    <string name="config_units_temp_metric">temperature ist in celsius</string>
+    <string name="config_units_temp_fahrenheid">temperature unit is fahrenheid</string>
+    <string name="config_units_depth_header">unit for depth</string>
+    <string name="config_units_depth_meters">depth is in meters</string>
+    <string name="config_units_depth_foot">depth is in foot</string>
     
     <!-- Detailseite connect mit spx -->
     <string name="connect_headline">Connection to SPX42</string>
@@ -44,12 +77,15 @@
     <string name="connect_button_off_text">ON/OFF</string>
     
     <!-- Detailseite Gasliste -->
-    <string name="connect_caslist">Gaslist SPX42</string>
+    <string name="gaslist_headline">Gaslist SPX42</string>
     
     
     <!-- sonstig  -->
     <string name="no_device">- no device - \n0\n0\n0\n0</string>
     <string name="array_with_pic_adapter_dummy">PROGRAMITEM</string>
+    <string name="config_units_watertype_header">type of water</string>
+    <string name="config_units_freshwater">freshwater</string>
+    <string name="config_units_saltwater">salty water</string>
     
     
 </resources>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:title="@string/config_highsetpoint_header" android:key="keyConfigHighsetpoint" android:summary="@string/config_spx42_preferencescreen_summary">
+    
+     <!-- Kategorie _Highsetpoint auto/off -->
+    <PreferenceCategory android:title="@string/config_highsetpoint_header" android:summary="@string/config_highsetpoint_summary" android:key="keyHighsetpoint">
+      <ListPreference 
+          android:key="keyConfigAutosetpointDepth" 
+          android:entryValues="@array/highsetpointDepthValuesArray" 
+          android:title="@string/config_autosetpoint_label" 
+          android:dialogTitle="@string/config_autosetpoint_label"
+          android:entries="@array/highsetpointDepthNamesArray"
+          android:defaultValue="0" 
+          android:summary="@string/config_autosetpoint_values_summary"/>
+      <ListPreference 
+          android:key="keyConfigHighsetpointValue" 
+          android:title="@string/config_highsetpoint_values_header"
+          android:dialogTitle="@string/config_highsetpoint_values_header"
+          android:entryValues="@array/highsetpointValuesArray" 
+          android:entries="@array/highsetpointNamesArray" 
+          android:defaultValue="1.0" 
+          android:summary="@string/config_highsetpoint_values_summary"/>
+    </PreferenceCategory>
+    
+    <!-- Voreinstellung Deco-Gradienten -->
+    <PreferenceCategory android:title="@string/config_decompression_header" android:summary="@string/config_decompression_header_summary" android:key="keyDeco">
+        <ListPreference 
+            android:entryValues="@array/gradientPresetValuesArray" 
+            android:entries="@array/gradientPresetNamesArray" 
+            android:title="@string/config_decompression_header" 
+            android:key="keyDecoGradientPresets" 
+            android:dialogTitle="@string/config_decompression_header" 
+            android:summary="@string/config_decompression_presets_values_summary"/>
+        <de.dmarcini.submatix.android4.utils.NumberPickerPreference  
+            android:title="@string/config_decompression_gradient_low" 
+            android:key="keyDecoGradientLow"
+            android:summary="@string/config_decompression_gradient_low_summary" 
+            android:defaultValue="35" />
+        <de.dmarcini.submatix.android4.utils.NumberPickerPreference  
+            android:title="@string/config_decompression_gradient_high" 
+            android:key="keyDecoGradientHigh"
+            android:summary="@string/config_decompression_gradient_high_summary" 
+            android:defaultValue="65" />
+        <ListPreference 
+            android:key="keyDecoLastStop" 
+            android:entryValues="@array/lastStoptValuesArray" 
+            android:summary="@string/config_decompression_last_stop_summary" 
+            android:entries="@array/lastStopNamesArray" 
+            android:title="@string/config_decompression_last_stop_header"/>
+        <CheckBoxPreference 
+            android:title="@string/config_decompression_dyn_gradients_header" 
+            android:key="keyDecoDynGradients" 
+            android:summaryOn="@string/config_decompression_dyn_stops_summary_on" 
+            android:summaryOff="@string/config_decompression_dyn_stops_summary_off"/>
+        <CheckBoxPreference 
+            android:title="@string/config_decompression_deppstops_header" 
+            android:summaryOn="@string/config_decompression_deepstops_summary_on" 
+            android:summaryOff="@string/config_decompression_deppstops_summary_off" 
+            android:key="keyDecoDeppStops"/>
+    </PreferenceCategory>
+      
+    <!-- Einstellungen für die Anzeige -->
+    <PreferenceCategory android:title="@string/config_display_header" android:key="keyDisplay">
+        <ListPreference 
+            android:summary="@string/config_luminance_header_summary" 
+            android:key="keyDisplayLiminance" 
+            android:title="@string/config_display_luminance_header" 
+            android:entryValues="@array/displayLuminanceValuesArray" 
+            android:defaultValue="10" 
+            android:entries="@array/displayLuminanceNamesArray"/>
+        <ListPreference 
+            android:summary="@string/config_display_orientation_header_summary" 
+            android:key="keyDisplayOrientation" 
+            android:title="@string/config_display_orientation_header" 
+            android:entryValues="@array/displayOrientationValuesArray" 
+            android:entries="@array/displayOrientationNamesArray"/>
+        
+    </PreferenceCategory>
+    
+    <!-- Einstellungen für Einheiten -->
+    <PreferenceCategory android:title="@string/config_units_header" android:summary="@string/config_units_summary" android:key="keyUnits">
+        <CheckBoxPreference android:title="@string/config_units_temp_header" android:defaultValue="true" android:summaryOn="@string/config_units_temp_metric" android:summaryOff="@string/config_units_temp_fahrenheid" android:key="keyIsTempMetric"/>
+        <CheckBoxPreference android:title="@string/config_units_depth_header" android:key="keyIsDepthMetric" android:summaryOn="@string/config_units_depth_meters" android:summaryOff="@string/config_units_depth_foot"/>
+        <CheckBoxPreference android:title="@string/config_units_watertype_header" android:summaryOn="@string/config_units_freshwater" android:summaryOff="@string/config_units_saltwater" android:key="keyIsFreshwater"/>
+    </PreferenceCategory>
+</PreferenceScreen>

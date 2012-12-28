@@ -1,8 +1,8 @@
 package de.dmarcini.submatix.android4.gui;
 
 import android.app.Activity;
+import android.app.ListFragment;
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
@@ -97,10 +97,9 @@ public class areaListFragment extends ListFragment
     Log.v( TAG, "onListItemClick()..." );
     //
     // delegiere die Bearbeitung an die aktive Activity
-    // welche auf dem gmeinsamen Objekt combinedFragmentActivity beruht...
     //
     setActivatedPosition( position );
-    ( ( combinedFragmentActivity )getActivity() ).onListItemClick( listView, view, position, id );
+    ( ( areaListActivity )getActivity() ).onListItemClick( listView, view, position, id );
   }
 
   /**

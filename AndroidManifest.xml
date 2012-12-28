@@ -16,10 +16,12 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" android:description="@string/app_description">
+        android:theme="@style/AppTheme" 
+        android:description="@string/app_description">
+        
         <!-- Die List/Main activity -->
         <activity
-            android:name="de.dmarcini.submatix.android4.gui.areaListActivity"
+            android:name=".gui.areaListActivity"
             android:label="@string/app_name"
             android:screenOrientation="sensorLandscape">            
             <intent-filter>
@@ -28,19 +30,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
         <!-- die Detailacivity, bei schmalen screens dann die Hauptactivity -->
         <activity
-            android:name="de.dmarcini.submatix.android4.gui.areaDetailActivity"
+            android:name=".gui.areaDetailActivity"
             android:label="@string/title_area_detail"
-            android:screenOrientation="sensorLandscape">            
-            android:parentActivityName=".gui.areaListActivity" >
+            android:screenOrientation="sensorLandscape" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".gui.areaListActivity" />
         </activity>
         
         <!-- der Service sollte auch eingetragen sein  -->
-        <service android:name="de.dmarcini.submatix.android4.comm.BluethoothComService" android:label="@string/app_bt_service"/>        
+        <service android:name=".comm.BluethoothComService" android:label="@string/app_bt_service"/>       
     </application>
 
 </manifest>

@@ -1,7 +1,7 @@
 package de.dmarcini.submatix.android4.gui;
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -83,7 +83,8 @@ public class configSPX42Fragment extends Fragment
     //
     // View aus Resource laden
     //
-    rootView = inflater.inflate( R.layout.fragment_spx42config, container, false );
+    // rootView = inflater.inflate( R.layout.fragment_spx42config, container, false );
+    rootView = inflater.inflate( R.layout.fragment_dummy, container, false );
     // Dimensionen checken
     height = displayMetrics.heightPixels;
     width = displayMetrics.widthPixels;

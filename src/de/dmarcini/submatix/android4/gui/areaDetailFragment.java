@@ -4,8 +4,8 @@
  */
 package de.dmarcini.submatix.android4.gui;
 
+import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,8 +42,8 @@ public class areaDetailFragment extends Fragment
   public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
   {
     Log.v( TAG, "onCreateView()..." );
-    // rootView = inflater.inflate( R.layout.activity_area_detail, container, false );
-    rootView = inflater.inflate( R.layout.fragment_dummy, container, false );
+    rootView = inflater.inflate( R.layout.activity_area_detail, container, false );
+    // rootView = inflater.inflate( R.layout.fragment_dummy, container, false );
     return rootView;
   }
 }

@@ -111,16 +111,19 @@ public final class ProjectConst
   public static final int TIMEFORMAT_EN                 = 2;  //EnglishDate ='MM/DD/YYYY hh:mm:ss';
   
   // Android: Farben der Gase
-  public static final int GASNAMECOLOR_NORMAL         = Color.blue( 0x88 ); 
-  public static final int GASNAMECOLOR_DANGEROUS      = Color.RED;
-  public static final int GASNAMECOLOR_NONORMOXIC     = Color.MAGENTA;
+  public static final int GASNAMECOLOR_NORMAL           = Color.blue( 0x88 ); 
+  public static final int GASNAMECOLOR_DANGEROUS        = Color.RED;
+  public static final int GASNAMECOLOR_NONORMOXIC       = Color.MAGENTA;
   
   // Android: Parameterbezeichnug für Programmmenü-Id
-  public static final String ARG_ITEM_ID              = "item_id";
+  public static final String ARG_ITEM_ID                = "item_id";
+  
   // Android: ID für Intentrequests
-  public static final int REQUEST_ENABLE_BT           = 1;
+  public static final int REQUEST_ENABLE_BT             = 1;
+  public static final int REQUEST_SPX_PREFS             = 2;
+  
   // Android: gewünschte BT Geräteklasse
-  public static final int SPX_BTDEVICE_CLASS          = 0x1F00;
+  public static final int SPX_BTDEVICE_CLASS            = 0x1F00;
   
   // Android (für PC MUSS die Klasse auskommentiert werden )
   public static final class ActionEvent

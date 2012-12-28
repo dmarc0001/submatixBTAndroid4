@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="gradientPresetValuesArray">
+        <item>50:50</item>
+        <item>30:40</item>
+        <item>30:40</item>
+        <item>30:40</item>
+        <item>30:40</item>
+        <item>0:0</item>
+        </string-array>
+    <string-array name="gradientPresetNamesArray">
+        <item>very conservative</item>
+        <item>conservative</item>
+        <item>moderate</item>
+        <item>aggressive</item>
+        <item>very aggressive</item>
+        <item>custom</item>
+    </string-array>
+    
+</resources>

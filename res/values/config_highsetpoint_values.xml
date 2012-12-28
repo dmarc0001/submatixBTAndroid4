@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="highsetpointDepthNamesArray">
+       <item>off</item>
+       <item>5m</item>
+       <item>10m</item>
+       <item>15m</item>
+       <item>20m</item>
+    </string-array>
+    
+    <string-array name="highsetpointDepthValuesArray">
+       <item>0</item>
+       <item>5</item>
+       <item>10</item>
+       <item>15</item>
+       <item>20</item>
+    </string-array>
+    
     <string-array name="highsetpointValuesArray">
       <item >0.7</item>
       <item >0.8</item>
@@ -12,6 +28,7 @@
       <item >1.5</item>
       <item >1.6</item>
     </string-array>
+    
     <string-array name="highsetpointNamesArray">
       <item >0.7 bar</item>
       <item >0.8 bar</item>

@@ -6,27 +6,35 @@
  */
 package de.dmarcini.submatix.android4.gui;
 
+import android.app.Activity;
+import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.content.ContentSwitcher;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 
-/**
- * An activity representing a single area detail screen. This activity is only used on handset devices. On tablet-size devices, item details are presented side-by-side with a list
- * of items in a {@link areaListActivity}.
- * <p>
- * This activity is mostly just a 'shell' activity containing nothing more than a {@link areaDetailFragment}.
- */
-public class areaDetailActivity extends combinedFragmentActivity
+public class areaDetailActivity extends Activity implements AreYouSureDialogFragment.NoticeDialogListener
 {
   private static final String TAG = areaDetailActivity.class.getSimpleName();
+
+  @Override
+  public void finishFromChild( Activity child )
+  {
+    Log.i( TAG, "child process called finish()..." );
+    //
+    // wenn eine Clientactivity mit finish() beendet
+    // wurde, ist hier auch schluss
+    // TODO: Service bescheid geben!
+    //
+    finish();
+  }
 
   //
   //
@@ -40,7 +48,8 @@ public class areaDetailActivity extends combinedFragmentActivity
     //
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate:..." );
-    // Aktiviere Zurückfunktion via Actionbsar Home
+    // Aktiviere Zurückfunktion via Actionbar Home
+    getActionBar().setHomeButtonEnabled( true );
     getActionBar().setDisplayHomeAsUpEnabled( true );
     //
     // was soll ich anzeigen?
@@ -58,35 +67,52 @@ public class areaDetailActivity extends combinedFragmentActivity
       // hab ich einen Eintrag vorrätig?
       if( mItem != null )
       {
-        // ok, ich hab eine Id, jetzt guck mal wo das hinführt
-        if( mItem.nId == R.string.progitem_connect )
+        switch ( mItem.nId )
         {
-          Log.v( TAG, "create connect fragment..." );
-          connectFragment conFragment = new connectFragment();
-          fragment = conFragment;
-          resourceId = 0;
-          setContentView( R.layout.fragment_connect );
-          getActionBar().setTitle( R.string.connect_headline );
-          getActionBar().setLogo( R.drawable.bluetooth_icon_color );
-        }
-        else if( mItem.nId == R.string.progitem_config )
-        {
-          Log.v( TAG, "create config fragment..." );
-          configSPX42Fragment confFragment = new configSPX42Fragment();
-          fragment = confFragment;
-          resourceId = 0;
-          setContentView( R.layout.fragment_spx42config );
-          getActionBar().setTitle( R.string.config_headline );
-        }
-        else
-        {
-          Log.w( TAG, "Not programitem found for <" + showId + ">" );
-          // Dann ist was faul, und ich zeig DUMMY
-          areaDetailFragment dFragment = new areaDetailFragment();
-          resourceId = R.id.area_detail_container;
-          fragment = dFragment;
-          setContentView( R.layout.activity_area_detail );
-          getActionBar().setTitle( R.string.dummy_headline );
+          case R.string.progitem_connect:
+            //
+            // erzeuge die Connect fragmentActivity
+            //
+            Log.v( TAG, "create connect fragmentActivity..." );
+            connectFragment conFragment = new connectFragment();
+            fragment = conFragment;
+            resourceId = 0;
+            setContentView( R.layout.fragment_connect );
+            getActionBar().setTitle( R.string.connect_headline );
+            getActionBar().setLogo( mItem.resId );
+            break;
+          case R.string.progitem_config:
+            Log.v( TAG, "create config PreferenceActivity..." );
+            getActionBar().setTitle( R.string.config_headline );
+            getActionBar().setLogo( mItem.resId );
+            setContentView( R.layout.activity_area_detail );
+            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, new SPX42PreferencesFragment() ).commit();
+            // getFragmentManager().beginTransaction().replace( android.R.id.content, new SPX42PreferencesFragment() ).commit();
+            return;
+          case R.string.progitem_gaslist:
+            //
+            // gaslist edit Activity erzeugen
+            //
+            Log.w( TAG, "Not programitem found for <" + showId + ">" );
+            getActionBar().setTitle( R.string.gaslist_headline );
+            getActionBar().setLogo( mItem.resId );
+            areaDetailFragment gFragment = new areaDetailFragment();
+            resourceId = R.id.area_detail_container;
+            fragment = gFragment;
+            setContentView( R.layout.activity_area_detail );
+            break;
+          default:
+            //
+            // Dann ist was faul, und ich zeig DUMMY
+            //
+            Log.w( TAG, "Not programitem found for <" + showId + ">" );
+            // Dann ist was faul, und ich zeig DUMMY
+            getActionBar().setTitle( R.string.dummy_headline );
+            getActionBar().setLogo( R.drawable.ic_launcher );
+            areaDetailFragment dFragment = new areaDetailFragment();
+            resourceId = R.id.area_detail_container;
+            fragment = dFragment;
+            setContentView( R.layout.activity_area_detail );
         }
       }
     }
@@ -105,7 +131,7 @@ public class areaDetailActivity extends combinedFragmentActivity
     //
     // Log.v( TAG, "add transaction..." );
     Log.v( TAG, "getSupportFragmentManager..." );
-    FragmentManager fm = getSupportFragmentManager();
+    FragmentManager fm = getFragmentManager();
     Log.v( TAG, "beginTransaction..." );
     FragmentTransaction ft = fm.beginTransaction();
     Log.v( TAG, "add(resourceId,fragment) ..." );
@@ -117,11 +143,43 @@ public class areaDetailActivity extends combinedFragmentActivity
   }
 
   @Override
+  public void onDialogNegativeClick( DialogFragment dialog )
+  {
+    Log.v( TAG, "Negative dialog click!" );
+  }
+
+  @Override
+  public void onDialogPositiveClick( DialogFragment dialog )
+  {
+    Log.v( TAG, "Positive dialog click!" );
+    //
+    // war es ein AreYouSureDialogFragment Dialog?
+    //
+    if( dialog instanceof AreYouSureDialogFragment )
+    {
+      AreYouSureDialogFragment aDial = ( AreYouSureDialogFragment )dialog;
+      //
+      // War der Tag für den Dialog zum Exit des Programmes?
+      //
+      if( aDial.getTag().equals( "programexit" ) )
+      {
+        Log.i( TAG, "User close app..." );
+        Toast.makeText( this, R.string.toast_exit, Toast.LENGTH_SHORT ).show();
+        finish();
+      }
+    }
+  }
+
+  @Override
   public boolean onOptionsItemSelected( MenuItem item )
   {
     switch ( item.getItemId() )
     {
       case android.R.id.home:
+        Log.v( TAG, "onOptionsItemSelected: HOME" );
+        Intent intent = new Intent( this, areaListActivity.class );
+        intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
+        startActivity( intent );
         // This ID represents the Home or Up button. In the case of this
         // activity, the Up button is shown. Use NavUtils to allow users
         // to navigate up one level in the application structure. For
@@ -129,8 +187,8 @@ public class areaDetailActivity extends combinedFragmentActivity
         //
         // http://developer.android.com/design/patterns/navigation.html#up-vs-back
         //
-        Log.v( TAG, "onOptionsItemSelected: HOME" );
-        NavUtils.navigateUpTo( this, new Intent( this, areaListActivity.class ) );
+        // Log.v( TAG, "onOptionsItemSelected: HOME" );
+        // NavUtils.navigateUpTo( this, new Intent( this, areaListActivity.class ) );
         return true;
     }
     return super.onOptionsItemSelected( item );
