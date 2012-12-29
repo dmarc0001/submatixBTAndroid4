@@ -8,13 +8,13 @@
           android:entryValues="@array/highsetpointDepthValuesArray" 
           android:title="@string/config_autosetpoint_label" 
           android:entries="@array/highsetpointDepthNamesArray"
-          android:summary="@string/config_autosetpoint_summary"/>
+          android:summary="@string/config_autosetpoint_summary" android:defaultValue="@string/config_autosetpoint_default"/>
       <ListPreference 
           android:key="keySetpointHighsetpointValue" 
           android:title="@string/config_highsetpoint_header"
           android:entryValues="@array/highsetpointValuesArray" 
           android:entries="@array/highsetpointNamesArray" 
-          android:summary="@string/config_highsetpoint_summary"/>
+          android:summary="@string/config_highsetpoint_summary" android:defaultValue="@string/config_highsetpoint_default"/>
     </PreferenceCategory>
     
     <!-- Voreinstellung Deco-Gradienten -->
@@ -24,38 +24,38 @@
             android:entries="@array/gradientPresetNamesArray" 
             android:title="@string/config_decompression_preset_header" 
             android:key="keyDecoGradientPresets" 
-            android:summary="@string/config_decompression_presets_summary"/>
+            android:summary="@string/config_decompression_presets_summary" android:defaultValue="@string/config_decompression_presets_default"/>
         <de.dmarcini.submatix.android4.utils.NumberPickerPreference  
             android:title="@string/config_decompression_gradient_low" 
             android:key="keyDecoGradientLow"
             android:summary="@string/config_decompression_gradient_low_summary" 
-            android:defaultValue="35" />
+            android:defaultValue="20" />
         <de.dmarcini.submatix.android4.utils.NumberPickerPreference  
             android:title="@string/config_decompression_gradient_high" 
             android:key="keyDecoGradientHigh"
             android:summary="@string/config_decompression_gradient_high_summary" 
-            android:defaultValue="65" />
+            android:defaultValue="60" />
         <SwitchPreference 
             android:key="keyDecoLastStop" 
             android:title="@string/config_decompression_last_stop_header" 
             android:switchTextOff="@string/config_decompression_last_stop_off" 
             android:switchTextOn="@string/config_decompression_last_stop_on" 
             android:summaryOff="@string/config_decompression_last_stop_off_summary" 
-            android:summaryOn="@string/config_decompression_last_stop_on_summary"/>
+            android:summaryOn="@string/config_decompression_last_stop_on_summary" android:defaultValue="true"/>
         <SwitchPreference 
             android:key="keyDecoDynGradients" 
             android:title="@string/config_decompression_dyn_gradients_header" 
             android:summaryOn="@string/config_decompression_dyn_gradients_summary_on" 
             android:summaryOff="@string/config_decompression_dyn_gradients_summary_off" 
             android:switchTextOn="@string/config_decompression_dyn_gradients_on" 
-            android:switchTextOff="@string/config_decompression_dyn_gradients_off"/>
+            android:switchTextOff="@string/config_decompression_dyn_gradients_off" android:defaultValue="true"/>
         <SwitchPreference 
             android:key="keyDecoDeepStops" 
             android:title="@string/config_decompression_deppstops_header" 
             android:summaryOn="@string/config_decompression_deepstops_summary_on" 
             android:summaryOff="@string/config_decompression_deppstops_summary_off" 
             android:switchTextOn="@string/config_decompression_deepstops_on" 
-            android:switchTextOff="@string/config_decompression_deepstops_off"/>
+            android:switchTextOff="@string/config_decompression_deepstops_off" android:defaultValue="true"/>
         
     </PreferenceCategory>
       
@@ -66,13 +66,13 @@
             android:title="@string/config_display_luminance_header" 
             android:entryValues="@array/displayLuminanceValuesArray" 
             android:entries="@array/displayLuminanceNamesArray" 
-            android:summary="@string/config_luminance_header_summary"/>
+            android:summary="@string/config_luminance_header_summary" android:defaultValue="@string/config_luminance_default"/>
         <ListPreference 
             android:summary="@string/config_display_orientation_header_summary" 
             android:key="keyDisplayOrientation" 
             android:title="@string/config_display_orientation_header" 
             android:entryValues="@array/displayOrientationValuesArray" 
-            android:entries="@array/displayOrientationNamesArray"/>
+            android:entries="@array/displayOrientationNamesArray" android:defaultValue="@string/config_display_orientation_default"/>
         
     </PreferenceCategory>
     
@@ -84,21 +84,21 @@
             android:switchTextOff="@string/config_units_temp_fahrenheid" 
             android:switchTextOn="@string/config_units_temp_metric" 
             android:summaryOn="@string/config_units_temp_metric_summary" 
-            android:summaryOff="@string/config_units_temp_fahrenheid_summary"/>
+            android:summaryOff="@string/config_units_temp_fahrenheid_summary" android:defaultValue="true"/>
         <SwitchPreference 
             android:title="@string/config_units_depth_header" 
             android:key="keyUnitsIsDepthMetric" 
             android:summaryOff="@string/config_units_depth_foot_summary" 
             android:summaryOn="@string/config_units_depth_meters_summary" 
             android:switchTextOn="@string/config_units_depth_meters" 
-            android:switchTextOff="@string/config_units_depth_foot"/>
+            android:switchTextOff="@string/config_units_depth_foot" android:defaultValue="true"/>
         <SwitchPreference 
             android:title="@string/config_units_watertype_header" 
             android:key="keyUnitsIsFreshwater" 
             android:switchTextOff="@string/config_units_saltwater" 
             android:switchTextOn="@string/config_units_freshwater" 
             android:summaryOn="@string/config_units_freshwater_summary" 
-            android:summaryOff="@string/config_units_saltwater_summary"/>
+            android:summaryOff="@string/config_units_saltwater_summary" android:defaultValue="true"/>
         
     </PreferenceCategory>
     
@@ -110,31 +110,31 @@
             android:switchTextOff="@string/config_individual_sensors_text_off" 
             android:key="keyIndividualSensorsOn" 
             android:summaryOff="@string/config_individual_sensors_text_off_summary" 
-            android:summaryOn="@string/config_individual_sensors_text_on_summary"/>
+            android:summaryOn="@string/config_individual_sensors_text_on_summary" android:defaultValue="true"/>
         <SwitchPreference 
             android:title="@string/config_individual_pscr_onoff_header" 
             android:key="keyIndividualPSCROn" 
             android:switchTextOn="@string/config_individual_pscr_text_on" 
             android:switchTextOff="@string/config_individual_pscr_text_off" 
             android:summaryOn="@string/config_individual_pscr_summary_on" 
-            android:summaryOff="@string/config_individual_pscr_summary_off"/>
+            android:summaryOff="@string/config_individual_pscr_summary_off" android:defaultValue="false"/>
         <ListPreference 
             android:key="keyIndividualCountSensorWarning" 
             android:title="@string/config_individual_count_sensorwarning_header" 
             android:entries="@array/individualSensorsCountNamesArray" 
-            android:entryValues="@array/individualSensorsCountValuesArray"/>
+            android:entryValues="@array/individualSensorsCountValuesArray" android:defaultValue="@string/config_individual_count_default" android:summary="@string/config_individual_count_sensorwarning_header_summary"/>
         <SwitchPreference 
             android:key="keyIndividualAcousticWarnings" 
             android:title="@string/config_individual_acoustic_warning_header" 
             android:switchTextOn="@string/config_individual_acoustic_warning_on" 
             android:switchTextOff="@string/config_individual_acoustic_warning_off" 
             android:summaryOff="@string/config_individual_acoustic_warning_off_summary" 
-            android:summaryOn="@string/config_individual_acoustic_warning_on_summary"/>
+            android:summaryOn="@string/config_individual_acoustic_warning_on_summary" android:defaultValue="true"/>
         <ListPreference 
             android:entries="@array/individualIntervalNamesArray" 
             android:entryValues="@array/individualIntervalValuesArray" 
             android:key="keyIndividualLoginterval" 
             android:title="@string/config_individual_interval_header" 
-            android:summary="@string/config_individual_interval_header_summary"/>
+            android:summary="@string/config_individual_interval_header_summary" android:defaultValue="@string/config_individual_interval_default"/>
     </PreferenceCategory>
 </PreferenceScreen>
