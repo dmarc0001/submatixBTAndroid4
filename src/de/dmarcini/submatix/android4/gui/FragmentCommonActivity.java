@@ -201,6 +201,10 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         AreYouSureDialogFragment sureDial = new AreYouSureDialogFragment( getString( R.string.dialog_sure_exit ) );
         sureDial.show( getFragmentManager().beginTransaction(), "programexit" );
         return;
+      case R.string.progitem_set_defaults:
+        Log.i( TAG, "onListItemClick: set DEFAULTS..." );
+        PreferenceManager.setDefaultValues( this, R.xml.config_spx42_preference, false );
+        return;
       case R.string.progitem_log_propertys:
       case R.string.progitem_null:
         //
