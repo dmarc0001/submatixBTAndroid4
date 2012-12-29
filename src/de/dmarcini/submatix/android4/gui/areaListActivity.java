@@ -6,7 +6,9 @@
  */
 package de.dmarcini.submatix.android4.gui;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
@@ -43,6 +45,7 @@ public class areaListActivity extends FragmentCommonActivity
     if( BuildConfig.DEBUG )
     {
       ContentSwitcher.addItem( new ProgItem( R.string.progitem_null, R.drawable.placeholder, getString( R.string.progitem_null ) ) );
+      ContentSwitcher.addItem( new ProgItem( R.string.progitem_set_defaults, R.drawable.radiation, getString( R.string.progitem_set_defaults ) ) );
       ContentSwitcher.addItem( new ProgItem( R.string.progitem_log_propertys, R.drawable.radiation, getString( R.string.progitem_log_propertys ) ) );
     }
   }
@@ -59,6 +62,20 @@ public class areaListActivity extends FragmentCommonActivity
   {
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate..." );
+    //
+    // wurden jemals Preferences gesettz?
+    //
+    SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( this );
+    if( !sPref.contains( "firstTimeInitiated" ) )
+    {
+      Log.w( TAG, "onCreate: make first time preferences..." );
+      if( !sPref.getBoolean( "firstTimeInitiated", false ) )
+      {
+        setDefaultPreferences();
+        sPref.edit().putBoolean( "firstTimeInitiated", true );
+        sPref.edit().commit();
+      }
+    }
     //
     // guck mal. ob das ein grosses Display ist,
     // dann ist da nämlich auch der Detailcontainer vorhanden
@@ -99,5 +116,21 @@ public class areaListActivity extends FragmentCommonActivity
   {
     super.onResume();
     Log.v( TAG, "onResume..." );
+  }
+
+  /**
+   * 
+   * Erzeuge Preferenzen für den SPX42
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 29.12.2012
+   */
+  public void setDefaultPreferences()
+  {
+    Log.i( TAG, "setDefaultPreferences: make default preferences..." );
+    PreferenceManager.setDefaultValues( this, R.xml.config_spx42_preference, false );
   }
 }
