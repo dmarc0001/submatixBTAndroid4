@@ -3,10 +3,10 @@
  */
 package de.dmarcini.submatix.android4.utils;
 
-
 import android.content.Context;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.NumberPicker.OnValueChangeListener;
@@ -18,9 +18,10 @@ import android.widget.NumberPicker.OnValueChangeListener;
  */
 public class NumberPickerPreference extends DialogPreference implements OnValueChangeListener
 {
-  private NumberPicker nPicker      = null;
-  private AttributeSet attrs        = null;
-  private int          currentValue = 0;
+  private static final String TAG          = NumberPickerPreference.class.getSimpleName();
+  private NumberPicker        nPicker      = null;
+  private AttributeSet        attrs        = null;
+  private int                 currentValue = 0;
 
   /**
    * Der Konstruktor
@@ -29,9 +30,9 @@ public class NumberPickerPreference extends DialogPreference implements OnValueC
    * @param context
    * @param attrs
    */
-  public NumberPickerPreference(Context context, AttributeSet attrs)
+  public NumberPickerPreference( Context context, AttributeSet attrs )
   {
-    super(context, attrs);
+    super( context, attrs );
     this.attrs = attrs;
   }
 
@@ -43,43 +44,46 @@ public class NumberPickerPreference extends DialogPreference implements OnValueC
    * @param attrs
    * @param defStyle
    */
-  public NumberPickerPreference(Context context, AttributeSet attrs, int defStyle)
+  public NumberPickerPreference( Context context, AttributeSet attrs, int defStyle )
   {
-    super(context, attrs, defStyle);
+    super( context, attrs, defStyle );
     this.attrs = attrs;
   }
 
   @Override
-  public void onValueChange(NumberPicker picker, int oldVal, int newVal)
+  public void onValueChange( NumberPicker picker, int oldVal, int newVal )
   {
+    Log.v( TAG, "onValueChange: oldVal: <" + oldVal + ">, newVal: <" + newVal + ">" );
     currentValue = newVal;
   }
 
   @Override
   protected View onCreateDialogView()
   {
-    nPicker = new NumberPicker(getContext(), this.attrs);
-    nPicker.setMinValue(0);
-    nPicker.setMaxValue(100);
-    this.currentValue = getPersistedInt(defaultValue());
-    nPicker.setValue(this.currentValue);
+    nPicker = new NumberPicker( getContext(), this.attrs );
+    nPicker.setOnValueChangedListener( this );
+    nPicker.setMinValue( 0 );
+    nPicker.setMaxValue( 100 );
+    this.currentValue = getPersistedInt( defaultValue() );
+    nPicker.setValue( this.currentValue );
     return nPicker;
   }
 
   @Override
-  protected void onSetInitialValue(boolean restoreValue, Object def)
+  protected void onSetInitialValue( boolean restoreValue, Object def )
   {
-    if (restoreValue)
+    Log.v( TAG, "onSetInitialValue: restore:<" + restoreValue + ">" );
+    if( restoreValue )
     {
-      this.currentValue = getPersistedInt(defaultValue());
-      if (nPicker != null)
+      this.currentValue = getPersistedInt( defaultValue() );
+      if( nPicker != null )
       {
-        nPicker.setValue(this.currentValue);
+        nPicker.setValue( this.currentValue );
       }
     }
     else
     {
-      persistInt(currentValue);
+      persistInt( currentValue );
     }
   }
 
@@ -93,11 +97,11 @@ public class NumberPickerPreference extends DialogPreference implements OnValueC
    * Called when the dialog is closed. If the close was by pressing "OK" it saves the value.
    */
   @Override
-  protected void onDialogClosed(boolean shouldSave)
+  protected void onDialogClosed( boolean shouldSave )
   {
-    if (shouldSave)
+    if( shouldSave )
     {
-      persistInt(currentValue);
+      persistInt( currentValue );
     }
   }
 }

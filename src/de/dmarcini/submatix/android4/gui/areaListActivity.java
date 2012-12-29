@@ -6,9 +6,9 @@
  */
 package de.dmarcini.submatix.android4.gui;
 
-
 import android.os.Bundle;
 import android.util.Log;
+import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.content.ContentSwitcher;
 import de.dmarcini.submatix.android4.content.ContentSwitcher.ProgItem;
@@ -29,17 +29,22 @@ public class areaListActivity extends FragmentCommonActivity
    */
   private void initStaticContenSwitcher()
   {
-    Log.v(TAG, "initStaticContent...");
+    Log.v( TAG, "initStaticContent..." );
     // zuerst aufräumen
     ContentSwitcher.clearItems();
     //
     // irgendeine Kennung muss der String bekommen, also gibts halt die String-ID
     //
-    ContentSwitcher.addItem(new ProgItem(R.string.progitem_connect, R.drawable.bluetooth_icon_color, getString(R.string.progitem_connect)));
-    ContentSwitcher.addItem(new ProgItem(R.string.progitem_config, R.drawable.toolboxwhite, getString(R.string.progitem_config)));
-    ContentSwitcher.addItem(new ProgItem(R.string.progitem_gaslist, R.drawable.pinion, getString(R.string.progitem_gaslist)));
-    ContentSwitcher.addItem(new ProgItem(R.string.progitem_logging, R.drawable.logging, getString(R.string.progitem_logging)));
-    ContentSwitcher.addItem(new ProgItem(R.string.progitem_exit, R.drawable.shutoff, getString(R.string.progitem_exit)));
+    ContentSwitcher.addItem( new ProgItem( R.string.progitem_connect, R.drawable.bluetooth_icon_color, getString( R.string.progitem_connect ) ) );
+    ContentSwitcher.addItem( new ProgItem( R.string.progitem_config, R.drawable.toolboxwhite, getString( R.string.progitem_config ) ) );
+    ContentSwitcher.addItem( new ProgItem( R.string.progitem_gaslist, R.drawable.pinion, getString( R.string.progitem_gaslist ) ) );
+    ContentSwitcher.addItem( new ProgItem( R.string.progitem_logging, R.drawable.logging, getString( R.string.progitem_logging ) ) );
+    ContentSwitcher.addItem( new ProgItem( R.string.progitem_exit, R.drawable.shutoff, getString( R.string.progitem_exit ) ) );
+    if( BuildConfig.DEBUG )
+    {
+      ContentSwitcher.addItem( new ProgItem( R.string.progitem_null, R.drawable.placeholder, getString( R.string.progitem_null ) ) );
+      ContentSwitcher.addItem( new ProgItem( R.string.progitem_log_propertys, R.drawable.radiation, getString( R.string.progitem_log_propertys ) ) );
+    }
   }
 
   /**
@@ -50,29 +55,49 @@ public class areaListActivity extends FragmentCommonActivity
    * @param savedInstanceState
    */
   @Override
-  public void onCreate(Bundle savedInstanceState)
+  public void onCreate( Bundle savedInstanceState )
   {
-    super.onCreate(savedInstanceState);
-    Log.v(TAG, "onCreate...");
+    super.onCreate( savedInstanceState );
+    Log.v( TAG, "onCreate..." );
+    //
+    // guck mal. ob das ein grosses Display ist,
+    // dann ist da nämlich auch der Detailcontainer vorhanden
+    //
+    if( findViewById( R.id.area_detail_container ) != null )
+    {
+      Log.v( TAG, "onCreate: twoPane-mode" );
+      // Der Detailcontainer ist nur vorhanden, wenn die App
+      // (durch das System) festgestellt hat, dass es auf einem
+      // Gerät mirt grossem Display (res/values-large and
+      // res/values-sw600dp) läuft.
+      mTwoPane = true;
+      // Im twoPane Modus soll der aktivierte Eintrag immer gekennzeichnet sein!
+      Log.v( TAG, "onCreate: set \"activate on item click\"..." );
+      ( ( areaListFragment )getFragmentManager().findFragmentById( R.id.area_list ) ).setActivateOnItemClick( true );
+    }
+    else
+    {
+      Log.v( TAG, "onCreate: onePane-mode" );
+    }
     //
     // die Programmlisteneinträge initialisieren
     //
-    Log.v(TAG, "onCreate: initStaticContentSwitcher()...");
+    Log.v( TAG, "onCreate: initStaticContentSwitcher()..." );
     initStaticContenSwitcher();
-    Log.v(TAG, "onCreate: initStaticContentSwitcher()...OK");
+    Log.v( TAG, "onCreate: initStaticContentSwitcher()...OK" );
   }
 
   @Override
   public void onPause()
   {
     super.onPause();
-    Log.v(TAG, "onPause...");
+    Log.v( TAG, "onPause..." );
   }
 
   @Override
   public void onResume()
   {
     super.onResume();
-    Log.v(TAG, "onResume...");
+    Log.v( TAG, "onResume..." );
   }
 }
