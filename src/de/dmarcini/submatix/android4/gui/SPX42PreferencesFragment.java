@@ -19,9 +19,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment
     Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference + ">..." );
     addPreferencesFromResource( R.xml.config_spx42_preference );
     Log.v( TAG, "onCreate: add Resouce...OK" );
-    // wenn gewünscht:
-    //
-    // PreferenceManager.setDefaultValues(this, R.xml.config_spx42_preference, false)
   }
 
   @Override
