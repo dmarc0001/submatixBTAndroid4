@@ -11,6 +11,7 @@
     <!-- DEBUGSTRINGS  -->
     <string name="progitem_null"></string>
     <string name="progitem_log_propertys">log propertys...</string>
+    <string name="progitem_set_defaults">set defaults</string>
     
     <!-- Liste der Programmaktivitäten -->
     <string name="progitem_connect">Connection</string>
@@ -40,26 +41,34 @@
     <!-- autosetpoint -->
     <string name="config_autosetpoint_label">autosetpoint</string>
     <string name="config_autosetpoint_summary">switch off or select deep for autosetpoint</string>
+    <string name="config_autosetpoint_default">5</string>
     <!-- tiefe für autosetpint -->
     <string name="config_highsetpoint_header">select whished higsetpoint</string>
     <string name="config_highsetpoint_summary">select depth for swtich to high setpoint</string>
+    <string name="config_highsetpoint_default">1.0</string>
     <!--  ### kategorie Decompression ### -->
     <string name="config_decompression_header">DECOMPRESSION</string>
     <!-- deco presets -->
     <string name="config_decompression_preset_header">select preset</string>
     <string name="config_decompression_presets_summary">select your preferences for decompression</string>
+    <!-- der Eintrag aus config_presets_preference.xml (Values)-->
+    <string name="config_decompression_presets_default">30:85</string>
     <!-- low gradient -->
     <string name="config_decompression_gradient_low">set low gradient</string>
     <string name="config_decompression_gradient_low_summary">set your own low gradient</string>
     <!--  high gradient -->
     <string name="config_decompression_gradient_high">set high gradient</string>
     <string name="config_decompression_gradient_high_summary">set your own high gradient</string>
+    <!-- gradient number picker buttons -->
+    <string name="config_decompression_gradient_button_positive">set gradient</string>
+    <string name="config_decompression_gradient_button_negative">cancel</string>
     <!-- last decostop -->
     <string name="config_decompression_last_stop_header">depth for last stop</string>
     <string name="config_decompression_last_stop_on">3 m</string>
     <string name="config_decompression_last_stop_off">6 m</string>
     <string name="config_decompression_last_stop_on_summary">last stop in 3 meters</string>
     <string name="config_decompression_last_stop_off_summary">last stop in 6 meters</string>
+    <string name="config_decompression_last_stop_default">6</string>
     <!-- dynamische gradienten (bei Notfall) -->
     <string name="config_decompression_dyn_gradients_header">dyn. gradients</string>
     <string name="config_decompression_dyn_gradients_on">Dyn.</string>
@@ -77,9 +86,11 @@
     <!-- display helligkeit -->
     <string name="config_display_luminance_header">luminance</string>
     <string name="config_luminance_header_summary">select luminance of display from SPX42</string>
+    <string name="config_luminance_default">100</string>
     <!-- display orientierung -->
     <string name="config_display_orientation_header">display orientation</string>
     <string name="config_display_orientation_header_summary">select the orientation from SPX42 display</string>
+    <string name="config_display_orientation_default">0</string>
     <!-- ### kategorie Einheiten ### -->
     <string name="config_units_header">SPX42 UNITS</string>
     <!-- temperatureinheiten -->
@@ -115,7 +126,9 @@
     <string name="config_individual_pscr_summary_on">the pscr mode is on</string>
     <string name="config_individual_pscr_summary_off">the pscr mode is off</string>
     <!-- anzahl der berücksichtigten sensoren -->
-    <string name="config_individual_count_sensorwarning_header">Sensorwarnungen</string>
+    <string name="config_individual_count_sensorwarning_header">sensor warnings</string>
+    <string name="config_individual_count_sensorwarning_header_summary">count of sensors for warning</string>
+    <string name="config_individual_count_default">3</string>
     <!-- akustische warnungen on/off -->    
     <string name="config_individual_acoustic_warning_header">acoustic warnings</string>
     <string name="config_individual_acoustic_warning_on">ON</string>
@@ -125,6 +138,7 @@
     <!-- log intervall -->
     <string name="config_individual_interval_header">loginterval</string>
     <string name="config_individual_interval_header_summary">interval between two logentrys</string>
+    <string name="config_individual_interval_default">60</string>
     
     <!-- Detailseite connect mit spx -->
     <string name="connect_headline">Connection to SPX42</string>
