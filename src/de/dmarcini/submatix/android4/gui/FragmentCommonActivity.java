@@ -266,7 +266,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
           Log.v( TAG, "onListItemClick: create SPX42PreferencesFragment...OK" );
           arguments.putString( ProjectConst.ARG_ITEM_ID, itemContent );
           cFragment.setArguments( arguments );
-          getActionBar().setTitle( R.string.config_headline );
+          getActionBar().setTitle( R.string.conf_headline );
           getActionBar().setLogo( mItem.resId );
           getFragmentManager().beginTransaction().replace( R.id.area_detail_container, cFragment ).commit();
           break;
