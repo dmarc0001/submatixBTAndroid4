@@ -65,6 +65,7 @@ public class NumberPickerPreference extends DialogPreference implements OnValueC
     }
 
     // Standard creator object using an instance of this class
+    @SuppressWarnings( "unused" )
     public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
                                                                  @Override
                                                                  public SavedState createFromParcel( Parcel in )
@@ -91,8 +92,8 @@ public class NumberPickerPreference extends DialogPreference implements OnValueC
   {
     super( context, attrs );
     this.attrs = attrs;
-    setPositiveButtonText( R.string.config_decompression_gradient_button_positive );
-    setNegativeButtonText( R.string.config_decompression_gradient_button_negative );
+    setPositiveButtonText( R.string.conf_deco_gradient_button_positive );
+    setNegativeButtonText( R.string.conf_deco_gradient_button_negative );
     setDialogIcon( null );
   }
 
@@ -108,8 +109,8 @@ public class NumberPickerPreference extends DialogPreference implements OnValueC
   {
     super( context, attrs, defStyle );
     this.attrs = attrs;
-    setPositiveButtonText( R.string.config_decompression_gradient_button_positive );
-    setNegativeButtonText( R.string.config_decompression_gradient_button_negative );
+    setPositiveButtonText( R.string.conf_deco_gradient_button_positive );
+    setNegativeButtonText( R.string.conf_deco_gradient_button_negative );
     setDialogIcon( null );
   }
 
@@ -123,11 +124,13 @@ public class NumberPickerPreference extends DialogPreference implements OnValueC
   @Override
   protected View onCreateDialogView()
   {
+    super.onCreateDialogView();
     Log.v( TAG, "onCreateDialogView()..." );
     nPicker = new NumberPicker( getContext(), this.attrs );
     nPicker.setOnValueChangedListener( this );
     nPicker.setMinValue( 0 );
     nPicker.setMaxValue( 100 );
+    nPicker.setWrapSelectorWheel( false );
     this.currentValue = getPersistedInt( defaultValue );
     nPicker.setValue( this.currentValue );
     return nPicker;
@@ -136,6 +139,7 @@ public class NumberPickerPreference extends DialogPreference implements OnValueC
   @Override
   protected void onSetInitialValue( boolean restoreValue, Object def )
   {
+    super.onSetInitialValue( restoreValue, def );
     Log.v( TAG, "onSetInitialValue: restore:<" + restoreValue + ">" );
     if( restoreValue )
     {
@@ -154,9 +158,37 @@ public class NumberPickerPreference extends DialogPreference implements OnValueC
   @Override
   protected Object onGetDefaultValue( TypedArray a, int index )
   {
-    this.defaultValue = a.getInteger( index, defaultValue );
-    Log.v( TAG, "onGetDefaultValue: <" + defaultValue + ">" );
-    return( defaultValue );
+    int retValue = 10;
+    String defaultString = null;
+    //
+    super.onGetDefaultValue( a, index );
+    Log.v( TAG, "onGetDefaultValue()..." );
+    try
+    {
+      //
+      // versuche aus einer Stringresource einen defaultwert zu machen
+      //
+      Log.v( TAG, "onGetDefaultValue...try read string resource..." );
+      defaultString = a.getString( index );
+      // nur, wenn da ein String zu finden war...
+      if( defaultString != null )
+      {
+        retValue = Integer.parseInt( defaultString );
+      }
+    }
+    catch( NumberFormatException ex )
+    {
+      Log.e( TAG, "onGetDefaultValue: wrong string: <" + defaultString + "> it's not an integer representation." );
+    }
+    catch( Exception ex )
+    {
+      Log.e( TAG, "onGetDefaultValue: <" + ex.getLocalizedMessage() + ">" );
+    }
+    finally
+    {
+      defaultValue = retValue;
+    }
+    return( retValue );
   }
 
   /**
@@ -165,9 +197,11 @@ public class NumberPickerPreference extends DialogPreference implements OnValueC
   @Override
   protected void onDialogClosed( boolean shouldSave )
   {
+    super.onDialogClosed( shouldSave );
     Log.v( TAG, "onDialogClosed()..." );
     if( shouldSave )
     {
+      Log.v( TAG, "onDialogClosed: should save..." );
       if( nPicker != null )
       {
         currentValue = nPicker.getValue();
@@ -180,6 +214,7 @@ public class NumberPickerPreference extends DialogPreference implements OnValueC
   @Override
   protected Parcelable onSaveInstanceState()
   {
+    super.onSaveInstanceState();
     final Parcelable superState = super.onSaveInstanceState();
     //
     Log.v( TAG, "onSaveInstanceState()..." );
@@ -199,6 +234,7 @@ public class NumberPickerPreference extends DialogPreference implements OnValueC
   @Override
   protected void onRestoreInstanceState( Parcelable state )
   {
+    super.onRestoreInstanceState( state );
     Log.v( TAG, "onRestoreInstanceState()..." );
     // Check whether we saved the state in onSaveInstanceState
     if( state == null || !state.getClass().equals( SavedState.class ) )
