@@ -11,15 +11,15 @@
         <item>50%</item>
         <item>100%</item>
     </string-array>
+    
     <!-- Orientierung -->
     <string-array name="displayOrientationValuesArray">
         <item>0</item>
         <item>180</item>
         </string-array>
     <string-array name="displayOrientationNamesArray">
-        <item>normal</item>
-        <item>180°</item>
+        <item>landsc. normal</item>
+        <item>landsc. 180°</item>
     </string-array>
-    
     
 </resources>

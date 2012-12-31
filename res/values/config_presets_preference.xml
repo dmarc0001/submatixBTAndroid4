@@ -8,6 +8,7 @@
         <item>10:100</item>
         <item>50:50</item>
         </string-array>
+        
     <string-array name="gradientPresetNamesArray">
         <item>very conservative</item>
         <item>standart</item>
