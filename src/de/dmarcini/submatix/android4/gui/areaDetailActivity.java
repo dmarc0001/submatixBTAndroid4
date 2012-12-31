@@ -57,7 +57,7 @@ public class areaDetailActivity extends FragmentCommonActivity
         {
           case R.string.progitem_config:
             Log.v( TAG, "onCreate: create config PreferenceActivity..." );
-            getActionBar().setTitle( R.string.config_headline );
+            getActionBar().setTitle( R.string.conf_headline );
             getActionBar().setLogo( mItem.resId );
             Log.v( TAG, "onCreate: set layout..." );
             setContentView( R.layout.activity_area_detail );
