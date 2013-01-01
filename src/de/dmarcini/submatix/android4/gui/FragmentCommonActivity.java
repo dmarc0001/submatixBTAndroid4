@@ -38,7 +38,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
 {
   private static final String TAG          = FragmentCommonActivity.class.getSimpleName();
   protected static boolean    mTwoPane     = false;
-  protected static boolean    isIndividual = true;
+  protected static boolean    isIndividual = false;
 
   /**
    * Frage, ob BR erlaubt werden sollte Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
