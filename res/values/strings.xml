@@ -175,6 +175,15 @@
     <string name="conf_prog_mail_compressed_on_summary">uddf file will compressed</string>
     <string name="conf_prog_mail_compressed_off_summary">uddf file will NOT compressed</string>
     
+    <!-- Detailseite für Gaslisten-Editor -->
+    <string name="conf_gaslist_headline">SPX42 gaslist edit</string>
+    <string name="conf_gaslist_o2">O2</string>
+    <string name="conf_gaslist_he">HE</string>
+    <string name="conf_gaslist_n2">N2</string>
+    
+    <!-- ### Kategorie Gas Nummer 01 ## -->
+    <string name="conf_gaslist_gas01_header">Gas 01</string>
+    
     <!-- sonstig  -->
     <string name="no_device">- no device - \n0\n0\n0\n0</string>
     <string name="array_with_pic_adapter_dummy">PROGRAMITEM</string>
