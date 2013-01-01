@@ -31,7 +31,7 @@
     <string name="dialog_exit_button">EXIT</string>
     <string name="dialog_ok_button">OK</string>
     <string name="dialog_cancel_button">Cancel</string>
-
+    
     <!--  DUMMY Detailseite  -->
     <string name="dummy_headline">dummy page</string>
     
@@ -188,6 +188,8 @@
     <string name="conf_gaslist_button_negative">Cancel</string>
     <!-- ### Kategorie Gas Nummer 01 ## -->
     <string name="conf_gaslist_gas01_header">gas #01</string>
+    <string name="conf_gaslist_gas02_header">gas #02</string>
+    <string name="conf_gaslist_gas03_header">gas #03</string>
     
     <!-- sonstig  -->
     <string name="no_device">- no device - \n0\n0\n0\n0</string>
