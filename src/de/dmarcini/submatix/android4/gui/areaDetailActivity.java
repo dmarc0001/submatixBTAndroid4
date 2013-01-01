@@ -6,7 +6,6 @@
  */
 package de.dmarcini.submatix.android4.gui;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import de.dmarcini.submatix.android4.R;
@@ -29,7 +28,7 @@ public class areaDetailActivity extends FragmentCommonActivity
   {
     String showId = null;
     ContentSwitcher.ProgItem mItem = null;
-    Fragment fragment = null;
+    // Fragment fragment = null;
     int resourceId = 0;
     //
     super.onCreate( savedInstanceState );
@@ -67,8 +66,8 @@ public class areaDetailActivity extends FragmentCommonActivity
             Log.v( TAG, "onCreate: begin replace view..." );
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, new SPX42PreferencesFragment( isIndividual ) ).commit();
             Log.v( TAG, "onCreate: begin replace view...OK" );
-            return;
-            //
+            break;
+          //
           case R.string.progitem_progpref:
             //
             // Programmconfiguration starten
@@ -81,20 +80,22 @@ public class areaDetailActivity extends FragmentCommonActivity
             Log.v( TAG, "onCreate: begin replace view..." );
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, new ProgramPreferencesFragment() ).commit();
             Log.v( TAG, "onCreate: begin replace view...OK" );
-            return;
-            //
+            break;
+          //
           case R.string.progitem_gaslist:
             //
             // gaslist edit Activity erzeugen
             //
-            Log.w( TAG, "onCreate: Not programitem found for <" + showId + ">" );
+            Log.w( TAG, "onCreate: create galsist preference activity..." );
             getActionBar().setTitle( R.string.gaslist_headline );
             getActionBar().setLogo( mItem.resId );
-            areaDetailFragment gFragment = new areaDetailFragment();
-            resourceId = R.id.area_detail_container;
-            fragment = gFragment;
+            Log.v( TAG, "onCreate: set layout..." );
             setContentView( R.layout.activity_area_detail );
+            Log.v( TAG, "onCreate: begin replace view..." );
+            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, new SPX42GaslistPreferencesFragment( isTrimix ) ).commit();
+            Log.v( TAG, "onCreate: begin replace view...OK" );
             break;
+          //
           default:
             Log.w( TAG, "onCreate: Not programitem found for <" + showId + ">" );
           case R.string.progitem_connect:
@@ -102,12 +103,14 @@ public class areaDetailActivity extends FragmentCommonActivity
             // erzeuge die Connect fragmentActivity, auch wenn nix passendes gefunden
             //
             Log.v( TAG, "onCreate: create connect fragmentActivity..." );
-            connectFragment conFragment = new connectFragment();
-            fragment = conFragment;
+            connectFragment connFragment = new connectFragment();
             resourceId = 0;
             setContentView( R.layout.fragment_connect );
             getActionBar().setTitle( R.string.connect_headline );
             getActionBar().setLogo( mItem.resId );
+            Log.v( TAG, "onCreate: beginTransaction..." );
+            getFragmentManager().beginTransaction().add( resourceId, connFragment ).commit();
+            Log.v( TAG, "onCreate: add transaction...OK" );
         }
       }
     }
@@ -117,16 +120,12 @@ public class areaDetailActivity extends FragmentCommonActivity
       Log.w( TAG, "onCreate: Not showId found, show DUMMY !" );
       areaDetailFragment dFragment = new areaDetailFragment();
       resourceId = R.id.area_detail_container;
-      fragment = dFragment;
       setContentView( R.layout.activity_area_detail );
       getActionBar().setTitle( R.string.dummy_headline );
+      Log.v( TAG, "onCreate: beginTransaction..." );
+      getFragmentManager().beginTransaction().add( resourceId, dFragment ).commit();
+      Log.v( TAG, "onCreate: add transaction...OK" );
     }
-    //
-    // und nun die Seite aufrufen, welche auch immer
-    //
-    Log.v( TAG, "onCreate: beginTransaction..." );
-    getFragmentManager().beginTransaction().add( resourceId, fragment ).commit();
-    Log.v( TAG, "onCreate: add transaction...OK" );
   }
 
   @Override

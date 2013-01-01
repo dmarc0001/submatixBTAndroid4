@@ -13,7 +13,6 @@ import java.util.Set;
 
 import android.app.Activity;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -39,6 +38,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   private static final String TAG          = FragmentCommonActivity.class.getSimpleName();
   protected static boolean    mTwoPane     = false;
   protected static boolean    isIndividual = false;
+  protected static boolean    isTrimix     = true;
 
   /**
    * Frage, ob BR erlaubt werden sollte Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
@@ -172,7 +172,6 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   public void onListItemClick( ListView listView, View view, int position, long id )
   {
     ContentSwitcher.ProgItem mItem = null;
-    Fragment fragment = null;
     String itemContent = null;
     String itemSid = null;
     //
@@ -291,7 +290,6 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
           //
           Log.v( TAG, "onListItemClick: set program preferences..." );
           ProgramPreferencesFragment ppFragment = new ProgramPreferencesFragment();
-          arguments.putString( ProjectConst.ARG_ITEM_ID, itemContent );
           ppFragment.setArguments( arguments );
           getActionBar().setTitle( R.string.conf_prog_headline );
           getActionBar().setLogo( mItem.resId );
@@ -301,12 +299,12 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
           //
           // der Benutzer wählt den Gaslisten Editmode
           //
-          areaDetailFragment dFragment = new areaDetailFragment();
-          fragment = dFragment;
+          Log.v( TAG, "onListItemClick: set gas preferences..." );
+          SPX42GaslistPreferencesFragment glFragment = new SPX42GaslistPreferencesFragment( isTrimix );
+          glFragment.setArguments( arguments );
           getActionBar().setTitle( R.string.gaslist_headline );
           getActionBar().setLogo( mItem.resId );
-          fragment.setArguments( arguments );
-          getFragmentManager().beginTransaction().replace( R.id.area_detail_container, fragment ).commit();
+          getFragmentManager().beginTransaction().replace( R.id.area_detail_container, glFragment ).commit();
           break;
         //
         default:
@@ -317,11 +315,10 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
           // der Benutzer wählt den Verbindungseintrag
           //
           connectFragment connFragment = new connectFragment();
-          fragment = connFragment;
           getActionBar().setTitle( R.string.connect_headline );
           getActionBar().setLogo( mItem.resId );
-          fragment.setArguments( arguments );
-          getFragmentManager().beginTransaction().replace( R.id.area_detail_container, fragment ).commit();
+          connFragment.setArguments( arguments );
+          getFragmentManager().beginTransaction().replace( R.id.area_detail_container, connFragment ).commit();
           //
       }
     }
