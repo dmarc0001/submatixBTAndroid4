@@ -153,8 +153,13 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
       //
       if( aDial.getTag().equals( "programexit" ) )
       {
-        Log.i( TAG, "User close app..." );
+        Log.i( TAG, "User will close app..." );
         Toast.makeText( this, R.string.toast_exit, Toast.LENGTH_SHORT ).show();
+        if( BluetoothAdapter.getDefaultAdapter() != null )
+        {
+          // TODO: Preferences -> Programmeinstellungen soll das automatisch passieren?
+          BluetoothAdapter.getDefaultAdapter().disable();
+        }
         finish();
       }
     }
