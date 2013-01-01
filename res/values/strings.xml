@@ -177,10 +177,13 @@
     
     <!-- Detailseite für Gaslisten-Editor -->
     <string name="conf_gaslist_headline">SPX42 gaslist edit</string>
-    <string name="conf_gaslist_default">21:0:79</string>
+    <string name="conf_gaslist_default">21:0:79:0:0:0</string>
     <string name="conf_gaslist_o2">O2</string>
     <string name="conf_gaslist_he">HE</string>
     <string name="conf_gaslist_n2">N2</string>
+    <string name="conf_gaslist_diluent1">D1</string>
+    <string name="conf_gaslist_diluent2">D2</string>
+    <string name="conf_gaslist_bailout">B</string>
     <string name="conf_gaslist_button_positive">Set Gas</string>
     <string name="conf_gaslist_button_negative">Cancel</string>
     <!-- ### Kategorie Gas Nummer 01 ## -->
