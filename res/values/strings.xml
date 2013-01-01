@@ -41,11 +41,11 @@
     <!-- autosetpoint -->
     <string name="conf_autoset_label">autosetpoint</string>
     <string name="conf_autoset_summary">current selection is: %s</string>
-    <string name="conf_autoset_default">5m</string>
+    <string name="conf_autoset_default">5</string>
     <!-- tiefe für autosetpint -->
     <string name="conf_highset_header">select whished higsetpoint</string>
     <string name="conf_highset_summary">current selection is %s</string>
-    <string name="conf_highset_default">1.0 bar</string>
+    <string name="conf_highset_default">1.0</string>
     <!--  ### kategorie Decompression ### -->
     <string name="conf_deco_header">DECOMPRESSION</string>
     <!-- deco presets -->
@@ -63,7 +63,7 @@
     <string name="conf_deco_gradient_high_default">80</string>
     <!-- gradient number picker buttons -->
     <string name="conf_deco_gradient_button_positive">set gradient</string>
-    <string name="conf_deco_gradient_button_negative">cancel</string>
+    <string name="conf_deco_gradient_button_negative">Cancel</string>
     <!-- last decostop -->
     <string name="conf_deco_last_stop_header">depth for last stop</string>
     <string name="conf_deco_last_stop_on">3 m</string>
