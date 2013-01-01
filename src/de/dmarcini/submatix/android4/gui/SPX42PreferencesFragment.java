@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.util.Log;
@@ -24,7 +23,7 @@ import de.dmarcini.submatix.android4.R;
  * 
  *         Stand: 31.12.2012 TODO Abhängigkeit bei Gradienten zwischen Voreinstellungen/custom und Presets berücksichtigen
  */
-public class SPX42PreferencesFragment extends PreferenceFragment implements OnPreferenceChangeListener, OnSharedPreferenceChangeListener
+public class SPX42PreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener
 {
   private static final String TAG          = SPX42PreferencesFragment.class.getSimpleName();
   private boolean             isIndividual = false;
@@ -41,9 +40,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements OnPr
    */
   @SuppressWarnings( "unused" )
   private SPX42PreferencesFragment()
-  {
-    super();
-  }
+  {}
 
   /**
    * 
@@ -152,13 +149,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements OnPr
   {
     super.onPause();
     Log.v( TAG, "onPause..." );
-  }
-
-  @Override
-  public boolean onPreferenceChange( Preference preference, Object newValue )
-  {
-    Log.v( TAG, "onPreferenceChange()..." );
-    return false;
   }
 
   @Override
