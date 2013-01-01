@@ -151,7 +151,7 @@ public class NumberPickerPreference extends DialogPreference implements OnValueC
     }
     else
     {
-      persistInt( this.currentValue );
+      // wiederherstellen defaultwert?
     }
   }
 
