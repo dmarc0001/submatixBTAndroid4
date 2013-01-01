@@ -36,8 +36,9 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
  */
 public class FragmentCommonActivity extends Activity implements AreYouSureDialogFragment.NoticeDialogListener
 {
-  private static final String TAG      = FragmentCommonActivity.class.getSimpleName();
-  protected static boolean    mTwoPane = false;
+  private static final String TAG          = FragmentCommonActivity.class.getSimpleName();
+  protected static boolean    mTwoPane     = false;
+  protected static boolean    isIndividual = true;
 
   /**
    * Frage, ob BR erlaubt werden sollte Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
@@ -203,7 +204,14 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         return;
       case R.string.progitem_set_defaults:
         Log.i( TAG, "onListItemClick: set DEFAULTS..." );
-        PreferenceManager.setDefaultValues( this, R.xml.config_spx42_preference, false );
+        if( isIndividual )
+        {
+          PreferenceManager.setDefaultValues( this, R.xml.config_spx42_preference_individual, false );
+        }
+        else
+        {
+          PreferenceManager.setDefaultValues( this, R.xml.config_spx42_preference_std, false );
+        }
         return;
       case R.string.progitem_log_propertys:
       case R.string.progitem_null:
@@ -262,7 +270,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
           // Der Benutzer wählt den Konfigurationseintrag für den SPX
           //
           Log.v( TAG, "onListItemClick: create SPX42PreferencesFragment..." );
-          SPX42PreferencesFragment cFragment = new SPX42PreferencesFragment();
+          SPX42PreferencesFragment cFragment = new SPX42PreferencesFragment( isIndividual );
           Log.v( TAG, "onListItemClick: create SPX42PreferencesFragment...OK" );
           arguments.putString( ProjectConst.ARG_ITEM_ID, itemContent );
           cFragment.setArguments( arguments );
