@@ -5,6 +5,16 @@
             android:key="keyGaslistGas01" 
             android:defaultValue="@string/conf_gaslist_default"/>
         />
+    <de.dmarcini.submatix.android4.utils.GasPickerPreference
+            android:title="@string/conf_gaslist_gas02_header" 
+            android:key="keyGaslistGas02" 
+            android:defaultValue="@string/conf_gaslist_default"/>
+        />
+    <de.dmarcini.submatix.android4.utils.GasPickerPreference
+            android:title="@string/conf_gaslist_gas03_header" 
+            android:key="keyGaslistGas03" 
+            android:defaultValue="@string/conf_gaslist_default"/>
+        />
         
 
 </PreferenceScreen>
