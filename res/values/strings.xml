@@ -16,8 +16,9 @@
     <!-- Liste der Programmaktivitäten -->
     <string name="progitem_connect">Connection</string>
     <string name="progitem_config">SPX42 Config</string>
-    <string name="progitem_logging">Logfiles read</string>
     <string name="progitem_gaslist">Gases editing</string>
+    <string name="progitem_logging">Logfiles read</string>
+    <string name="progitem_progpref">Program Prefs</string>
     <string name="progitem_exit">EXIT</string>
 
     <!-- Toasts -->
@@ -150,6 +151,29 @@
     <!-- Detailseite Gasliste -->
     <string name="gaslist_headline">Gaslist SPX42</string>
     
+    <!-- Detailseite für Programmkonfiguration -->
+    <string name="conf_prog_headline">app preferences</string>
+    <!-- ### Kategorie Dateisystem ### -->
+    <string name="conf_prog_filesystem">FILESYSTEM PREFERENCES</string>
+    <!-- datenverzeichnis für Logdaten -->
+    <string name="conf_prog_datadir">data dir</string>
+    <string name="conf_prog_datadir_summary">logdata stored in \"%s\"</string>
+    <!-- nur neue Logdaten oder alle Logdaten auf dem Gerät zeigen? -->
+    <string name="conf_prog_showall_header">show all new logentrys?</string>
+    <string name="conf_prog_showall_on_summary">showing all logentrys</string>
+    <string name="conf_prog_showall_off_summary">"showing only new logentrys "</string>
+    <string name="conf_prog_showall_on">SHOW</string>
+    <string name="conf_prog_showall_off">NO</string>
+    <!-- ### Kategorie Mail ### -->
+    <string name="conf_prog_mail_header">MAILCONFIG</string>
+    <!-- Mailversand an wen? -->
+    <string name="conf_prog_mail_main">main reciver</string>
+    <string name="conf_prog_mail_2nd">main reciver</string>
+    <string name="conf_prog_mail_main_summary">send mail to &lt;%s&gt;</string>
+    <!-- soll die uddf (xml) datei komprimiert werden? -->
+    <string name="conf_prog_mail_compressed_header">compress uddf</string>
+    <string name="conf_prog_mail_compressed_on_summary">uddf file will compressed</string>
+    <string name="conf_prog_mail_compressed_off_summary">uddf file will NOT compressed</string>
     
     <!-- sonstig  -->
     <string name="no_device">- no device - \n0\n0\n0\n0</string>

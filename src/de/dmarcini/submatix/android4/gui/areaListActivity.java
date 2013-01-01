@@ -41,6 +41,7 @@ public class areaListActivity extends FragmentCommonActivity
     ContentSwitcher.addItem( new ProgItem( R.string.progitem_config, R.drawable.toolboxwhite, getString( R.string.progitem_config ) ) );
     ContentSwitcher.addItem( new ProgItem( R.string.progitem_gaslist, R.drawable.pinion, getString( R.string.progitem_gaslist ) ) );
     ContentSwitcher.addItem( new ProgItem( R.string.progitem_logging, R.drawable.logging, getString( R.string.progitem_logging ) ) );
+    ContentSwitcher.addItem( new ProgItem( R.string.progitem_progpref, R.drawable.toolboxred, getString( R.string.progitem_progpref ) ) );
     ContentSwitcher.addItem( new ProgItem( R.string.progitem_exit, R.drawable.shutoff, getString( R.string.progitem_exit ) ) );
     if( BuildConfig.DEBUG )
     {
@@ -132,5 +133,6 @@ public class areaListActivity extends FragmentCommonActivity
   {
     Log.i( TAG, "setDefaultPreferences: make default preferences..." );
     PreferenceManager.setDefaultValues( this, R.xml.config_spx42_preference_individual, false );
+    PreferenceManager.setDefaultValues( this, R.xml.config_program_preference, false );
   }
 }

@@ -204,6 +204,9 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         return;
       case R.string.progitem_set_defaults:
         Log.i( TAG, "onListItemClick: set DEFAULTS..." );
+        //
+        // defaults für SPX42
+        //
         if( isIndividual )
         {
           PreferenceManager.setDefaultValues( this, R.xml.config_spx42_preference_individual, false );
@@ -212,6 +215,10 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         {
           PreferenceManager.setDefaultValues( this, R.xml.config_spx42_preference_std, false );
         }
+        //
+        // defaults für Programm
+        //
+        PreferenceManager.setDefaultValues( this, R.xml.config_program_preference, false );
         return;
       case R.string.progitem_log_propertys:
       case R.string.progitem_null:
@@ -271,7 +278,6 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
           //
           Log.v( TAG, "onListItemClick: create SPX42PreferencesFragment..." );
           SPX42PreferencesFragment cFragment = new SPX42PreferencesFragment( isIndividual );
-          Log.v( TAG, "onListItemClick: create SPX42PreferencesFragment...OK" );
           arguments.putString( ProjectConst.ARG_ITEM_ID, itemContent );
           cFragment.setArguments( arguments );
           getActionBar().setTitle( R.string.conf_headline );
@@ -279,6 +285,18 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
           getFragmentManager().beginTransaction().replace( R.id.area_detail_container, cFragment ).commit();
           break;
         //
+        case R.string.progitem_progpref:
+          //
+          // der Benutzer will Programmeinstellungen setzen
+          //
+          Log.v( TAG, "onListItemClick: set program preferences..." );
+          ProgramPreferencesFragment ppFragment = new ProgramPreferencesFragment();
+          arguments.putString( ProjectConst.ARG_ITEM_ID, itemContent );
+          ppFragment.setArguments( arguments );
+          getActionBar().setTitle( R.string.conf_prog_headline );
+          getActionBar().setLogo( mItem.resId );
+          getFragmentManager().beginTransaction().replace( R.id.area_detail_container, ppFragment ).commit();
+          break;
         case R.string.progitem_gaslist:
           //
           // der Benutzer wählt den Gaslisten Editmode

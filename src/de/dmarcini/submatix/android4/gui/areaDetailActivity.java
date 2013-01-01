@@ -56,6 +56,9 @@ public class areaDetailActivity extends FragmentCommonActivity
         switch ( mItem.nId )
         {
           case R.string.progitem_config:
+            //
+            // SPX42 Configuration starten
+            //
             Log.v( TAG, "onCreate: create config PreferenceActivity..." );
             getActionBar().setTitle( R.string.conf_headline );
             getActionBar().setLogo( mItem.resId );
@@ -65,6 +68,21 @@ public class areaDetailActivity extends FragmentCommonActivity
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, new SPX42PreferencesFragment( isIndividual ) ).commit();
             Log.v( TAG, "onCreate: begin replace view...OK" );
             return;
+            //
+          case R.string.progitem_progpref:
+            //
+            // Programmconfiguration starten
+            //
+            Log.v( TAG, "onCreate: create program PreferenceActivity..." );
+            getActionBar().setTitle( R.string.conf_prog_headline );
+            getActionBar().setLogo( mItem.resId );
+            Log.v( TAG, "onCreate: set layout..." );
+            setContentView( R.layout.activity_area_detail );
+            Log.v( TAG, "onCreate: begin replace view..." );
+            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, new ProgramPreferencesFragment() ).commit();
+            Log.v( TAG, "onCreate: begin replace view...OK" );
+            return;
+            //
           case R.string.progitem_gaslist:
             //
             // gaslist edit Activity erzeugen
