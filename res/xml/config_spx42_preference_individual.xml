@@ -5,14 +5,14 @@
     <PreferenceCategory android:title="@string/conf_setpoint_header" android:key="keySetpoint">
       <ListPreference 
           android:key="keySetpointAutosetpointDepth" 
-          android:entryValues="@array/highsetpointDepthNamesArray" 
+          android:entryValues="@array/highsetpointDepthValuesArray" 
           android:title="@string/conf_autoset_label" 
           android:entries="@array/highsetpointDepthNamesArray"
           android:defaultValue="@string/conf_autoset_default"/>
       <ListPreference 
           android:key="keySetpointHighsetpointValue" 
           android:title="@string/conf_highset_header"
-          android:entryValues="@array/highsetpointNamesArray" 
+          android:entryValues="@array/highsetpointValuesArray" 
           android:entries="@array/highsetpointNamesArray" 
           android:defaultValue="@string/conf_highset_default"/>
     </PreferenceCategory>
@@ -111,20 +111,20 @@
     <PreferenceCategory android:key="keyIndividual" android:title="@string/conf_ind_header">
         <SwitchPreference 
             android:title="@string/conf_ind_sensors_onoff_header" 
-            android:switchTextOn="@string/conf_ind_sensors_text_on" 
-            android:switchTextOff="@string/conf_ind_sensors_text_off" 
             android:key="keyIndividualSensorsOn" 
             android:summaryOff="@string/conf_ind_sensors_text_off_summary" 
             android:summaryOn="@string/conf_ind_sensors_text_on_summary" 
-            android:defaultValue="true"/>
+            android:defaultValue="true" 
+            android:switchTextOn="@string/conf_ind_sensors_text_on" 
+            android:switchTextOff="@string/conf_ind_sensors_text_off"/>
         <SwitchPreference 
             android:title="@string/conf_ind_pscr_onoff_header" 
             android:key="keyIndividualPSCROn" 
-            android:switchTextOn="@string/conf_ind_pscr_text_on" 
-            android:switchTextOff="@string/conf_ind_pscr_text_off" 
             android:summaryOn="@string/conf_ind_pscr_summary_on" 
             android:summaryOff="@string/conf_ind_pscr_summary_off" 
-            android:defaultValue="false"/>
+            android:defaultValue="false" 
+            android:switchTextOn="@string/conf_ind_pscr_text_on" 
+            android:switchTextOff="@string/conf_ind_pscr_text_off"/>
         <ListPreference 
             android:key="keyIndividualCountSensorWarning" 
             android:title="@string/conf_ind_count_sensorwarning_header" 
@@ -134,11 +134,11 @@
         <SwitchPreference 
             android:key="keyIndividualAcousticWarnings" 
             android:title="@string/conf_ind_acoustic_warning_header" 
-            android:switchTextOn="@string/conf_ind_acoustic_warning_on" 
-            android:switchTextOff="@string/conf_ind_acoustic_warning_off" 
             android:summaryOff="@string/conf_ind_acoustic_warning_off_summary" 
             android:summaryOn="@string/conf_ind_acoustic_warning_on_summary" 
-            android:defaultValue="true" />
+            android:defaultValue="true" 
+            android:switchTextOn="@string/conf_ind_acoustic_warning_on" 
+            android:switchTextOff="@string/conf_ind_acoustic_warning_off"/>
         <ListPreference 
             android:entries="@array/individualIntervalNamesArray" 
             android:entryValues="@array/individualIntervalValuesArray" 
