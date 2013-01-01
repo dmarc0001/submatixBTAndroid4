@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:key="keyGaslistScreen" android:title="@string/conf_gaslist_headline"><Preference android:key="keyGaslist01" android:layout="@layout/gas_picker_layout" android:title="@string/conf_gaslist_gas01_header"/>
-    
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:key="keyGaslistScreen" android:title="@string/conf_gaslist_headline">
+    <de.dmarcini.submatix.android4.utils.GasPickerPreference
+            android:title="@string/conf_gaslist_gas01_header" 
+            android:key="keyGaslistGas01" 
+            android:defaultValue="@string/conf_gaslist_default"/>
+        />
+        
 
 </PreferenceScreen>
