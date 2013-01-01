@@ -62,7 +62,7 @@ public class areaDetailActivity extends FragmentCommonActivity
             Log.v( TAG, "onCreate: set layout..." );
             setContentView( R.layout.activity_area_detail );
             Log.v( TAG, "onCreate: begin replace view..." );
-            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, new SPX42PreferencesFragment() ).commit();
+            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, new SPX42PreferencesFragment( isIndividual ) ).commit();
             Log.v( TAG, "onCreate: begin replace view...OK" );
             return;
           case R.string.progitem_gaslist:

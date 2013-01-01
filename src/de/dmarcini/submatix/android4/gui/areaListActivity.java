@@ -131,6 +131,6 @@ public class areaListActivity extends FragmentCommonActivity
   public void setDefaultPreferences()
   {
     Log.i( TAG, "setDefaultPreferences: make default preferences..." );
-    PreferenceManager.setDefaultValues( this, R.xml.config_spx42_preference, false );
+    PreferenceManager.setDefaultValues( this, R.xml.config_spx42_preference_individual, false );
   }
 }
