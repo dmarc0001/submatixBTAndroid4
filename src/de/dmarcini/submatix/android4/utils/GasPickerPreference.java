@@ -445,6 +445,9 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
       Log.v( TAG, "onDialogClosed: should save..." );
       persistString( String.format( "%d:%d:%d:%b:%b:%b", o2Picker.getValue(), hePicker.getValue(), n2Picker.getValue(), d1Checkbox.isChecked(), d2Checkbox.isChecked(),
               bailoutCheckbox.isChecked() ) );
+      // DEBUG
+      setTitle( "Helium <" + heCurrent + ">" );
+      setSummary( "O2 <" + o2Current + ">" );
     }
   }
 
