@@ -3,6 +3,7 @@
  */
 package de.dmarcini.submatix.android4.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Parcel;
@@ -11,7 +12,9 @@ import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.NumberPicker;
+import android.widget.NumberPicker.Formatter;
 import android.widget.NumberPicker.OnValueChangeListener;
 import de.dmarcini.submatix.android4.R;
 
@@ -25,6 +28,8 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
   private static final String TAG                = GradientPickerPreference.class.getSimpleName();
   private NumberPicker        lowPicker          = null;
   private NumberPicker        highPicker         = null;
+  private EditText            lowEditText        = null;
+  private EditText            highEditText       = null;
   private String              defaultReturnValue = "30:80";
   private int                 highGradient       = 0;
   private int                 lowGradient        = 0;
@@ -78,6 +83,26 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
   }
 
   /**
+   * 
+   * Ich will beim Formatierer immer mindestens zwei Stellen angezeigt bekommen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 02.01.2013
+   */
+  @SuppressLint( "DefaultLocale" )
+  private class TwoDigitFormatter implements Formatter
+  {
+    @Override
+    public String format( int value )
+    {
+      return( String.format( "%02d", value ) );
+    }
+  }
+
+  /**
    * Der Konstruktor
    * 
    * @author Dirk Marciniak 28.12.2012
@@ -112,7 +137,16 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
   public void onValueChange( NumberPicker picker, int oldVal, int newVal )
   {
     Log.v( TAG, "onValueChange: oldVal: <" + oldVal + ">, newVal: <" + newVal + ">" );
-    // currentValue = newVal;
+    if( picker.equals( lowPicker ) )
+    {
+      lowGradient = newVal;
+      setLowColor( getGradientColor( lowGradient ) );
+    }
+    else if( picker.equals( highPicker ) )
+    {
+      highGradient = newVal;
+      setHighColor( getGradientColor( highGradient ) );
+    }
   }
 
   @Override
@@ -131,6 +165,7 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
     // LOW Gradient Picker initialisieren
     //
     lowPicker = ( NumberPicker )v.findViewById( R.id.gradientLowPicker );
+    lowPicker.setFormatter( new TwoDigitFormatter() );
     lowPicker.setOnValueChangedListener( this );
     lowPicker.setMinValue( 0 );
     lowPicker.setMaxValue( 100 );
@@ -140,12 +175,134 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
     // HIGH Gradient Picker initialisieren
     //
     highPicker = ( NumberPicker )v.findViewById( R.id.gradientHighPicker );
+    highPicker.setFormatter( new TwoDigitFormatter() );
     highPicker.setOnValueChangedListener( this );
     highPicker.setMinValue( 0 );
     highPicker.setMaxValue( 100 );
     highPicker.setValue( highGradient );
     highPicker.setWrapSelectorWheel( false );
+    //
+    // farben machen
+    //
+    setLowColor( getGradientColor( lowGradient ) );
+    setHighColor( getGradientColor( highGradient ) );
     Log.d( TAG, "onBindDialogView()...OK" );
+  }
+
+  /**
+   * 
+   * Setze die Farbe abhängig vom Wert des Gradienten. Niedrieger == grüner, höher == roter
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 02.01.2013
+   * @param gradient
+   * @return
+   */
+  private int getGradientColor( int gradient )
+  {
+    int color = 0;
+    int blueCol = 0;
+    int redCol = 0;
+    int greenCol = 0;
+    //
+    // je kleiner gradient, desto Grün
+    // je groesser, desto rot
+    // Farbe 0xffRRGGBB
+    if( gradient <= 50 )
+    {
+      // erst grün, dann verblassen zu weiss
+      redCol = ( gradient * 4 ) + 55;
+      greenCol = 255;
+      blueCol = ( gradient * 4 ) + 55;
+    }
+    else
+    {
+      // erst weiss, dann erleuchten zu rot
+      redCol = 255;
+      gradient = 100 - gradient;
+      greenCol = ( gradient * 4 ) + 55;
+      blueCol = ( gradient * 4 ) + 55;
+    }
+    color = 0xff000000 | ( ( redCol & 0xFF ) << 16 ) | ( ( greenCol & 0xFF ) << 8 ) | ( blueCol & 0xFF );
+    Log.d( TAG, String.format( "setLowColor: <0x%08X>", color ) );
+    return( color );
+  }
+
+  /**
+   * 
+   * Setze die Farbe vom lowGradienten Picker
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 02.01.2013
+   * @param cl
+   */
+  private void setLowColor( int cl )
+  {
+    int index = 0;
+    //
+    // wenn low Edittext nicht da ist...
+    //
+    if( this.lowEditText == null )
+    {
+      for( index = 0; index < lowPicker.getChildCount(); index++ )
+      {
+        if( lowPicker.getChildAt( index ) instanceof EditText )
+        {
+          this.lowEditText = ( EditText )lowPicker.getChildAt( index );
+          lowEditText.setFocusable( false );
+          break;
+        }
+      }
+    }
+    //
+    // Na dann...
+    //
+    if( this.lowEditText != null )
+    {
+      lowEditText.setTextColor( cl );
+      lowEditText.setHintTextColor( cl );
+    }
+  }
+
+  /**
+   * 
+   * Setze die Farbe des highGradienten Pickers
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 02.01.2013
+   */
+  private void setHighColor( int cl )
+  {
+    int index = 0;
+    //
+    // wenn high Edittext nicht da ist...
+    //
+    if( this.highEditText == null )
+    {
+      for( index = 0; index < highPicker.getChildCount(); index++ )
+      {
+        if( highPicker.getChildAt( index ) instanceof EditText )
+        {
+          this.highEditText = ( EditText )highPicker.getChildAt( index );
+          highEditText.setFocusable( false );
+          break;
+        }
+      }
+    }
+    if( this.highEditText != null )
+    {
+      highEditText.setTextColor( cl );
+      highEditText.setHintTextColor( cl );
+    }
   }
 
   @Override
