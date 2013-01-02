@@ -26,14 +26,11 @@
             android:key="keyDecoGradientPresets" 
             android:summary="@string/conf_deco_presets_summary" 
             android:defaultValue="@string/conf_deco_presets_default"/>
-        <de.dmarcini.submatix.android4.utils.NumberPickerPreference  
-            android:title="@string/conf_deco_gradient_low" 
-            android:key="keyDecoGradientLow" 
-            android:defaultValue="@string/conf_deco_gradient_low_default"/>
-        <de.dmarcini.submatix.android4.utils.NumberPickerPreference  
-            android:title="@string/conf_deco_gradient_high" 
-            android:key="keyDecoGradientHigh"
-            android:defaultValue="@string/conf_deco_gradient_high_default"/>
+        
+        <de.dmarcini.submatix.android4.utils.GradientPickerPreference  
+            android:title="@string/conf_deco_gradient" 
+            android:key="keyDecoGradient" 
+            android:defaultValue="@string/conf_deco_gradient_default" />
         <SwitchPreference 
             android:key="keyDecoLastStop" 
             android:title="@string/conf_deco_last_stop_header" 
