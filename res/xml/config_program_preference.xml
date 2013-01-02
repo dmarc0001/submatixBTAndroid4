@@ -23,7 +23,12 @@
         <EditTextPreference 
             android:title="@string/conf_prog_mail_2nd" 
             android:key="keyProgMail2nd"/>
-        <CheckBoxPreference android:key="keyProgMailCompressed" android:defaultValue="off" android:title="@string/conf_prog_mail_compressed_header" android:summaryOn="@string/conf_prog_mail_compressed_on_summary" android:summaryOff="@string/conf_prog_mail_compressed_off_summary"/>
+        <CheckBoxPreference 
+            android:key="keyProgMailCompressed" 
+            android:defaultValue="off" 
+            android:title="@string/conf_prog_mail_compressed_header" 
+            android:summaryOn="@string/conf_prog_mail_compressed_on_summary" 
+            android:summaryOff="@string/conf_prog_mail_compressed_off_summary"/>
         
         
         
