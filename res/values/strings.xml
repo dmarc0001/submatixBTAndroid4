@@ -10,7 +10,7 @@
     
     <!-- DEBUGSTRINGS  -->
     <string name="progitem_null"></string>
-    <string name="progitem_log_propertys">log propertys...</string>
+    <string name="progitem_log_propertys">log propertys</string>
     <string name="progitem_set_defaults">set defaults</string>
     
     <!-- Liste der Programmaktivitäten -->
