@@ -14,6 +14,7 @@ import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.content.ContentSwitcher;
 import de.dmarcini.submatix.android4.content.ContentSwitcher.ProgItem;
+import de.dmarcini.submatix.android4.utils.ProjectConst;
 
 /**
  * Activity mit welcher die App startet. Bei Tablett die Main-Activity, bei kleinen screens die Menü-Activity
@@ -64,7 +65,7 @@ public class areaListActivity extends FragmentCommonActivity
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate..." );
     //
-    // wurden jemals Preferences gesettz?
+    // wurden jemals Preferences gesetzt?
     //
     SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( this );
     if( !sPref.contains( "firstTimeInitiated" ) )
@@ -73,9 +74,21 @@ public class areaListActivity extends FragmentCommonActivity
       if( !sPref.getBoolean( "firstTimeInitiated", false ) )
       {
         setDefaultPreferences();
-        sPref.edit().putBoolean( "firstTimeInitiated", true );
-        sPref.edit().commit();
       }
+    }
+    //
+    // sind die Preferenzen in der richtigen version?
+    //
+    if( sPref.contains( "PREF_VERSION" ) )
+    {
+      if( ProjectConst.PREF_VERSION != sPref.getInt( "PREF_VERSION", 0 ) )
+      {
+        setDefaultPreferences();
+      }
+    }
+    else
+    {
+      setDefaultPreferences();
     }
     //
     // guck mal. ob das ein grosses Display ist,
@@ -132,7 +145,16 @@ public class areaListActivity extends FragmentCommonActivity
   public void setDefaultPreferences()
   {
     Log.i( TAG, "setDefaultPreferences: make default preferences..." );
-    PreferenceManager.setDefaultValues( this, R.xml.config_spx42_preference_individual, false );
-    PreferenceManager.setDefaultValues( this, R.xml.config_program_preference, false );
+    PreferenceManager.getDefaultSharedPreferences( this );
+    PreferenceManager.setDefaultValues( this, R.xml.config_spx42_preference_individual, true );
+    PreferenceManager.setDefaultValues( this, R.xml.config_program_preference, true );
+    SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( this );
+    //
+    // workarround um defaults zu setzen
+    //
+    sPref.edit().putBoolean( "firstTimeInitiated", true );
+    sPref.edit().commit();
+    sPref.edit().putInt( "PREF_VERSION", ProjectConst.PREF_VERSION );
+    sPref.edit().commit();
   }
 }
