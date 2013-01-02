@@ -54,14 +54,13 @@
     <string name="conf_deco_presets_summary">current selected preset is \"%s\"</string>
     <!-- der Eintrag aus config_presets_preference.xml (Values)-->
     <string name="conf_deco_presets_default">30:85</string>
-    <!-- low gradient -->
-    <string name="conf_deco_gradient_low">set low gradient</string>
-    <string name="conf_deco_gradient_low_summary">current value is %d</string>
-    <string name="conf_deco_gradient_low_default">40</string>
-    <!--  high gradient -->
-    <string name="conf_deco_gradient_high">set high gradient</string>
-    <string name="conf_deco_gradient_high_summary">current value is %d</string>
-    <string name="conf_deco_gradient_high_default">80</string>
+    <!-- labes in der layoutdatei zum gradient picker -->
+    <string name="conf_deco_gradient_low_header">LOW</string>
+    <string name="conf_deco_gradient_high_header">HIGH</string>
+    <!-- gradienten -->
+    <string name="conf_deco_gradient">set gradients</string>
+    <string name="conf_deco_gradient_summary" formatted="false">current values low: %d high: %d</string>
+    <string name="conf_deco_gradient_default">40:80</string>
     <!-- gradient number picker buttons -->
     <string name="conf_deco_gradient_button_positive">set gradient</string>
     <string name="conf_deco_gradient_button_negative">Cancel</string>
