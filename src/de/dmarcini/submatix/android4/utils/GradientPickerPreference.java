@@ -30,7 +30,7 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
   private NumberPicker        highPicker         = null;
   private EditText            lowEditText        = null;
   private EditText            highEditText       = null;
-  private String              defaultReturnValue = "30:80";
+  private static String       defaultReturnValue = "30:80";
   private int                 highGradient       = 0;
   private int                 lowGradient        = 0;
 
