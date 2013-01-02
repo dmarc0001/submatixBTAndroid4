@@ -25,6 +25,8 @@ public final class ProjectConst
   public static final boolean CHECK_PHYSICAL_BT         = false; 
   // Datenbankversion
   public static int          DB_VERSION                 = 1;
+  // ANDROID: Preferences Version
+  public static int          PREF_VERSION               = 1;
 
   // interne Begrenzung für Empfangspuffer
   public static final int    MAXINBUFFER                = 10 * 1024;
