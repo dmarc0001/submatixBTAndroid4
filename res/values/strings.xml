@@ -6,7 +6,6 @@
     <string name="app_description">this app connects with SUBMATIX SPX42 an read logs or read \/write configuration of this device</string>
     <string name="dummy_filler">SUBMATIX BT Config</string>
     <string name="app_bt_service">BluethootService</string>
-    <string name="dummy_text">\?</string>
     
     <!-- DEBUGSTRINGS  -->
     <string name="progitem_null"></string>
@@ -29,7 +28,7 @@
     <!-- Dialogboxen  -->
     <string name="dialog_sure_exit">are you sure?</string>
     <string name="dialog_exit_button">EXIT</string>
-    <string name="dialog_ok_button">OK</string>
+    <!-- string name="dialog_ok_button">OK</string -->
     <string name="dialog_cancel_button">Cancel</string>
     
     <!--  DUMMY Detailseite  -->
@@ -147,9 +146,32 @@
     <string name="connect_discover_button_title">Discover BT Devices</string>
     <string name="connect_button_off_text">ON/OFF</string>
     
+    <!-- Detailseite für Gaslisten-Editor -->
+    <string name="conf_gaslist_headline">SPX42 gaslist edit</string>
+    <string name="conf_gaslist_default">21:0:79:0:0:0</string>
+    <string name="conf_gaslist_o2">O2</string>
+    <string name="conf_gaslist_he">HE</string>
+    <string name="conf_gaslist_n2">N2</string>
+    <string name="conf_gaslist_diluent1">D1</string>
+    <string name="conf_gaslist_diluent2">D2</string>
+    <string name="conf_gaslist_bailout">B</string>
+    <string name="conf_gaslist_button_positive">Set Gas</string>
+    <string name="conf_gaslist_button_negative">Cancel</string>
+    
     <!-- Detailseite Gasliste -->
     <string name="gaslist_headline">Gaslist SPX42</string>
-    
+    <string name="conf_gaslist_summary" formatted="false">current gas %02d is %s D1:[%s] D2:[%s] B:[%s]</string>
+    <string name="conf_gaslist_noname">not init yet</string>
+    <!-- ### Kategorie Gas  ## -->
+    <string name="conf_gaslist_gas01_header">gas #01</string>
+    <string name="conf_gaslist_gas02_header">gas #02</string>
+    <string name="conf_gaslist_gas03_header">gas #03</string>
+    <string name="conf_gaslist_gas04_header">gas #04</string>
+    <string name="conf_gaslist_gas05_header">gas #05</string>
+    <string name="conf_gaslist_gas06_header">gas #06</string>
+    <string name="conf_gaslist_gas07_header">gas #07</string>
+    <string name="conf_gaslist_gas08_header">gas #08</string>
+            
     <!-- Detailseite für Programmkonfiguration -->
     <string name="conf_prog_headline">app preferences</string>
     <!-- ### Kategorie Dateisystem ### -->
@@ -174,21 +196,6 @@
     <string name="conf_prog_mail_compressed_on_summary">uddf file will compressed</string>
     <string name="conf_prog_mail_compressed_off_summary">uddf file will NOT compressed</string>
     
-    <!-- Detailseite für Gaslisten-Editor -->
-    <string name="conf_gaslist_headline">SPX42 gaslist edit</string>
-    <string name="conf_gaslist_default">21:0:79:0:0:0</string>
-    <string name="conf_gaslist_o2">O2</string>
-    <string name="conf_gaslist_he">HE</string>
-    <string name="conf_gaslist_n2">N2</string>
-    <string name="conf_gaslist_diluent1">D1</string>
-    <string name="conf_gaslist_diluent2">D2</string>
-    <string name="conf_gaslist_bailout">B</string>
-    <string name="conf_gaslist_button_positive">Set Gas</string>
-    <string name="conf_gaslist_button_negative">Cancel</string>
-    <!-- ### Kategorie Gas Nummer 01 ## -->
-    <string name="conf_gaslist_gas01_header">gas #01</string>
-    <string name="conf_gaslist_gas02_header">gas #02</string>
-    <string name="conf_gaslist_gas03_header">gas #03</string>
     
     <!-- sonstig  -->
     <string name="no_device">- no device - \n0\n0\n0\n0</string>
