@@ -15,6 +15,31 @@
             android:key="keyGaslistGas03" 
             android:defaultValue="@string/conf_gaslist_default"/>
         />
+    <de.dmarcini.submatix.android4.utils.GasPickerPreference
+            android:title="@string/conf_gaslist_gas04_header" 
+            android:key="keyGaslistGas04" 
+            android:defaultValue="@string/conf_gaslist_default"/>
+        />
+    <de.dmarcini.submatix.android4.utils.GasPickerPreference
+            android:title="@string/conf_gaslist_gas05_header" 
+            android:key="keyGaslistGas05" 
+            android:defaultValue="@string/conf_gaslist_default"/>
+        />
+    <de.dmarcini.submatix.android4.utils.GasPickerPreference
+            android:title="@string/conf_gaslist_gas06_header" 
+            android:key="keyGaslistGas06" 
+            android:defaultValue="@string/conf_gaslist_default"/>
+        />
+    <de.dmarcini.submatix.android4.utils.GasPickerPreference
+            android:title="@string/conf_gaslist_gas07_header" 
+            android:key="keyGaslistGas07" 
+            android:defaultValue="@string/conf_gaslist_default"/>
+        />
+    <de.dmarcini.submatix.android4.utils.GasPickerPreference
+            android:title="@string/conf_gaslist_gas08_header" 
+            android:key="keyGaslistGas08" 
+            android:defaultValue="@string/conf_gaslist_default"/>
+        />
         
 
 </PreferenceScreen>
