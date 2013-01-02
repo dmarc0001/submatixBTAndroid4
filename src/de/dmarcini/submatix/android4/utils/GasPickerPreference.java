@@ -1,5 +1,6 @@
 package de.dmarcini.submatix.android4.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Parcel;
@@ -11,7 +12,9 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.EditText;
 import android.widget.NumberPicker;
+import android.widget.NumberPicker.Formatter;
 import android.widget.NumberPicker.OnValueChangeListener;
 import de.dmarcini.submatix.android4.R;
 
@@ -41,7 +44,8 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
   private boolean             d1Current          = false;
   private boolean             d2Current          = false;
   private boolean             bailoutCurrent     = false;
-  private AttributeSet        attrs              = null;
+  private EditText            o2EditText         = null;
+  private EditText            heEditText         = null;
   private static String       defaultReturnValue = "100:0:0:0:0:0";
 
   /**
@@ -98,6 +102,26 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
   }
 
   /**
+   * 
+   * private Klase zur formatierung der Zahlen auf mindestens zweistellig
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 02.01.2013
+   */
+  @SuppressLint( "DefaultLocale" )
+  private class TwoDigitFormatter implements Formatter
+  {
+    @Override
+    public String format( int value )
+    {
+      return( String.format( "%02d", value ) );
+    }
+  }
+
+  /**
    * Der Konstruktor
    * 
    * @author Dirk Marciniak 28.12.2012
@@ -107,7 +131,6 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
   public GasPickerPreference( Context context, AttributeSet attrs )
   {
     super( context, attrs );
-    this.attrs = attrs;
     Log.d( TAG, "GasPickerPreference(Context,AttributeSet)..." );
     setPositiveButtonText( R.string.conf_gaslist_button_positive );
     setNegativeButtonText( R.string.conf_gaslist_button_negative );
@@ -125,7 +148,6 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
   public GasPickerPreference( Context context, AttributeSet attrs, int defStyle )
   {
     super( context, attrs, defStyle );
-    this.attrs = attrs;
     Log.d( TAG, "GasPickerPreference(Context,AttributeSet,int)..." );
     setPositiveButtonText( R.string.conf_gaslist_button_positive );
     setNegativeButtonText( R.string.conf_gaslist_button_negative );
@@ -144,11 +166,15 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
       case R.id.o2NumberPicker:
         Log.d( TAG, "onValueChange: O2 oldVal: <" + oldVal + ">, newVal: <" + newVal + ">" );
         onSetO2Value( newVal );
+        setO2PickerColor( o2Current );
+        setHePickerColor( heCurrent );
         break;
       //
       case R.id.heNumberPicker:
         Log.d( TAG, "onValueChange: HE oldVal: <" + oldVal + ">, newVal: <" + newVal + ">" );
         onSetHeValue( newVal );
+        setHePickerColor( heCurrent );
+        setO2PickerColor( o2Current );
         break;
       //
       case R.id.n2NumberPicker:
@@ -298,6 +324,7 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
     // O2 Picker initialisieren
     //
     o2Picker = ( NumberPicker )v.findViewById( R.id.o2NumberPicker );
+    o2Picker.setFormatter( new TwoDigitFormatter() );
     o2Picker.setOnValueChangedListener( this );
     o2Picker.setMinValue( 0 );
     o2Picker.setMaxValue( 100 );
@@ -306,6 +333,7 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
     // he Picker initialisieren
     //
     hePicker = ( NumberPicker )v.findViewById( R.id.heNumberPicker );
+    hePicker.setFormatter( new TwoDigitFormatter() );
     hePicker.setOnValueChangedListener( this );
     hePicker.setMinValue( 0 );
     hePicker.setMaxValue( 100 );
@@ -314,6 +342,7 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
     // n2 Picker initialisieren
     //
     n2Picker = ( NumberPicker )v.findViewById( R.id.n2NumberPicker );
+    n2Picker.setFormatter( new TwoDigitFormatter() );
     n2Picker.setOnValueChangedListener( this );
     n2Picker.setMinValue( 0 );
     n2Picker.setMaxValue( 100 );
@@ -330,10 +359,106 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
     bailoutCheckbox = ( CheckBox )v.findViewById( R.id.bailoutCheckBox );
     bailoutCheckbox.setChecked( bailoutCurrent );
     bailoutCheckbox.setOnCheckedChangeListener( this );
+    //
+    // setzte initial die Farben der picker
+    //
+    setO2PickerColor( o2Current );
+    setHePickerColor( heCurrent );
     noAction = true;
     onSetO2Value( o2Current );
-    // setPickerWoEvent();
     Log.d( TAG, "onBindDialogView()...OK" );
+  }
+
+  /**
+   * 
+   * Setze die Farbe des Heliumpickers nach Heliumgehalt
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 02.01.2013
+   * @param he
+   */
+  private void setHePickerColor( int he )
+  {
+    int index = 0;
+    int color;
+    int rest;
+    //
+    // wenn o2EditText nicht da ist...
+    //
+    if( this.heEditText == null )
+    {
+      for( index = 0; index < hePicker.getChildCount(); index++ )
+      {
+        if( hePicker.getChildAt( index ) instanceof EditText )
+        {
+          this.heEditText = ( EditText )hePicker.getChildAt( index );
+          heEditText.setFocusable( false );
+          break;
+        }
+      }
+    }
+    //
+    // Na dann...
+    //
+    if( this.heEditText != null )
+    {
+      // je mehr he desto grüner
+      // also desto weniger blau and red
+      // also he vom weiss abziehen
+      rest = 200 - ( he * 2 );
+      color = 0xff00ff00 | ( rest << 16 ) | rest;
+      heEditText.setTextColor( color );
+      heEditText.setHintTextColor( color );
+    }
+  }
+
+  /**
+   * 
+   * Setze die Farbe des Sauerstoffpickers nach Sauerstoffgehelt
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 02.01.2013
+   * @param o2
+   */
+  private void setO2PickerColor( int o2 )
+  {
+    int index = 0;
+    int color;
+    int rest;
+    //
+    // wenn o2EditText nicht da ist...
+    //
+    if( this.o2EditText == null )
+    {
+      for( index = 0; index < o2Picker.getChildCount(); index++ )
+      {
+        if( o2Picker.getChildAt( index ) instanceof EditText )
+        {
+          this.o2EditText = ( EditText )o2Picker.getChildAt( index );
+          o2EditText.setFocusable( false );
+          break;
+        }
+      }
+    }
+    //
+    // Na dann...
+    //
+    if( this.o2EditText != null )
+    {
+      // je mehr O2 desto blauer
+      // also desto weniger green and red
+      // also o2 vom weiss abziehen
+      rest = 200 - ( o2 * 2 );
+      color = 0xff0000ff | ( rest << 16 ) | ( rest << 8 );
+      o2EditText.setTextColor( color );
+      o2EditText.setHintTextColor( color );
+    }
   }
 
   @Override
@@ -445,9 +570,6 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
       Log.v( TAG, "onDialogClosed: should save..." );
       persistString( String.format( "%d:%d:%d:%b:%b:%b", o2Picker.getValue(), hePicker.getValue(), n2Picker.getValue(), d1Checkbox.isChecked(), d2Checkbox.isChecked(),
               bailoutCheckbox.isChecked() ) );
-      // DEBUG
-      setTitle( "Helium <" + heCurrent + ">" );
-      setSummary( "O2 <" + o2Current + ">" );
     }
   }
 
