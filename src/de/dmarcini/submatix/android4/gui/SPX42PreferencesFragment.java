@@ -1,5 +1,6 @@
 package de.dmarcini.submatix.android4.gui;
 
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -14,14 +15,10 @@ import android.view.MenuItem;
 import de.dmarcini.submatix.android4.R;
 
 /**
+ * Ein Objekt zum bearbeiten der SPX42 Einstellungen Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
  * 
- * Ein Objekt zum bearbeiten der SPX42 Einstellungen
- * 
- * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
- * 
- * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- * 
- *         Stand: 31.12.2012 TODO Abhängigkeit bei Gradienten zwischen Voreinstellungen/custom und Presets berücksichtigen
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 31.12.2012 TODO Abhängigkeit bei Gradienten zwischen Voreinstellungen/custom und Presets
+ *         berücksichtigen
  */
 public class SPX42PreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener
 {
@@ -29,84 +26,69 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements OnSh
   private boolean             isIndividual = false;
 
   /**
+   * Sperre den Standartkonstruktor! Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * Sperre den Standartkonstruktor!
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 01.01.2013
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 01.01.2013
    */
-  @SuppressWarnings( "unused" )
+  @SuppressWarnings("unused")
   private SPX42PreferencesFragment()
   {}
 
   /**
+   * Bei der Konstruktion soll angegeben sein, welcher Lizenzstatus vorhanden ist Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * Bei der Konstruktion soll angegeben sein, welcher Lizenzstatus vorhanden ist
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 01.01.2013
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 01.01.2013
    * @param isIndividual
    */
-  public SPX42PreferencesFragment( boolean isIndividual )
+  public SPX42PreferencesFragment(boolean isIndividual)
   {
     super();
     this.isIndividual = isIndividual;
-    if( isIndividual )
+    if (isIndividual)
     {
-      Log.i( TAG, "SPX42 preferences starts with \"individual\" license..." );
+      Log.i(TAG, "SPX42 preferences starts with \"individual\" license...");
     }
     else
     {
-      Log.i( TAG, "SPX42 preferences starts without \"individual\" license..." );
+      Log.i(TAG, "SPX42 preferences starts without \"individual\" license...");
     }
   }
 
   /**
+   * Den Integerwert oder Null zurückgeben für eine Stringresource Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * Den Integerwert oder Null zurückgeben für eine Stringresource
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 31.12.2012
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 31.12.2012
    * @param id
    * @return
    */
-  private int getIntegerFromStringResource( int id )
+  private int getIntegerFromStringResource(int id)
   {
     int retVal = 0;
-    String strVal = getResources().getString( id );
+    String strVal = getResources().getString(id);
     try
     {
-      retVal = Integer.parseInt( strVal );
+      retVal = Integer.parseInt(strVal);
     }
-    catch( NumberFormatException ex )
+    catch (NumberFormatException ex)
     {
-      Log.e( TAG, "getIntegerFromStringResource(): String <" + strVal + "> is not an correct integer" );
+      Log.e(TAG, "getIntegerFromStringResource(): String <" + strVal + "> is not an correct integer");
     }
-    return( retVal );
+    return (retVal);
   }
 
   @Override
-  public void onCreate( Bundle savedInstanceState )
+  public void onCreate(Bundle savedInstanceState)
   {
-    super.onCreate( savedInstanceState );
-    Log.v( TAG, "onCreate()..." );
-    Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_individual + ">..." );
-    if( isIndividual )
+    super.onCreate(savedInstanceState);
+    Log.v(TAG, "onCreate()...");
+    Log.v(TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_individual + ">...");
+    if (isIndividual)
     {
-      addPreferencesFromResource( R.xml.config_spx42_preference_individual );
+      addPreferencesFromResource(R.xml.config_spx42_preference_individual);
     }
     else
     {
-      addPreferencesFromResource( R.xml.config_spx42_preference_std );
+      addPreferencesFromResource(R.xml.config_spx42_preference_std);
     }
     //
     // initiiere die notwendigen summarys
@@ -115,8 +97,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements OnSh
     //
     // setze Listener, der überwacht, wenn Preferenzen geändert wurden
     //
-    getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener( this );
-    Log.v( TAG, "onCreate: add Resouce...OK" );
+    getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    Log.v(TAG, "onCreate: add Resouce...OK");
   }
 
   @Override
@@ -126,142 +108,130 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements OnSh
     //
     // den Change-Listener abbestellen ;-)
     //
-    getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener( this );
+    getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
   }
 
   @Override
-  public boolean onOptionsItemSelected( MenuItem item )
+  public boolean onOptionsItemSelected(MenuItem item)
   {
-    switch ( item.getItemId() )
+    switch (item.getItemId())
     {
       case android.R.id.home:
-        Log.v( TAG, "onOptionsItemSelected: HOME" );
-        Intent intent = new Intent( getActivity(), areaListActivity.class );
-        intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
-        startActivity( intent );
+        Log.v(TAG, "onOptionsItemSelected: HOME");
+        Intent intent = new Intent(getActivity(), areaListActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
         return true;
     }
-    return super.onOptionsItemSelected( item );
+    return super.onOptionsItemSelected(item);
   }
 
   @Override
   public void onPause()
   {
     super.onPause();
-    Log.v( TAG, "onPause..." );
+    Log.v(TAG, "onPause...");
   }
 
   @Override
   public void onResume()
   {
     super.onResume();
-    Log.v( TAG, "onResume..." );
+    Log.v(TAG, "onResume...");
   }
 
   @Override
-  public void onSharedPreferenceChanged( SharedPreferences sharedPreferences, String key )
+  public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
   {
     ListPreference lP = null;
     Preference pref = null;
-    Log.v( TAG, "onSharedPreferenceChanged()...." );
-    Log.d( TAG, "onSharedPreferenceChanged: key = <" + key + ">" );
+    Log.v(TAG, "onSharedPreferenceChanged()....");
+    Log.d(TAG, "onSharedPreferenceChanged: key = <" + key + ">");
     //
     // zuerst mal die ListPreferenzen abklappern
     //
-    if( getPreferenceScreen().findPreference( key ) instanceof ListPreference )
+    if (getPreferenceScreen().findPreference(key) instanceof ListPreference)
     {
-      lP = ( ListPreference )getPreferenceScreen().findPreference( key );
-      if( lP == null )
+      lP = (ListPreference) getPreferenceScreen().findPreference(key);
+      if (lP == null)
       {
-        Log.e( TAG, "onSharedPreferenceChanged: for Key <" + key + "> was not found an ListPreference! abort!" );
+        Log.e(TAG, "onSharedPreferenceChanged: for Key <" + key + "> was not found an ListPreference! abort!");
         return;
       }
       //
       // Autosetpoint (off/tiefe)
       //
-      if( key.equals( "keySetpointAutosetpointDepth" ) )
+      if (key.equals("keySetpointAutosetpointDepth"))
       {
-        lP.setSummary( String.format( getResources().getString( R.string.conf_autoset_summary ), lP.getEntry() ) );
+        lP.setSummary(String.format(getResources().getString(R.string.conf_autoset_summary), lP.getEntry()));
       }
       //
       // Highsetpoint (wenn on)
       //
-      else if( key.equals( "keySetpointHighsetpointValue" ) )
+      else if (key.equals("keySetpointHighsetpointValue"))
       {
-        lP.setSummary( String.format( getResources().getString( R.string.conf_highset_summary ), lP.getEntry() ) );
+        lP.setSummary(String.format(getResources().getString(R.string.conf_highset_summary), lP.getEntry()));
       }
       //
       // DECO-Preset, wenn ON
       //
-      else if( key.equals( "keyDecoGradientPresets" ) )
+      else if (key.equals("keyDecoGradientPresets"))
       {
-        lP.setSummary( String.format( getResources().getString( R.string.conf_deco_presets_summary ), lP.getEntry() ) );
+        lP.setSummary(String.format(getResources().getString(R.string.conf_deco_presets_summary), lP.getEntry()));
       }
       //
       // Helligkeit Display
       //
-      else if( key.equals( "keyDisplayLuminance" ) )
+      else if (key.equals("keyDisplayLuminance"))
       {
-        lP.setSummary( String.format( getResources().getString( R.string.conf_luminance_header_summary ), lP.getEntry() ) );
+        lP.setSummary(String.format(getResources().getString(R.string.conf_luminance_header_summary), lP.getEntry()));
       }
       //
       // Orientierung Display
       //
-      else if( key.equals( "keyDisplayOrientation" ) )
+      else if (key.equals("keyDisplayOrientation"))
       {
-        lP.setSummary( String.format( getResources().getString( R.string.conf_display_orientation_header_summary ), lP.getEntry() ) );
+        lP.setSummary(String.format(getResources().getString(R.string.conf_display_orientation_header_summary), lP.getEntry()));
       }
       //
       // Sensors Count Warning
       //
-      else if( key.equals( "keyIndividualCountSensorWarning" ) )
+      else if (key.equals("keyIndividualCountSensorWarning"))
       {
-        lP.setSummary( String.format( getResources().getString( R.string.conf_ind_count_sensorwarning_header_summary ), lP.getEntry() ) );
+        lP.setSummary(String.format(getResources().getString(R.string.conf_ind_count_sensorwarning_header_summary), lP.getEntry()));
       }
       //
       // Intervall zwischen zwei Logeinträgen
       //
-      else if( key.equals( "keyIndividualLoginterval" ) )
+      else if (key.equals("keyIndividualLoginterval"))
       {
-        lP.setSummary( String.format( getResources().getString( R.string.conf_ind_interval_header_summary ), lP.getEntry() ) );
+        lP.setSummary(String.format(getResources().getString(R.string.conf_ind_interval_header_summary), lP.getEntry()));
       }
     }
     else
     {
-      pref = getPreferenceScreen().findPreference( key );
-      if( pref == null )
+      pref = getPreferenceScreen().findPreference(key);
+      if (pref == null)
       {
-        Log.e( TAG, "onSharedPreferenceChanged: for Key <" + key + "> was not found an Preference! abort!" );
+        Log.e(TAG, "onSharedPreferenceChanged: for Key <" + key + "> was not found an Preference! abort!");
         return;
       }
       //
-      // DECO-Gradient LOW
-      //
-      if( key.equals( "keyDecoGradientLow" ) )
-      {
-        pref.setSummary( String.format( getResources().getString( R.string.conf_deco_gradient_low_summary ),
-                sharedPreferences.getInt( key, getIntegerFromStringResource( R.string.conf_deco_gradient_low_default ) ) ) );
-      }
-      //
-      // DECO-Gradient HIGH
-      //
-      else if( key.equals( "keyDecoGradientHigh" ) )
-      {
-        pref.setSummary( String.format( getResources().getString( R.string.conf_deco_gradient_high_summary ),
-                sharedPreferences.getInt( key, getIntegerFromStringResource( R.string.conf_deco_gradient_high_default ) ) ) );
-      }
+      // DECO-Gradient
+      // TODO: für neues Objekt einrichten
+      // if( key.equals( "keyDecoGradient" ) )
+      // {
+      // pref.setSummary( String.format( getResources().getString( R.string.conf_deco_gradient_low_summary ),
+      // sharedPreferences.getInt( key, getIntegerFromStringResource( R.string.conf_deco_gradient_low_default ) ) ) );
+      // }
     }
   }
 
   /**
+   * Setze alle Summarys auf ihren aktuellen Wert (wi das die Activity nichzt selber macht) Project: SubmatixBTLoggerAndroid_4 Package:
+   * de.dmarcini.submatix.android4.gui
    * 
-   * Setze alle Summarys auf ihren aktuellen Wert (wi das die Activity nichzt selber macht)
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 31.12.2012
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 31.12.2012
    */
   private void setAllSummarys()
   {
@@ -272,55 +242,49 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements OnSh
     //
     // Autoset
     //
-    lP = ( ListPreference )pS.findPreference( "keySetpointAutosetpointDepth" );
-    lP.setSummary( String.format( res.getString( R.string.conf_autoset_summary ), lP.getEntry() ) );
+    lP = (ListPreference) pS.findPreference("keySetpointAutosetpointDepth");
+    lP.setSummary(String.format(res.getString(R.string.conf_autoset_summary), lP.getEntry()));
     //
     // High Setpoint
     //
-    lP = ( ListPreference )pS.findPreference( "keySetpointHighsetpointValue" );
-    lP.setSummary( String.format( res.getString( R.string.conf_highset_summary ), lP.getEntry() ) );
+    lP = (ListPreference) pS.findPreference("keySetpointHighsetpointValue");
+    lP.setSummary(String.format(res.getString(R.string.conf_highset_summary), lP.getEntry()));
     //
     // Deco gradienten Preset
     //
-    lP = ( ListPreference )pS.findPreference( "keyDecoGradientPresets" );
-    lP.setSummary( String.format( res.getString( R.string.conf_deco_presets_summary ), lP.getEntry() ) );
+    lP = (ListPreference) pS.findPreference("keyDecoGradientPresets");
+    lP.setSummary(String.format(res.getString(R.string.conf_deco_presets_summary), lP.getEntry()));
     //
-    // Deco gradienten LOW
-    //
-    pS.findPreference( "keyDecoGradientLow" ).setSummary(
-            String.format( res.getString( R.string.conf_deco_gradient_low_summary ),
-                    shared.getInt( "keyDecoGradientLow", getIntegerFromStringResource( R.string.conf_deco_gradient_low_default ) ) ) );
-    //
-    // Deco gradienten High
-    //
-    pS.findPreference( "keyDecoGradientHigh" ).setSummary(
-            String.format( res.getString( R.string.conf_deco_gradient_high_summary ),
-                    shared.getInt( "keyDecoGradientHigh", getIntegerFromStringResource( R.string.conf_deco_gradient_high_default ) ) ) );
+    // Deco gradienten
+    // TODO: richte mal für neues Objekt
+    // pS.findPreference( "keyDecoGradient" ).setSummary(
+    // String.format( res.getString( R.string.conf_deco_gradient_low_summary ),
+    // shared.getInt( "keyDecoGradientLow", getIntegerFromStringResource( R.string.conf_deco_gradient_low_default ) ) ) );
     //
     // Displayhelligkeit
     //
-    lP = ( ListPreference )pS.findPreference( "keyDisplayLuminance" );
-    lP.setSummary( String.format( res.getString( R.string.conf_luminance_header_summary ), lP.getEntry() ) );
+    lP = (ListPreference) pS.findPreference("keyDisplayLuminance");
+    lP.setSummary(String.format(res.getString(R.string.conf_luminance_header_summary), lP.getEntry()));
     //
     // Display Orientierung
     //
-    lP = ( ListPreference )pS.findPreference( "keyDisplayOrientation" );
-    lP.setSummary( String.format( res.getString( R.string.conf_display_orientation_header_summary ), lP.getEntry() ) );
+    lP = (ListPreference) pS.findPreference("keyDisplayOrientation");
+    lP.setSummary(String.format(res.getString(R.string.conf_display_orientation_header_summary), lP.getEntry()));
     //
     // das nur bei Individuallizenz
     //
-    if( isIndividual )
+    if (isIndividual)
     {
       //
       // Sensors Count for Warning
       //
-      lP = ( ListPreference )pS.findPreference( "keyIndividualCountSensorWarning" );
-      lP.setSummary( String.format( res.getString( R.string.conf_ind_count_sensorwarning_header_summary ), lP.getEntry() ) );
+      lP = (ListPreference) pS.findPreference("keyIndividualCountSensorWarning");
+      lP.setSummary(String.format(res.getString(R.string.conf_ind_count_sensorwarning_header_summary), lP.getEntry()));
       //
       // Logintervall
       //
-      lP = ( ListPreference )pS.findPreference( "keyIndividualLoginterval" );
-      lP.setSummary( String.format( res.getString( R.string.conf_ind_interval_header_summary ), lP.getEntry() ) );
+      lP = (ListPreference) pS.findPreference("keyIndividualLoginterval");
+      lP.setSummary(String.format(res.getString(R.string.conf_ind_interval_header_summary), lP.getEntry()));
     }
   }
 }
