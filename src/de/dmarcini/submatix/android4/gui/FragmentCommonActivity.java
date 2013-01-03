@@ -18,7 +18,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NavUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -115,6 +114,24 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate..." );
     Log.v( TAG, "onCreate: setContentView..." );
+    //
+    // Das gewünschte Thema setzen
+    //
+    SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( this );
+    if( sPref.contains( "keyProgOthersThemeIsDark" ) )
+    {
+      boolean whishedTheme = sPref.getBoolean( "keyProgOthersThemeIsDark", false );
+      if( whishedTheme )
+      {
+        Log.d( TAG, "onCreate: select DARK theme while preference was set" );
+        setTheme( R.style.AppDarkTheme );
+      }
+      else
+      {
+        Log.d( TAG, "onCreate: select Blue theme while preference was set" );
+        setTheme( R.style.AppBlueTheme );
+      }
+    }
     setContentView( R.layout.activity_area_list );
   }
 
@@ -260,6 +277,10 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
           {
             Log.d( TAG, String.format( "PROP (Long): %s: %d", key, mPrefs.get( key ) ) );
           }
+          else
+          {
+            Log.w( TAG, String.format( "PROP <%s> is unknown instanceof", key ) );
+          }
         }
         return;
     }
@@ -346,16 +367,17 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     switch ( item.getItemId() )
     {
       case android.R.id.home:
-        // This ID represents the Home or Up button. In the case of this
-        // activity, the Up button is shown. Use NavUtils to allow users
-        // to navigate up one level in the application structure. For
-        // more details, see the Navigation pattern on Android Design:
-        //
-        // http://developer.android.com/design/patterns/navigation.html#up-vs-back
-        //
-        Log.v( TAG, "onOptionsItemSelected: HOME" );
-        NavUtils.navigateUpTo( this, new Intent( this, areaListActivity.class ) );
+        Log.d( TAG, "onOptionsItemSelected: navigate UP!" );
+        // This is called when the Home (Up) button is pressed
+        // in the Action Bar.
+        Intent parentActivityIntent = new Intent( this, areaListActivity.class );
+        parentActivityIntent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
+        startActivity( parentActivityIntent );
+        finish();
         return true;
+        // Log.v( TAG, "onOptionsItemSelected: HOME" );
+        // NavUtils.navigateUpTo( this, new Intent( this, areaListActivity.class ) );
+        // return true;
     }
     return super.onOptionsItemSelected( item );
   }
