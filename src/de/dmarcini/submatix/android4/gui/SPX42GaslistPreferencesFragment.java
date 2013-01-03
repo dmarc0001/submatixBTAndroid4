@@ -33,7 +33,7 @@ import de.dmarcini.submatix.android4.utils.GasPickerPreference;
 public class SPX42GaslistPreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener
 {
   private static final String TAG            = SPX42GaslistPreferencesFragment.class.getSimpleName();
-  private static final String gasKeyTemplate = "keyGaslistGas%02d";
+  private String              gasKeyTemplate = null;
   private boolean             isTrimix       = false;
 
   /**
@@ -73,6 +73,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate()..." );
     Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_gaslist_preference + ">..." );
+    gasKeyTemplate = getResources().getString( R.string.conf_gaslist_gas_key_template );
     addPreferencesFromResource( R.xml.config_spx42_gaslist_preference );
     //
     // initiiere die notwendigen summarys
