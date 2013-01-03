@@ -29,10 +29,20 @@
             android:title="@string/conf_prog_mail_compressed_header" 
             android:summaryOn="@string/conf_prog_mail_compressed_on_summary" 
             android:summaryOff="@string/conf_prog_mail_compressed_off_summary"/>
-        
-        
-        
     </PreferenceCategory>
+    
+    <PreferenceCategory android:title="@string/conf_prog_others_header" android:key="keyProgOthers">
+        <SwitchPreference 
+            android:switchTextOff="@string/conf_prog_others_off_blue" 
+            android:switchTextOn="@string/conf_prog_others_on_dark" 
+            android:title="@string/conf_prog_others_theme_header" 
+            android:key="keyProgOthersThemeIsDark" 
+            android:summaryOff="@string/conf_prog_others_off_blue_summary" 
+            android:summaryOn="@string/conf_prog_others_on_dark_summary" 
+            android:defaultValue="true"/>
+    </PreferenceCategory>
+    
+    
     
 
 </PreferenceScreen>
