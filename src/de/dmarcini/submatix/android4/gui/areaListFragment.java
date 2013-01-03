@@ -1,17 +1,19 @@
 package de.dmarcini.submatix.android4.gui;
 
+
 import android.app.Activity;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+
 import de.dmarcini.submatix.android4.content.ContentSwitcher;
 import de.dmarcini.submatix.android4.utils.ArrayAdapterWithPics;
 
 /**
- * A list fragment representing a list of areas. This fragment also supports tablet devices by allowing list items to be given an 'activated' state upon selection. This helps
- * indicate which item is currently being viewed in a {@link areaDetailFragment}.
+ * A list fragment representing a list of areas. This fragment also supports tablet devices by allowing list items to be given an 'activated' state upon
+ * selection. This helps indicate which item is currently being viewed in a {@link areaDetailFragment}.
  */
 public class areaListFragment extends ListFragment
 {
@@ -20,14 +22,9 @@ public class areaListFragment extends ListFragment
   private int                 mActivatedPosition       = ListView.INVALID_POSITION;
 
   /**
+   * Der Konstruktor Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.gui
    * 
-   * Der Konstruktor
-   * 
-   * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 04.11.2012
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 04.11.2012
    */
   public areaListFragment()
   {}
@@ -36,35 +33,35 @@ public class areaListFragment extends ListFragment
    * Nach dem Erzeugen des Objektes noch Einstellungen....
    */
   @Override
-  public void onCreate( Bundle savedInstanceState )
+  public void onCreate(Bundle savedInstanceState)
   {
-    super.onCreate( savedInstanceState );
-    Log.v( TAG, "onCreate()..." );
-    Log.v( TAG, "onCreate(): setListAdapter......" );
-    setListAdapter( new ArrayAdapterWithPics( getActivity(), 0, ContentSwitcher.progItems ) );
+    super.onCreate(savedInstanceState);
+    Log.v(TAG, "onCreate()...");
+    Log.v(TAG, "onCreate(): setListAdapter......");
+    setListAdapter(new ArrayAdapterWithPics(getActivity(), 0, ContentSwitcher.progItems));
   }
 
   @Override
-  public void onViewCreated( View view, Bundle savedInstanceState )
+  public void onViewCreated(View view, Bundle savedInstanceState)
   {
-    super.onViewCreated( view, savedInstanceState );
-    Log.v( TAG, "onViewCreated..." );
+    super.onViewCreated(view, savedInstanceState);
+    Log.v(TAG, "onViewCreated...");
     // Restore the previously serialized activated item position.
-    if( savedInstanceState != null && savedInstanceState.containsKey( STATE_ACTIVATED_POSITION ) )
+    if (savedInstanceState != null && savedInstanceState.containsKey(STATE_ACTIVATED_POSITION))
     {
-      Log.v( TAG, "setActivadedPosition..." );
-      setActivatedPosition( savedInstanceState.getInt( STATE_ACTIVATED_POSITION ) );
+      Log.v(TAG, "setActivadedPosition...");
+      setActivatedPosition(savedInstanceState.getInt(STATE_ACTIVATED_POSITION));
     }
   }
 
   @Override
-  public void onSaveInstanceState( Bundle outState )
+  public void onSaveInstanceState(Bundle outState)
   {
-    super.onSaveInstanceState( outState );
-    if( mActivatedPosition != ListView.INVALID_POSITION )
+    super.onSaveInstanceState(outState);
+    if (mActivatedPosition != ListView.INVALID_POSITION)
     {
       // Serialize and persist the activated item position.
-      outState.putInt( STATE_ACTIVATED_POSITION, mActivatedPosition );
+      outState.putInt(STATE_ACTIVATED_POSITION, mActivatedPosition);
     }
   }
 
@@ -75,13 +72,13 @@ public class areaListFragment extends ListFragment
   public synchronized void onResume()
   {
     super.onResume();
-    Log.v( TAG, "onResume()..." );
+    Log.v(TAG, "onResume()...");
   }
 
   @Override
-  public void onAttach( Activity activity )
+  public void onAttach(Activity activity)
   {
-    super.onAttach( activity );
+    super.onAttach(activity);
   }
 
   @Override
@@ -91,56 +88,48 @@ public class areaListFragment extends ListFragment
   }
 
   @Override
-  public void onListItemClick( ListView listView, View view, int position, long id )
+  public void onListItemClick(ListView listView, View view, int position, long id)
   {
-    super.onListItemClick( listView, view, position, id );
-    Log.v( TAG, "onListItemClick()..." );
+    super.onListItemClick(listView, view, position, id);
+    Log.v(TAG, "onListItemClick()...");
     //
     // delegiere die Bearbeitung an die aktive Activity
     //
-    setActivatedPosition( position );
-    ( ( areaListActivity )getActivity() ).onListItemClick( listView, view, position, id );
+    ((areaListActivity) getActivity()).onListItemClick(listView, view, position, id);
+    setActivatedPosition(position);
   }
 
   /**
+   * Schaltet den Activate-On-click Mode an, damit erhalten angefasste Einträge den Activate Status Project: SubmatixBTLoggerAndroid_4 Package:
+   * de.dmarcini.submatix.android4.gui
    * 
-   * Schaltet den Activate-On-click Mode an, damit erhalten angefasste Einträge den Activate Status
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 22.12.2012
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 22.12.2012
    * @param activateOnItemClick
    */
-  public void setActivateOnItemClick( boolean activateOnItemClick )
+  public void setActivateOnItemClick(boolean activateOnItemClick)
   {
     // When setting CHOICE_MODE_SINGLE, ListView will automatically
-    // give items the 'activated' state when touched.
-    getListView().setChoiceMode( activateOnItemClick ? ListView.CHOICE_MODE_SINGLE : ListView.CHOICE_MODE_NONE );
+    // give items the 'activated' state when touched
+    Log.d(TAG, "setActivateOnItemClick( " + activateOnItemClick + " )");
+    getListView().setChoiceMode(activateOnItemClick ? ListView.CHOICE_MODE_SINGLE : ListView.CHOICE_MODE_NONE);
   }
 
   /**
+   * Kennzeichne die aktivierte Position Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * Kennzeichne die aktivierte Position
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 23.12.2012
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 23.12.2012
    * @param position
    */
-  private void setActivatedPosition( int position )
+  private void setActivatedPosition(int position)
   {
-    if( position == ListView.INVALID_POSITION )
+    if (position == ListView.INVALID_POSITION)
     {
-      getListView().setItemChecked( mActivatedPosition, false );
+      getListView().setItemChecked(mActivatedPosition, false);
     }
     else
     {
-      // Log.i( TAG, "setActivatedPosition: checked Position was: <" + getListView().getCheckedItemPosition() + ">" );
-      getListView().setItemChecked( position, true );
+      Log.d(TAG, "setActivatedPosition: checked Position was: <" + getListView().getCheckedItemPosition() + ">");
+      getListView().setItemChecked(position, true);
     }
     mActivatedPosition = position;
   }
