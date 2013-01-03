@@ -163,6 +163,7 @@
     <string name="conf_gaslist_summary" formatted="false">current gas %02d is %s D1:[%s] D2:[%s] B:[%s]</string>
     <string name="conf_gaslist_noname">not init yet</string>
     <!-- ### Kategorie Gas  ## -->
+    <string name="conf_gaslist_gas_key_template">keyGaslistGas%02d</string>
     <string name="conf_gaslist_gas01_header">gas #01</string>
     <string name="conf_gaslist_gas02_header">gas #02</string>
     <string name="conf_gaslist_gas03_header">gas #03</string>
@@ -200,6 +201,12 @@
     <!-- sonstig  -->
     <string name="no_device">- no device - \n0\n0\n0\n0</string>
     <string name="array_with_pic_adapter_dummy">PROGRAMITEM</string>
+    <string name="conf_prog_others_header">OTHERS</string>
+    <string name="conf_prog_others_theme_header">switch theme</string>
+    <string name="conf_prog_others_on_dark">dark</string>
+    <string name="conf_prog_others_off_blue">blue</string>
+    <string name="conf_prog_others_on_dark_summary">app theme DARK selected</string>
+    <string name="conf_prog_others_off_blue_summary">app theme BLUE selected</string>
     
     
 </resources>
