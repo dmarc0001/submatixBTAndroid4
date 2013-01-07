@@ -25,8 +25,7 @@
             android:title="@string/conf_deco_preset_header" 
             android:key="keyDecoGradientPresets" 
             android:summary="@string/conf_deco_presets_summary" 
-            android:defaultValue="@string/conf_deco_presets_default"/>
-        
+            android:defaultValue="@string/conf_deco_presets_default"/>        
         <de.dmarcini.submatix.android4.utils.GradientPickerPreference  
             android:title="@string/conf_deco_gradient" 
             android:key="keyDecoGradient" 

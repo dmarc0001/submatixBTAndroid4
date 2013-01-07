@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.content.ContentSwitcher;
 import de.dmarcini.submatix.android4.content.ContentSwitcher.ProgItem;
@@ -46,12 +45,6 @@ public class areaListActivity extends FragmentCommonActivity
     ContentSwitcher.addItem( new ProgItem( R.string.progitem_logging, R.drawable.logging, getString( R.string.progitem_logging ) ) );
     ContentSwitcher.addItem( new ProgItem( R.string.progitem_progpref, R.drawable.toolboxred, getString( R.string.progitem_progpref ) ) );
     ContentSwitcher.addItem( new ProgItem( R.string.progitem_exit, R.drawable.shutoff, getString( R.string.progitem_exit ) ) );
-    if( BuildConfig.DEBUG )
-    {
-      ContentSwitcher.addItem( new ProgItem( R.string.progitem_null, R.drawable.placeholder, getString( R.string.progitem_null ) ) );
-      ContentSwitcher.addItem( new ProgItem( R.string.progitem_set_defaults, R.drawable.radiation, getString( R.string.progitem_set_defaults ) ) );
-      ContentSwitcher.addItem( new ProgItem( R.string.progitem_log_propertys, R.drawable.radiation, getString( R.string.progitem_log_propertys ) ) );
-    }
   }
 
   /**

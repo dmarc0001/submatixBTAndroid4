@@ -7,10 +7,6 @@
  */
 package de.dmarcini.submatix.android4.gui;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.bluetooth.BluetoothAdapter;
@@ -256,66 +252,6 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         Log.v( TAG, "onListItemClick: make dialog for USER..." );
         AreYouSureDialogFragment sureDial = new AreYouSureDialogFragment( getString( R.string.dialog_sure_exit ) );
         sureDial.show( getFragmentManager().beginTransaction(), "programexit" );
-        return;
-      case R.string.progitem_set_defaults:
-        Log.i( TAG, "onListItemClick: set DEFAULTS..." );
-        //
-        // defaults für SPX42
-        //
-        if( isIndividual )
-        {
-          PreferenceManager.setDefaultValues( this, R.xml.config_spx42_preference_individual, false );
-        }
-        else
-        {
-          PreferenceManager.setDefaultValues( this, R.xml.config_spx42_preference_std, false );
-        }
-        //
-        // defaults für Programm
-        //
-        PreferenceManager.setDefaultValues( this, R.xml.config_program_preference, false );
-        return;
-      case R.string.progitem_log_propertys:
-      case R.string.progitem_null:
-        //
-        // für DEBUGGING ONLY
-        //
-        Log.v( TAG, "onListItemClick: DEBUG: List all Preferences..." );
-        //
-        // erfrage mal alle Einstellungen
-        //
-        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( this );
-        Map<String, ?> mPrefs = sPref.getAll();
-        Set<String> keys = mPrefs.keySet();
-        Iterator<String> it = keys.iterator();
-        while( it.hasNext() )
-        {
-          String key = it.next();
-          if( mPrefs.get( key ) instanceof String )
-          {
-            Log.d( TAG, String.format( "PROP (String): %s: %s", key, mPrefs.get( key ) ) );
-          }
-          else if( mPrefs.get( key ) instanceof Boolean )
-          {
-            Log.d( TAG, String.format( "PROP (Boolean): %s: %b", key, mPrefs.get( key ) ) );
-          }
-          else if( mPrefs.get( key ) instanceof Integer )
-          {
-            Log.d( TAG, String.format( "PROP (Integer): %s: %d", key, mPrefs.get( key ) ) );
-          }
-          else if( mPrefs.get( key ) instanceof Float )
-          {
-            Log.d( TAG, String.format( "PROP (Float): %s: %f", key, mPrefs.get( key ) ) );
-          }
-          else if( mPrefs.get( key ) instanceof Long )
-          {
-            Log.d( TAG, String.format( "PROP (Long): %s: %d", key, mPrefs.get( key ) ) );
-          }
-          else
-          {
-            Log.w( TAG, String.format( "PROP <%s> is unknown instanceof", key ) );
-          }
-        }
         return;
     }
     // ////////////////////////////////////////////////////////////////////////
