@@ -13,6 +13,7 @@ import android.preference.PreferenceScreen;
 import android.util.Log;
 import android.view.MenuItem;
 import de.dmarcini.submatix.android4.R;
+import de.dmarcini.submatix.android4.utils.ProjectConst;
 
 /**
  * 
@@ -150,7 +151,34 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
         Log.e( TAG, "onSharedPreferenceChanged: for Key <" + key + "> was not found an Preference! abort!" );
         return;
       }
+      if( key.equals( "keyProgOthersThemeIsDark" ) )
+      {
+        setThemeForApp();
+      }
     }
+  }
+
+  /**
+   * 
+   * Starte die App neu mit dem neuen Theme und voreingestellt die Preferencen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 07.01.2013
+   */
+  private void setThemeForApp()
+  {
+    //
+    // Argumente für Intent zusammenbauen
+    //
+    Bundle arguments = new Bundle();
+    arguments.putString( ProjectConst.ARG_ITEM_ID, getResources().getString( R.string.progitem_progpref ) );
+    Intent parentActivityIntent = new Intent( getActivity(), areaListActivity.class );
+    parentActivityIntent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
+    getActivity().finish();
+    startActivity( parentActivityIntent );
   }
 
   /**

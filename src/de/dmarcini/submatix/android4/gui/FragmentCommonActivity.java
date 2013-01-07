@@ -375,9 +375,6 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         startActivity( parentActivityIntent );
         finish();
         return true;
-        // Log.v( TAG, "onOptionsItemSelected: HOME" );
-        // NavUtils.navigateUpTo( this, new Intent( this, areaListActivity.class ) );
-        // return true;
     }
     return super.onOptionsItemSelected( item );
   }
