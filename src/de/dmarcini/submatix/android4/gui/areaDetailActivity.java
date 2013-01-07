@@ -26,7 +26,7 @@ public class areaDetailActivity extends FragmentCommonActivity
   @Override
   public void onCreate( Bundle savedInstanceState )
   {
-    String showId = null;
+    int showId = 0;
     ContentSwitcher.ProgItem mItem = null;
     // Fragment fragment = null;
     int resourceId = 0;
@@ -39,16 +39,16 @@ public class areaDetailActivity extends FragmentCommonActivity
     //
     // was soll ich anzeigen?
     //
-    showId = getIntent().getStringExtra( ProjectConst.ARG_ITEM_ID );
+    showId = getIntent().getIntExtra( ProjectConst.ARG_ITEM_ID, 0 );
     // gibt es eine ID?
-    if( showId != null )
+    if( showId != 0 )
     {
       Log.v( TAG, "onCreate: SowId found: <" + showId + ">" );
       // argumente basteln
       Bundle arguments = new Bundle();
-      arguments.putString( ProjectConst.ARG_ITEM_ID, getIntent().getStringExtra( ProjectConst.ARG_ITEM_ID ) );
+      arguments.putInt( ProjectConst.ARG_ITEM_ID, showId );
       // Welcher Programmmenüpunkt war denn das?
-      mItem = ContentSwitcher.progItemsMap.get( showId );
+      mItem = ContentSwitcher.getProgItemForId( showId );
       // hab ich einen Eintrag vorrätig?
       if( mItem != null )
       {

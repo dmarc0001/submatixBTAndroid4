@@ -41,7 +41,7 @@ public class areaListFragment extends ListFragment
     SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( getActivity() );
     boolean whishedTheme = sPref.getBoolean( "keyProgOthersThemeIsDark", false );
     Log.v( TAG, "onCreate(): setListAdapter...(" + ( whishedTheme ? "DARK" : "LIGHT" ) + ")" );
-    setListAdapter( new ArrayAdapterWithPics( getActivity(), 0, ContentSwitcher.progItems, ( whishedTheme ? R.style.AppDarkTheme : R.style.AppLightTheme ) ) );
+    setListAdapter( new ArrayAdapterWithPics( getActivity(), 0, ContentSwitcher.getProgramItemsList(), ( whishedTheme ? R.style.AppDarkTheme : R.style.AppLightTheme ) ) );
   }
 
   @Override

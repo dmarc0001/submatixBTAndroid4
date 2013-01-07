@@ -20,8 +20,9 @@ import de.dmarcini.submatix.android4.R;
  */
 public class ContentSwitcher
 {
-  public static List<ProgItem>        progItems    = new ArrayList<ProgItem>();
-  public static Map<String, ProgItem> progItemsMap = new HashMap<String, ProgItem>();
+  public static final String           TAG          = ContentSwitcher.class.getSimpleName();
+  public static List<ProgItem>         progItems    = new ArrayList<ProgItem>();
+  private static Map<String, ProgItem> progItemsMap = new HashMap<String, ProgItem>();
 
   /**
    * 
@@ -150,5 +151,26 @@ public class ContentSwitcher
   static
   {
     addItem( new ProgItem( "1", "dummy 1" ) );
+  }
+
+  /**
+   * 
+   * Gib einen Eintrag für die ID zurück
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.content
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 07.01.2013
+   * @param showId
+   */
+  public static ProgItem getProgItemForId( int showId )
+  {
+    return( progItemsMap.get( String.format( "%d", showId ) ) );
+  }
+
+  public static List<ProgItem> getProgramItemsList()
+  {
+    return( progItems );
   }
 }

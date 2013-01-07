@@ -229,8 +229,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   public void onListItemClick( ListView listView, View view, int position, long id )
   {
     ContentSwitcher.ProgItem mItem = null;
-    String itemContent = null;
-    String itemSid = null;
+    Bundle arguments = new Bundle();
     //
     //
     // zunächst will ich mal wissen, was das werden soll!
@@ -243,10 +242,10 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
       Log.e( TAG, "onListItemClick: program menu item was NOT explored!" );
       return;
     }
-    itemContent = mItem.content;
-    itemSid = mItem.sId;
-    Log.v( TAG, "onListItemClick: item content was: " + itemContent );
-    Log.v( TAG, "onListItemClick: item id was: " + itemSid );
+    arguments.putString( ProjectConst.ARG_ITEM_CONTENT, mItem.content );
+    arguments.putInt( ProjectConst.ARG_ITEM_ID, mItem.nId );
+    Log.v( TAG, "onListItemClick: item content was: " + mItem.content );
+    Log.v( TAG, "onListItemClick: item id was: " + mItem.nId );
     //
     // wenn EXIT angeordnet wurde
     //
@@ -328,8 +327,6 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
       // zweischirmbetrieb
       //
       Log.i( TAG, "onListItemClick: towPane mode!" );
-      Bundle arguments = new Bundle();
-      arguments.putString( ProjectConst.ARG_ITEM_ID, itemContent );
       switch ( mItem.nId )
       {
         case R.string.progitem_config:
@@ -338,7 +335,6 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
           //
           Log.v( TAG, "onListItemClick: create SPX42PreferencesFragment..." );
           SPX42PreferencesFragment cFragment = new SPX42PreferencesFragment( isIndividual );
-          arguments.putString( ProjectConst.ARG_ITEM_ID, itemContent );
           cFragment.setArguments( arguments );
           getActionBar().setTitle( R.string.conf_headline );
           getActionBar().setLogo( mItem.resId );
@@ -389,9 +385,9 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
       // kleiner Schirm
       // da wird jeder Eintrag als einzelne activity ausgeführt
       //
-      Log.i( TAG, "onListItemClick: onePane modue! Call intent DetailActivity fur itenid<" + itemSid + ">" );
+      Log.i( TAG, "onListItemClick: onePane modue! Call intent DetailActivity fur itenid<" + mItem.nId + ">" );
       Intent detailIntent = new Intent( this, areaDetailActivity.class );
-      detailIntent.putExtra( ProjectConst.ARG_ITEM_ID, itemSid );
+      detailIntent.putExtras( arguments );
       startActivity( detailIntent );
     }
   }
