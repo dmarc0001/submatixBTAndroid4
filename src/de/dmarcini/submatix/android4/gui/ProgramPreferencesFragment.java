@@ -153,7 +153,10 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
       }
       if( key.equals( "keyProgOthersThemeIsDark" ) )
       {
-        setThemeForApp();
+        if( getActivity() instanceof FragmentCommonActivity )
+        {
+          setThemeForApp();
+        }
       }
     }
   }
@@ -170,15 +173,33 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
    */
   private void setThemeForApp()
   {
-    //
-    // Argumente für Intent zusammenbauen
-    //
-    Bundle arguments = new Bundle();
-    arguments.putString( ProjectConst.ARG_ITEM_ID, getResources().getString( R.string.progitem_progpref ) );
-    Intent parentActivityIntent = new Intent( getActivity(), areaListActivity.class );
-    parentActivityIntent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
-    getActivity().finish();
-    startActivity( parentActivityIntent );
+    if( ( ( FragmentCommonActivity )getActivity() ).istActivityTwoPane() )
+    {
+      //
+      // Argumente für Intent zusammenbauen
+      //
+      Bundle arguments = new Bundle();
+      arguments.putInt( ProjectConst.ARG_ITEM_ID, R.string.progitem_progpref );
+      Intent parentActivityIntent = new Intent( getActivity(), areaListActivity.class );
+      parentActivityIntent.putExtras( arguments );
+      parentActivityIntent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
+      startActivity( parentActivityIntent );
+      getActivity().finish();
+    }
+    else
+    {
+      Bundle arguments = new Bundle();
+      arguments.putInt( ProjectConst.ARG_ITEM_ID, R.string.progitem_progpref );
+      Intent parentActivityIntent = new Intent( getActivity(), areaDetailActivity.class );
+      parentActivityIntent.putExtras( arguments );
+      parentActivityIntent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
+      startActivity( parentActivityIntent );
+      getActivity().finish();
+      // SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( getActivity() );
+      // boolean whishedTheme = sPref.getBoolean( "keyProgOthersThemeIsDark", false );
+      // Log.v( TAG, "onCreate(): setListAdapter...(" + ( whishedTheme ? "DARK" : "LIGHT" ) + ")" );
+      // getActivity().setTheme( whishedTheme ? R.style.AppDarkTheme : R.style.AppLightTheme );
+    }
   }
 
   /**

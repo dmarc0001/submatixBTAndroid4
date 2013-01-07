@@ -9,12 +9,10 @@
  */
 package de.dmarcini.submatix.android4.utils;
 
-
 import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +20,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.content.ContentSwitcher;
 
@@ -33,6 +30,9 @@ import de.dmarcini.submatix.android4.content.ContentSwitcher;
  */
 public class ArrayAdapterWithPics extends ArrayAdapter<ContentSwitcher.ProgItem>
 {
+  private int themeId = R.style.AppDarkTheme;
+
+  // R.drawable.activated_red_icon_color;
   /**
    * Mein Konstruktor Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
@@ -40,10 +40,12 @@ public class ArrayAdapterWithPics extends ArrayAdapter<ContentSwitcher.ProgItem>
    * @param context
    * @param textViewResourceId
    * @param objects
+   * @param themeId
    */
-  public ArrayAdapterWithPics(Context context, int textViewResourceId, List<ContentSwitcher.ProgItem> objects)
+  public ArrayAdapterWithPics( Context context, int textViewResourceId, List<ContentSwitcher.ProgItem> objects, int themeId )
   {
-    super(context, textViewResourceId, objects);
+    super( context, textViewResourceId, objects );
+    this.themeId = themeId;
   }
 
   /* private view holder class */
@@ -66,40 +68,50 @@ public class ArrayAdapterWithPics extends ArrayAdapter<ContentSwitcher.ProgItem>
    * @return die View für diesen Punkt der Liste
    */
   @Override
-  public View getView(int position, View convertView, ViewGroup parent)
+  public View getView( int position, View convertView, ViewGroup parent )
   {
     ViewHolder holder = null;
-    ContentSwitcher.ProgItem progItem = getItem(position);
-    LayoutInflater mInflater = (LayoutInflater) getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-    if (convertView == null)
+    ContentSwitcher.ProgItem progItem = getItem( position );
+    LayoutInflater mInflater = ( LayoutInflater )getContext().getSystemService( Activity.LAYOUT_INFLATER_SERVICE );
+    if( convertView == null )
     {
-      convertView = mInflater.inflate(R.layout.array_with_pic_adapter_view, parent, false);
+      convertView = mInflater.inflate( R.layout.array_with_pic_adapter_view, parent, false );
       holder = new ViewHolder();
-      holder.txtTitle = (TextView) convertView.findViewById(R.id.arrayListTextView);
-      holder.imageView = (ImageView) convertView.findViewById(R.id.arrayListIconView);
-      holder.imageRightIndicatorView = (ImageView) convertView.findViewById(R.id.arrayListRightActiveIndicator);
-      holder.imageLeftIndicatorView = (ImageView) convertView.findViewById(R.id.arrayListLeftActiveIndicator);
-      convertView.setTag(holder);
+      holder.txtTitle = ( TextView )convertView.findViewById( R.id.arrayListTextView );
+      holder.imageView = ( ImageView )convertView.findViewById( R.id.arrayListIconView );
+      holder.imageRightIndicatorView = ( ImageView )convertView.findViewById( R.id.arrayListRightActiveIndicator );
+      holder.imageLeftIndicatorView = ( ImageView )convertView.findViewById( R.id.arrayListLeftActiveIndicator );
+      convertView.setTag( holder );
     }
     else
     {
-      holder = (ViewHolder) convertView.getTag();
+      holder = ( ViewHolder )convertView.getTag();
     }
-    holder.txtTitle.setText(progItem.content);
-    holder.imageView.setImageResource(progItem.resId);
-    if (parent instanceof ListView)
+    holder.txtTitle.setText( progItem.content );
+    holder.imageView.setImageResource( progItem.resId );
+    if( parent instanceof ListView )
     {
-      ListView pView = (ListView) parent;
-      if (pView.getCheckedItemPosition() == position)
+      ListView pView = ( ListView )parent;
+      if( pView.getCheckedItemPosition() == position )
       {
-        Log.i("DEBUG", "is selected at <" + position + ">");
-        holder.imageLeftIndicatorView.setImageResource(R.drawable.activated_red_icon_color);
-        holder.imageRightIndicatorView.setImageResource(R.drawable.activated_red_icon_color);
+        //
+        // Hier noch je nach hellem oder dunklen Thema den Marker wählen
+        //
+        if( this.themeId == R.style.AppDarkTheme )
+        {
+          holder.imageLeftIndicatorView.setImageResource( R.drawable.activated_red_icon_color );
+          holder.imageRightIndicatorView.setImageResource( R.drawable.activated_red_icon_color );
+        }
+        else
+        {
+          holder.imageLeftIndicatorView.setImageResource( R.drawable.activated_blue_icon_color );
+          holder.imageRightIndicatorView.setImageResource( R.drawable.activated_blue_icon_color );
+        }
       }
       else
       {
-        holder.imageLeftIndicatorView.setImageResource(R.drawable.deactivated_and_space);
-        holder.imageRightIndicatorView.setImageResource(R.drawable.deactivated_and_space);
+        holder.imageLeftIndicatorView.setImageResource( R.drawable.deactivated_and_space );
+        holder.imageRightIndicatorView.setImageResource( R.drawable.deactivated_and_space );
       }
     }
     return convertView;

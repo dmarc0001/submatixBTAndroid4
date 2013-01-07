@@ -118,7 +118,7 @@ public final class ProjectConst
   public static final int GASNAMECOLOR_NONORMOXIC       = Color.MAGENTA;
   
   // Android: Parameterbezeichnug für Programmmenü-Id
-  public static final String ARG_ITEM_ID                = "item_id";
+  public static final String ARG_ITEM_ID                = "de.dmarcini.submatix.progitem_item_id";
   
   // Android: ID für Intentrequests
   public static final int REQUEST_ENABLE_BT             = 1;

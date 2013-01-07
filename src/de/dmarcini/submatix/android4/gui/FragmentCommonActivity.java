@@ -52,6 +52,22 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     Log.v( TAG, "askEnableBT()...OK" );
   }
 
+  /**
+   * 
+   * Ist die Activity mit zwei Anzeigeflächen? (Tablett)
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 07.01.2013
+   * @return TODO
+   */
+  public boolean istActivityTwoPane()
+  {
+    return( mTwoPane );
+  }
+
   @Override
   public void finishFromChild( Activity child )
   {
@@ -129,10 +145,29 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
       else
       {
         Log.d( TAG, "onCreate: select Blue theme while preference was set" );
-        setTheme( R.style.AppBlueTheme );
+        setTheme( R.style.AppLightTheme );
       }
     }
     setContentView( R.layout.activity_area_list );
+    //
+    // finde raus, ob es ein Restart für ein neues Theme war
+    //
+    if( getIntent().getExtras() != null && getIntent().getExtras().containsKey( ProjectConst.ARG_ITEM_ID ) )
+    {
+      Log.v( TAG, "onCreate: it was an bundle there..." );
+      if( getIntent().getExtras().getInt( ProjectConst.ARG_ITEM_ID, 0 ) == R.string.progitem_progpref )
+      {
+        // ja, jetzt muss ich auch drauf reagieren und die Preferenzen aufbauen
+        Log.i( TAG, "onCreate: set program preferences after switch theme..." );
+        Bundle arg = new Bundle();
+        arg.putString( ProjectConst.ARG_ITEM_ID, getResources().getString( R.string.progitem_progpref ) );
+        ProgramPreferencesFragment ppFragment = new ProgramPreferencesFragment();
+        ppFragment.setArguments( arg );
+        getActionBar().setTitle( R.string.conf_prog_headline );
+        getActionBar().setLogo( R.drawable.properties );
+        getFragmentManager().beginTransaction().replace( R.id.area_detail_container, ppFragment ).commit();
+      }
+    }
   }
 
   /**
@@ -284,9 +319,9 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         }
         return;
     }
-    //
+    // ////////////////////////////////////////////////////////////////////////
     // jetzt noch zwischen Tablett mit Schirmsplitt und Smartphone unterscheiden
-    //
+    // ////////////////////////////////////////////////////////////////////////
     if( mTwoPane )
     {
       //
