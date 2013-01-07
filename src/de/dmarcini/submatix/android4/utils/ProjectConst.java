@@ -119,6 +119,7 @@ public final class ProjectConst
   
   // Android: Parameterbezeichnug für Programmmenü-Id
   public static final String ARG_ITEM_ID                = "de.dmarcini.submatix.progitem_item_id";
+  public static final String ARG_ITEM_CONTENT           = "de.dmarcini.submatix.progitem_item_content";
   
   // Android: ID für Intentrequests
   public static final int REQUEST_ENABLE_BT             = 1;
