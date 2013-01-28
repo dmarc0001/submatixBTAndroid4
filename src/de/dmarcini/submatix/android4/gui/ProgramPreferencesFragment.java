@@ -9,9 +9,11 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 
@@ -34,7 +36,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
   {
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate()..." );
-    Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_individual + ">..." );
+    Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_program_preference + ">..." );
     addPreferencesFromResource( R.xml.config_program_preference );
     //
     // initiiere die notwendigen summarys
@@ -45,6 +47,15 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     //
     getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener( this );
     Log.v( TAG, "onCreate: add Resouce...OK" );
+  }
+
+  @Override
+  public void onResume()
+  {
+    super.onResume();
+    Log.v( TAG, "onResume()" );
+    PreferenceScreen ps = getPreferenceScreen();
+    Log.v( TAG, "this preferencescreen has <" + ps.getPreferenceCount() + "> preferenes." );
   }
 
   @Override
@@ -77,13 +88,6 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
   {
     super.onPause();
     Log.v( TAG, "onPause..." );
-  }
-
-  @Override
-  public void onResume()
-  {
-    super.onResume();
-    Log.v( TAG, "onResume..." );
   }
 
   @Override
@@ -195,10 +199,6 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
       parentActivityIntent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
       startActivity( parentActivityIntent );
       getActivity().finish();
-      // SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( getActivity() );
-      // boolean whishedTheme = sPref.getBoolean( "keyProgOthersThemeIsDark", false );
-      // Log.v( TAG, "onCreate(): setListAdapter...(" + ( whishedTheme ? "DARK" : "LIGHT" ) + ")" );
-      // getActivity().setTheme( whishedTheme ? R.style.AppDarkTheme : R.style.AppLightTheme );
     }
   }
 
@@ -259,6 +259,43 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     else
     {
       tP.setSummary( String.format( res.getString( R.string.conf_prog_mail_main_summary ), "." ) );
+    }
+  }
+
+  @Override
+  public void onViewCreated( View view, Bundle savedInstanceState )
+  {
+    super.onViewCreated( view, savedInstanceState );
+    Log.v( TAG, "onViewCreated..." );
+    PreferenceScreen ps = getPreferenceScreen();
+    Log.v( TAG, "this preferencescreen has <" + ps.getPreferenceCount() + "> preferenes." );
+    for( int groupIdx = 0; groupIdx < ps.getPreferenceCount(); groupIdx++ )
+    {
+      PreferenceGroup pg = ( PreferenceGroup )ps.getPreference( groupIdx );
+      Log.v( TAG, String.format( "The Group <%s> has %d preferences", pg.getTitle(), pg.getPreferenceCount() ) );
+      for( int prefIdx = 0; prefIdx < pg.getPreferenceCount(); prefIdx++ )
+      {
+        Preference pref = pg.getPreference( prefIdx );
+        Log.v( TAG, String.format( "The Preference <%s> is number %d", pref.getTitle(), prefIdx ) );
+        // jede ungerade Zeile färben
+        if( prefIdx % 2 > 0 )
+        {
+          if( FragmentCommonActivity.getAppStyle() == R.style.AppDarkTheme )
+          {
+            // dunkles Thema
+            pref.setLayoutResource( R.layout.preference_dark );
+          }
+          else
+          {
+            // helles Thema
+            pref.setLayoutResource( R.layout.preference_light );
+          }
+        }
+        else
+        {
+          pref.setLayoutResource( R.layout.preference );
+        }
+      }
     }
   }
 }

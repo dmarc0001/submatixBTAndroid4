@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import de.dmarcini.submatix.android4.R;
 
 /**
@@ -140,6 +142,43 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements OnSh
   {
     super.onResume();
     Log.v( TAG, "onResume..." );
+  }
+
+  @Override
+  public void onViewCreated( View view, Bundle savedInstanceState )
+  {
+    super.onViewCreated( view, savedInstanceState );
+    Log.v( TAG, "onViewCreated..." );
+    PreferenceScreen ps = getPreferenceScreen();
+    Log.v( TAG, "this preferencescreen has <" + ps.getPreferenceCount() + "> preferenes." );
+    for( int groupIdx = 0; groupIdx < ps.getPreferenceCount(); groupIdx++ )
+    {
+      PreferenceGroup pg = ( PreferenceGroup )ps.getPreference( groupIdx );
+      Log.v( TAG, String.format( "The Group <%s> has %d preferences", pg.getTitle(), pg.getPreferenceCount() ) );
+      for( int prefIdx = 0; prefIdx < pg.getPreferenceCount(); prefIdx++ )
+      {
+        Preference pref = pg.getPreference( prefIdx );
+        Log.v( TAG, String.format( "The Preference <%s> is number %d", pref.getTitle(), prefIdx ) );
+        // jede ungerade Zeile färben
+        if( prefIdx % 2 > 0 )
+        {
+          if( FragmentCommonActivity.getAppStyle() == R.style.AppDarkTheme )
+          {
+            // dunkles Thema
+            pref.setLayoutResource( R.layout.preference_dark );
+          }
+          else
+          {
+            // helles Thema
+            pref.setLayoutResource( R.layout.preference_light );
+          }
+        }
+        else
+        {
+          pref.setLayoutResource( R.layout.preference );
+        }
+      }
+    }
   }
 
   @Override
