@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:title="@string/conf_prog_headline">
-    <PreferenceCategory android:title="@string/conf_prog_filesystem" android:key="keyProgData">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:title="@string/conf_prog_headline" android:id="@+id/conf_prog_preferencescreen">
+    <de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory android:title="@string/conf_prog_filesystem" android:key="keyProgData">
         <EditTextPreference 
             android:title="@string/conf_prog_datadir" 
             android:key="keyProgDataDirectory" 
@@ -14,9 +14,9 @@
             android:key="keyProgShowAllLogentrys" 
             android:defaultValue="true"/>
         
-    </PreferenceCategory>
+    </de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory>
     
-    <PreferenceCategory android:title="@string/conf_prog_mail_header" android:key="keyProgMail">
+    <de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory android:title="@string/conf_prog_mail_header" android:key="keyProgMail">
         <EditTextPreference 
             android:title="@string/conf_prog_mail_main" 
             android:key="keyProgMailMain"/>
@@ -25,13 +25,13 @@
             android:key="keyProgMail2nd"/>
         <CheckBoxPreference 
             android:key="keyProgMailCompressed" 
-            android:defaultValue="off" 
+            android:defaultValue="false" 
             android:title="@string/conf_prog_mail_compressed_header" 
             android:summaryOn="@string/conf_prog_mail_compressed_on_summary" 
             android:summaryOff="@string/conf_prog_mail_compressed_off_summary"/>
-    </PreferenceCategory>
+    </de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory>
     
-    <PreferenceCategory android:title="@string/conf_prog_others_header" android:key="keyProgOthers">
+    <de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory android:title="@string/conf_prog_others_header" android:key="keyProgOthers">
         <SwitchPreference 
             android:switchTextOff="@string/conf_prog_others_off_light" 
             android:switchTextOn="@string/conf_prog_others_on_dark" 
@@ -40,7 +40,7 @@
             android:summaryOff="@string/conf_prog_others_off_light_summary" 
             android:summaryOn="@string/conf_prog_others_on_dark_summary" 
             android:defaultValue="true"/>
-    </PreferenceCategory>
+    </de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory>
     
     
     

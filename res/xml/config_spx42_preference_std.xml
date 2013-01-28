@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:title="@string/conf_headline" android:key="keyConfig">
     
      <!-- Kategorie _Highsetpoint auto/off -->
-    <PreferenceCategory android:title="@string/conf_setpoint_header" android:key="keySetpoint">
+    <de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory android:title="@string/conf_setpoint_header" android:key="keySetpoint">
       <ListPreference 
           android:key="keySetpointAutosetpointDepth" 
           android:entryValues="@array/highsetpointDepthValuesArray" 
@@ -15,10 +15,10 @@
           android:entryValues="@array/highsetpointValuesArray" 
           android:entries="@array/highsetpointNamesArray" 
           android:defaultValue="@string/conf_highset_default"/>
-    </PreferenceCategory>
+    </de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory>
     
     <!-- Voreinstellung Deco-Gradienten -->
-    <PreferenceCategory android:title="@string/conf_deco_header" android:key="keyDeco">
+    <de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory android:title="@string/conf_deco_header" android:key="keyDeco">
         <ListPreference 
             android:entryValues="@array/gradientPresetValuesArray" 
             android:entries="@array/gradientPresetNamesArray" 
@@ -55,10 +55,10 @@
             android:switchTextOff="@string/conf_deco_deepstops_off" 
             android:defaultValue="true"/>
         
-    </PreferenceCategory>
+    </de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory>
       
     <!-- Einstellungen für die Anzeige -->
-    <PreferenceCategory android:title="@string/conf_display_header" android:key="keyDisplay">
+    <de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory android:title="@string/conf_display_header" android:key="keyDisplay">
         <ListPreference 
             android:key="keyDisplayLuminance" 
             android:title="@string/conf_display_luminance_header" 
@@ -72,10 +72,10 @@
             android:entries="@array/displayOrientationNamesArray" 
             android:defaultValue="@string/conf_display_orientation_default"/>
         
-    </PreferenceCategory>
+    </de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory>
     
     <!-- Einstellungen für Einheiten -->
-    <PreferenceCategory android:title="@string/conf_units_header" android:key="keyUnits">
+    <de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory android:title="@string/conf_units_header" android:key="keyUnits">
         <SwitchPreference 
             android:key="keyUnitsIsTempMetric" 
             android:title="@string/conf_units_temp_header" 
@@ -101,7 +101,7 @@
             android:summaryOff="@string/conf_units_saltwater_summary" 
             android:defaultValue="true"/>
         
-    </PreferenceCategory>
+    </de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory>
     
     <!-- Individual-Einstellungen fehlen bei diesem Lizenzmodell-->
 </PreferenceScreen>
