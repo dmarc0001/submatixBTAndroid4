@@ -30,10 +30,11 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
  */
 public class FragmentCommonActivity extends Activity implements AreYouSureDialogFragment.NoticeDialogListener
 {
-  private static final String TAG          = FragmentCommonActivity.class.getSimpleName();
-  protected static boolean    mTwoPane     = false;
-  protected static boolean    isIndividual = false;
-  protected static boolean    isTrimix     = true;
+  private static final String TAG            = FragmentCommonActivity.class.getSimpleName();
+  protected static boolean    mTwoPane       = false;
+  protected static boolean    isIndividual   = false;
+  protected static boolean    isTrimix       = true;
+  private static int          currentStyleId = R.style.AppDarkTheme;
 
   /**
    * Frage, ob BR erlaubt werden sollte Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
@@ -113,6 +114,11 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     }
   }
 
+  public static final int getAppStyle()
+  {
+    return( currentStyleId );
+  }
+
   /**
    * Wenn die Activity erzeugt wird, u.A. herausfinden ob ein- oder zwei-Flächen Mode
    * 
@@ -136,11 +142,13 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
       if( whishedTheme )
       {
         Log.d( TAG, "onCreate: select DARK theme while preference was set" );
+        currentStyleId = R.style.AppDarkTheme;
         setTheme( R.style.AppDarkTheme );
       }
       else
       {
         Log.d( TAG, "onCreate: select Blue theme while preference was set" );
+        currentStyleId = R.style.AppLightTheme;
         setTheme( R.style.AppLightTheme );
       }
     }
