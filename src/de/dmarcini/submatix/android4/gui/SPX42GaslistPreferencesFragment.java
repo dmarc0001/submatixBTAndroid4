@@ -28,12 +28,13 @@ import de.dmarcini.submatix.android4.utils.GasPickerPreference;
  * 
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
  * 
- *         Stand: 01.01.2013 TODO
+ *         Stand: 01.01.2013
  */
 public class SPX42GaslistPreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener
 {
   private static final String TAG            = SPX42GaslistPreferencesFragment.class.getSimpleName();
   private String              gasKeyTemplate = null;
+  @SuppressWarnings( "unused" )
   private boolean             isTrimix       = false;
 
   /**

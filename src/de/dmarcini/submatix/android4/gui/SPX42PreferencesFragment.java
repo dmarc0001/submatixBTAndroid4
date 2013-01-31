@@ -175,7 +175,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements OnSh
         }
         else
         {
-          pref.setLayoutResource( R.layout.preference );
+          pref.setLayoutResource( R.layout.preference_dark );
         }
       }
     }

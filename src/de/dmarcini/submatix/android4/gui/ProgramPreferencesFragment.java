@@ -293,7 +293,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
         }
         else
         {
-          pref.setLayoutResource( R.layout.preference );
+          pref.setLayoutResource( R.layout.preference_dark );
         }
       }
     }
