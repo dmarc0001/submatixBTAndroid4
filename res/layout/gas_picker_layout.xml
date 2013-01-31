@@ -52,8 +52,6 @@
     
         <NumberPicker
             android:id="@+id/o2NumberPicker"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
             android:layout_column="0"
             android:layout_gravity="left"
             android:layout_row="1" >
@@ -69,9 +67,7 @@
             android:id="@+id/n2NumberPicker"
             android:layout_column="2"
             android:layout_gravity="left"
-            android:layout_row="1"
-            android:focusable="false"
-            android:focusableInTouchMode="false" />
+            android:layout_row="1" />
     
         <!-- Ende der Reihen... -->
     </GridLayout>
