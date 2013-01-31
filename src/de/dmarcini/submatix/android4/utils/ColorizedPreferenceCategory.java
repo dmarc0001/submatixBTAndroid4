@@ -49,8 +49,6 @@ public class ColorizedPreferenceCategory extends PreferenceCategory
   {
     Log.v( TAG, "check for theme in app..." );
     currStyle = FragmentCommonActivity.getAppStyle();
-    // setWidgetLayoutResource( widgetLayoutResId )
-    // setLayoutResource( R.layout.preference_category_header );
     return( currStyle );
   }
 
