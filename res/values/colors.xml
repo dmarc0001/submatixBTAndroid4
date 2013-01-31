@@ -1,11 +1,11 @@
 <resources>
   <!-- DARK Thema -->
   <color name="preferenceCategoryDark.textColor">#00ff00</color>
-  <color name="preferenceCategoryDark.backgroundColor">#300C316E</color>
-  <color name="preferenceDark.backgroundColor">#10d0d0f0</color>
+  <color name="preferenceCategoryDark.backgroundColor">#37373E</color>
+  <color name="preferenceDark.backgroundColor">#2a2a2a</color>
   
   <!-- Light Thema -->
   <color name="preferenceCategoryLight.textColor">#0554FF</color>
-  <color name="preferenceCategoryLight.backgroundColor">#3081BAD6</color>
-  <color name="preferenceLight.backgroundColor">#106060e0</color>
+  <color name="preferenceCategoryLight.backgroundColor">#DFDFFF</color>
+  <color name="preferenceLight.backgroundColor">#F2F2FF</color>
 </resources>
