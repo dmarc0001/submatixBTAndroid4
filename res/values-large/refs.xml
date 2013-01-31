@@ -8,5 +8,5 @@
     http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
     -->
     <item name="activity_area_list" type="layout">@layout/activity_area_twopane</item>
-
+    <item name="gas_picker_layout" type="layout">@layout/gas_picker_layout_big</item>
 </resources>

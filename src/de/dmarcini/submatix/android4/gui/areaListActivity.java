@@ -96,7 +96,7 @@ public class areaListActivity extends FragmentCommonActivity
       Log.v( TAG, "onCreate: twoPane-mode" );
       // Der Detailcontainer ist nur vorhanden, wenn die App
       // (durch das System) festgestellt hat, dass es auf einem
-      // Gerät mirt grossem Display (res/values-large and
+      // Gerät mit grossem Display (res/values-large and
       // res/values-sw600dp) läuft.
       mTwoPane = true;
       // Im twoPane Modus soll der aktivierte Eintrag immer gekennzeichnet sein!
