@@ -347,6 +347,13 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
     n2Picker.setMinValue( 0 );
     n2Picker.setMaxValue( 100 );
     n2Picker.setWrapSelectorWheel( false );
+    if( n2Picker.getChildCount() == 1 )
+    {
+      EditText et = ( EditText )n2Picker.getChildAt( 0 );
+      et.setClickable( false );
+      et.setFocusable( false );
+      et.setFocusableInTouchMode( false );
+    }
     //
     // Checkboxen für Gasdefinition benennen
     //
