@@ -163,12 +163,24 @@ public class ContentSwitcher
    * 
    *         Stand: 07.01.2013
    * @param showId
+   * @return Programmeintrag
    */
   public static ProgItem getProgItemForId( int showId )
   {
     return( progItemsMap.get( String.format( "%d", showId ) ) );
   }
 
+  /**
+   * 
+   * Liste von Programmeinträgen zurückgeben
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.content
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 31.01.2013
+   * @return Liste von Programmeinträgen
+   */
   public static List<ProgItem> getProgramItemsList()
   {
     return( progItems );
