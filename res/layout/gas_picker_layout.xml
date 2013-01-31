@@ -27,7 +27,8 @@
             android:layout_gravity="center"
             android:layout_row="0"
             android:text="@string/conf_gaslist_o2"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
     
         <TextView
             android:id="@+id/heTextView"
@@ -37,7 +38,8 @@
             android:layout_gravity="center"
             android:layout_row="0"
             android:text="@string/conf_gaslist_he"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
     
         <TextView
             android:id="@+id/n2TextView"
@@ -46,7 +48,8 @@
             android:layout_gravity="center"
             android:layout_row="0"
             android:text="@string/conf_gaslist_n2"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
     
         <!-- Reihe #02 -->
     
