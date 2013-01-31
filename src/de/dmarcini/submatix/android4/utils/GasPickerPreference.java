@@ -16,7 +16,9 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.NumberPicker.Formatter;
 import android.widget.NumberPicker.OnValueChangeListener;
+import android.widget.TextView;
 import de.dmarcini.submatix.android4.R;
+import de.dmarcini.submatix.android4.gui.FragmentCommonActivity;
 
 /**
  * 
@@ -44,9 +46,10 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
   private boolean             d1Current          = false;
   private boolean             d2Current          = false;
   private boolean             bailoutCurrent     = false;
-  private EditText            o2EditText         = null;
-  private EditText            heEditText         = null;
+  private TextView            o2TextView         = null;
+  private TextView            heTextView         = null;
   private static String       defaultReturnValue = "100:0:0:0:0:0";
+  private int                 currentStyleId     = R.style.AppDarkTheme;
 
   /**
    * 
@@ -312,12 +315,15 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
   {
     Log.d( TAG, "onCreateDialogView()..." );
     setDialogLayoutResource( R.layout.gas_picker_layout );
+    currentStyleId = FragmentCommonActivity.getAppStyle();
     return super.onCreateDialogView();
   }
 
   @Override
   protected void onBindDialogView( View v )
   {
+    int index;
+    //
     Log.d( TAG, "onBindDialogView()..." );
     noAction = true;
     //
@@ -329,6 +335,17 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
     o2Picker.setMinValue( 0 );
     o2Picker.setMaxValue( 100 );
     o2Picker.setWrapSelectorWheel( false );
+    for( index = 0; index < o2Picker.getChildCount(); index++ )
+    {
+      if( o2Picker.getChildAt( index ) instanceof EditText )
+      {
+        EditText o2EditText = ( EditText )o2Picker.getChildAt( index );
+        o2EditText.setClickable( false );
+        o2EditText.setFocusable( false );
+        o2EditText.setFocusableInTouchMode( false );
+        break;
+      }
+    }
     //
     // he Picker initialisieren
     //
@@ -338,6 +355,17 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
     hePicker.setMinValue( 0 );
     hePicker.setMaxValue( 100 );
     hePicker.setWrapSelectorWheel( false );
+    for( index = 0; index < hePicker.getChildCount(); index++ )
+    {
+      if( hePicker.getChildAt( index ) instanceof EditText )
+      {
+        EditText heEditText = ( EditText )hePicker.getChildAt( index );
+        heEditText.setClickable( false );
+        heEditText.setFocusable( false );
+        heEditText.setFocusableInTouchMode( false );
+        break;
+      }
+    }
     //
     // n2 Picker initialisieren
     //
@@ -347,12 +375,16 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
     n2Picker.setMinValue( 0 );
     n2Picker.setMaxValue( 100 );
     n2Picker.setWrapSelectorWheel( false );
-    if( n2Picker.getChildCount() == 1 )
+    for( index = 0; index < n2Picker.getChildCount(); index++ )
     {
-      EditText et = ( EditText )n2Picker.getChildAt( 0 );
-      et.setClickable( false );
-      et.setFocusable( false );
-      et.setFocusableInTouchMode( false );
+      if( n2Picker.getChildAt( index ) instanceof EditText )
+      {
+        EditText n2EditText = ( EditText )n2Picker.getChildAt( index );
+        n2EditText.setClickable( false );
+        n2EditText.setFocusable( false );
+        n2EditText.setFocusableInTouchMode( false );
+        break;
+      }
     }
     //
     // Checkboxen für Gasdefinition benennen
@@ -366,6 +398,11 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
     bailoutCheckbox = ( CheckBox )v.findViewById( R.id.bailoutCheckBox );
     bailoutCheckbox.setChecked( bailoutCurrent );
     bailoutCheckbox.setOnCheckedChangeListener( this );
+    //
+    // Labels für Picker suchen
+    //
+    o2TextView = ( TextView )v.findViewById( R.id.o2TextView );
+    heTextView = ( TextView )v.findViewById( R.id.heTextView );
     //
     // setzte initial die Farben der picker
     //
@@ -389,36 +426,29 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    */
   private void setHePickerColor( int he )
   {
-    int index = 0;
     int color;
     int rest;
     //
-    // wenn o2EditText nicht da ist...
-    //
-    if( this.heEditText == null )
-    {
-      for( index = 0; index < hePicker.getChildCount(); index++ )
-      {
-        if( hePicker.getChildAt( index ) instanceof EditText )
-        {
-          this.heEditText = ( EditText )hePicker.getChildAt( index );
-          heEditText.setFocusable( false );
-          break;
-        }
-      }
-    }
-    //
     // Na dann...
     //
-    if( this.heEditText != null )
+    if( this.heTextView != null )
     {
-      // je mehr he desto grüner
-      // also desto weniger blau and red
-      // also he vom weiss abziehen
-      rest = 200 - ( he * 2 );
-      color = 0xff00ff00 | ( rest << 16 ) | rest;
-      heEditText.setTextColor( color );
-      heEditText.setHintTextColor( color );
+      if( currentStyleId == R.style.AppDarkTheme )
+      {
+        // je mehr he desto grüner
+        // also desto weniger blau and red
+        // also he vom weiss abziehen
+        rest = 200 - ( he * 2 );
+        color = 0xff00c800 | ( rest << 16 ) | 200 - he;
+      }
+      else
+      {
+        // anfangen mit schwarz, immer mehr grün...
+        rest = ( he * 2 ) + 54;
+        color = 0xff300000 | ( rest << 8 ) | he + 60;
+      }
+      heTextView.setTextColor( color );
+      heTextView.setHintTextColor( color );
     }
   }
 
@@ -435,36 +465,52 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    */
   private void setO2PickerColor( int o2 )
   {
-    int index = 0;
     int color;
     int rest;
     //
-    // wenn o2EditText nicht da ist...
-    //
-    if( this.o2EditText == null )
-    {
-      for( index = 0; index < o2Picker.getChildCount(); index++ )
-      {
-        if( o2Picker.getChildAt( index ) instanceof EditText )
-        {
-          this.o2EditText = ( EditText )o2Picker.getChildAt( index );
-          o2EditText.setFocusable( false );
-          break;
-        }
-      }
-    }
-    //
     // Na dann...
     //
-    if( this.o2EditText != null )
+    if( this.o2TextView != null )
     {
-      // je mehr O2 desto blauer
-      // also desto weniger green and red
-      // also o2 vom weiss abziehen
-      rest = 200 - ( o2 * 2 );
-      color = 0xff0000ff | ( rest << 16 ) | ( rest << 8 );
-      o2EditText.setTextColor( color );
-      o2EditText.setHintTextColor( color );
+      //
+      // unterscheide noch nach Sauerstoff normoxisch/non-Normoxisch
+      if( o2 > 20 )
+      {
+        // also NORMOXISCH
+        if( currentStyleId == R.style.AppDarkTheme )
+        {
+          // je mehr O2 desto blauer
+          // also desto weniger green and red
+          // also o2 vom weiss abziehen
+          rest = 144 - Math.round( ( o2 - 21 ) * 1.8F );
+          color = 0xff0000ff | ( rest << 16 ) | ( rest << 8 );
+        }
+        else
+        {
+          // anfangen mit schwarz, immer mehr blau...
+          rest = o2 - 21;
+          color = 0xff000000 | Math.round( rest * 2.11F ) << 16 | Math.round( rest * 2.11F ) << 16 | 156 + Math.round( rest * 0.86F );
+        }
+      }
+      else
+      {
+        // also NICHT NORMOXISCH
+        if( currentStyleId == R.style.AppDarkTheme )
+        {
+          // je weniger O2 desto roter
+          // Bereich 0..20
+          // Blau 00 ..0x90
+          // rot 00 -- 0xff
+          color = 0xff000000 | ( ( 0xff - Math.round( o2 * 5.05F ) ) << 16 ) | Math.round( o2 * 7.2F ) << 8 | Math.round( o2 * 12.7F );
+        }
+        else
+        {
+          // anfangen mit blau immer mehr rot
+          color = 0xff000000 | ( 0xff - Math.round( o2 * 8.35F ) ) << 16 | Math.round( 02 * 3.8F ) << 8 | Math.round( o2 * 7.8F );
+        }
+      }
+      o2TextView.setTextColor( color );
+      o2TextView.setHintTextColor( color );
     }
   }
 
