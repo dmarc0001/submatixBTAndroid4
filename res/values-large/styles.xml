@@ -1,0 +1,42 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Style für GROSSE Displays
+    -->
+    <!-- Application theme. -->
+    <style name="AppDarkTheme" parent="android:Theme.Holo">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+    
+    <style name="AppLightTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+
+    <style name="preferenceCategoryCommon">
+      <item name="android:background">@color/preferenceCategoryDark.backgroundColor</item>
+      <item name="android:textColor">@color/preferenceCategoryDark.textColor</item>
+      <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+      <item name="android:textStyle">bold</item>
+      <!--  hier GROSSE TEsxte bei den Kategorien -->
+      <item name="android:textSize">24sp</item>
+      <item name="android:paddingTop">24dp</item>
+      <item name="android:paddingLeft">10dp</item>
+      </style>
+    
+    <style name="preferenceCategoryDark" parent="preferenceCategoryCommon"> 
+      <item name="android:background">@color/preferenceCategoryDark.backgroundColor</item>
+      <item name="android:textColor">@color/preferenceCategoryDark.textColor</item>
+    </style>
+    
+    
+    <style name="preferenceCategoryLight" parent="preferenceCategoryCommon"> 
+      <item name="android:background">@color/preferenceCategoryLight.backgroundColor</item>
+      <item name="android:textColor">@color/preferenceCategoryLight.textColor</item>
+    </style>
+    
+    <style name="selectableItemBackground" >
+      <item name="android:background" >@color/preferenceDark.backgroundColor</item>
+    </style>
+    
+    
+</resources>
