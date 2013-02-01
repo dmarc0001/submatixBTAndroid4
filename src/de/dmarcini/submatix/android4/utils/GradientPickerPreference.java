@@ -16,7 +16,9 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.NumberPicker.Formatter;
 import android.widget.NumberPicker.OnValueChangeListener;
+import android.widget.TextView;
 import de.dmarcini.submatix.android4.R;
+import de.dmarcini.submatix.android4.gui.FragmentCommonActivity;
 
 /**
  * Eigene Klasse zum Einstellen der Gradienten für decompression
@@ -25,14 +27,15 @@ import de.dmarcini.submatix.android4.R;
  */
 public class GradientPickerPreference extends DialogPreference implements OnValueChangeListener
 {
-  private static final String TAG                = GradientPickerPreference.class.getSimpleName();
-  private NumberPicker        lowPicker          = null;
-  private NumberPicker        highPicker         = null;
-  private EditText            lowEditText        = null;
-  private EditText            highEditText       = null;
-  private static String       defaultReturnValue = "30:80";
-  private int                 highGradient       = 0;
-  private int                 lowGradient        = 0;
+  private static final String TAG                  = GradientPickerPreference.class.getSimpleName();
+  private NumberPicker        lowPicker            = null;
+  private NumberPicker        highPicker           = null;
+  private TextView            lowGradientTextView  = null;
+  private TextView            highGradientTextView = null;
+  private static String       defaultReturnValue   = "30:80";
+  private int                 highGradient         = 0;
+  private int                 lowGradient          = 0;
+  private int                 currentStyleId       = R.style.AppDarkTheme;
 
   /**
    * Private Klasse (nach Android Developers) zum sichern des aktuellen Status Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
@@ -154,13 +157,18 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
   {
     Log.d( TAG, "onCreateDialogView()..." );
     setDialogLayoutResource( R.layout.gradient_picker_layout );
+    currentStyleId = FragmentCommonActivity.getAppStyle();
     return super.onCreateDialogView();
   }
 
   @Override
   protected void onBindDialogView( View v )
   {
+    int index;
+    //
     Log.d( TAG, "onBindDialogView()..." );
+    lowGradientTextView = ( TextView )v.findViewById( R.id.lowGradientTextView );
+    highGradientTextView = ( TextView )v.findViewById( R.id.highGradientTextView );
     //
     // LOW Gradient Picker initialisieren
     //
@@ -171,6 +179,17 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
     lowPicker.setMaxValue( 100 );
     lowPicker.setValue( lowGradient );
     lowPicker.setWrapSelectorWheel( false );
+    for( index = 0; index < lowPicker.getChildCount(); index++ )
+    {
+      if( lowPicker.getChildAt( index ) instanceof EditText )
+      {
+        EditText lowEditText = ( EditText )lowPicker.getChildAt( index );
+        lowEditText.setClickable( false );
+        lowEditText.setFocusable( false );
+        lowEditText.setFocusableInTouchMode( false );
+        break;
+      }
+    }
     //
     // HIGH Gradient Picker initialisieren
     //
@@ -181,6 +200,17 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
     highPicker.setMaxValue( 100 );
     highPicker.setValue( highGradient );
     highPicker.setWrapSelectorWheel( false );
+    for( index = 0; index < highPicker.getChildCount(); index++ )
+    {
+      if( highPicker.getChildAt( index ) instanceof EditText )
+      {
+        EditText highEditText = ( EditText )highPicker.getChildAt( index );
+        highEditText.setClickable( false );
+        highEditText.setFocusable( false );
+        highEditText.setFocusableInTouchMode( false );
+        break;
+      }
+    }
     //
     // farben machen
     //
@@ -208,26 +238,51 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
     int redCol = 0;
     int greenCol = 0;
     //
-    // je kleiner gradient, desto Grün
-    // je groesser, desto rot
-    // Farbe 0xffRRGGBB
-    if( gradient <= 50 )
+    if( currentStyleId == R.style.AppDarkTheme )
     {
-      // erst grün, dann verblassen zu weiss
-      redCol = ( gradient * 4 ) + 55;
-      greenCol = 255;
-      blueCol = ( gradient * 4 ) + 55;
+      //
+      // je kleiner gradient, desto Grün
+      // je groesser, desto rot
+      // Farbe 0xffRRGGBB
+      if( gradient <= 50 )
+      {
+        // erst grün, dann verblassen zu weiss
+        redCol = ( gradient * 4 ) + 55;
+        greenCol = 255;
+        blueCol = ( gradient * 4 ) + 55;
+      }
+      else
+      {
+        // erst weiss, dann erleuchten zu rot
+        redCol = 255;
+        gradient = 100 - gradient;
+        greenCol = ( gradient * 4 ) + 55;
+        blueCol = ( gradient * 4 ) + 55;
+      }
     }
     else
     {
-      // erst weiss, dann erleuchten zu rot
-      redCol = 255;
-      gradient = 100 - gradient;
-      greenCol = ( gradient * 4 ) + 55;
-      blueCol = ( gradient * 4 ) + 55;
+      //
+      // je kleiner gradient, desto Grün
+      // je groesser, desto rot
+      // Farbe 0xffRRGGBB
+      if( gradient < 50 )
+      {
+        // erst grün, dann verblassen zu Schwarz
+        redCol = 33;
+        greenCol = 255 - ( Math.round( gradient * 4.44F ) + 33 );
+        blueCol = 33;
+      }
+      else
+      {
+        // erst schwarz, dann erleuchten zu rot
+        gradient -= 50;
+        redCol = Math.round( gradient * 4.44F ) + 33;
+        greenCol = 33;
+        blueCol = 33;
+      }
     }
     color = 0xff000000 | ( ( redCol & 0xFF ) << 16 ) | ( ( greenCol & 0xFF ) << 8 ) | ( blueCol & 0xFF );
-    Log.d( TAG, String.format( "setLowColor: <0x%08X>", color ) );
     return( color );
   }
 
@@ -244,29 +299,13 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
    */
   private void setLowColor( int cl )
   {
-    int index = 0;
     //
-    // wenn low Edittext nicht da ist...
+    // wenn lowGradientTextView nicht da ist...
     //
-    if( this.lowEditText == null )
+    if( lowGradientTextView != null )
     {
-      for( index = 0; index < lowPicker.getChildCount(); index++ )
-      {
-        if( lowPicker.getChildAt( index ) instanceof EditText )
-        {
-          this.lowEditText = ( EditText )lowPicker.getChildAt( index );
-          lowEditText.setFocusable( false );
-          break;
-        }
-      }
-    }
-    //
-    // Na dann...
-    //
-    if( this.lowEditText != null )
-    {
-      lowEditText.setTextColor( cl );
-      lowEditText.setHintTextColor( cl );
+      lowGradientTextView.setTextColor( cl );
+      lowGradientTextView.setHintTextColor( cl );
     }
   }
 
@@ -282,26 +321,13 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
    */
   private void setHighColor( int cl )
   {
-    int index = 0;
     //
-    // wenn high Edittext nicht da ist...
+    // wenn highGradientTextView nicht da ist...
     //
-    if( this.highEditText == null )
+    if( highGradientTextView != null )
     {
-      for( index = 0; index < highPicker.getChildCount(); index++ )
-      {
-        if( highPicker.getChildAt( index ) instanceof EditText )
-        {
-          this.highEditText = ( EditText )highPicker.getChildAt( index );
-          highEditText.setFocusable( false );
-          break;
-        }
-      }
-    }
-    if( this.highEditText != null )
-    {
-      highEditText.setTextColor( cl );
-      highEditText.setHintTextColor( cl );
+      highGradientTextView.setTextColor( cl );
+      highGradientTextView.setHintTextColor( cl );
     }
   }
 
