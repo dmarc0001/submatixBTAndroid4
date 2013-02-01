@@ -15,13 +15,8 @@ import java.util.Date;
  */
 public class BuildVersion
 {
-<<<<<<< HEAD
-  private final long buildNumber = 1187L;
-  private final long buildDate = 1359675711874L;
-=======
   private final long buildNumber = 1120L;
   private final long buildDate = 1359676920064L;
->>>>>>> refs/heads/20130201-farbenFuerPreferenzen
 
   /**
    * Gib die Buildnummer zurück
