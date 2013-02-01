@@ -58,7 +58,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 07.01.2013
-   * @return TODO
+   * @return
    */
   public boolean istActivityTwoPane()
   {
@@ -72,7 +72,6 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     //
     // wenn eine Clientactivity mit finish() beendet
     // wurde, ist hier auch schluss
-    // TODO: Service bescheid geben!
     //
     finish();
   }
