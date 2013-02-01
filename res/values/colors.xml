@@ -6,11 +6,6 @@
   
   <!-- Light Thema -->
   <color name="preferenceCategoryLight.textColor">#0554FF</color>
-<<<<<<< HEAD
-  <color name="preferenceCategoryLight.backgroundColor">#C4D4FF</color>
-  <color name="preferenceLight.backgroundColor">#EBF3FF</color>
-=======
   <color name="preferenceCategoryLight.backgroundColor">#DFDFFF</color>
   <color name="preferenceLight.backgroundColor">#F2F2FF</color>
->>>>>>> refs/heads/20130201-farbenFuerPreferenzen
 </resources>
