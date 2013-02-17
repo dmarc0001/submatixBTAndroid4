@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +32,7 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
 public class connectFragment extends Fragment
 {
   public static final String          TAG            = connectFragment.class.getSimpleName();
-  private final DisplayMetrics        displayMetrics = new DisplayMetrics();
+  // private final DisplayMetrics displayMetrics = new DisplayMetrics();
   private View                        rootView       = null;
   private final BluetoothAdapter      mBtAdapter     = null;
   private BluetoothDeviceArrayAdapter btArrayAdapter = null;
@@ -58,7 +57,7 @@ public class connectFragment extends Fragment
   {
     Log.v( TAG, "onCreateView()..." );
     // Höhe des Views feststellen
-    getActivity().getWindowManager().getDefaultDisplay().getMetrics( displayMetrics );
+    // getActivity().getWindowManager().getDefaultDisplay().getMetrics( displayMetrics );
     // Verbindungsseite ausgewählt
     Log.v( TAG, "onCreateView: item for connect device selected!" );
     rootView = makeConnectionView( inflater, container );
@@ -151,9 +150,9 @@ public class connectFragment extends Fragment
     //
     rootView = inflater.inflate( R.layout.fragment_connect, container, false );
     // Dimensionen checken
-    height = displayMetrics.heightPixels;
-    width = displayMetrics.widthPixels;
-    Log.v( TAG, String.format( "screen has height: %d pixels and width: %d pixels", height, width ) );
+    // height = displayMetrics.heightPixels;
+    // width = displayMetrics.widthPixels;
+    // Log.v( TAG, String.format( "screen has height: %d pixels and width: %d pixels", height, width ) );
     // Objekte lokalisieren
     // tgButton = ( ToggleButton )rootView.findViewById( R.id.connectTroggleButton );
     discoverButton = ( Button )rootView.findViewById( R.id.connectDiscoverButton );
