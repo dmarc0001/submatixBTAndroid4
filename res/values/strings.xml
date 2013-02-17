@@ -12,6 +12,8 @@
     <string name="progitem_config">SPX42 Config</string>
     <string name="progitem_gaslist">Gases editing</string>
     <string name="progitem_logging">Logfiles read</string>
+    <string name="progitem_loggraph">Visualize logs</string>
+    <string name="progitem_export">Export logs</string>
     <string name="progitem_progpref">Program Prefs</string>
     <string name="progitem_exit">EXIT</string>
 
@@ -28,6 +30,7 @@
     
     <!--  DUMMY Detailseite  -->
     <string name="dummy_headline">dummy page</string>
+    <string name="spacer_string">spacer</string>
     
     <!-- Detailseite für Konfiguration des SPX42 -->
     <string name="conf_headline">Config SPX42</string>
@@ -60,8 +63,8 @@
     <string name="conf_deco_gradient_button_negative">Cancel</string>
     <!-- last decostop -->
     <string name="conf_deco_last_stop_header">depth for last stop</string>
-    <string name="conf_deco_last_stop_on">3 m</string>
-    <string name="conf_deco_last_stop_off">6 m</string>
+    <string name="conf_deco_last_stop_on">3m</string>
+    <string name="conf_deco_last_stop_off">6m</string>
     <string name="conf_deco_last_stop_on_summary">last stop in 3 meters</string>
     <string name="conf_deco_last_stop_off_summary">last stop in 6 meters</string>
     <string name="conf_deco_last_stop_default">6</string>
@@ -157,6 +160,7 @@
     <string name="gaslist_headline">Gaslist SPX42</string>
     <string name="conf_gaslist_summary" formatted="false">current gas %02d is %s D1:[%s] D2:[%s] B:[%s]</string>
     <string name="conf_gaslist_noname">not init yet</string>
+    
     <!-- ### Kategorie Gas  ## -->
     <string name="conf_gaslist_gas_key_template">keyGaslistGas%02d</string>
     <string name="conf_gaslist_gas01_header">gas #01</string>
@@ -185,7 +189,7 @@
     <string name="conf_prog_mail_header">MAILCONFIG</string>
     <!-- Mailversand an wen? -->
     <string name="conf_prog_mail_main">main reciver</string>
-    <string name="conf_prog_mail_2nd">main reciver</string>
+    <string name="conf_prog_mail_2nd">cc reciver</string>
     <string name="conf_prog_mail_main_summary">send mail to &lt;%s&gt;</string>
     <!-- soll die uddf (xml) datei komprimiert werden? -->
     <string name="conf_prog_mail_compressed_header">compress uddf</string>
