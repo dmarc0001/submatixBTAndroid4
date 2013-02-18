@@ -28,6 +28,11 @@
     <!-- string name="dialog_ok_button">OK</string -->
     <string name="dialog_cancel_button">Cancel</string>
     
+    <!-- BT Discover Box -->
+    <string name="progress_wait_for_discover_title">Searching BT Devices..</string>
+    <string name="progress_wait_for_discover_message_start">not found device yet...</string>
+    <string name="progress_wait_for_discover_message_continue">last device found: %s...</string>
+    
     <!--  DUMMY Detailseite  -->
     <string name="dummy_headline">dummy page</string>
     <string name="spacer_string">spacer</string>
@@ -205,7 +210,7 @@
     
     
     <!-- sonstig  -->
-    <string name="no_device">- no device - \n0\n0\n0\n0</string>
+    <string name="no_device">- no device -</string>
     <string name="array_with_pic_adapter_dummy">PROGRAMITEM</string>
     
     
