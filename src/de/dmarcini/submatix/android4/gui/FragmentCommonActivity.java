@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 import de.dmarcini.submatix.android4.R;
+import de.dmarcini.submatix.android4.comm.BlueThoothCommThread;
 import de.dmarcini.submatix.android4.content.ContentSwitcher;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 
@@ -30,12 +31,13 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
  */
 public class FragmentCommonActivity extends Activity implements AreYouSureDialogFragment.NoticeDialogListener
 {
-  private static final String       TAG            = FragmentCommonActivity.class.getSimpleName();
-  protected static boolean          mTwoPane       = false;
-  protected static boolean          isIndividual   = false;
-  protected static boolean          isTrimix       = true;
-  protected static BluetoothAdapter mBtAdapter     = null;
-  private static int                currentStyleId = R.style.AppDarkTheme;
+  private static final String           TAG            = FragmentCommonActivity.class.getSimpleName();
+  protected static boolean              mTwoPane       = false;
+  protected static boolean              isIndividual   = false;
+  protected static boolean              isTrimix       = true;
+  protected static BluetoothAdapter     mBtAdapter     = null;
+  protected static BlueThoothCommThread btWorkerThread = null;
+  private static int                    currentStyleId = R.style.AppDarkTheme;
 
   /**
    * Frage, ob BR erlaubt werden sollte Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
@@ -74,7 +76,23 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     // wenn eine Clientactivity mit finish() beendet
     // wurde, ist hier auch schluss
     //
+    if( btWorkerThread != null )
+    {
+      btWorkerThread.stopThread();
+      btWorkerThread = null;
+    }
     finish();
+  }
+
+  @Override
+  public void onDestroy()
+  {
+    Log.i( TAG, "Activity destroy..." );
+    if( FragmentCommonActivity.btWorkerThread != null )
+    {
+      btWorkerThread.stopThread();
+      btWorkerThread = null;
+    }
   }
 
   @Override
