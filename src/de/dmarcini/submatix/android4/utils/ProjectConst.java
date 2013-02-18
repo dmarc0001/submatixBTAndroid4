@@ -3,6 +3,8 @@
  */
 package de.dmarcini.submatix.android4.utils;
 
+import java.util.UUID;
+
 import android.graphics.Color;
 
 //@formatter:off
@@ -23,11 +25,21 @@ public final class ProjectConst
   public static final String GENMONTH                   = "01";
   public static final String GENDAY                     = "01";
   public static final boolean CHECK_PHYSICAL_BT         = false; 
+
   // Datenbankversion
   public static int          DB_VERSION                 = 1;
+  
   // ANDROID: Preferences Version
   public static int          PREF_VERSION               = 1;
 
+  // ANDROID: Unique UUID für allgemeine (well known) Serielle Schnittstelle
+  public static final UUID   SERIAL_DEVICE_UUID         = UUID.fromString( "00001101-0000-1000-8000-00805f9b34fb" );
+
+  // ANDROID: Verbindungsstatus BT
+  public static final int    STATE_NONE                 = 0;
+  public static final int    STATE_CONNECTING           = 1;
+  public static final int    STATE_CONNECTED            = 2;
+  
   // interne Begrenzung für Empfangspuffer
   public static final int    MAXINBUFFER                = 10 * 1024;
   // wie lange wartet der Watchdog auf Schreiben ins Device
