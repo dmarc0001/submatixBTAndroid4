@@ -15,8 +15,8 @@ import java.util.Date;
  */
 public class BuildVersion
 {
-  private final long buildNumber = 1190L;
-  private final long buildDate = 1361109514904L;
+  private final long buildNumber = 1242L;
+  private final long buildDate = 1361224871608L;
 
   /**
    * Gib die Buildnummer zurück
