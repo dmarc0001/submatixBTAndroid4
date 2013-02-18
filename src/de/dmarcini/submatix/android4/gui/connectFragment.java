@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.ToggleButton;
 import de.dmarcini.submatix.android4.R;
+import de.dmarcini.submatix.android4.comm.BlueThoothCommThread;
 import de.dmarcini.submatix.android4.utils.BluetoothDeviceArrayAdapter;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 
@@ -38,7 +39,6 @@ public class connectFragment extends Fragment
   public static final String          TAG            = connectFragment.class.getSimpleName();
   // private final DisplayMetrics displayMetrics = new DisplayMetrics();
   private View                        rootView       = null;
-  private BluetoothAdapter            mBtAdapter     = null;
   private BluetoothDeviceArrayAdapter btArrayAdapter = null;
   private Button                      discoverButton = null;
   private Spinner                     devSpinner     = null;
@@ -53,7 +53,6 @@ public class connectFragment extends Fragment
   {
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate()..." );
-    mBtAdapter = BluetoothAdapter.getDefaultAdapter();
   }
 
   /**
@@ -93,11 +92,11 @@ public class connectFragment extends Fragment
     // erst mal leere Liste anzeigen, String aus Resource
     //
     btArrayAdapter = new BluetoothDeviceArrayAdapter( getActivity(), R.layout.device_name_textview );
-    if( mBtAdapter == null ) return;
+    if( FragmentCommonActivity.mBtAdapter == null ) return;
     //
     // eine Liste der bereits gepaarten Devices
     //
-    Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
+    Set<BluetoothDevice> pairedDevices = FragmentCommonActivity.mBtAdapter.getBondedDevices();
     //
     // Sind dort einige vorhanden, dann ab in den adapter...
     //
@@ -136,9 +135,9 @@ public class connectFragment extends Fragment
   {
     super.onDestroy();
     // Make sure we're not doing discovery anymore
-    if( mBtAdapter != null )
+    if( FragmentCommonActivity.mBtAdapter != null )
     {
-      mBtAdapter.cancelDiscovery();
+      FragmentCommonActivity.mBtAdapter.cancelDiscovery();
     }
     // Unregister broadcast listeners
     getActivity().unregisterReceiver( mReceiver );
@@ -213,10 +212,31 @@ public class connectFragment extends Fragment
           if( tgButton.isChecked() )
           {
             Log.v( TAG, "switch connect ON" );
+            //
+            // wenn da noch einer werkelt, anhalten und kompostieren
+            //
+            if( FragmentCommonActivity.btWorkerThread != null )
+            {
+              FragmentCommonActivity.btWorkerThread.stopThread();
+              FragmentCommonActivity.btWorkerThread = null;
+            }
+            //
+            // einen neuen Tread machen
+            //
+            FragmentCommonActivity.btWorkerThread = new BlueThoothCommThread();
+            FragmentCommonActivity.btWorkerThread.start();
           }
           else
           {
             Log.v( TAG, "switch connect OFF" );
+            //
+            // wenn da noch einer werkelt, anhalten und kompostieren
+            //
+            if( FragmentCommonActivity.btWorkerThread != null )
+            {
+              FragmentCommonActivity.btWorkerThread.stopThread();
+              FragmentCommonActivity.btWorkerThread = null;
+            }
           }
         }
       } );
@@ -239,12 +259,12 @@ public class connectFragment extends Fragment
     // If we're already discovering, stop it
     Log.v( TAG, "start discovering..." );
     setItemsEnabled( false );
-    if( mBtAdapter.isDiscovering() )
+    if( FragmentCommonActivity.mBtAdapter.isDiscovering() )
     {
-      mBtAdapter.cancelDiscovery();
+      FragmentCommonActivity.mBtAdapter.cancelDiscovery();
     }
     // Request discover from BluetoothAdapter
-    mBtAdapter.startDiscovery();
+    FragmentCommonActivity.mBtAdapter.startDiscovery();
   }
 
   /**

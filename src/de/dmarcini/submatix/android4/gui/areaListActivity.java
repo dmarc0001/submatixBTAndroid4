@@ -131,6 +131,12 @@ public class areaListActivity extends FragmentCommonActivity
     Log.v( TAG, "onResume..." );
   }
 
+  @Override
+  public void onDestroy()
+  {
+    super.onDestroy();
+  }
+
   /**
    * Erzeuge Preferenzen für den SPX42 Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 

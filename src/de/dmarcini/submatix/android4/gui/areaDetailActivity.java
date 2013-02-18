@@ -136,6 +136,12 @@ public class areaDetailActivity extends FragmentCommonActivity
   }
 
   @Override
+  public void onDestroy()
+  {
+    super.onDestroy();
+  }
+
+  @Override
   public void onResume()
   {
     super.onResume();
