@@ -30,11 +30,12 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
  */
 public class FragmentCommonActivity extends Activity implements AreYouSureDialogFragment.NoticeDialogListener
 {
-  private static final String TAG            = FragmentCommonActivity.class.getSimpleName();
-  protected static boolean    mTwoPane       = false;
-  protected static boolean    isIndividual   = false;
-  protected static boolean    isTrimix       = true;
-  private static int          currentStyleId = R.style.AppDarkTheme;
+  private static final String       TAG            = FragmentCommonActivity.class.getSimpleName();
+  protected static boolean          mTwoPane       = false;
+  protected static boolean          isIndividual   = false;
+  protected static boolean          isTrimix       = true;
+  protected static BluetoothAdapter mBtAdapter     = null;
+  private static int                currentStyleId = R.style.AppDarkTheme;
 
   /**
    * Frage, ob BR erlaubt werden sollte Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
@@ -58,7 +59,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 07.01.2013
-   * @return
+   * @return ist zweigeteilt oder nicht
    */
   public boolean istActivityTwoPane()
   {
@@ -130,6 +131,8 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   {
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate..." );
+    // den defaultadapter lesen
+    mBtAdapter = BluetoothAdapter.getDefaultAdapter();
     Log.v( TAG, "onCreate: setContentView..." );
     //
     // Das gewünschte Thema setzen
@@ -328,7 +331,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
       // kleiner Schirm
       // da wird jeder Eintrag als einzelne activity ausgeführt
       //
-      Log.i( TAG, "onListItemClick: onePane modue! Call intent DetailActivity fur itenid<" + mItem.nId + ">" );
+      Log.i( TAG, "onListItemClick: onePane modus! Call intent DetailActivity fur itenid<" + mItem.nId + ">" );
       Intent detailIntent = new Intent( this, areaDetailActivity.class );
       detailIntent.putExtras( arguments );
       startActivity( detailIntent );
@@ -365,7 +368,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   {
     super.onResume();
     Log.v( TAG, "onResume..." );
-    if( BluetoothAdapter.getDefaultAdapter() == null )
+    if( mBtAdapter == null )
     {
       if( ProjectConst.CHECK_PHYSICAL_BT )
       {
@@ -380,7 +383,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         return;
       }
     }
-    if( !BluetoothAdapter.getDefaultAdapter().isEnabled() )
+    if( !mBtAdapter.isEnabled() )
     {
       // Eh, kein BT erlaubt!
       askEnableBT();
