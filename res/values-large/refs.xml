@@ -10,4 +10,5 @@
     <item name="activity_area_list" type="layout">@layout/activity_area_twopane</item>
     <item name="gas_picker_layout" type="layout">@layout/gas_picker_layout_big</item>
     <item name="fragment_connect" type="layout">@layout/fragment_connect_big</item>
+    <item name="array_with_pic_adapter_view" type="layout">@layout/array_with_pic_adapter_view_big</item>
 </resources>
