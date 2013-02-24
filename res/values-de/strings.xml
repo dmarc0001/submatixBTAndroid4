@@ -219,7 +219,7 @@
     <string name="notify_service_connected">BT Service Verbunden</string>
     <string name="notify_service_disconnected">BT Service getrennt</string>
     <string name="notify_service_running">Submatix BT Service läuft</string>
-    <string name="notify_service_ticker">TICKER</string>
+    <string name="notify_service_ticker">SUBMATIX BT Service</string>
     
     
     <!-- sonstig  -->
