@@ -7,12 +7,21 @@
  */
 package de.dmarcini.submatix.android4.gui;
 
+import java.util.List;
+import java.util.Vector;
+
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.app.DialogFragment;
 import android.bluetooth.BluetoothAdapter;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MenuItem;
@@ -20,7 +29,10 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 import de.dmarcini.submatix.android4.R;
-import de.dmarcini.submatix.android4.comm.BlueThoothCommThread;
+import de.dmarcini.submatix.android4.comm.BlueThoothComService;
+import de.dmarcini.submatix.android4.comm.BlueThoothComService.LocalBinder;
+import de.dmarcini.submatix.android4.comm.BtServiceMessage;
+import de.dmarcini.submatix.android4.comm.IComServiceToApp;
 import de.dmarcini.submatix.android4.content.ContentSwitcher;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 
@@ -29,15 +41,178 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
  * 
  * @author dmarc
  */
-public class FragmentCommonActivity extends Activity implements AreYouSureDialogFragment.NoticeDialogListener
+public class FragmentCommonActivity extends Activity implements AreYouSureDialogFragment.NoticeDialogListener, IComServiceToApp, IBtServiceListener
 {
-  private static final String           TAG            = FragmentCommonActivity.class.getSimpleName();
-  protected static boolean              mTwoPane       = false;
-  protected static boolean              isIndividual   = false;
-  protected static boolean              isTrimix       = true;
-  protected static BluetoothAdapter     mBtAdapter     = null;
-  protected static BlueThoothCommThread btWorkerThread = null;
-  private static int                    currentStyleId = R.style.AppDarkTheme;
+  private static final String               TAG               = FragmentCommonActivity.class.getSimpleName();
+  protected static boolean                  mTwoPane          = false;
+  protected static boolean                  isIndividual      = false;
+  protected static boolean                  isTrimix          = true;
+  protected static BluetoothAdapter         mBtAdapter        = null;
+  private volatile Vector<BtServiceMessage> msgVector         = new Vector<BtServiceMessage>();
+  private BlueThoothComService              mService          = null;
+  private MsgLooper                         msgLooper         = null;
+  private IBtServiceListener                serviceListener   = null;
+  private volatile boolean                  mIsBound          = false;
+  private boolean                           deviceIsConnected = false;
+  private static int                        currentStyleId    = R.style.AppDarkTheme;
+  //
+  //@formatter:off
+  //
+  // wird beim binden / unbinden benutzt
+  //
+  private final ServiceConnection mConnection = new ServiceConnection() 
+  {
+    @Override
+    public void onServiceConnected( ComponentName name, IBinder service )
+    {
+      LocalBinder binder = ( LocalBinder )service;
+      mService = binder.getService();
+      mService.registerClient( FragmentCommonActivity.this );
+    }
+  
+    @Override
+    public void onServiceDisconnected( ComponentName name )
+    {
+      if( mService != null )
+      {
+        mService.unregisterClient( FragmentCommonActivity.this );
+      }
+      mService = null;
+    }
+  };
+  //
+  //@formatter:on
+  //
+  private class MsgLooper extends Thread
+  {
+    private final String     TAGT       = MsgLooper.class.getSimpleName();
+    private volatile boolean isInitated = false;
+
+    @Override
+    public void run()
+    {
+      BtServiceMessage msg;
+      //
+      setName( "activity_message_looper" );
+      isInitated = true;
+      Log.i( TAGT, "start messageLooper Thread..." );
+      // läuft, solange der Service gebunden ist
+      // und danach solange Messages vorhanden sind
+      // Vector ist Syncronisiert, daher keine besonderen Probleme
+      while( isInitated )
+      {
+        // guck mal, ob Nachrichten vorhanden sind...
+        if( msgVector.isEmpty() )
+        {
+          waitForEntrys();
+        }
+        else
+        {
+          // Es sind zu bearbeitende Nachrichten vorhanden
+          msg = msgVector.lastElement();
+          msgVector.remove( msgVector.size() - 1 );
+          switch ( msg.getId() )
+          {
+          // ################################################################
+          // Computer wird gerade verbunden
+          // ################################################################
+            case ProjectConst.MESSAGE_CONNECTING:
+              serviceListener.msgConnecting( msg );
+              break;
+            // ################################################################
+            // Computer wurde getrennt
+            // ################################################################
+            case ProjectConst.MESSAGE_CONNECTED:
+              serviceListener.msgConnected( msg );
+              break;
+            // ################################################################
+            // Computer wurde getrennt
+            // ################################################################
+            case ProjectConst.MESSAGE_DISCONNECTED:
+              serviceListener.msgDisconnected( msg );
+              break;
+            // ################################################################
+            // Service TICK empfangen
+            // ################################################################
+            case ProjectConst.MESSAGE_TICK:
+              serviceListener.msgRecivedTick( msg );
+              break;
+            // ################################################################
+            // Computer wurde verbunden
+            // ################################################################
+            default:
+              Log.w( TAG, "unknown message with id <" + msg.getId() + "> recived!" );
+          }
+        }
+      }
+      isInitated = false;
+    }
+
+    private synchronized void waitForEntrys()
+    {
+      // Keine Nachrichten, schlafen legen
+      try
+      {
+        // warte 30 ms oder bis eine Message eintrifft
+        Thread.yield();
+        wait( 1000 );
+      }
+      catch( InterruptedException ex )
+      {
+        Log.e( TAGT, "ERROR " + ex.getMessage() );
+      }
+    }
+
+    /**
+     * 
+     * Schreibe eine Nachricht in die Warteschlange
+     * 
+     * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+     * 
+     * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+     * 
+     *         Stand: 23.02.2013
+     * @param msg
+     * 
+     */
+    public synchronized void sendMessage( BtServiceMessage msg )
+    {
+      // Vector ist syncronisiert, daher einfach reinschreiben!
+      msgVector.add( msg );
+      notifyAll();
+    }
+
+    /**
+     * 
+     * Ist der initiiert oder nicht
+     * 
+     * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+     * 
+     * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+     * 
+     *         Stand: 23.02.2013
+     * @return
+     */
+    public boolean isInitiated()
+    {
+      return( isInitated );
+    }
+
+    /**
+     * 
+     * Den Thread wieder anhalten
+     * 
+     * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+     * 
+     * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+     * 
+     *         Stand: 23.02.2013
+     */
+    public synchronized void stopLooper()
+    {
+      isInitated = false;
+    }
+  }
 
   /**
    * Frage, ob BR erlaubt werden sollte Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
@@ -76,23 +251,13 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     // wenn eine Clientactivity mit finish() beendet
     // wurde, ist hier auch schluss
     //
-    if( btWorkerThread != null )
-    {
-      btWorkerThread.stopThread();
-      btWorkerThread = null;
-    }
     finish();
   }
 
   @Override
   public void onDestroy()
   {
-    Log.i( TAG, "Activity destroy..." );
-    if( FragmentCommonActivity.btWorkerThread != null )
-    {
-      btWorkerThread.stopThread();
-      btWorkerThread = null;
-    }
+    super.onDestroy();
   }
 
   @Override
@@ -105,11 +270,12 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     // Bluethooth erlauben
     //
       case ProjectConst.REQUEST_ENABLE_BT:
-        // When the request to enable Bluetooth returns
+        // Wenn BT eingeschaltet wurde
         if( resultCode == Activity.RESULT_OK )
         {
           Log.v( TAG, "REQUEST_ENABLE_BT => BT Device ENABLED" );
           Toast.makeText( this, R.string.toast_bt_enabled, Toast.LENGTH_SHORT ).show();
+          // Service starten und binden (bei onResume())
         }
         else
         {
@@ -149,6 +315,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   {
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate..." );
+    serviceListener = this;
     // den defaultadapter lesen
     mBtAdapter = BluetoothAdapter.getDefaultAdapter();
     Log.v( TAG, "onCreate: setContentView..." );
@@ -172,6 +339,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         setTheme( R.style.AppLightTheme );
       }
     }
+    //
     setContentView( R.layout.activity_area_list );
     //
     // finde raus, ob es ein Restart für ein neues Theme war
@@ -190,6 +358,80 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         getActionBar().setTitle( R.string.conf_prog_headline );
         getActionBar().setLogo( R.drawable.properties );
         getFragmentManager().beginTransaction().replace( R.id.area_detail_container, ppFragment ).commit();
+      }
+    }
+  }
+
+  /**
+   * 
+   * Service binden, ggf starten
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 23.02.2013
+   */
+  private void doBindService()
+  {
+    //
+    // Service starten, wenn er nicht schon läuft
+    //
+    final ActivityManager activityManager = ( ActivityManager )getSystemService( ACTIVITY_SERVICE );
+    final List<RunningServiceInfo> services = activityManager.getRunningServices( Integer.MAX_VALUE );
+    boolean isServiceFound = false;
+    //
+    for( int i = 0; i < services.size(); i++ )
+    {
+      // Log.d( TAG, "Service Nr." + i + ":" + services.get( i ).service );
+      if( "de.dmarcini.submatix.android4.comm".equals( services.get( i ).service.getPackageName() ) )
+      {
+        if( "BlueThoothComService".equals( services.get( i ).service.getClassName() ) )
+        {
+          isServiceFound = true;
+        }
+      }
+    }
+    if( !isServiceFound )
+    {
+      Log.d( TAG, "Starting Service..." );
+      Intent service = new Intent( this, BlueThoothComService.class );
+      startService( service );
+    }
+    //
+    // binde Service
+    //
+    Log.i( TAG, "bind  BT service..." );
+    Intent intent = new Intent( this, BlueThoothComService.class );
+    bindService( intent, mConnection, Context.BIND_AUTO_CREATE );
+    mIsBound = true;
+  }
+
+  /**
+   * 
+   * Service unbinden
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 23.02.2013
+   */
+  private void doUnbindService()
+  {
+    if( mIsBound )
+    {
+      // If we have received the service, and hence registered with it, then now is the time to unregister.
+      if( mService != null )
+      {
+        Log.v( TAG, "unbind service..." );
+        if( mService != null )
+        {
+          mService.unregisterClient( FragmentCommonActivity.this );
+          unbindService( mConnection );
+        }
+        mIsBound = false;
+        Log.v( TAG, "unbind service...OK" );
       }
     }
   }
@@ -378,14 +620,22 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   public void onPause()
   {
     super.onPause();
-    Log.v( TAG, "onPause..." );
+    msgLooper.stopLooper();
+    msgLooper = null;
+    doUnbindService();
   }
 
   @Override
   public void onResume()
   {
-    super.onResume();
     Log.v( TAG, "onResume..." );
+    super.onResume();
+    if( msgLooper == null )
+    {
+      msgLooper = new MsgLooper();
+      msgLooper.start();
+    }
+    //
     if( mBtAdapter == null )
     {
       if( ProjectConst.CHECK_PHYSICAL_BT )
@@ -408,7 +658,110 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     }
     else
     {
-      // läuft der Task?
+      // Service wieder anbinden / starten
+      doBindService();
     }
+  }
+
+  @Override
+  public void sendMessage( BtServiceMessage msg )
+  {
+    // die Message in die Queue schreiben und dort abarbeiten
+    msgLooper.sendMessage( msg );
+  }
+
+  /**
+   * 
+   * Wenn das Gerät verbunden wird (beim Verbinden)
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 23.02.2013
+   * @param msg
+   */
+  @Override
+  public void msgConnecting( BtServiceMessage msg )
+  {
+    Log.v( TAG, "connecting..." );
+    deviceIsConnected = false;
+    // in der überschriebenen Funktion befüllen
+  }
+
+  /**
+   * 
+   * Das Gerät wurde verbunden
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 23.02.2013
+   * @param msg
+   */
+  @Override
+  public void msgConnected( BtServiceMessage msg )
+  {
+    Log.v( TAG, "connected..." );
+    deviceIsConnected = true;
+    // in der überschriebenen Funktion befüllen
+  }
+
+  /**
+   * 
+   * Das Gerät wurde getrennt
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 23.02.2013
+   * @param msg
+   * 
+   */
+  @Override
+  public void msgDisconnected( BtServiceMessage msg )
+  {
+    Log.v( TAG, "disconnected..." );
+    deviceIsConnected = false;
+    // in der überschriebenen Funktion befüllen
+  }
+
+  /**
+   * 
+   * Wenn ein Fragment die Nachrichten erhalten soll, muß es den listener übergben...
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 24.02.2013
+   * @param listener
+   */
+  public void setServiceListener( IBtServiceListener listener )
+  {
+    serviceListener = listener;
+  }
+
+  /**
+   * 
+   * Den Listener löschen, d.h. die Activity macht das wieder selber
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 24.02.2013
+   */
+  public void clearServiceListener()
+  {
+    serviceListener = this;
+  }
+
+  @Override
+  public void msgRecivedTick( BtServiceMessage msg )
+  {
+    Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
   }
 }
