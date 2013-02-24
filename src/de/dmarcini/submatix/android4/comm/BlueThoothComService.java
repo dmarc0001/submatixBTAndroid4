@@ -19,7 +19,7 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
 public class BlueThoothComService extends Service
 {
   private static final String TAG               = BlueThoothComService.class.getSimpleName();
-  private static final long   msToEndService    = 10000L;
+  private static final long   msToEndService    = 6000L;
   private long                tickToCounter     = 0L;
   private long                timeToStopService = 0L;
   private NotificationManager nm;
