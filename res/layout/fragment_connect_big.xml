@@ -38,10 +38,11 @@
             android:layout_width="match_parent"
             android:layout_weight="0.4" />
 
-        <ToggleButton
-            android:id="@+id/connectTroggleButton"
+        <ImageButton
+            android:id="@+id/connectButton"
             android:layout_height="match_parent"
             android:layout_weight="0.2"
+            android:src="@drawable/bluetooth_icon_bw"
             android:text="@string/connect_button_off_text" />
 
         <ImageView

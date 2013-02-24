@@ -9,8 +9,6 @@
     tools:context=".gui.areaDetailActivity" >
     
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/connectLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -24,10 +22,11 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.75" />
 
-       <ToggleButton
-           android:id="@+id/connectTroggleButton"
+       <ImageButton
+           android:id="@+id/connectButton"
            android:layout_width="180dp"
            android:layout_height="wrap_content"
+           android:src="@drawable/bluetooth_icon_bw"
            android:text="@string/connect_button_off_text" />
             
     </LinearLayout>
