@@ -17,10 +17,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.ToggleButton;
 import de.dmarcini.submatix.android4.R;
-import de.dmarcini.submatix.android4.comm.BlueThoothCommThread;
+import de.dmarcini.submatix.android4.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.utils.BluetoothDeviceArrayAdapter;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 
@@ -34,15 +34,14 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
  * 
  *         Stand: 04.11.2012
  */
-public class connectFragment extends Fragment
+public class connectFragment extends Fragment implements OnClickListener, IBtServiceListener
 {
   public static final String          TAG            = connectFragment.class.getSimpleName();
-  // private final DisplayMetrics displayMetrics = new DisplayMetrics();
   private View                        rootView       = null;
   private BluetoothDeviceArrayAdapter btArrayAdapter = null;
   private Button                      discoverButton = null;
   private Spinner                     devSpinner     = null;
-  private ToggleButton                tgButton       = null;
+  private ImageButton                 connButton     = null;
   protected ProgressDialog            progressDialog = null;
 
   /**
@@ -53,6 +52,7 @@ public class connectFragment extends Fragment
   {
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate()..." );
+    ( ( FragmentCommonActivity )getActivity() ).setServiceListener( this );
   }
 
   /**
@@ -62,10 +62,7 @@ public class connectFragment extends Fragment
   public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
   {
     Log.v( TAG, "onCreateView()..." );
-    // Höhe des Views feststellen
-    // getActivity().getWindowManager().getDefaultDisplay().getMetrics( displayMetrics );
     // Verbindungsseite ausgewählt
-    Log.v( TAG, "onCreateView: item for connect device selected!" );
     rootView = makeConnectionView( inflater, container );
     //
     // Register broadcasts während Geräte gesucht werden
@@ -78,6 +75,15 @@ public class connectFragment extends Fragment
     filter = new IntentFilter( BluetoothAdapter.ACTION_DISCOVERY_FINISHED );
     getActivity().registerReceiver( mReceiver, filter );
     return rootView;
+  }
+
+  @Override
+  public void onPause()
+  {
+    super.onPause();
+    Log.v( TAG, "onPause()..." );
+    discoverButton.setOnClickListener( null );
+    connButton.setOnClickListener( null );
   }
 
   /**
@@ -105,7 +111,7 @@ public class connectFragment extends Fragment
       // Alle gepaarten Geräte durch
       for( BluetoothDevice device : pairedDevices )
       {
-        // Ist es ein gerät vom gewünschten Typ?
+        // Ist es ein Gerät vom gewünschten Typ?
         if( ( device.getBluetoothClass().getDeviceClass() == ProjectConst.SPX_BTDEVICE_CLASS ) && ( device.getName() != null ) )
         {
           String[] entr = new String[4];
@@ -127,6 +133,7 @@ public class connectFragment extends Fragment
       entr[BluetoothDeviceArrayAdapter.BT_DEVAR_DBID] = "0";
       btArrayAdapter.addEntr( entr );
     }
+    Log.v( TAG, "fill List with devices on surcafe..." );
     devSpinner.setAdapter( btArrayAdapter );
   }
 
@@ -139,6 +146,7 @@ public class connectFragment extends Fragment
     {
       FragmentCommonActivity.mBtAdapter.cancelDiscovery();
     }
+    ( ( FragmentCommonActivity )getActivity() ).clearServiceListener();
     // Unregister broadcast listeners
     getActivity().unregisterReceiver( mReceiver );
   }
@@ -170,78 +178,41 @@ public class connectFragment extends Fragment
     //
     discoverButton = ( Button )rootView.findViewById( R.id.connectDiscoverButton );
     devSpinner = ( Spinner )rootView.findViewById( R.id.connectBlueToothDeviceSpinner );
-    tgButton = ( ToggleButton )rootView.findViewById( R.id.connectTroggleButton );
-    if( discoverButton == null || devSpinner == null || tgButton == null )
+    connButton = ( ImageButton )rootView.findViewById( R.id.connectButton );
+    if( discoverButton == null || devSpinner == null || connButton == null )
     {
       throw new NullPointerException( "can init GUI (not found an Element)" );
     }
     //
     // den Discoverbutton mit Funktion versehen, wenn ein Adapter da und eingeschaltet ist
     //
-    if( ( BluetoothAdapter.getDefaultAdapter() != null ) && BluetoothAdapter.getDefaultAdapter().isEnabled() )
+    if( FragmentCommonActivity.mBtAdapter.isEnabled() )
     {
-      discoverButton.setOnClickListener( new OnClickListener() {
-        @Override
-        public void onClick( View v )
-        {
-          Log.v( TAG, "start discovering for BT Devices..." );
-          // ist da nur die Kennzeichnung für LEER?
-          if( btArrayAdapter.isEmpty() || btArrayAdapter.getItem( 0 ).startsWith( getActivity().getString( R.string.no_device ).substring( 0, 5 ) ) )
-          {
-            Log.v( TAG, "not devices in Adapter yet..." );
-            btArrayAdapter.clear();
-            tgButton.setChecked( false );
-          }
-          Log.v( TAG, "start discovering for BT Devices...ArrayAdapter created" );
-          startDiscoverBt();
-        }
-      } );
-      //
-      tgButton.setOnClickListener( new OnClickListener() {
-        @Override
-        public void onClick( View v )
-        {
-          if( btArrayAdapter.isEmpty() || btArrayAdapter.getItem( 0 ).startsWith( getActivity().getString( R.string.no_device ).substring( 0, 5 ) ) )
-          {
-            Log.v( TAG, "not devices in Adapter yet..." );
-            if( tgButton.isChecked() )
-            {
-              tgButton.setChecked( false );
-            }
-          }
-          if( tgButton.isChecked() )
-          {
-            Log.v( TAG, "switch connect ON" );
-            //
-            // wenn da noch einer werkelt, anhalten und kompostieren
-            //
-            if( FragmentCommonActivity.btWorkerThread != null )
-            {
-              FragmentCommonActivity.btWorkerThread.stopThread();
-              FragmentCommonActivity.btWorkerThread = null;
-            }
-            //
-            // einen neuen Tread machen
-            //
-            FragmentCommonActivity.btWorkerThread = new BlueThoothCommThread();
-            FragmentCommonActivity.btWorkerThread.start();
-          }
-          else
-          {
-            Log.v( TAG, "switch connect OFF" );
-            //
-            // wenn da noch einer werkelt, anhalten und kompostieren
-            //
-            if( FragmentCommonActivity.btWorkerThread != null )
-            {
-              FragmentCommonActivity.btWorkerThread.stopThread();
-              FragmentCommonActivity.btWorkerThread = null;
-            }
-          }
-        }
-      } );
+      discoverButton.setOnClickListener( this );
+      connButton.setOnClickListener( this );
     }
+    setToggleButtonTextAndStat( connButton, 0 );
     return( rootView );
+  }
+
+  private void setToggleButtonTextAndStat( ImageButton tg, int connState )
+  {
+    switch ( connState )
+    {
+      case ProjectConst.STATE_NONE:
+      default:
+        tg.setImageResource( R.drawable.bluetooth_icon_bw );
+        tg.setAlpha( 1.0F );
+        break;
+      case ProjectConst.STATE_CONNECTING:
+        tg.setImageResource( R.drawable.bluetooth_icon_color );
+        tg.setAlpha( 0.5F );
+        break;
+      case ProjectConst.STATE_CONNECTED:
+        tg.setImageResource( R.drawable.bluetooth_icon_color );
+        tg.setAlpha( 1.0F );
+        break;
+    }
   }
 
   /**
@@ -298,7 +269,7 @@ public class connectFragment extends Fragment
     }
     discoverButton.setEnabled( enabled );
     devSpinner.setEnabled( enabled );
-    tgButton.setEnabled( enabled );
+    connButton.setEnabled( enabled );
   }
 
   //
@@ -342,7 +313,7 @@ public class connectFragment extends Fragment
                                                     entr[BluetoothDeviceArrayAdapter.BT_DEVAR_DBID] = "0";
                                                     // add, wenn nicht schon vorhanden
                                                     Log.v( TAG, "device add to btArrayAdapter..." );
-                                                    btArrayAdapter.addEntr( entr );
+                                                    ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).addEntr( entr );
                                                   }
                                                   //
                                                   // When discovery is finished, change the Activity title
@@ -351,8 +322,95 @@ public class connectFragment extends Fragment
                                                 {
                                                   Log.v( TAG, "discover finished, enable button." );
                                                   setItemsEnabled( true );
-                                                  // devSpinner.setAdapter( btArrayAdapter );
+                                                  devSpinner.setAdapter( btArrayAdapter );
                                                 }
                                               }
                                             };
+
+  @Override
+  public void onClick( View cView )
+  {
+    int connState = ProjectConst.STATE_NONE;
+    Log.d( TAG, "ON CLICK!" );
+    //
+    if( cView instanceof ImageButton )
+    {
+      ImageButton tb = ( ImageButton )cView;
+      if( btArrayAdapter.isEmpty() || btArrayAdapter.getItem( 0 ).startsWith( getActivity().getString( R.string.no_device ).substring( 0, 5 ) ) )
+      {
+        Log.v( TAG, "not devices in Adapter yet..." );
+        // TODO: setToggleButtonTextAndStat( tb );
+        return;
+      }
+      switch ( connState )
+      {
+        case ProjectConst.STATE_NONE:
+        default:
+          Log.v( TAG, "switch connect to ON" );
+          //
+          // wenn da noch einer werkelt, anhalten und kompostieren
+          //
+          // TODO: Service stoppen
+          //
+          // einen neuen Tread machen
+          //
+          tb.setImageResource( R.drawable.bluetooth_icon_color );
+          tb.setAlpha( 0.5F );
+          break;
+        case ProjectConst.STATE_CONNECTING:
+          Log.v( TAG, "cancel connecting.." );
+        case ProjectConst.STATE_CONNECTED:
+          Log.v( TAG, "switch connect to OFF" );
+          //
+          // wenn da noch einer werkelt, anhalten und kompostieren
+          //
+          // TODO: Servive stoppen
+          tb.setImageResource( R.drawable.bluetooth_icon_bw );
+          tb.setAlpha( 1.0F );
+          break;
+      }
+    }
+    //
+    if( cView instanceof Button )
+    {
+      Log.v( TAG, "start discovering for BT Devices..." );
+      // ist da nur die Kennzeichnung für LEER?
+      if( btArrayAdapter.isEmpty() || btArrayAdapter.getItem( 0 ).startsWith( getActivity().getString( R.string.no_device ).substring( 0, 5 ) ) )
+      {
+        Log.v( TAG, "not devices in Adapter yet..." );
+        btArrayAdapter.clear();
+        // connButton.setChecked( false );
+      }
+      Log.v( TAG, "start discovering for BT Devices...ArrayAdapter created" );
+      startDiscoverBt();
+      return;
+    }
+  }
+
+  //
+  // ENDE
+  //
+  @Override
+  public void msgConnecting( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgConnected( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgDisconnected( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgRecivedTick( BtServiceMessage msg )
+  {
+    Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
+  }
 }
