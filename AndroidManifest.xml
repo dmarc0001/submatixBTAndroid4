@@ -24,7 +24,7 @@
         <activity
             android:name=".gui.areaListActivity"
             android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape">            
+            android:screenOrientation="sensorLandscape" android:launchMode="singleTop">            
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -35,12 +35,14 @@
         <activity
             android:name=".gui.areaDetailActivity"
             android:label="@string/title_area_detail"
-            android:screenOrientation="sensorLandscape" >
+            android:screenOrientation="sensorLandscape" android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".gui.areaListActivity" />
         </activity>
         
+        <!-- Der Bluethooth Service -->
+        <service android:name=".comm.BlueThoothComService"></service>        
     </application>
 
 </manifest>
