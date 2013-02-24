@@ -8,6 +8,8 @@ package de.dmarcini.submatix.android4.gui;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.ImageButton;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.content.ContentSwitcher;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
@@ -111,6 +113,12 @@ public class areaDetailActivity extends FragmentCommonActivity
             Log.v( TAG, "onCreate: beginTransaction..." );
             getFragmentManager().beginTransaction().add( resourceId, connFragment ).commit();
             Log.v( TAG, "onCreate: add transaction...OK" );
+            //
+            // den Listener auf das Fragment setzen ( der Code soll da ausgeführt werden )
+            //
+            ( ( Button )findViewById( R.id.connectDiscoverButton ) ).setOnClickListener( connFragment );
+            // (( Spinner )rootView.findViewById( R.id.connectBlueToothDeviceSpinner ));
+            ( ( ImageButton )findViewById( R.id.connectButton ) ).setOnClickListener( connFragment );
         }
       }
     }
@@ -126,25 +134,5 @@ public class areaDetailActivity extends FragmentCommonActivity
       getFragmentManager().beginTransaction().add( resourceId, dFragment ).commit();
       Log.v( TAG, "onCreate: add transaction...OK" );
     }
-  }
-
-  @Override
-  public void onPause()
-  {
-    super.onPause();
-    Log.v( TAG, "onPause..." );
-  }
-
-  @Override
-  public void onDestroy()
-  {
-    super.onDestroy();
-  }
-
-  @Override
-  public void onResume()
-  {
-    super.onResume();
-    Log.v( TAG, "onResume..." );
   }
 }

@@ -120,21 +120,29 @@ public class areaListActivity extends FragmentCommonActivity
   @Override
   public void onPause()
   {
-    super.onPause();
     Log.v( TAG, "onPause..." );
+    super.onPause();
   }
 
   @Override
   public void onResume()
   {
-    super.onResume();
     Log.v( TAG, "onResume..." );
+    super.onResume();
   }
 
   @Override
   public void onDestroy()
   {
+    Log.v( TAG, "onDestroy..." );
     super.onDestroy();
+  }
+
+  @Override
+  public void onStop()
+  {
+    Log.v( TAG, "onStop..." );
+    super.onStop();
   }
 
   /**
