@@ -632,6 +632,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     super.onResume();
     if( msgLooper == null )
     {
+      Log.d( TAG, "start message looper..." );
       msgLooper = new MsgLooper();
       msgLooper.start();
     }

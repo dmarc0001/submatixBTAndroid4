@@ -120,7 +120,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
           entr[BluetoothDeviceArrayAdapter.BT_DEVAR_MAC] = device.getAddress();
           entr[BluetoothDeviceArrayAdapter.BT_DEVAR_NAME] = device.getName();
           entr[BluetoothDeviceArrayAdapter.BT_DEVAR_DBID] = "0";
-          btArrayAdapter.addEntr( entr );
+          btArrayAdapter.add( entr );
         }
       }
     }
@@ -131,7 +131,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
       entr[BluetoothDeviceArrayAdapter.BT_DEVAR_MAC] = "";
       entr[BluetoothDeviceArrayAdapter.BT_DEVAR_NAME] = getActivity().getString( R.string.no_device );
       entr[BluetoothDeviceArrayAdapter.BT_DEVAR_DBID] = "0";
-      btArrayAdapter.addEntr( entr );
+      btArrayAdapter.add( entr );
     }
     Log.v( TAG, "fill List with devices on surcafe..." );
     devSpinner.setAdapter( btArrayAdapter );
@@ -186,7 +186,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
     //
     // den Discoverbutton mit Funktion versehen, wenn ein Adapter da und eingeschaltet ist
     //
-    if( FragmentCommonActivity.mBtAdapter.isEnabled() )
+    if( FragmentCommonActivity.mBtAdapter != null && FragmentCommonActivity.mBtAdapter.isEnabled() )
     {
       discoverButton.setOnClickListener( this );
       connButton.setOnClickListener( this );
@@ -230,6 +230,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
     // If we're already discovering, stop it
     Log.v( TAG, "start discovering..." );
     setItemsEnabled( false );
+    if( FragmentCommonActivity.mBtAdapter == null ) return;
     if( FragmentCommonActivity.mBtAdapter.isDiscovering() )
     {
       FragmentCommonActivity.mBtAdapter.cancelDiscovery();
@@ -313,7 +314,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
                                                     entr[BluetoothDeviceArrayAdapter.BT_DEVAR_DBID] = "0";
                                                     // add, wenn nicht schon vorhanden
                                                     Log.v( TAG, "device add to btArrayAdapter..." );
-                                                    ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).addEntr( entr );
+                                                    ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).add( entr );
                                                   }
                                                   //
                                                   // When discovery is finished, change the Activity title
@@ -336,7 +337,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
     if( cView instanceof ImageButton )
     {
       ImageButton tb = ( ImageButton )cView;
-      if( btArrayAdapter.isEmpty() || btArrayAdapter.getItem( 0 ).startsWith( getActivity().getString( R.string.no_device ).substring( 0, 5 ) ) )
+      if( btArrayAdapter.isEmpty() || btArrayAdapter.getAlias( 0 ).startsWith( getActivity().getString( R.string.no_device ).substring( 0, 5 ) ) )
       {
         Log.v( TAG, "not devices in Adapter yet..." );
         // TODO: setToggleButtonTextAndStat( tb );
@@ -375,7 +376,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
     {
       Log.v( TAG, "start discovering for BT Devices..." );
       // ist da nur die Kennzeichnung für LEER?
-      if( btArrayAdapter.isEmpty() || btArrayAdapter.getItem( 0 ).startsWith( getActivity().getString( R.string.no_device ).substring( 0, 5 ) ) )
+      if( btArrayAdapter.isEmpty() || btArrayAdapter.getAlias( 0 ).startsWith( getActivity().getString( R.string.no_device ).substring( 0, 5 ) ) )
       {
         Log.v( TAG, "not devices in Adapter yet..." );
         btArrayAdapter.clear();
