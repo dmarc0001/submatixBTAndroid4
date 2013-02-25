@@ -97,7 +97,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
     //
     // erst mal leere Liste anzeigen, String aus Resource
     //
-    btArrayAdapter = new BluetoothDeviceArrayAdapter( getActivity(), R.layout.device_name_textview );
+    btArrayAdapter = new BluetoothDeviceArrayAdapter( getActivity(), R.layout.device_name_textview, ( ( FragmentCommonActivity )getActivity() ).getAppStyle() );
     if( FragmentCommonActivity.mBtAdapter == null ) return;
     //
     // eine Liste der bereits gepaarten Devices
@@ -114,23 +114,25 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
         // Ist es ein Gerät vom gewünschten Typ?
         if( ( device.getBluetoothClass().getDeviceClass() == ProjectConst.SPX_BTDEVICE_CLASS ) && ( device.getName() != null ) )
         {
-          String[] entr = new String[4];
+          String[] entr = new String[BluetoothDeviceArrayAdapter.BT_DEVAR_COUNT];
           // TODO: ALIAS TESTEN und eintragen!
           entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = device.getName() + "*";
           entr[BluetoothDeviceArrayAdapter.BT_DEVAR_MAC] = device.getAddress();
           entr[BluetoothDeviceArrayAdapter.BT_DEVAR_NAME] = device.getName();
           entr[BluetoothDeviceArrayAdapter.BT_DEVAR_DBID] = "0";
+          entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISPAIRED] = "true";
           btArrayAdapter.add( entr );
         }
       }
     }
     else
     {
-      String[] entr = new String[4];
+      String[] entr = new String[BluetoothDeviceArrayAdapter.BT_DEVAR_COUNT];
       entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = getActivity().getString( R.string.no_device );
       entr[BluetoothDeviceArrayAdapter.BT_DEVAR_MAC] = "";
       entr[BluetoothDeviceArrayAdapter.BT_DEVAR_NAME] = getActivity().getString( R.string.no_device );
       entr[BluetoothDeviceArrayAdapter.BT_DEVAR_DBID] = "0";
+      entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISPAIRED] = "false";
       btArrayAdapter.add( entr );
     }
     Log.v( TAG, "fill List with devices on surcafe..." );
@@ -307,11 +309,13 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
                                                     // Feld 1 = Geräte-MAC
                                                     // Feld 2 = Geräte-Name
                                                     // Feld 3 = Datenbank-Id (wenn vorhanden) sonst 0
-                                                    String[] entr = new String[4];
+                                                    // Feld 4 = Gerät gepart?
+                                                    String[] entr = new String[BluetoothDeviceArrayAdapter.BT_DEVAR_COUNT];
                                                     entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = device.getName();
                                                     entr[BluetoothDeviceArrayAdapter.BT_DEVAR_MAC] = device.getAddress();
                                                     entr[BluetoothDeviceArrayAdapter.BT_DEVAR_NAME] = device.getName();
                                                     entr[BluetoothDeviceArrayAdapter.BT_DEVAR_DBID] = "0";
+                                                    entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISPAIRED] = "false";
                                                     // add, wenn nicht schon vorhanden
                                                     Log.v( TAG, "device add to btArrayAdapter..." );
                                                     ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).add( entr );

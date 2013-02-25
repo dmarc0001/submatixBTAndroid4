@@ -33,11 +33,14 @@ import de.dmarcini.submatix.android4.R;
  */
 public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
 {
-  private static final String TAG            = BluetoothDeviceArrayAdapter.class.getSimpleName();
-  public static final int     BT_DEVAR_ALIAS = 0;
-  public static final int     BT_DEVAR_MAC   = 1;
-  public static final int     BT_DEVAR_NAME  = 2;
-  public static final int     BT_DEVAR_DBID  = 3;
+  private static final String TAG               = BluetoothDeviceArrayAdapter.class.getSimpleName();
+  private int                 themeId           = R.style.AppDarkTheme;
+  public static final int     BT_DEVAR_ALIAS    = 0;
+  public static final int     BT_DEVAR_MAC      = 1;
+  public static final int     BT_DEVAR_NAME     = 2;
+  public static final int     BT_DEVAR_DBID     = 3;
+  public static final int     BT_DEVAR_ISPAIRED = 4;
+  public static final int     BT_DEVAR_COUNT    = 5;
 
   /**
    * 
@@ -50,20 +53,24 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    *         Stand: 05.11.2012
    * @param context
    * @param textViewResourceId
+   * @param themeId
    */
-  public BluetoothDeviceArrayAdapter( Context context, int textViewResourceId )
+  public BluetoothDeviceArrayAdapter( Context context, int textViewResourceId, int themeId )
   {
     super( context, textViewResourceId );
+    this.themeId = themeId;
   }
 
-  private BluetoothDeviceArrayAdapter( Context context, int resource, int textViewResourceId )
+  private BluetoothDeviceArrayAdapter( Context context, int resource, int textViewResourceId, int themeId )
   {
     super( context, resource, textViewResourceId );
+    this.themeId = themeId;
   }
 
-  private BluetoothDeviceArrayAdapter( Context context, int textViewResourceId, List<String[]> objects )
+  private BluetoothDeviceArrayAdapter( Context context, int textViewResourceId, List<String[]> objects, int themeId )
   {
     super( context, textViewResourceId, objects );
+    this.themeId = themeId;
   }
 
   /* private view holder class */
@@ -76,21 +83,51 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
   @Override
   public View getView( int position, View convertView, ViewGroup parent )
   {
+    return( getCustomView( position, convertView, parent, true ) );
+  }
+
+  @Override
+  public View getDropDownView( int position, View convertView, ViewGroup parent )
+  {
+    return( getCustomView( position, convertView, parent, false ) );
+  }
+
+  private View getCustomView( int position, View convertView, ViewGroup parent, boolean isFirst )
+  {
     ViewHolder holder = null;
     LayoutInflater mInflater = ( LayoutInflater )getContext().getSystemService( Activity.LAYOUT_INFLATER_SERVICE );
-    if( convertView == null )
+    if( convertView != null && ( convertView.getTag() instanceof ViewHolder ) )
+    {
+      holder = ( ViewHolder )convertView.getTag();
+    }
+    else
     {
       convertView = mInflater.inflate( R.layout.bt_array_with_pic_adapter_view, parent, false );
       holder = new ViewHolder();
       holder.txtTitle = ( TextView )convertView.findViewById( R.id.btArrayListTextView );
       holder.imageView = ( ImageView )convertView.findViewById( R.id.btArrayListIconView );
+      if( isDevicePaired( position ) )
+      {
+        holder.imageView.setImageResource( R.drawable.bluetooth_icon_color );
+      }
+      else
+      {
+        holder.imageView.setImageResource( R.drawable.bluetooth_icon_bw );
+      }
       convertView.setTag( holder );
     }
-    else
+    holder.txtTitle.setText( getAlias( position ) );
+    if( isFirst )
     {
-      holder = ( ViewHolder )convertView.getTag();
+      if( this.themeId == R.style.AppDarkTheme )
+      {
+        holder.txtTitle.setTextColor( convertView.getResources().getColor( R.color.connectFragmentDark_spinnerText ) );
+      }
+      else
+      {
+        holder.txtTitle.setTextColor( convertView.getResources().getColor( R.color.connectFragmentLight_spinnerText ) );
+      }
     }
-    holder.txtTitle.setText( "XXXXXXX" ); // getAlias( position ) );
     // TODO: gepaart oder nicht? Online oder nicht?
     holder.imageView.setImageResource( R.drawable.bluetooth_icon_bw );
     return convertView;
@@ -264,5 +301,27 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
       return( dbId );
     }
     return( 0 );
+  }
+
+  /**
+   * 
+   * Ist das Gerät bereits gepaart?
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 25.02.2013
+   * @param position
+   * @return gepart?
+   */
+  public boolean isDevicePaired( int position )
+  {
+    String pairedStr = getStringAt( position, BT_DEVAR_ISPAIRED );
+    if( pairedStr.matches( "true" ) || pairedStr.matches( "1" ) || pairedStr.matches( "yes" ) )
+    {
+      return( true );
+    }
+    return( false );
   }
 }
