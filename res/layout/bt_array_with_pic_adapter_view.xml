@@ -8,9 +8,7 @@
         android:id="@+id/btArrayListIconView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center_vertical"
+        android:layout_gravity="center_horizontal"
         android:layout_marginLeft="@dimen/icon_margin_left"
         android:layout_marginTop="@dimen/icon_margin_top"
         android:contentDescription="@string/array_with_pic_adapter_dummy"
@@ -23,6 +21,7 @@
         android:layout_alignBottom="@+id/btArrayListIconView"
         android:layout_marginLeft="15dp"
         android:layout_toRightOf="@+id/btArrayListIconView"
+        android:gravity="center_horizontal"
         android:text="@string/array_with_pic_adapter_dummy"
         android:textAppearance="?android:attr/textAppearanceMedium" />
     
