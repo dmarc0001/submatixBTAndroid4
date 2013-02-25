@@ -108,7 +108,7 @@ public class BlueThoothComService extends Service
     Notification notification = new Notification.Builder( getBaseContext() )
                                   .setContentTitle( head )
                                   .setContentText( msg )
-                                  .setSmallIcon( android.R.drawable.ic_btn_speak_now )
+                                  .setSmallIcon( R.drawable.bluetooth_icon_color )
                                   .setTicker( getText( R.string.notify_service_ticker ) )
                                   .setContentIntent(contentIntent)
                                   .getNotification();
