@@ -43,18 +43,17 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
  */
 public class FragmentCommonActivity extends Activity implements AreYouSureDialogFragment.NoticeDialogListener, IComServiceToApp, IBtServiceListener
 {
-  private static final String               TAG               = FragmentCommonActivity.class.getSimpleName();
-  protected static boolean                  mTwoPane          = false;
-  protected static boolean                  isIndividual      = false;
-  protected static boolean                  isTrimix          = true;
-  protected static BluetoothAdapter         mBtAdapter        = null;
-  private volatile Vector<BtServiceMessage> msgVector         = new Vector<BtServiceMessage>();
-  private BlueThoothComService              mService          = null;
-  private MsgLooper                         msgLooper         = null;
-  private IBtServiceListener                serviceListener   = null;
-  private volatile boolean                  mIsBound          = false;
-  private boolean                           deviceIsConnected = false;
-  private static int                        currentStyleId    = R.style.AppDarkTheme;
+  private static final String               TAG             = FragmentCommonActivity.class.getSimpleName();
+  protected static boolean                  mTwoPane        = false;
+  protected static boolean                  isIndividual    = false;
+  protected static boolean                  isTrimix        = true;
+  protected static BluetoothAdapter         mBtAdapter      = null;
+  private volatile Vector<BtServiceMessage> msgVector       = new Vector<BtServiceMessage>();
+  private BlueThoothComService              mService        = null;
+  private MsgLooper                         msgLooper       = null;
+  private IBtServiceListener                serviceListener = null;
+  private volatile boolean                  mIsBound        = false;
+  private static int                        currentStyleId  = R.style.AppDarkTheme;
   //
   //@formatter:off
   //
@@ -437,6 +436,45 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   }
 
   /**
+   * 
+   * Verbinde Blutethooth Gerät
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 04.03.2013
+   * @param device
+   */
+  public void doConnectBtDevice( String device )
+  {
+    Log.d( TAG, String.format( "recived do connect device <%s>", device ) );
+    if( mIsBound )
+    {
+      mService.connect( device );
+    }
+  }
+
+  /**
+   * 
+   * Trenne Bluethooth Gerät
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 04.03.2013
+   */
+  public void doDisconnectBtDevice()
+  {
+    Log.d( TAG, "recived do disconnect device " );
+    if( mIsBound )
+    {
+      mService.disconnect();
+    }
+  }
+
+  /**
    * Wird ein Dialog negativ beendet (nein oder Abbruch)
    * 
    * @see de.dmarcini.submatix.android4.gui.AreYouSureDialogFragment.NoticeDialogListener#onDialogNegativeClick(android.app.DialogFragment)
@@ -686,7 +724,6 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   public void msgConnecting( BtServiceMessage msg )
   {
     Log.v( TAG, "connecting..." );
-    deviceIsConnected = false;
     // in der überschriebenen Funktion befüllen
   }
 
@@ -705,7 +742,6 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   public void msgConnected( BtServiceMessage msg )
   {
     Log.v( TAG, "connected..." );
-    deviceIsConnected = true;
     // in der überschriebenen Funktion befüllen
   }
 
@@ -725,7 +761,6 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   public void msgDisconnected( BtServiceMessage msg )
   {
     Log.v( TAG, "disconnected..." );
-    deviceIsConnected = false;
     // in der überschriebenen Funktion befüllen
   }
 
