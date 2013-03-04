@@ -43,6 +43,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
   private Spinner                     devSpinner     = null;
   private ImageButton                 connButton     = null;
   protected ProgressDialog            progressDialog = null;
+  private FragmentCommonActivity      myActivity     = null;
 
   /**
    * Nach dem Erzeugen des Objektes noch Einstellungen....
@@ -52,7 +53,10 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
   {
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate()..." );
+    // damit die Activity Nachrichten schicken kann
     ( ( FragmentCommonActivity )getActivity() ).setServiceListener( this );
+    // Funktionen der Activity nutzen
+    myActivity = ( ( FragmentCommonActivity )getActivity() );
   }
 
   /**
@@ -305,6 +309,8 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
                                                   if( ( device.getBondState() != BluetoothDevice.BOND_BONDED ) && ( device.getName() != null )
                                                           && ( device.getBluetoothClass().getMajorDeviceClass() == ProjectConst.SPX_BTDEVICE_CLASS ) )
                                                   {
+                                                    // BluetoothClass btClass = device.getBluetoothClass();
+                                                    // btClass.hasService( service );
                                                     // Feld 0 = Geräte Alias / Gerätename
                                                     // Feld 1 = Geräte-MAC
                                                     // Feld 2 = Geräte-Name
@@ -319,6 +325,11 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
                                                     // add, wenn nicht schon vorhanden
                                                     Log.v( TAG, "device add to btArrayAdapter..." );
                                                     ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).add( entr );
+                                                  }
+                                                  else
+                                                  {
+                                                    // kein RFCOMM-Gerät
+                                                    Log.d( TAG, "not an RFCOMM device. Ignore..." );
                                                   }
                                                   //
                                                   // When discovery is finished, change the Activity title
@@ -355,23 +366,19 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
           //
           // wenn da noch einer werkelt, anhalten und kompostieren
           //
-          // TODO: Service stoppen
-          //
-          // einen neuen Tread machen
-          //
           tb.setImageResource( R.drawable.bluetooth_icon_color );
-          tb.setAlpha( 0.5F );
+          String device = ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getMAC( devSpinner.getSelectedItemPosition() );
+          myActivity.doConnectBtDevice( device );
           break;
         case ProjectConst.STATE_CONNECTING:
           Log.v( TAG, "cancel connecting.." );
+          myActivity.doDisconnectBtDevice();
         case ProjectConst.STATE_CONNECTED:
           Log.v( TAG, "switch connect to OFF" );
           //
           // wenn da noch einer werkelt, anhalten und kompostieren
           //
-          // TODO: Servive stoppen
-          tb.setImageResource( R.drawable.bluetooth_icon_bw );
-          tb.setAlpha( 1.0F );
+          myActivity.doDisconnectBtDevice();
           break;
       }
     }
@@ -398,19 +405,28 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
   @Override
   public void msgConnecting( BtServiceMessage msg )
   {
-    // TODO Automatisch generierter Methodenstub
+    if( connButton != null )
+    {
+      connButton.setImageResource( R.drawable.bluetooth_icon_connecting );
+    }
   }
 
   @Override
   public void msgConnected( BtServiceMessage msg )
   {
-    // TODO Automatisch generierter Methodenstub
+    if( connButton != null )
+    {
+      connButton.setImageResource( R.drawable.bluetooth_icon_color );
+    }
   }
 
   @Override
   public void msgDisconnected( BtServiceMessage msg )
   {
-    // TODO Automatisch generierter Methodenstub
+    if( connButton != null )
+    {
+      connButton.setImageResource( R.drawable.bluetooth_icon_bw );
+    }
   }
 
   @Override
