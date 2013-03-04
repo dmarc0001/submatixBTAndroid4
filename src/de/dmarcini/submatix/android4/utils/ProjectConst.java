@@ -35,6 +35,9 @@ public final class ProjectConst
   // ANDROID: Unique UUID für allgemeine (well known) Serielle Schnittstelle
   public static final UUID   SERIAL_DEVICE_UUID         = UUID.fromString( "00001101-0000-1000-8000-00805f9b34fb" );
 
+  // Android: gewünschte BT Geräteklasse
+  public static final int SPX_BTDEVICE_CLASS            = 0x1F00;
+
   // ANDROID: Verbindungsstatus BT
   public static final int    STATE_NONE                 = 0;
   public static final int    STATE_CONNECTING           = 1;
@@ -136,9 +139,6 @@ public final class ProjectConst
   // Android: ID für Intentrequests
   public static final int REQUEST_ENABLE_BT             = 1;
   public static final int REQUEST_SPX_PREFS             = 2;
-  
-  // Android: gewünschte BT Geräteklasse
-  public static final int SPX_BTDEVICE_CLASS            = 0x1F00;
   
   // Android (für PC MUSS die Klasse auskommentiert werden )
   public static final class ActionEvent
