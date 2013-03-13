@@ -33,6 +33,13 @@ import de.dmarcini.submatix.android4.R;
  */
 public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
 {
+  /* private view holder class */
+  private class ViewHolder
+  {
+    public ImageView imageView;
+    public TextView  txtTitle;
+  }
+
   private static final String TAG               = BluetoothDeviceArrayAdapter.class.getSimpleName();
   private int                 themeId           = R.style.AppDarkTheme;
   public static final int     BT_DEVAR_ALIAS    = 0;
@@ -40,7 +47,8 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
   public static final int     BT_DEVAR_NAME     = 2;
   public static final int     BT_DEVAR_DBID     = 3;
   public static final int     BT_DEVAR_ISPAIRED = 4;
-  public static final int     BT_DEVAR_COUNT    = 5;
+  public static final int     BT_DEVAR_ISONLINE = 5;
+  public static final int     BT_DEVAR_COUNT    = 6;
 
   /**
    * 
@@ -73,66 +81,6 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
     this.themeId = themeId;
   }
 
-  /* private view holder class */
-  private class ViewHolder
-  {
-    public ImageView imageView;
-    public TextView  txtTitle;
-  }
-
-  @Override
-  public View getView( int position, View convertView, ViewGroup parent )
-  {
-    return( getCustomView( position, convertView, parent, true ) );
-  }
-
-  @Override
-  public View getDropDownView( int position, View convertView, ViewGroup parent )
-  {
-    return( getCustomView( position, convertView, parent, false ) );
-  }
-
-  private View getCustomView( int position, View convertView, ViewGroup parent, boolean isFirst )
-  {
-    ViewHolder holder = null;
-    LayoutInflater mInflater = ( LayoutInflater )getContext().getSystemService( Activity.LAYOUT_INFLATER_SERVICE );
-    if( convertView != null && ( convertView.getTag() instanceof ViewHolder ) )
-    {
-      holder = ( ViewHolder )convertView.getTag();
-    }
-    else
-    {
-      convertView = mInflater.inflate( R.layout.bt_array_with_pic_adapter_view, parent, false );
-      holder = new ViewHolder();
-      holder.txtTitle = ( TextView )convertView.findViewById( R.id.btArrayListTextView );
-      holder.imageView = ( ImageView )convertView.findViewById( R.id.btArrayListIconView );
-      if( isDevicePaired( position ) )
-      {
-        holder.imageView.setImageResource( R.drawable.bluetooth_icon_color );
-      }
-      else
-      {
-        holder.imageView.setImageResource( R.drawable.bluetooth_icon_bw );
-      }
-      convertView.setTag( holder );
-    }
-    holder.txtTitle.setText( getAlias( position ) );
-    if( isFirst )
-    {
-      if( this.themeId == R.style.AppDarkTheme )
-      {
-        holder.txtTitle.setTextColor( convertView.getResources().getColor( R.color.connectFragmentDark_spinnerText ) );
-      }
-      else
-      {
-        holder.txtTitle.setTextColor( convertView.getResources().getColor( R.color.connectFragmentLight_spinnerText ) );
-      }
-    }
-    // TODO: gepaart oder nicht? Online oder nicht?
-    holder.imageView.setImageResource( R.drawable.bluetooth_icon_bw );
-    return convertView;
-  }
-
   /**
    * 
    * Das Stringarray in die Liste!
@@ -147,7 +95,7 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
   @Override
   public void add( String[] items )
   {
-    if( !isMacThere( items ) )
+    if( isMacThere( items ) < 0 )
     {
       super.add( items );
     }
@@ -155,51 +103,32 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
 
   /**
    * 
-   * Ist die MAC-Adresse schon in der Liste?
+   * zufügen oder Daten updaten
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 17.02.2013
-   * @param item
-   * @return
+   *         Stand: 13.03.2013
+   * @param items
    */
-  private boolean isMacThere( String[] item )
+  public void addOrUpdate( String[] items )
   {
-    // int count = super.getCount();
-    int count = super.getCount();
-    for( int i = 0; i < count; i++ )
+    int position = isMacThere( items );
+    if( position < 0 )
     {
-      if( item[BT_DEVAR_MAC].equals( getItem( i )[BT_DEVAR_MAC] ) )
-      {
-        return( true );
-      }
+      super.add( items );
     }
-    return false;
-  }
-
-  /**
-   * 
-   * Die universelle Funktion zur Rückgabe einiger Teilstrings
-   * 
-   * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.utils
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 05.11.2012
-   * @param position
-   * @param index
-   * @return
-   */
-  private String getStringAt( int position, int index )
-  {
-    String[] fields = getItem( position );
-    if( fields.length >= index )
+    else
     {
-      return( fields[index] );
+      String[] fields = getItem( position );
+      fields[BT_DEVAR_ALIAS] = items[BT_DEVAR_ALIAS];
+      fields[BT_DEVAR_NAME] = items[BT_DEVAR_NAME];
+      fields[BT_DEVAR_DBID] = items[BT_DEVAR_DBID];
+      fields[BT_DEVAR_ISPAIRED] = items[BT_DEVAR_ISPAIRED];
+      fields[BT_DEVAR_ISONLINE] = items[BT_DEVAR_ISONLINE];
+      fields[BT_DEVAR_COUNT] = items[BT_DEVAR_COUNT];
     }
-    return( null );
   }
 
   /**
@@ -219,55 +148,66 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
     return( getStringAt( position, BT_DEVAR_ALIAS ) );
   }
 
-  /**
-   * 
-   * Gib die MAC des BT-Devices als Sting zurück
-   * 
-   * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.utils
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 05.11.2012
-   * @param position
-   * @return den String
-   */
-  public String getMAC( int position )
+  private View getCustomView( int position, View convertView, ViewGroup parent, boolean isFirst )
   {
-    return( getStringAt( position, BT_DEVAR_MAC ) );
-  }
-
-  /**
-   * 
-   * Gib den vom Gerät zurückgegebenen Namen
-   * 
-   * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.utils
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 05.11.2012
-   * @param position
-   * @return den String
-   */
-  public String getDevName( int position )
-  {
-    return( getStringAt( position, BT_DEVAR_NAME ) );
-  }
-
-  /**
-   * 
-   * Gib die DatenbankId des Eintrages zurück
-   * 
-   * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.utils
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 05.11.2012
-   * @param position
-   * @return den String
-   */
-  public String getDbIdStr( int position )
-  {
-    return( getStringAt( position, BT_DEVAR_DBID ) );
+    ViewHolder holder = null;
+    LayoutInflater mInflater = ( LayoutInflater )getContext().getSystemService( Activity.LAYOUT_INFLATER_SERVICE );
+    if( convertView != null && ( convertView.getTag() instanceof ViewHolder ) )
+    {
+      holder = ( ViewHolder )convertView.getTag();
+    }
+    else
+    {
+      convertView = mInflater.inflate( R.layout.bt_array_with_pic_adapter_view, parent, false );
+      holder = new ViewHolder();
+      holder.txtTitle = ( TextView )convertView.findViewById( R.id.btArrayListTextView );
+      holder.imageView = ( ImageView )convertView.findViewById( R.id.btArrayListIconView );
+      convertView.setTag( holder );
+    }
+    //
+    // Icon setzen
+    //
+    if( isDevicePaired( position ) )
+    {
+      // gepaarte Geräte
+      if( isDeviceOnline( position ) )
+      {
+        holder.imageView.setImageResource( R.drawable.device_is_paired_and_online );
+      }
+      else
+      {
+        holder.imageView.setImageResource( R.drawable.device_is_paired_no_connection );
+      }
+    }
+    else
+    {
+      // nicht gepaarte Geräte
+      if( isDeviceOnline( position ) )
+      {
+        holder.imageView.setImageResource( R.drawable.device_is_not_paired_and_online );
+      }
+      else
+      {
+        holder.imageView.setImageResource( R.drawable.device_is_not_paired_no_connection );
+      }
+    }
+    // Beschrifting setzen
+    holder.txtTitle.setText( getAlias( position ) );
+    //
+    // ist die Beschriftung die ausgewählte, einfärben
+    //
+    if( isFirst )
+    {
+      if( this.themeId == R.style.AppDarkTheme )
+      {
+        holder.txtTitle.setTextColor( convertView.getResources().getColor( R.color.connectFragmentDark_spinnerText ) );
+      }
+      else
+      {
+        holder.txtTitle.setTextColor( convertView.getResources().getColor( R.color.connectFragmentLight_spinnerText ) );
+      }
+    }
+    return convertView;
   }
 
   /**
@@ -305,6 +245,92 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
 
   /**
    * 
+   * Gib die DatenbankId des Eintrages zurück
+   * 
+   * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 05.11.2012
+   * @param position
+   * @return den String
+   */
+  public String getDbIdStr( int position )
+  {
+    return( getStringAt( position, BT_DEVAR_DBID ) );
+  }
+
+  /**
+   * 
+   * Gib den vom Gerät zurückgegebenen Namen
+   * 
+   * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 05.11.2012
+   * @param position
+   * @return den String
+   */
+  public String getDevName( int position )
+  {
+    return( getStringAt( position, BT_DEVAR_NAME ) );
+  }
+
+  @Override
+  public View getDropDownView( int position, View convertView, ViewGroup parent )
+  {
+    return( getCustomView( position, convertView, parent, false ) );
+  }
+
+  /**
+   * 
+   * Gib die MAC des BT-Devices als Sting zurück
+   * 
+   * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 05.11.2012
+   * @param position
+   * @return den String
+   */
+  public String getMAC( int position )
+  {
+    return( getStringAt( position, BT_DEVAR_MAC ) );
+  }
+
+  /**
+   * 
+   * Die universelle Funktion zur Rückgabe einiger Teilstrings
+   * 
+   * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 05.11.2012
+   * @param position
+   * @param index
+   * @return
+   */
+  private String getStringAt( int position, int index )
+  {
+    String[] fields = getItem( position );
+    if( fields.length >= index )
+    {
+      return( fields[index] );
+    }
+    return( null );
+  }
+
+  @Override
+  public View getView( int position, View convertView, ViewGroup parent )
+  {
+    return( getCustomView( position, convertView, parent, true ) );
+  }
+
+  /**
+   * 
    * Ist das Gerät bereits gepaart?
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
@@ -323,5 +349,72 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
       return( true );
     }
     return( false );
+  }
+
+  /**
+   * 
+   * Ist das Gerät als Online markiert?
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 13.03.2013
+   * @param position
+   * @return
+   */
+  public boolean isDeviceOnline( int position )
+  {
+    String pairedStr = getStringAt( position, BT_DEVAR_ISONLINE );
+    if( pairedStr.matches( "true" ) || pairedStr.matches( "1" ) || pairedStr.matches( "yes" ) )
+    {
+      return( true );
+    }
+    return( false );
+  }
+
+  /**
+   * 
+   * Ist die MAC-Adresse schon in der Liste?
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 17.02.2013
+   * @param item
+   * @return -1 nicht, ansonsten Nummer des Eintrages
+   */
+  public int isMacThere( String[] item )
+  {
+    // int count = super.getCount();
+    int count = super.getCount();
+    for( int i = 0; i < count; i++ )
+    {
+      if( item[BT_DEVAR_MAC].equals( getItem( i )[BT_DEVAR_MAC] ) )
+      {
+        return( i );
+      }
+    }
+    return( -1 );
+  }
+
+  /**
+   * 
+   * Setze den Aliasnamen des Gerätes neu
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 13.03.2013
+   * @param position
+   * @param newName
+   * 
+   */
+  public void setDevAlias( int position, String newName )
+  {
+    String[] fields = getItem( position );
+    fields[BT_DEVAR_ALIAS] = newName;
   }
 }
