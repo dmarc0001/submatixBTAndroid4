@@ -21,6 +21,7 @@
     <string name="toast_exit">exiting app</string>
     <string name="toast_exit_nobt">exiting app NO BT ADAPTER!</string>
     <string name="toast_bt_enabled">bluethooth enabled!</string>
+    <string name="toast_cant_bt_connect">can not connect bt device </string>
     
     <!-- Dialogboxen  -->
     <string name="dialog_sure_exit">are you sure?</string>

@@ -20,6 +20,7 @@
     <string name="toast_exit">"Verlasse App"</string>
     <string name="toast_exit_nobt">"Verlasse App KEIN BT ADAPTER!"</string>
     <string name="toast_bt_enabled">"Bluethooth aktiviert!"</string>
+    <string name="toast_cant_bt_connect">Kann nicht mit BT Gerät verbinden: </string>
     
     <!-- Dialogboxen  -->
     <string name="dialog_sure_exit">"Sind Sie sicher?"</string>
