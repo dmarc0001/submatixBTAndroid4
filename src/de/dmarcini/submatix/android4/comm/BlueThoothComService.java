@@ -16,6 +16,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import de.dmarcini.submatix.android4.R;
@@ -34,7 +35,7 @@ public class BlueThoothComService extends Service
   private int                    counter           = 0;
   private final int              incrementby       = 1;
   private boolean                isRunning         = false;
-  ArrayList<IComServiceToApp>    mClients          = new ArrayList<IComServiceToApp>();         // Keeps track of all current registered clients.
+  ArrayList<Handler>             mClientHandler    = new ArrayList<Handler>();                  // Messagehandler für Clienten
   int                            mValue            = 0;                                         // Holds last value set by a client.
   private final IBinder          mBinder           = new LocalBinder();
   private BluetoothAdapter       mAdapter          = null;
@@ -59,6 +60,28 @@ public class BlueThoothComService extends Service
     public BlueThoothComService getService()
     {
       return BlueThoothComService.this;
+    }
+
+    public void unregisterServiceHandler( Handler mHandler )
+    {
+      // if( mIsBusy ) return( null );
+      Log.i( TAG, "Client unregister" );
+      mClientHandler.remove( mHandler );
+      if( mClientHandler.isEmpty() )
+      {
+        Log.i( TAG, "last Client ist removed..." );
+        isRunning = false;
+        // zeit bis zum Ende des Service setzen
+        timeToStopService = System.currentTimeMillis() + msToEndService;
+      }
+    }
+
+    public void registerServiceHandler( Handler mHandler )
+    {
+      Log.i( TAG, "Client register" );
+      mClientHandler.add( mHandler );
+      isRunning = true;
+      timeToStopService = 0L;
     }
   }
 
@@ -577,16 +600,16 @@ public class BlueThoothComService extends Service
    */
   private void sendMessageToApp( BtServiceMessage msg )
   {
-    for( int i = mClients.size() - 1; i >= 0; i-- )
+    for( int i = mClientHandler.size() - 1; i >= 0; i-- )
     {
       try
       {
-        mClients.get( i ).sendMessage( msg );
+        mClientHandler.get( i ).obtainMessage( msg.getId(), msg ).sendToTarget();
       }
       catch( NullPointerException ex )
       {
         // das ging schief, den Clienten NICHT mehr benutzen
-        mClients.remove( i );
+        mClientHandler.remove( i );
       }
     }
   }
@@ -607,47 +630,14 @@ public class BlueThoothComService extends Service
 
   /**
    * 
-   * Eine App / einen Clioenten zur Benachrichtigung registrieren
+   * Wenn die Verbindung verloren geht
    * 
-   * Project: BtServiceVersuch Package: de.dmarcini.android.btservive
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 21.02.2013
-   * @param msgr
-   */
-  public void registerClient( IComServiceToApp mActivity )
-  {
-    Log.i( TAG, "Client register" );
-    mClients.add( mActivity );
-    isRunning = true;
-    timeToStopService = 0L;
-  }
-
-  /**
-   * 
-   * Eine Registrierung aufheben!
-   * 
-   * Project: BtServiceVersuch Package: de.dmarcini.android.btservive
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 21.02.2013
-   * @param msgr
+   *         Stand: 13.03.2013
    */
-  public void unregisterClient( IComServiceToApp mActivity )
-  {
-    Log.i( TAG, "Client unregister" );
-    mClients.remove( mActivity );
-    if( mClients.isEmpty() )
-    {
-      Log.i( TAG, "last Client ist removed..." );
-      isRunning = false;
-      // zeit bis zum Ende des Service setzen
-      timeToStopService = System.currentTimeMillis() + msToEndService;
-    }
-  }
-
   private void connectionLost()
   {
     connectedDevice = null;
