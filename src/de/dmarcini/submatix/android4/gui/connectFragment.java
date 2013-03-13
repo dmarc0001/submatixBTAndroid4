@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.utils.BluetoothDeviceArrayAdapter;
@@ -371,7 +372,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
   @Override
   public void onClick( View cView )
   {
-    int connState = ProjectConst.STATE_NONE;
+    int connState = ( ( FragmentCommonActivity )getActivity() ).getConnectionStatus();
     Log.d( TAG, "ON CLICK!" );
     //
     if( cView instanceof ImageButton )
@@ -459,5 +460,14 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
   public void msgRecivedTick( BtServiceMessage msg )
   {
     Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
+  }
+
+  @Override
+  public void msgConnectError( BtServiceMessage msg )
+  {
+    Toast.makeText(
+            getActivity().getApplicationContext(),
+            getActivity().getString( R.string.toast_cant_bt_connect ) + ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getAlias( devSpinner.getSelectedItemPosition() ),
+            Toast.LENGTH_LONG ).show();
   }
 }

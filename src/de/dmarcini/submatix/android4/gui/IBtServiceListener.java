@@ -11,4 +11,6 @@ public interface IBtServiceListener
   public void msgDisconnected( BtServiceMessage msg );
 
   public void msgRecivedTick( BtServiceMessage msg );
+
+  public void msgConnectError( BtServiceMessage msg );
 }

@@ -235,7 +235,7 @@ public class BlueThoothComService extends Service
      */
     public ConnectedThread( BluetoothSocket socket )
     {
-      Log.d( TAG, "create ConnectedThread" );
+      Log.d( TAGCOT, "create ConnectedThread" );
       mmSocket = socket;
       InputStream tmpIn = null;
       OutputStream tmpOut = null;
@@ -700,6 +700,9 @@ public class BlueThoothComService extends Service
     BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
     // Melde des Status an die Clienten
     sendMessageToApp( msg );
+    BtServiceMessage msg1 = new BtServiceMessage( ProjectConst.MESSAGE_CONNECTERROR );
+    // Melde des Status an die Clienten
+    sendMessageToApp( msg1 );
   }
 
   /**

@@ -63,6 +63,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     @Override
     public void onServiceConnected( ComponentName name, IBinder service )
     {
+      Log.d(TAG,"onServiceConnected...");
       binder = ( LocalBinder )service;
       mService = binder.getService();
       binder.registerServiceHandler( mHandler );
@@ -71,8 +72,10 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     @Override
     public void onServiceDisconnected( ComponentName name )
     {
+      Log.d(TAG,"onServiceDisconnected...");
       if( mService != null && binder != null )
       {
+        Log.d(TAG,"onServiceDisconnected...unregister Handler...");
         binder.unregisterServiceHandler( mHandler );
       }
       mService = null;
@@ -97,6 +100,12 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
       switch ( msg.what )
       {
         // ################################################################
+        // Service TICK empfangen
+        // ################################################################
+        case ProjectConst.MESSAGE_TICK:
+          serviceListener.msgRecivedTick( smsg );
+          break;
+        // ################################################################
         // Computer wird gerade verbunden
         // ################################################################
         case ProjectConst.MESSAGE_CONNECTING:
@@ -115,13 +124,14 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
           serviceListener.msgDisconnected( smsg );
           break;
         // ################################################################
-        // Service TICK empfangen
+        // Computer wurde getrennt
         // ################################################################
-        case ProjectConst.MESSAGE_TICK:
-          serviceListener.msgRecivedTick( smsg );
+        case ProjectConst.MESSAGE_CONNECTERROR:
+          serviceListener.msgConnectError( smsg );
           break;
-        // ################################################################
-        // Computer wurde verbunden
+
+          // ################################################################
+        // Sonst....
         // ################################################################
         default:
           Log.w( TAG, "unknown message with id <" + smsg.getId() + "> recived!" );
@@ -341,13 +351,20 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
       // If we have received the service, and hence registered with it, then now is the time to unregister.
       if( mService != null )
       {
-        Log.v( TAG, "unbind service..." );
+        Log.v( TAG, "doUnbindService..." );
         if( mService != null )
         {
+          if( mService != null && binder != null )
+          {
+            Log.d( TAG, "doUnbindService...unregister Handler..." );
+            binder.unregisterServiceHandler( mHandler );
+          }
+          mService = null;
+          binder = null;
           unbindService( mConnection );
         }
         mIsBound = false;
-        Log.v( TAG, "unbind service...OK" );
+        Log.v( TAG, "doUnbindService...OK" );
       }
     }
   }
@@ -613,6 +630,26 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
 
   /**
    * 
+   * Verbindungsstatus erfragen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 13.03.2013
+   * @return
+   */
+  public int getConnectionStatus()
+  {
+    if( mService != null )
+    {
+      return( mService.getConnectionState() );
+    }
+    return( ProjectConst.STATE_NONE );
+  }
+
+  /**
+   * 
    * Wenn das Gerät verbunden wird (beim Verbinden)
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
@@ -701,5 +738,11 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   public void msgRecivedTick( BtServiceMessage msg )
   {
     Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
+  }
+
+  @Override
+  public void msgConnectError( BtServiceMessage msg )
+  {
+    Log.d( TAG, "connection error (device not online?)" );
   }
 }
