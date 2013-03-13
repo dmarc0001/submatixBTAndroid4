@@ -44,6 +44,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
   private ImageButton                 connButton     = null;
   protected ProgressDialog            progressDialog = null;
   private FragmentCommonActivity      myActivity     = null;
+  private boolean                     runDiscovering = false;
 
   /**
    * Nach dem Erzeugen des Objektes noch Einstellungen....
@@ -91,17 +92,19 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
   }
 
   /**
-   * Wenn das View wieder nach vorn kommt / reaktiviert wurde
+   * 
+   * Einen neuen Adapter mit bereits gepaarten Geräten befüllen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 13.03.2013
    */
-  @Override
-  public synchronized void onResume()
+  private void fillNewAdapterWithPairedDevices()
   {
-    super.onResume();
-    Log.v( TAG, "onResume()..." );
-    //
-    // erst mal leere Liste anzeigen, String aus Resource
-    //
-    btArrayAdapter = new BluetoothDeviceArrayAdapter( getActivity(), R.layout.device_name_textview, ( ( FragmentCommonActivity )getActivity() ).getAppStyle() );
+    Log.v( TAG, "fill a new ArrayAdapter with paired devices..." );
+    btArrayAdapter = new BluetoothDeviceArrayAdapter( getActivity(), R.layout.device_name_textview, FragmentCommonActivity.getAppStyle() );
     if( FragmentCommonActivity.mBtAdapter == null ) return;
     //
     // eine Liste der bereits gepaarten Devices
@@ -120,11 +123,12 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
         {
           String[] entr = new String[BluetoothDeviceArrayAdapter.BT_DEVAR_COUNT];
           // TODO: ALIAS TESTEN und eintragen!
-          entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = device.getName() + "*";
+          entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = device.getName();
           entr[BluetoothDeviceArrayAdapter.BT_DEVAR_MAC] = device.getAddress();
           entr[BluetoothDeviceArrayAdapter.BT_DEVAR_NAME] = device.getName();
           entr[BluetoothDeviceArrayAdapter.BT_DEVAR_DBID] = "0";
           entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISPAIRED] = "true";
+          entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISONLINE] = "false";
           btArrayAdapter.add( entr );
         }
       }
@@ -137,10 +141,22 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
       entr[BluetoothDeviceArrayAdapter.BT_DEVAR_NAME] = getActivity().getString( R.string.no_device );
       entr[BluetoothDeviceArrayAdapter.BT_DEVAR_DBID] = "0";
       entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISPAIRED] = "false";
+      entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISONLINE] = "false";
       btArrayAdapter.add( entr );
     }
-    Log.v( TAG, "fill List with devices on surcafe..." );
+    Log.v( TAG, "fill List with devices..." );
     devSpinner.setAdapter( btArrayAdapter );
+  }
+
+  /**
+   * Wenn das View wieder nach vorn kommt / reaktiviert wurde
+   */
+  @Override
+  public synchronized void onResume()
+  {
+    super.onResume();
+    Log.v( TAG, "onResume()..." );
+    fillNewAdapterWithPairedDevices();
   }
 
   @Override
@@ -241,7 +257,11 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
     {
       FragmentCommonActivity.mBtAdapter.cancelDiscovery();
     }
-    // Request discover from BluetoothAdapter
+    // Discovering Marker setzen
+    this.runDiscovering = true;
+    // Adapter frisch befüllen
+    fillNewAdapterWithPairedDevices();
+    // Discovering starten
     FragmentCommonActivity.mBtAdapter.startDiscovery();
   }
 
@@ -280,7 +300,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
   }
 
   //
-  // der Broadcast Empfänger der Nachrichten über gefudnene BT Geräte findet
+  // der Broadcast Empfänger der Nachrichten über gefundene BT Geräte findet
   //
   private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
                                               @Override
@@ -293,10 +313,13 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
                                                 if( BluetoothDevice.ACTION_FOUND.equals( action ) )
                                                 {
                                                   //
+                                                  // ignoriere das, wenn ich das nicht selber angeschubst hab
+                                                  //
+                                                  if( !runDiscovering ) return;
+                                                  //
                                                   // Das Gerät extraieren
                                                   //
                                                   BluetoothDevice device = intent.getParcelableExtra( BluetoothDevice.EXTRA_DEVICE );
-                                                  Log.v( TAG, String.format( "Name: %s, MAC: %s", device.getName(), device.getAddress() ) );
                                                   if( progressDialog != null )
                                                   {
                                                     Log.v( TAG, "device add to progressDialog..." );
@@ -309,6 +332,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
                                                   if( ( device.getBondState() != BluetoothDevice.BOND_BONDED ) && ( device.getName() != null )
                                                           && ( device.getBluetoothClass().getMajorDeviceClass() == ProjectConst.SPX_BTDEVICE_CLASS ) )
                                                   {
+                                                    Log.d( TAG, String.format( "<%s> is an RFCOMM, Add...", device.getName() ) );
                                                     // BluetoothClass btClass = device.getBluetoothClass();
                                                     // btClass.hasService( service );
                                                     // Feld 0 = Geräte Alias / Gerätename
@@ -322,14 +346,14 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
                                                     entr[BluetoothDeviceArrayAdapter.BT_DEVAR_NAME] = device.getName();
                                                     entr[BluetoothDeviceArrayAdapter.BT_DEVAR_DBID] = "0";
                                                     entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISPAIRED] = "false";
-                                                    // add, wenn nicht schon vorhanden
-                                                    Log.v( TAG, "device add to btArrayAdapter..." );
-                                                    ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).add( entr );
+                                                    entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISONLINE] = "true";
+                                                    // add oder Update Datensatz, wenn nicht schon vorhanden
+                                                    ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).addOrUpdate( entr );
                                                   }
                                                   else
                                                   {
                                                     // kein RFCOMM-Gerät
-                                                    Log.d( TAG, "not an RFCOMM device. Ignore..." );
+                                                    Log.d( TAG, String.format( "<%s> is not RFCOMM, Ignore...", device.getName() ) );
                                                   }
                                                   //
                                                   // When discovery is finished, change the Activity title
@@ -337,6 +361,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
                                                 else if( BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals( action ) )
                                                 {
                                                   Log.v( TAG, "discover finished, enable button." );
+                                                  runDiscovering = false;
                                                   setItemsEnabled( true );
                                                   devSpinner.setAdapter( btArrayAdapter );
                                                 }
@@ -425,6 +450,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
   {
     if( connButton != null )
     {
+      // TODO: im aktiven Thread machen
       connButton.setImageResource( R.drawable.bluetooth_icon_bw );
     }
   }
