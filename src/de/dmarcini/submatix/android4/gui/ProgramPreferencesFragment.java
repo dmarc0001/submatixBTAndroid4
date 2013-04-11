@@ -14,6 +14,7 @@ import android.preference.PreferenceScreen;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 
@@ -98,7 +99,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     Preference pref = null;
     Resources res = getResources();
     Log.v( TAG, "onSharedPreferenceChanged()...." );
-    Log.d( TAG, "onSharedPreferenceChanged: key = <" + key + ">" );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onSharedPreferenceChanged: key = <" + key + ">" );
     //
     // zuerst mal die ListPreferenzen abklappern
     //

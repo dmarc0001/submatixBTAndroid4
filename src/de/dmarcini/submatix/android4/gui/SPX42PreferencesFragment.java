@@ -13,6 +13,7 @@ import android.preference.PreferenceScreen;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 
 /**
@@ -187,7 +188,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements OnSh
     ListPreference lP = null;
     Preference pref = null;
     Log.v( TAG, "onSharedPreferenceChanged()...." );
-    Log.d( TAG, "onSharedPreferenceChanged: key = <" + key + ">" );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onSharedPreferenceChanged: key = <" + key + ">" );
     //
     // zuerst mal die ListPreferenzen abklappern
     //

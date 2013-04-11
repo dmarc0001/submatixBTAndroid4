@@ -19,6 +19,7 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.gui.areaListActivity;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
@@ -116,7 +117,7 @@ public class BlueThoothComService extends Service
     {
       mmDevice = device;
       BluetoothSocket tmp = null;
-      Log.d( TAGCON, "createRfCommSocketToServiceRecord(" + ProjectConst.SERIAL_DEVICE_UUID + ")" );
+      if( BuildConfig.DEBUG ) Log.d( TAGCON, "createRfCommSocketToServiceRecord(" + ProjectConst.SERIAL_DEVICE_UUID + ")" );
       //
       // Einen Socket für das Gerät erzeugen
       //
@@ -236,7 +237,7 @@ public class BlueThoothComService extends Service
      */
     public ConnectedThread( BluetoothSocket socket )
     {
-      Log.d( TAGCOT, "create ConnectedThread" );
+      if( BuildConfig.DEBUG ) Log.d( TAGCOT, "create ConnectedThread" );
       mmSocket = socket;
       InputStream tmpIn = null;
       OutputStream tmpOut = null;
@@ -442,7 +443,7 @@ public class BlueThoothComService extends Service
   @Override
   public IBinder onBind( Intent intent )
   {
-    Log.d( TAG, "onBind..." );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onBind..." );
     showNotification( getText( R.string.notify_service ), getText( R.string.notify_service_connected ) );
     return mBinder;
   }
@@ -450,7 +451,7 @@ public class BlueThoothComService extends Service
   @Override
   public boolean onUnbind( Intent intent )
   {
-    Log.d( TAG, "onUnbind..." );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onUnbind..." );
     showNotification( getText( R.string.notify_service ), getText( R.string.notify_service_disconnected ) );
     return( super.onUnbind( intent ) );
   }
@@ -581,7 +582,7 @@ public class BlueThoothComService extends Service
     }
     if( System.currentTimeMillis() > tickToCounter )
     {
-      Log.d( TAG, "Timer :<" + counter + ">" );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "Timer :<" + counter + ">" );
       tickToCounter = System.currentTimeMillis() + 2000L;
       try
       {

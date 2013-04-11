@@ -29,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
+import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BlueThoothComService;
 import de.dmarcini.submatix.android4.comm.BlueThoothComService.LocalBinder;
@@ -63,7 +64,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     @Override
     public void onServiceConnected( ComponentName name, IBinder service )
     {
-      Log.d(TAG,"onServiceConnected...");
+      if( BuildConfig.DEBUG ) if( BuildConfig.DEBUG ) Log.d(TAG,"onServiceConnected...");
       binder = ( LocalBinder )service;
       mService = binder.getService();
       binder.registerServiceHandler( mHandler );
@@ -72,10 +73,10 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     @Override
     public void onServiceDisconnected( ComponentName name )
     {
-      Log.d(TAG,"onServiceDisconnected...");
+      if( BuildConfig.DEBUG ) Log.d(TAG,"onServiceDisconnected...");
       if( mService != null && binder != null )
       {
-        Log.d(TAG,"onServiceDisconnected...unregister Handler...");
+        if( BuildConfig.DEBUG ) Log.d(TAG,"onServiceDisconnected...unregister Handler...");
         binder.unregisterServiceHandler( mHandler );
       }
       mService = null;
@@ -255,13 +256,13 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
       boolean whishedTheme = sPref.getBoolean( "keyProgOthersThemeIsDark", false );
       if( whishedTheme )
       {
-        Log.d( TAG, "onCreate: select DARK theme while preference was set" );
+        if( BuildConfig.DEBUG ) Log.d( TAG, "onCreate: select DARK theme while preference was set" );
         currentStyleId = R.style.AppDarkTheme;
         setTheme( R.style.AppDarkTheme );
       }
       else
       {
-        Log.d( TAG, "onCreate: select Blue theme while preference was set" );
+        if( BuildConfig.DEBUG ) Log.d( TAG, "onCreate: select Blue theme while preference was set" );
         currentStyleId = R.style.AppLightTheme;
         setTheme( R.style.AppLightTheme );
       }
@@ -310,7 +311,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     //
     for( int i = 0; i < services.size(); i++ )
     {
-      // Log.d( TAG, "Service Nr." + i + ":" + services.get( i ).service );
+      // if( BuildConfig.DEBUG ) Log.d( TAG, "Service Nr." + i + ":" + services.get( i ).service );
       if( "de.dmarcini.submatix.android4.comm".equals( services.get( i ).service.getPackageName() ) )
       {
         if( "BlueThoothComService".equals( services.get( i ).service.getClassName() ) )
@@ -321,7 +322,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     }
     if( !isServiceFound )
     {
-      Log.d( TAG, "Starting Service..." );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "Starting Service..." );
       Intent service = new Intent( this, BlueThoothComService.class );
       startService( service );
     }
@@ -356,7 +357,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         {
           if( mService != null && binder != null )
           {
-            Log.d( TAG, "doUnbindService...unregister Handler..." );
+            if( BuildConfig.DEBUG ) Log.d( TAG, "doUnbindService...unregister Handler..." );
             binder.unregisterServiceHandler( mHandler );
           }
           mService = null;
@@ -382,7 +383,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
    */
   public void doConnectBtDevice( String device )
   {
-    Log.d( TAG, String.format( "recived do connect device <%s>", device ) );
+    if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "recived do connect device <%s>", device ) );
     if( mIsBound )
     {
       mService.connect( device );
@@ -401,7 +402,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
    */
   public void doDisconnectBtDevice()
   {
-    Log.d( TAG, "recived do disconnect device " );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "recived do disconnect device " );
     if( mIsBound )
     {
       mService.disconnect();
@@ -576,7 +577,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     switch ( item.getItemId() )
     {
       case android.R.id.home:
-        Log.d( TAG, "onOptionsItemSelected: navigate UP!" );
+        if( BuildConfig.DEBUG ) Log.d( TAG, "onOptionsItemSelected: navigate UP!" );
         // This is called when the Home (Up) button is pressed
         // in the Action Bar.
         Intent parentActivityIntent = new Intent( this, areaListActivity.class );
@@ -737,12 +738,12 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   @Override
   public void msgRecivedTick( BtServiceMessage msg )
   {
-    Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
+    if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
   }
 
   @Override
   public void msgConnectError( BtServiceMessage msg )
   {
-    Log.d( TAG, "connection error (device not online?)" );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "connection error (device not online?)" );
   }
 }

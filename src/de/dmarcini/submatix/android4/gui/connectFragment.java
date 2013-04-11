@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
+import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.utils.BluetoothDeviceArrayAdapter;
@@ -336,7 +337,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
                                                   if( ( device.getBondState() != BluetoothDevice.BOND_BONDED ) && ( device.getName() != null )
                                                           && ( device.getBluetoothClass().getMajorDeviceClass() == ProjectConst.SPX_BTDEVICE_CLASS ) )
                                                   {
-                                                    Log.d( TAG, String.format( "<%s> is an RFCOMM, Add...", device.getName() ) );
+                                                    if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "<%s> is an RFCOMM, Add...", device.getName() ) );
                                                     // BluetoothClass btClass = device.getBluetoothClass();
                                                     // btClass.hasService( service );
                                                     // Feld 0 = Geräte Alias / Gerätename
@@ -357,7 +358,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
                                                   else
                                                   {
                                                     // kein RFCOMM-Gerät
-                                                    Log.d( TAG, String.format( "<%s> is not RFCOMM, Ignore...", device.getName() ) );
+                                                    if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "<%s> is not RFCOMM, Ignore...", device.getName() ) );
                                                   }
                                                   //
                                                   // When discovery is finished, change the Activity title
@@ -376,7 +377,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
   public void onClick( View cView )
   {
     int connState = ( ( FragmentCommonActivity )getActivity() ).getConnectionStatus();
-    Log.d( TAG, "ON CLICK!" );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "ON CLICK!" );
     //
     if( cView instanceof ImageButton )
     {
@@ -462,7 +463,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
   @Override
   public void msgRecivedTick( BtServiceMessage msg )
   {
-    Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
+    if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
   }
 
   @Override

@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.content.ContentSwitcher;
 import de.dmarcini.submatix.android4.content.ContentSwitcher.ProgItem;
@@ -154,7 +155,7 @@ public class areaListActivity extends FragmentCommonActivity
   {
     String gasKeyTemplate = getResources().getString( R.string.conf_gaslist_gas_key_template );
     String gasListDefault = getResources().getString( R.string.conf_gaslist_default );
-    Log.d( TAG, "setDefaultPreferences: make default preferences..." );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "setDefaultPreferences: make default preferences..." );
     PreferenceManager.setDefaultValues( this, R.xml.config_spx42_preference_individual, true );
     PreferenceManager.setDefaultValues( this, R.xml.config_program_preference, true );
     //
@@ -175,7 +176,7 @@ public class areaListActivity extends FragmentCommonActivity
     }
     if( editor.commit() )
     {
-      Log.d( TAG, "setDefaultPreferences: wrote preferences to storeage." );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "setDefaultPreferences: wrote preferences to storeage." );
     }
     else
     {

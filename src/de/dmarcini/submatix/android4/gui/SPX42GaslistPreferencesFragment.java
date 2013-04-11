@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.util.Log;
 import android.view.MenuItem;
+import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.utils.GasPickerPreference;
 import de.dmarcini.submatix.android4.utils.GasUtilitys;
@@ -137,7 +138,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     boolean d1 = false, d2 = false, bo = false;
     //
     Log.v( TAG, "onSharedPreferenceChanged()...." );
-    Log.d( TAG, "onSharedPreferenceChanged: key = <" + key + ">" );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onSharedPreferenceChanged: key = <" + key + ">" );
     //
     // Wenn das von der GasPickergeschichte kommt
     //
