@@ -217,10 +217,11 @@ public class BlueThoothComService extends Service
    */
   private class ConnectedThread extends Thread
   {
-    private final String          TAGCOT = ConnectedThread.class.getSimpleName();
+    private final String          TAGCOT       = ConnectedThread.class.getSimpleName();
     private final BluetoothSocket mmSocket;
     private final InputStream     mmInStream;
     private final OutputStream    mmOutStream;
+    private Boolean               cancelThread = false;
 
     /**
      * 
@@ -239,6 +240,7 @@ public class BlueThoothComService extends Service
       mmSocket = socket;
       InputStream tmpIn = null;
       OutputStream tmpOut = null;
+      cancelThread = false;
       // die BluetoothSocket input and output streams erstellen
       try
       {
@@ -267,6 +269,7 @@ public class BlueThoothComService extends Service
     {
       try
       {
+        cancelThread = true;
         mmSocket.close();
       }
       catch( IOException ex )
@@ -338,7 +341,14 @@ public class BlueThoothComService extends Service
         }
         catch( IOException e )
         {
-          Log.e( TAGCOT, "disconnected" + e.getLocalizedMessage() );
+          if( cancelThread )
+          {
+            Log.i( TAGCOT, "while cancel thread: disconnected " + e.getLocalizedMessage() );
+          }
+          else
+          {
+            Log.e( TAGCOT, "disconnected " + e.getLocalizedMessage() );
+          }
           connectionLost();
           cancel();
           break;
@@ -611,6 +621,10 @@ public class BlueThoothComService extends Service
         // das ging schief, den Clienten NICHT mehr benutzen
         mClientHandler.remove( i );
       }
+      catch( Exception ex )
+      {
+        Log.e( TAG, "error while sendMessageToApp: " + ex.getLocalizedMessage() );
+      }
     }
   }
 
@@ -762,7 +776,7 @@ public class BlueThoothComService extends Service
    */
   public void disconnect()
   {
-    Log.v( TAG, "stop" );
+    Log.v( TAG, "stopping bt-connection" );
     if( mConnectThread != null )
     {
       mConnectThread.cancel();
