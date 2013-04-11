@@ -55,10 +55,11 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
   {
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate()..." );
-    // damit die Activity Nachrichten schicken kann
-    ( ( FragmentCommonActivity )getActivity() ).setServiceListener( this );
     // Funktionen der Activity nutzen
     myActivity = ( ( FragmentCommonActivity )getActivity() );
+    // damit die Activity Nachrichten schicken kann
+    // ( ( FragmentCommonActivity )getActivity() ).setServiceListener( this );
+    myActivity.setServiceListener( this );
   }
 
   /**
@@ -158,6 +159,8 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
     super.onResume();
     Log.v( TAG, "onResume()..." );
     fillNewAdapterWithPairedDevices();
+    // setze den verbindungsstatus visuell
+    setToggleButtonTextAndStat( connButton, myActivity.getConnectionStatus() );
   }
 
   @Override
