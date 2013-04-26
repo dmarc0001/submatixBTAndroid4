@@ -522,7 +522,7 @@ public class BlueThoothComService extends Service
     // mHandler.sendMessage( msg );
     // }
     Log.v( TAG, "call setState" );
-    setState( ProjectConst.STATE_CONNECTED );
+    setState( ProjectConst.CONN_STATE_CONNECTED );
   }
 
   /**
@@ -582,7 +582,7 @@ public class BlueThoothComService extends Service
     }
     if( System.currentTimeMillis() > tickToCounter )
     {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "Timer :<" + counter + ">" );
+      // if( BuildConfig.DEBUG ) Log.d( TAG, "Timer :<" + counter + ">" );
       tickToCounter = System.currentTimeMillis() + 2000L;
       try
       {
@@ -657,7 +657,7 @@ public class BlueThoothComService extends Service
   {
     connectedDevice = null;
     // connectedDeviceAlias = null;
-    setState( ProjectConst.STATE_NONE );
+    setState( ProjectConst.CONN_STATE_NONE );
     BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
     // Melde des Status an die Clienten
     sendMessageToApp( msg );
@@ -683,13 +683,13 @@ public class BlueThoothComService extends Service
     switch ( state )
     {
       default:
-      case ProjectConst.STATE_NONE:
+      case ProjectConst.CONN_STATE_NONE:
         msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
         break;
-      case ProjectConst.STATE_CONNECTING:
+      case ProjectConst.CONN_STATE_CONNECTING:
         msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECTING );
         break;
-      case ProjectConst.STATE_CONNECTED:
+      case ProjectConst.CONN_STATE_CONNECTED:
         msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECTED );
         break;
     }
@@ -711,7 +711,7 @@ public class BlueThoothComService extends Service
   {
     connectedDevice = null;
     // connectedDeviceAlias = null;
-    setState( ProjectConst.STATE_NONE );
+    setState( ProjectConst.CONN_STATE_NONE );
     BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
     // Melde des Status an die Clienten
     sendMessageToApp( msg );
@@ -744,7 +744,7 @@ public class BlueThoothComService extends Service
     }
     device = mAdapter.getRemoteDevice( addr );
     // Thread stoppen, bevor eine Verbindung aufgebaut werden kann
-    if( mConnectionState == ProjectConst.STATE_CONNECTING )
+    if( mConnectionState == ProjectConst.CONN_STATE_CONNECTING )
     {
       if( mConnectThread != null )
       {
@@ -762,7 +762,7 @@ public class BlueThoothComService extends Service
     mConnectThread = new ConnectThread( device );
     connectedDevice = addr;
     mConnectThread.start();
-    setState( ProjectConst.STATE_CONNECTING );
+    setState( ProjectConst.CONN_STATE_CONNECTING );
   }
 
   /**
@@ -790,7 +790,7 @@ public class BlueThoothComService extends Service
     }
     connectedDevice = null;
     // connectedDeviceAlias = null;
-    setState( ProjectConst.STATE_NONE );
+    setState( ProjectConst.CONN_STATE_NONE );
   }
 
   /**
