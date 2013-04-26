@@ -646,7 +646,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     {
       return( mService.getConnectionState() );
     }
-    return( ProjectConst.STATE_NONE );
+    return( ProjectConst.CONN_STATE_NONE );
   }
 
   /**
