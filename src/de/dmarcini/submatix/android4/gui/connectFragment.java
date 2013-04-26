@@ -161,7 +161,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
     Log.v( TAG, "onResume()..." );
     fillNewAdapterWithPairedDevices();
     // setze den verbindungsstatus visuell
-    setToggleButtonTextAndStat( connButton, myActivity.getConnectionStatus() );
+    setToggleButtonTextAndStat( myActivity.getConnectionStatus() );
   }
 
   @Override
@@ -218,27 +218,43 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
       discoverButton.setOnClickListener( this );
       connButton.setOnClickListener( this );
     }
-    setToggleButtonTextAndStat( connButton, 0 );
+    setToggleButtonTextAndStat( ProjectConst.CONN_STATE_NONE );
     return( rootView );
   }
 
-  private void setToggleButtonTextAndStat( ImageButton tg, int connState )
+  private void setToggleButtonTextAndStat( int connState )
   {
-    switch ( connState )
+    try
     {
-      case ProjectConst.STATE_NONE:
-      default:
-        tg.setImageResource( R.drawable.bluetooth_icon_bw );
-        tg.setAlpha( 1.0F );
-        break;
-      case ProjectConst.STATE_CONNECTING:
-        tg.setImageResource( R.drawable.bluetooth_icon_color );
-        tg.setAlpha( 0.5F );
-        break;
-      case ProjectConst.STATE_CONNECTED:
-        tg.setImageResource( R.drawable.bluetooth_icon_color );
-        tg.setAlpha( 1.0F );
-        break;
+      switch ( connState )
+      {
+        case ProjectConst.CONN_STATE_NONE:
+        default:
+          connButton.setImageResource( R.drawable.bluetooth_icon_bw );
+          connButton.setAlpha( 1.0F );
+          connButton.setEnabled( true );
+          discoverButton.setEnabled( true );
+          devSpinner.setEnabled( true );
+          break;
+        case ProjectConst.CONN_STATE_CONNECTING:
+          connButton.setImageResource( R.drawable.bluetooth_icon_color );
+          connButton.setAlpha( 0.5F );
+          connButton.setEnabled( false );
+          discoverButton.setEnabled( false );
+          devSpinner.setEnabled( false );
+          break;
+        case ProjectConst.CONN_STATE_CONNECTED:
+          connButton.setImageResource( R.drawable.bluetooth_icon_color );
+          connButton.setAlpha( 1.0F );
+          connButton.setEnabled( true );
+          discoverButton.setEnabled( true );
+          devSpinner.setEnabled( true );
+          break;
+      }
+    }
+    catch( NullPointerException ex )
+    {
+      Log.e( TAG, "Nullpointer while setToggleButtonTextAndStat() : " + ex.getLocalizedMessage() );
     }
   }
 
@@ -256,7 +272,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
   {
     // If we're already discovering, stop it
     Log.v( TAG, "start discovering..." );
-    setItemsEnabled( false );
+    setItemsEnabledwhileDiscover( false );
     if( FragmentCommonActivity.mBtAdapter == null ) return;
     if( FragmentCommonActivity.mBtAdapter.isDiscovering() )
     {
@@ -272,7 +288,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
 
   /**
    * 
-   * Lasse die Butons nicht mehr bedienen
+   * Lasse die Butons nicht mehr bedienen während des Discovering
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
@@ -281,7 +297,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
    *         Stand: 17.02.2013
    * @param enabled
    */
-  private void setItemsEnabled( boolean enabled )
+  private void setItemsEnabledwhileDiscover( boolean enabled )
   {
     if( progressDialog != null )
     {
@@ -367,7 +383,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
                                                 {
                                                   Log.v( TAG, "discover finished, enable button." );
                                                   runDiscovering = false;
-                                                  setItemsEnabled( true );
+                                                  setItemsEnabledwhileDiscover( true );
                                                   devSpinner.setAdapter( btArrayAdapter );
                                                 }
                                               }
@@ -390,7 +406,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
       }
       switch ( connState )
       {
-        case ProjectConst.STATE_NONE:
+        case ProjectConst.CONN_STATE_NONE:
         default:
           Log.v( TAG, "switch connect to ON" );
           //
@@ -400,10 +416,10 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
           String device = ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getMAC( devSpinner.getSelectedItemPosition() );
           myActivity.doConnectBtDevice( device );
           break;
-        case ProjectConst.STATE_CONNECTING:
+        case ProjectConst.CONN_STATE_CONNECTING:
           Log.v( TAG, "cancel connecting.." );
           myActivity.doDisconnectBtDevice();
-        case ProjectConst.STATE_CONNECTED:
+        case ProjectConst.CONN_STATE_CONNECTED:
           Log.v( TAG, "switch connect to OFF" );
           //
           // wenn da noch einer werkelt, anhalten und kompostieren
@@ -435,29 +451,19 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
   @Override
   public void msgConnecting( BtServiceMessage msg )
   {
-    if( connButton != null )
-    {
-      connButton.setImageResource( R.drawable.bluetooth_icon_connecting );
-    }
+    setToggleButtonTextAndStat( ProjectConst.CONN_STATE_CONNECTING );
   }
 
   @Override
   public void msgConnected( BtServiceMessage msg )
   {
-    if( connButton != null )
-    {
-      connButton.setImageResource( R.drawable.bluetooth_icon_color );
-    }
+    setToggleButtonTextAndStat( ProjectConst.CONN_STATE_CONNECTED );
   }
 
   @Override
   public void msgDisconnected( BtServiceMessage msg )
   {
-    if( connButton != null )
-    {
-      // TODO: im aktiven Thread machen
-      connButton.setImageResource( R.drawable.bluetooth_icon_bw );
-    }
+    setToggleButtonTextAndStat( ProjectConst.CONN_STATE_NONE );
   }
 
   @Override
