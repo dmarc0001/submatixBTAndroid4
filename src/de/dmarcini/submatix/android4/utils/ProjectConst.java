@@ -39,9 +39,9 @@ public final class ProjectConst
   public static final int SPX_BTDEVICE_CLASS            = 0x1F00;
 
   // ANDROID: Verbindungsstatus BT
-  public static final int    STATE_NONE                 = 0;
-  public static final int    STATE_CONNECTING           = 1;
-  public static final int    STATE_CONNECTED            = 2;
+  public static final int    CONN_STATE_NONE            = 0;
+  public static final int    CONN_STATE_CONNECTING      = 1;
+  public static final int    CONN_STATE_CONNECTED       = 2;
   
   // interne Begrenzung für Empfangspuffer
   public static final int    MAXINBUFFER                = 10 * 1024;
