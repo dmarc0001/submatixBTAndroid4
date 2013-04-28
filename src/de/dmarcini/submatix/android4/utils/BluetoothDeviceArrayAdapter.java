@@ -148,6 +148,21 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
     return( getStringAt( position, BT_DEVAR_ALIAS ) );
   }
 
+  /**
+   * 
+   * Ein eigenes View zur Anzeige machen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 28.04.2013
+   * @param position
+   * @param convertView
+   * @param parent
+   * @param isFirst
+   * @return
+   */
   private View getCustomView( int position, View convertView, ViewGroup parent, boolean isFirst )
   {
     ViewHolder holder = null;
