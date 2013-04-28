@@ -149,6 +149,9 @@
     <string name="connect_headline">"Verbindung zu SPX42"</string>
     <string name="connect_discover_button_title">"Finden von BT Geräten"</string>
     <string name="connect_button_off_text">"An/Aus"</string>
+    <string name="connect_disconnect_device">getrennt</string>
+    <string name="connect_connecting_device">verbinden</string>
+    <string name="connect_connected_device">verbunden</string>
     
     <!-- Detailseite für Gaslisten-Editor -->
     <string name="conf_gaslist_headline">"SPX42 Gasliste bearbeiten"</string>
