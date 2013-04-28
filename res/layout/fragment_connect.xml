@@ -38,5 +38,17 @@
         android:layout_gravity="end"
         android:layout_margin="@dimen/default_left_right_margin"
         android:text="@string/connect_discover_button_title" />
+
+    <TextView
+        android:id="@+id/connectStatusText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/default_left_right_margin"
+        android:layout_marginRight="@dimen/default_left_right_margin"
+        android:gravity="center"
+        android:text="@string/connect_disconnect_device"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/connectFragment.disconnectText" />
     
 </LinearLayout>
