@@ -10,6 +10,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
@@ -38,15 +40,16 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
  */
 public class connectFragment extends Fragment implements OnClickListener, IBtServiceListener
 {
-  public static final String          TAG            = connectFragment.class.getSimpleName();
-  private View                        rootView       = null;
-  private BluetoothDeviceArrayAdapter btArrayAdapter = null;
-  private Button                      discoverButton = null;
-  private Spinner                     devSpinner     = null;
-  private ImageButton                 connButton     = null;
-  protected ProgressDialog            progressDialog = null;
-  private FragmentCommonActivity      myActivity     = null;
-  private boolean                     runDiscovering = false;
+  public static final String          TAG             = connectFragment.class.getSimpleName();
+  private View                        rootView        = null;
+  private BluetoothDeviceArrayAdapter btArrayAdapter  = null;
+  private Button                      discoverButton  = null;
+  private Spinner                     devSpinner      = null;
+  private ImageButton                 connButton      = null;
+  private TextView                    connectTextView = null;
+  protected ProgressDialog            progressDialog  = null;
+  private FragmentCommonActivity      myActivity      = null;
+  private boolean                     runDiscovering  = false;
 
   /**
    * Nach dem Erzeugen des Objektes noch Einstellungen....
@@ -126,6 +129,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
         {
           String[] entr = new String[BluetoothDeviceArrayAdapter.BT_DEVAR_COUNT];
           // TODO: ALIAS TESTEN und eintragen!
+          if( BuildConfig.DEBUG ) Log.d( TAG, "paired Device: " + device.getName() );
           entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = device.getName();
           entr[BluetoothDeviceArrayAdapter.BT_DEVAR_MAC] = device.getAddress();
           entr[BluetoothDeviceArrayAdapter.BT_DEVAR_NAME] = device.getName();
@@ -138,6 +142,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
     }
     else
     {
+      if( BuildConfig.DEBUG ) Log.d( TAG, "paired Device: " + getActivity().getString( R.string.no_device ) );
       String[] entr = new String[BluetoothDeviceArrayAdapter.BT_DEVAR_COUNT];
       entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = getActivity().getString( R.string.no_device );
       entr[BluetoothDeviceArrayAdapter.BT_DEVAR_MAC] = "";
@@ -206,6 +211,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
     discoverButton = ( Button )rootView.findViewById( R.id.connectDiscoverButton );
     devSpinner = ( Spinner )rootView.findViewById( R.id.connectBlueToothDeviceSpinner );
     connButton = ( ImageButton )rootView.findViewById( R.id.connectButton );
+    connectTextView = ( TextView )rootView.findViewById( R.id.connectStatusText );
     if( discoverButton == null || devSpinner == null || connButton == null )
     {
       throw new NullPointerException( "can init GUI (not found an Element)" );
@@ -222,8 +228,21 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
     return( rootView );
   }
 
+  /**
+   * 
+   * Oberfläche anpassen, je nach gemeldetem Verbindungsstatus
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 26.04.2013
+   * @param connState
+   *          welcher Verbindungsstatus
+   */
   private void setToggleButtonTextAndStat( int connState )
   {
+    Resources res = getActivity().getResources();
     try
     {
       switch ( connState )
@@ -235,13 +254,17 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
           connButton.setEnabled( true );
           discoverButton.setEnabled( true );
           devSpinner.setEnabled( true );
+          connectTextView.setText( R.string.connect_disconnect_device );
+          connectTextView.setTextColor( res.getColor( R.color.connectFragment_disconnectText ) );
           break;
         case ProjectConst.CONN_STATE_CONNECTING:
-          connButton.setImageResource( R.drawable.bluetooth_icon_color );
+          connButton.setImageResource( R.drawable.bluetooth_icon_connecting );
           connButton.setAlpha( 0.5F );
-          connButton.setEnabled( false );
+          connButton.setEnabled( true );
           discoverButton.setEnabled( false );
           devSpinner.setEnabled( false );
+          connectTextView.setText( R.string.connect_connecting_device );
+          connectTextView.setTextColor( res.getColor( R.color.connectFragment_connectingText ) );
           break;
         case ProjectConst.CONN_STATE_CONNECTED:
           connButton.setImageResource( R.drawable.bluetooth_icon_color );
@@ -249,6 +272,8 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
           connButton.setEnabled( true );
           discoverButton.setEnabled( true );
           devSpinner.setEnabled( true );
+          connectTextView.setText( R.string.connect_connected_device );
+          connectTextView.setTextColor( res.getColor( R.color.connectFragment_connectText ) );
           break;
       }
     }
@@ -315,9 +340,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
       progressDialog.show();
       // .show( getActivity().getApplicationContext(), "search", "Loading...", true );
     }
-    discoverButton.setEnabled( enabled );
-    devSpinner.setEnabled( enabled );
-    connButton.setEnabled( enabled );
+    setToggleButtonTextAndStat( ProjectConst.CONN_STATE_NONE );
   }
 
   //
@@ -401,7 +424,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
       if( btArrayAdapter.isEmpty() || btArrayAdapter.getAlias( 0 ).startsWith( getActivity().getString( R.string.no_device ).substring( 0, 5 ) ) )
       {
         Log.v( TAG, "not devices in Adapter yet..." );
-        // TODO: setToggleButtonTextAndStat( tb );
+        setToggleButtonTextAndStat( connState );
         return;
       }
       switch ( connState )
@@ -469,7 +492,7 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
   @Override
   public void msgRecivedTick( BtServiceMessage msg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
+    // if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
   }
 
   @Override
