@@ -158,27 +158,29 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    * 
    *         Stand: 28.04.2013
    * @param position
-   * @param convertView
+   * @param cconvertView
    * @param parent
    * @param isFirst
    * @return
    */
   private View getCustomView( int position, View convertView, ViewGroup parent, boolean isFirst )
   {
+    View cView = convertView;
     ViewHolder holder = null;
-    LayoutInflater mInflater = ( LayoutInflater )getContext().getSystemService( Activity.LAYOUT_INFLATER_SERVICE );
-    if( convertView != null && ( convertView.getTag() instanceof ViewHolder ) )
+    LayoutInflater mInflater = ( ( Activity )getContext() ).getLayoutInflater();
+    // LayoutInflater mInflater = ( LayoutInflater )getContext().getSystemService( Activity.LAYOUT_INFLATER_SERVICE );
+    if( cView != null && ( cView.getTag() instanceof ViewHolder ) )
     {
-      holder = ( ViewHolder )convertView.getTag();
+      holder = ( ViewHolder )cView.getTag();
     }
     else
     {
-      convertView = mInflater.inflate( R.layout.bt_array_with_pic_adapter_view, parent, false );
+      cView = mInflater.inflate( R.layout.bt_array_with_pic_adapter_view, parent, false );
       holder = new ViewHolder();
-      holder.txtTitle = ( TextView )convertView.findViewById( R.id.btArrayListTextView );
-      holder.imageView = ( ImageView )convertView.findViewById( R.id.btArrayListIconView );
-      convertView.setTag( holder );
     }
+    holder.txtTitle = ( TextView )cView.findViewById( R.id.btArrayListTextView );
+    holder.imageView = ( ImageView )cView.findViewById( R.id.btArrayListIconView );
+    cView.setTag( holder );
     //
     // Icon setzen
     //
@@ -215,14 +217,14 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
     {
       if( this.themeId == R.style.AppDarkTheme )
       {
-        holder.txtTitle.setTextColor( convertView.getResources().getColor( R.color.connectFragmentDark_spinnerText ) );
+        holder.txtTitle.setTextColor( cView.getResources().getColor( R.color.connectFragmentDark_spinnerText ) );
       }
       else
       {
-        holder.txtTitle.setTextColor( convertView.getResources().getColor( R.color.connectFragmentLight_spinnerText ) );
+        holder.txtTitle.setTextColor( cView.getResources().getColor( R.color.connectFragmentLight_spinnerText ) );
       }
     }
-    return convertView;
+    return cView;
   }
 
   /**
