@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningServiceInfo;
 import android.app.DialogFragment;
+import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ComponentName;
 import android.content.Context;
@@ -517,7 +518,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
           cFragment.setArguments( arguments );
           getActionBar().setTitle( R.string.conf_headline );
           getActionBar().setLogo( mItem.resId );
-          getFragmentManager().beginTransaction().replace( R.id.area_detail_container, cFragment ).commit();
+          getFragmentManager().beginTransaction().replace( R.id.area_detail_container, cFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
           break;
         //
         case R.string.progitem_progpref:
@@ -529,7 +530,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
           ppFragment.setArguments( arguments );
           getActionBar().setTitle( R.string.conf_prog_headline );
           getActionBar().setLogo( mItem.resId );
-          getFragmentManager().beginTransaction().replace( R.id.area_detail_container, ppFragment ).commit();
+          getFragmentManager().beginTransaction().replace( R.id.area_detail_container, ppFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
           break;
         case R.string.progitem_gaslist:
           //
@@ -540,7 +541,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
           glFragment.setArguments( arguments );
           getActionBar().setTitle( R.string.gaslist_headline );
           getActionBar().setLogo( mItem.resId );
-          getFragmentManager().beginTransaction().replace( R.id.area_detail_container, glFragment ).commit();
+          getFragmentManager().beginTransaction().replace( R.id.area_detail_container, glFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
           break;
         //
         default:
@@ -550,11 +551,15 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
           // keine passende ID gefunden oder
           // der Benutzer wählt den Verbindungseintrag
           //
-          connectFragment connFragment = new connectFragment();
+          connectFragment connFragment = ( connectFragment )getFragmentManager().findFragmentById( R.id.connectLinearLayout );
+          if( connFragment == null )
+          {
+            connFragment = new connectFragment();
+          }
           getActionBar().setTitle( R.string.connect_headline );
           getActionBar().setLogo( mItem.resId );
           connFragment.setArguments( arguments );
-          getFragmentManager().beginTransaction().replace( R.id.area_detail_container, connFragment ).commit();
+          getFragmentManager().beginTransaction().replace( R.id.area_detail_container, connFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
           //
       }
     }
