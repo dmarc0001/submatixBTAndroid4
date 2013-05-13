@@ -404,7 +404,6 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    */
   public int isMacThere( String[] item )
   {
-    // int count = super.getCount();
     int count = super.getCount();
     for( int i = 0; i < count; i++ )
     {

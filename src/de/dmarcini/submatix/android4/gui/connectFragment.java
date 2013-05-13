@@ -2,6 +2,7 @@ package de.dmarcini.submatix.android4.gui;
 
 import java.util.Set;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -13,10 +14,10 @@ import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -38,10 +39,9 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
  * 
  *         Stand: 04.11.2012
  */
-public class connectFragment extends Fragment implements OnClickListener, IBtServiceListener
+public class connectFragment extends Fragment implements IBtServiceListener, OnItemSelectedListener, OnClickListener
 {
   public static final String          TAG             = connectFragment.class.getSimpleName();
-  private View                        rootView        = null;
   private BluetoothDeviceArrayAdapter btArrayAdapter  = null;
   private Button                      discoverButton  = null;
   private Spinner                     devSpinner      = null;
@@ -50,38 +50,76 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
   protected ProgressDialog            progressDialog  = null;
   private FragmentCommonActivity      myActivity      = null;
   private boolean                     runDiscovering  = false;
-
-  /**
-   * Nach dem Erzeugen des Objektes noch Einstellungen....
-   */
-  @Override
-  public void onCreate( Bundle savedInstanceState )
-  {
-    super.onCreate( savedInstanceState );
-    Log.v( TAG, "onCreate()..." );
-    // Funktionen der Activity nutzen
-    myActivity = ( ( FragmentCommonActivity )getActivity() );
-  }
-
-  /**
-   * Wenn das View erzeugt wird (nach onCreate), noch ein paar Sachen erledigen
-   */
-  @Override
-  public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
-  {
-    Log.v( TAG, "onCreateView()..." );
-    // Verbindungsseite ausgewählt
-    rootView = makeConnectionView( inflater, container );
-    return rootView;
-  }
-
-  @Override
-  public void onPause()
-  {
-    super.onPause();
-    Log.v( TAG, "onPause()..." );
-    myActivity.clearServiceListener();
-  }
+  Activity                            runningActivity = null;
+  //
+  // der Broadcast Empfänger der Nachrichten über gefundene BT Geräte findet
+  //
+  private final BroadcastReceiver     mReceiver       = new BroadcastReceiver() {
+                                                        @Override
+                                                        public void onReceive( Context context, Intent intent )
+                                                        {
+                                                          String action = intent.getAction();
+                                                          //
+                                                          // wenn ein Gerät gefunden wurde
+                                                          //
+                                                          if( BluetoothDevice.ACTION_FOUND.equals( action ) )
+                                                          {
+                                                            //
+                                                            // ignoriere das, wenn ich das nicht selber angeschubst hab
+                                                            //
+                                                            if( !runDiscovering ) return;
+                                                            //
+                                                            // Das Gerät extraieren
+                                                            //
+                                                            BluetoothDevice device = intent.getParcelableExtra( BluetoothDevice.EXTRA_DEVICE );
+                                                            if( progressDialog != null )
+                                                            {
+                                                              Log.v( TAG, "device add to progressDialog..." );
+                                                              // den Gerätenamen in den String aus der Resource (lokalisiert) einbauen und in die waitbox setzen
+                                                              String dispStr = ( ( device.getName() == null ) ? device.getAddress() : device.getName() );
+                                                              progressDialog.setMessage( String.format(
+                                                                      getActivity().getResources().getString( R.string.progress_wait_for_discover_message_continue ), dispStr ) );
+                                                            }
+                                                            // If it's already paired, skip it, because it's been listed already
+                                                            if( ( device.getBondState() != BluetoothDevice.BOND_BONDED ) && ( device.getName() != null )
+                                                                    && ( device.getBluetoothClass().getMajorDeviceClass() == ProjectConst.SPX_BTDEVICE_CLASS ) )
+                                                            {
+                                                              if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "<%s> is an RFCOMM, Add...", device.getName() ) );
+                                                              // BluetoothClass btClass = device.getBluetoothClass();
+                                                              // btClass.hasService( service );
+                                                              // Feld 0 = Geräte Alias / Gerätename
+                                                              // Feld 1 = Geräte-MAC
+                                                              // Feld 2 = Geräte-Name
+                                                              // Feld 3 = Datenbank-Id (wenn vorhanden) sonst 0
+                                                              // Feld 4 = Gerät gepart?
+                                                              String[] entr = new String[BluetoothDeviceArrayAdapter.BT_DEVAR_COUNT];
+                                                              entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = device.getName();
+                                                              entr[BluetoothDeviceArrayAdapter.BT_DEVAR_MAC] = device.getAddress();
+                                                              entr[BluetoothDeviceArrayAdapter.BT_DEVAR_NAME] = device.getName();
+                                                              entr[BluetoothDeviceArrayAdapter.BT_DEVAR_DBID] = "0";
+                                                              entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISPAIRED] = "false";
+                                                              entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISONLINE] = "true";
+                                                              // add oder Update Datensatz, wenn nicht schon vorhanden
+                                                              if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "Add <%s> to adapter...", device.getName() ) );
+                                                              ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).addOrUpdate( entr );
+                                                            }
+                                                            else
+                                                            {
+                                                              // kein RFCOMM-Gerät
+                                                              if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "<%s> is not RFCOMM, Ignore...", device.getName() ) );
+                                                            }
+                                                            //
+                                                            // When discovery is finished, change the Activity title
+                                                          }
+                                                          else if( BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals( action ) )
+                                                          {
+                                                            Log.v( TAG, "discover finished, enable button." );
+                                                            runDiscovering = false;
+                                                            stopDiscoverBt();
+                                                            setItemsEnabledwhileDiscover( true );
+                                                          }
+                                                        }
+                                                      };
 
   /**
    * 
@@ -115,19 +153,19 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
       for( BluetoothDevice device : pairedDevices )
       {
         // Ist es ein Gerät vom gewünschten Typ?
-        // if( ( device.getBluetoothClass().getDeviceClass() == ProjectConst.SPX_BTDEVICE_CLASS ) && ( device.getName() != null ) )
-        // {
-        String[] entr = new String[BluetoothDeviceArrayAdapter.BT_DEVAR_COUNT];
-        // TODO: ALIAS TESTEN und eintragen!
-        if( BuildConfig.DEBUG ) Log.d( TAG, "paired Device: " + device.getName() );
-        entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = device.getName();
-        entr[BluetoothDeviceArrayAdapter.BT_DEVAR_MAC] = device.getAddress();
-        entr[BluetoothDeviceArrayAdapter.BT_DEVAR_NAME] = device.getName();
-        entr[BluetoothDeviceArrayAdapter.BT_DEVAR_DBID] = "0";
-        entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISPAIRED] = "true";
-        entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISONLINE] = "false";
-        ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).add( entr );
-        // }
+        if( ( device.getBluetoothClass().getDeviceClass() == ProjectConst.SPX_BTDEVICE_CLASS ) && ( device.getName() != null ) )
+        {
+          String[] entr = new String[BluetoothDeviceArrayAdapter.BT_DEVAR_COUNT];
+          // TODO: ALIAS TESTEN und eintragen!
+          if( BuildConfig.DEBUG ) Log.d( TAG, "paired Device: " + device.getName() );
+          entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = device.getName();
+          entr[BluetoothDeviceArrayAdapter.BT_DEVAR_MAC] = device.getAddress();
+          entr[BluetoothDeviceArrayAdapter.BT_DEVAR_NAME] = device.getName();
+          entr[BluetoothDeviceArrayAdapter.BT_DEVAR_DBID] = "0";
+          entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISPAIRED] = "true";
+          entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISONLINE] = "false";
+          ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).add( entr );
+        }
       }
     }
     else
@@ -144,18 +182,155 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
     }
   }
 
+  @Override
+  public void msgConnected( BtServiceMessage msg )
+  {
+    setToggleButtonTextAndStat( ProjectConst.CONN_STATE_CONNECTED );
+  }
+
+  @Override
+  public void msgConnectError( BtServiceMessage msg )
+  {
+    Toast.makeText(
+            getActivity().getApplicationContext(),
+            getActivity().getString( R.string.toast_cant_bt_connect ) + ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getAlias( devSpinner.getSelectedItemPosition() ),
+            Toast.LENGTH_LONG ).show();
+  }
+
+  @Override
+  public void msgConnecting( BtServiceMessage msg )
+  {
+    setToggleButtonTextAndStat( ProjectConst.CONN_STATE_CONNECTING );
+  }
+
+  @Override
+  public void msgDisconnected( BtServiceMessage msg )
+  {
+    setToggleButtonTextAndStat( ProjectConst.CONN_STATE_NONE );
+  }
+
+  @Override
+  public void msgRecivedTick( BtServiceMessage msg )
+  {
+    // if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
+  }
+
+  @Override
+  public void onActivityCreated( Bundle bundle )
+  {
+    super.onActivityCreated( bundle );
+    runningActivity = getActivity();
+    Log.w( TAG, "ACTIVITY ATTACH" );
+    try
+    {
+      discoverButton = ( Button )runningActivity.findViewById( R.id.connectDiscoverButton );
+      devSpinner = ( Spinner )runningActivity.findViewById( R.id.connectBlueToothDeviceSpinner );
+      connButton = ( ImageButton )runningActivity.findViewById( R.id.connectButton );
+      connectTextView = ( TextView )runningActivity.findViewById( R.id.connectStatusText );
+      if( FragmentCommonActivity.mBtAdapter != null && FragmentCommonActivity.mBtAdapter.isEnabled() )
+      {
+        if( BuildConfig.DEBUG ) Log.d( TAG, "set connectFragment eventhandler..." );
+        devSpinner.setOnItemSelectedListener( this );
+        discoverButton.setOnClickListener( this );
+        connButton.setOnClickListener( this );
+        //
+        // den eigenen ArrayAdapter machen
+        //
+        btArrayAdapter = new BluetoothDeviceArrayAdapter( runningActivity, R.layout.bt_array_with_pic_adapter_view, FragmentCommonActivity.getAppStyle() );
+        devSpinner.setAdapter( btArrayAdapter );
+        //
+        setToggleButtonTextAndStat( ProjectConst.CONN_STATE_NONE );
+      }
+      else
+      {
+        if( BuildConfig.DEBUG ) Log.d( TAG, "NOT set onClick eventhandler..." );
+      }
+    }
+    catch( NullPointerException ex )
+    {
+      Log.e( TAG, "gui objects not allocated!" );
+    }
+  }
+
+  @Override
+  public void onAttach( Activity activity )
+  {
+    super.onAttach( activity );
+    Log.w( TAG, "ATTACH" );
+  }
+
+  @Override
+  public void onClick( View cView )
+  {
+    int connState = ( ( FragmentCommonActivity )getActivity() ).getConnectionStatus();
+    if( BuildConfig.DEBUG ) Log.d( TAG, "ON CLICK!" );
+    btArrayAdapter = ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter();
+    //
+    if( cView instanceof ImageButton )
+    {
+      ImageButton tb = ( ImageButton )cView;
+      if( devSpinner.getSelectedItemPosition() == -1 )
+      {
+        Log.v( TAG, "not devices selected yet..." );
+        setToggleButtonTextAndStat( connState );
+        return;
+      }
+      if( btArrayAdapter.isEmpty() || btArrayAdapter.getAlias( 0 ).startsWith( getActivity().getString( R.string.no_device ).substring( 0, 5 ) ) )
+      {
+        Log.v( TAG, "not devices in Adapter yet..." );
+        setToggleButtonTextAndStat( connState );
+        return;
+      }
+      switch ( connState )
+      {
+        case ProjectConst.CONN_STATE_NONE:
+        default:
+          Log.v( TAG, "switch connect to ON" );
+          //
+          // wenn da noch einer werkelt, anhalten und kompostieren
+          //
+          tb.setImageResource( R.drawable.bluetooth_icon_color );
+          String device = ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getMAC( devSpinner.getSelectedItemPosition() );
+          myActivity.doConnectBtDevice( device );
+          break;
+        case ProjectConst.CONN_STATE_CONNECTING:
+          Log.v( TAG, "cancel connecting.." );
+          myActivity.doDisconnectBtDevice();
+        case ProjectConst.CONN_STATE_CONNECTED:
+          Log.v( TAG, "switch connect to OFF" );
+          //
+          // wenn da noch einer werkelt, anhalten und kompostieren
+          //
+          myActivity.doDisconnectBtDevice();
+          break;
+      }
+    }
+    //
+    else if( cView instanceof Button )
+    {
+      Log.v( TAG, "start discovering for BT Devices..." );
+      // ist da nur die Kennzeichnung für LEER?
+      if( btArrayAdapter.isEmpty() || btArrayAdapter.getAlias( 0 ).startsWith( getActivity().getString( R.string.no_device ).substring( 0, 5 ) ) )
+      {
+        Log.v( TAG, "not devices in Adapter yet..." );
+        btArrayAdapter.clear();
+      }
+      Log.v( TAG, "start discovering for BT Devices...OK" );
+      startDiscoverBt();
+      return;
+    }
+  }
+
   /**
-   * Wenn das View wieder nach vorn kommt / reaktiviert wurde
+   * Nach dem Erzeugen des Objektes noch Einstellungen....
    */
   @Override
-  public synchronized void onResume()
+  public void onCreate( Bundle savedInstanceState )
   {
-    super.onResume();
-    Log.v( TAG, "onResume()..." );
-    myActivity.setServiceListener( this );
-    fillNewAdapterWithPairedDevices();
-    // setze den verbindungsstatus visuell
-    setToggleButtonTextAndStat( myActivity.getConnectionStatus() );
+    super.onCreate( savedInstanceState );
+    Log.v( TAG, "onCreate()..." );
+    // Funktionen der Activity nutzen
+    myActivity = ( ( FragmentCommonActivity )getActivity() );
   }
 
   @Override
@@ -170,60 +345,69 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
     ( ( FragmentCommonActivity )getActivity() ).clearServiceListener();
   }
 
+  @Override
+  public void onItemSelected( AdapterView<?> arg0, View arg1, int arg2, long arg3 )
+  {
+    Log.v( TAG, "ITEM Selected!" );
+  }
+
+  @Override
+  public void onNothingSelected( AdapterView<?> arg0 )
+  {
+    Log.v( TAG, "ITEM NOT Selected!" );
+  }
+
+  @Override
+  public void onPause()
+  {
+    super.onPause();
+    Log.v( TAG, "onPause()..." );
+    myActivity.clearServiceListener();
+  }
+
+  /**
+   * Wenn das View wieder nach vorn kommt / reaktiviert wurde
+   */
+  @Override
+  public synchronized void onResume()
+  {
+    super.onResume();
+    Log.v( TAG, "onResume()..." );
+    myActivity.setServiceListener( this );
+    fillNewAdapterWithPairedDevices();
+    // setze den verbindungsstatus visuell
+    setToggleButtonTextAndStat( myActivity.getConnectionStatus() );
+  }
+
   /**
    * 
-   * Die Anzeige der Verbunden/trennen Seite
+   * Lasse die Butons nicht mehr bedienen während des Discovering
    * 
-   * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.gui
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 04.11.2012
-   * @param inflater
-   * @param container
-   * @return
+   *         Stand: 17.02.2013
+   * @param enabled
    */
-  private View makeConnectionView( LayoutInflater inflater, ViewGroup container )
+  private void setItemsEnabledwhileDiscover( boolean enabled )
   {
-    View rootView;
-    //
-    Log.v( TAG, "makeConnectionView()..." );
-    //
-    // View aus Resource laden
-    //
-    rootView = inflater.inflate( R.layout.fragment_connect, container, false );
-    //
-    // Objekte lokalisieren
-    //
-    discoverButton = ( Button )rootView.findViewById( R.id.connectDiscoverButton );
-    devSpinner = ( Spinner )rootView.findViewById( R.id.connectBlueToothDeviceSpinner );
-    connButton = ( ImageButton )rootView.findViewById( R.id.connectButton );
-    connectTextView = ( TextView )rootView.findViewById( R.id.connectStatusText );
-    if( discoverButton == null || devSpinner == null || connButton == null )
+    if( progressDialog != null )
     {
-      throw new NullPointerException( "can init GUI (not found an Element)" );
+      Log.v( TAG, "dialog dismiss...." );
+      progressDialog.dismiss();
+      progressDialog = null;
     }
-    //
-    // den Discoverbutton mit Funktion versehen, wenn ein Adapter da und eingeschaltet ist
-    //
-    if( FragmentCommonActivity.mBtAdapter != null && FragmentCommonActivity.mBtAdapter.isEnabled() )
+    if( !enabled )
     {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "set onClick eventhandler..." );
-      discoverButton.setOnClickListener( this );
-      connButton.setOnClickListener( this );
+      Log.v( TAG, "dialog show...." );
+      progressDialog = new ProgressDialog( getActivity() );
+      progressDialog.setTitle( R.string.progress_wait_for_discover_title );
+      progressDialog.setIndeterminate( true );
+      progressDialog.setMessage( getActivity().getResources().getString( R.string.progress_wait_for_discover_message_start ) );
+      progressDialog.show();
     }
-    else
-    {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "NOT set onClick eventhandler..." );
-    }
-    //
-    // den eigenen ArrayAdapter machen
-    //
-    btArrayAdapter = new BluetoothDeviceArrayAdapter( getActivity(), R.layout.bt_array_with_pic_adapter_view, FragmentCommonActivity.getAppStyle() );
-    devSpinner.setAdapter( btArrayAdapter );
-    //
     setToggleButtonTextAndStat( ProjectConst.CONN_STATE_NONE );
-    return( rootView );
   }
 
   /**
@@ -335,205 +519,5 @@ public class connectFragment extends Fragment implements OnClickListener, IBtSer
     FragmentCommonActivity.mBtAdapter.cancelDiscovery();
     // Unregister broadcast listeners
     getActivity().unregisterReceiver( mReceiver );
-  }
-
-  /**
-   * 
-   * Lasse die Butons nicht mehr bedienen während des Discovering
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 17.02.2013
-   * @param enabled
-   */
-  private void setItemsEnabledwhileDiscover( boolean enabled )
-  {
-    if( progressDialog != null )
-    {
-      Log.v( TAG, "dialog dismiss...." );
-      progressDialog.dismiss();
-      progressDialog = null;
-    }
-    if( !enabled )
-    {
-      Log.v( TAG, "dialog show...." );
-      progressDialog = new ProgressDialog( getActivity() );
-      progressDialog.setTitle( R.string.progress_wait_for_discover_title );
-      progressDialog.setIndeterminate( true );
-      progressDialog.setMessage( getActivity().getResources().getString( R.string.progress_wait_for_discover_message_start ) );
-      progressDialog.show();
-      // .show( getActivity().getApplicationContext(), "search", "Loading...", true );
-    }
-    setToggleButtonTextAndStat( ProjectConst.CONN_STATE_NONE );
-  }
-
-  //
-  // der Broadcast Empfänger der Nachrichten über gefundene BT Geräte findet
-  //
-  private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-                                              @Override
-                                              public void onReceive( Context context, Intent intent )
-                                              {
-                                                String action = intent.getAction();
-                                                //
-                                                // wenn ein Gerät gefunden wurde
-                                                //
-                                                if( BluetoothDevice.ACTION_FOUND.equals( action ) )
-                                                {
-                                                  //
-                                                  // ignoriere das, wenn ich das nicht selber angeschubst hab
-                                                  //
-                                                  if( !runDiscovering ) return;
-                                                  //
-                                                  // Das Gerät extraieren
-                                                  //
-                                                  BluetoothDevice device = intent.getParcelableExtra( BluetoothDevice.EXTRA_DEVICE );
-                                                  if( progressDialog != null )
-                                                  {
-                                                    Log.v( TAG, "device add to progressDialog..." );
-                                                    // den Gerätenamen in den String aus der Resource (lokalisiert) einbauen und in die waitbox setzen
-                                                    String dispStr = ( ( device.getName() == null ) ? device.getAddress() : device.getName() );
-                                                    progressDialog.setMessage( String.format(
-                                                            getActivity().getResources().getString( R.string.progress_wait_for_discover_message_continue ), dispStr ) );
-                                                  }
-                                                  // If it's already paired, skip it, because it's been listed already
-                                                  if( ( device.getBondState() != BluetoothDevice.BOND_BONDED ) && ( device.getName() != null )
-                                                          && ( device.getBluetoothClass().getMajorDeviceClass() == ProjectConst.SPX_BTDEVICE_CLASS ) )
-                                                  {
-                                                    if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "<%s> is an RFCOMM, Add...", device.getName() ) );
-                                                    // BluetoothClass btClass = device.getBluetoothClass();
-                                                    // btClass.hasService( service );
-                                                    // Feld 0 = Geräte Alias / Gerätename
-                                                    // Feld 1 = Geräte-MAC
-                                                    // Feld 2 = Geräte-Name
-                                                    // Feld 3 = Datenbank-Id (wenn vorhanden) sonst 0
-                                                    // Feld 4 = Gerät gepart?
-                                                    String[] entr = new String[BluetoothDeviceArrayAdapter.BT_DEVAR_COUNT];
-                                                    entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = device.getName();
-                                                    entr[BluetoothDeviceArrayAdapter.BT_DEVAR_MAC] = device.getAddress();
-                                                    entr[BluetoothDeviceArrayAdapter.BT_DEVAR_NAME] = device.getName();
-                                                    entr[BluetoothDeviceArrayAdapter.BT_DEVAR_DBID] = "0";
-                                                    entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISPAIRED] = "false";
-                                                    entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISONLINE] = "true";
-                                                    // add oder Update Datensatz, wenn nicht schon vorhanden
-                                                    if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "Add <%s> to adapter...", device.getName() ) );
-                                                    ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).addOrUpdate( entr );
-                                                  }
-                                                  else
-                                                  {
-                                                    // kein RFCOMM-Gerät
-                                                    if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "<%s> is not RFCOMM, Ignore...", device.getName() ) );
-                                                  }
-                                                  //
-                                                  // When discovery is finished, change the Activity title
-                                                }
-                                                else if( BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals( action ) )
-                                                {
-                                                  Log.v( TAG, "discover finished, enable button." );
-                                                  runDiscovering = false;
-                                                  stopDiscoverBt();
-                                                  setItemsEnabledwhileDiscover( true );
-                                                }
-                                              }
-                                            };
-
-  @Override
-  public void onClick( View cView )
-  {
-    int connState = ( ( FragmentCommonActivity )getActivity() ).getConnectionStatus();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "ON CLICK!" );
-    btArrayAdapter = ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter();
-    //
-    if( cView instanceof ImageButton )
-    {
-      ImageButton tb = ( ImageButton )cView;
-      if( devSpinner.getSelectedItemPosition() == -1 )
-      {
-        Log.v( TAG, "not devices selected yet..." );
-        setToggleButtonTextAndStat( connState );
-        return;
-      }
-      if( btArrayAdapter.isEmpty() || btArrayAdapter.getAlias( 0 ).startsWith( getActivity().getString( R.string.no_device ).substring( 0, 5 ) ) )
-      {
-        Log.v( TAG, "not devices in Adapter yet..." );
-        setToggleButtonTextAndStat( connState );
-        return;
-      }
-      switch ( connState )
-      {
-        case ProjectConst.CONN_STATE_NONE:
-        default:
-          Log.v( TAG, "switch connect to ON" );
-          //
-          // wenn da noch einer werkelt, anhalten und kompostieren
-          //
-          tb.setImageResource( R.drawable.bluetooth_icon_color );
-          String device = ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getMAC( devSpinner.getSelectedItemPosition() );
-          myActivity.doConnectBtDevice( device );
-          break;
-        case ProjectConst.CONN_STATE_CONNECTING:
-          Log.v( TAG, "cancel connecting.." );
-          myActivity.doDisconnectBtDevice();
-        case ProjectConst.CONN_STATE_CONNECTED:
-          Log.v( TAG, "switch connect to OFF" );
-          //
-          // wenn da noch einer werkelt, anhalten und kompostieren
-          //
-          myActivity.doDisconnectBtDevice();
-          break;
-      }
-    }
-    //
-    else if( cView instanceof Button )
-    {
-      Log.v( TAG, "start discovering for BT Devices..." );
-      // ist da nur die Kennzeichnung für LEER?
-      if( btArrayAdapter.isEmpty() || btArrayAdapter.getAlias( 0 ).startsWith( getActivity().getString( R.string.no_device ).substring( 0, 5 ) ) )
-      {
-        Log.v( TAG, "not devices in Adapter yet..." );
-        btArrayAdapter.clear();
-      }
-      Log.v( TAG, "start discovering for BT Devices...OK" );
-      startDiscoverBt();
-      return;
-    }
-  }
-
-  //
-  // ENDE
-  //
-  @Override
-  public void msgConnecting( BtServiceMessage msg )
-  {
-    setToggleButtonTextAndStat( ProjectConst.CONN_STATE_CONNECTING );
-  }
-
-  @Override
-  public void msgConnected( BtServiceMessage msg )
-  {
-    setToggleButtonTextAndStat( ProjectConst.CONN_STATE_CONNECTED );
-  }
-
-  @Override
-  public void msgDisconnected( BtServiceMessage msg )
-  {
-    setToggleButtonTextAndStat( ProjectConst.CONN_STATE_NONE );
-  }
-
-  @Override
-  public void msgRecivedTick( BtServiceMessage msg )
-  {
-    // if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
-  }
-
-  @Override
-  public void msgConnectError( BtServiceMessage msg )
-  {
-    Toast.makeText(
-            getActivity().getApplicationContext(),
-            getActivity().getString( R.string.toast_cant_bt_connect ) + ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getAlias( devSpinner.getSelectedItemPosition() ),
-            Toast.LENGTH_LONG ).show();
   }
 }

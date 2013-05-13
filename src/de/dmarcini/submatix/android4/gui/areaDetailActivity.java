@@ -6,14 +6,14 @@
  */
 package de.dmarcini.submatix.android4.gui;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.Spinner;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.content.ContentSwitcher;
-import de.dmarcini.submatix.android4.utils.BluetoothDeviceArrayAdapter;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 
 /**
@@ -21,9 +21,10 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
  * 
  * @author dmarc
  */
-public class areaDetailActivity extends FragmentCommonActivity
+public class areaDetailActivity extends FragmentCommonActivity implements OnItemSelectedListener
 {
-  private static final String TAG = areaDetailActivity.class.getSimpleName();
+  private static final String TAG          = areaDetailActivity.class.getSimpleName();
+  private static Fragment     currFragment = null;
 
   //
   //
@@ -32,8 +33,6 @@ public class areaDetailActivity extends FragmentCommonActivity
   {
     int showId = 0;
     ContentSwitcher.ProgItem mItem = null;
-    // Fragment fragment = null;
-    int resourceId = 0;
     //
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate:..." );
@@ -68,7 +67,8 @@ public class areaDetailActivity extends FragmentCommonActivity
             Log.v( TAG, "onCreate: set layout..." );
             setContentView( R.layout.activity_area_detail );
             Log.v( TAG, "onCreate: begin replace view..." );
-            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, new SPX42PreferencesFragment( isIndividual ) ).commit();
+            currFragment = ( new SPX42PreferencesFragment( isIndividual ) );
+            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, currFragment ).commit();
             Log.v( TAG, "onCreate: begin replace view...OK" );
             break;
           //
@@ -82,7 +82,8 @@ public class areaDetailActivity extends FragmentCommonActivity
             Log.v( TAG, "onCreate: set layout..." );
             setContentView( R.layout.activity_area_detail );
             Log.v( TAG, "onCreate: begin replace view..." );
-            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, new ProgramPreferencesFragment() ).commit();
+            currFragment = ( new ProgramPreferencesFragment() );
+            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, currFragment ).commit();
             Log.v( TAG, "onCreate: begin replace view...OK" );
             break;
           //
@@ -96,7 +97,8 @@ public class areaDetailActivity extends FragmentCommonActivity
             Log.v( TAG, "onCreate: set layout..." );
             setContentView( R.layout.activity_area_detail );
             Log.v( TAG, "onCreate: begin replace view..." );
-            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, new SPX42GaslistPreferencesFragment( isTrimix ) ).commit();
+            currFragment = ( new SPX42GaslistPreferencesFragment( isTrimix ) );
+            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, currFragment ).commit();
             Log.v( TAG, "onCreate: begin replace view...OK" );
             break;
           //
@@ -107,22 +109,14 @@ public class areaDetailActivity extends FragmentCommonActivity
             // erzeuge die Connect fragmentActivity, auch wenn nix passendes gefunden
             //
             Log.v( TAG, "onCreate: create connect fragmentActivity..." );
-            connectFragment connFragment = new connectFragment();
-            resourceId = 0;
+            currFragment = ( new connectFragment() );
             setContentView( R.layout.fragment_connect );
             getActionBar().setTitle( R.string.connect_headline );
             getActionBar().setLogo( mItem.resId );
             Log.v( TAG, "onCreate: beginTransaction..." );
-            getFragmentManager().beginTransaction().add( resourceId, connFragment ).commit();
+            getFragmentManager().beginTransaction().replace( R.id.connectOuterLayout, currFragment ).commit();
+            // getFragmentManager().beginTransaction().add( resourceId, currFragment ).commit();
             Log.v( TAG, "onCreate: add transaction...OK" );
-            //
-            // die Listener auf das Fragment setzen ( der Code soll da ausgeführt werden )
-            //
-            ( ( Button )findViewById( R.id.connectDiscoverButton ) ).setOnClickListener( connFragment );
-            //
-            ( ( Spinner )findViewById( R.id.connectBlueToothDeviceSpinner ) ).setAdapter( new BluetoothDeviceArrayAdapter( this, R.layout.bt_array_with_pic_adapter_view,
-                    FragmentCommonActivity.getAppStyle() ) );
-            ( ( ImageButton )findViewById( R.id.connectButton ) ).setOnClickListener( connFragment );
         }
       }
     }
@@ -130,12 +124,11 @@ public class areaDetailActivity extends FragmentCommonActivity
     {
       // Dann ist was faul, und ich zeig DUMMY
       Log.w( TAG, "onCreate: Not showId found, show DUMMY !" );
-      areaDetailFragment dFragment = new areaDetailFragment();
-      resourceId = R.id.area_detail_container;
+      currFragment = new areaDetailFragment();
       setContentView( R.layout.activity_area_detail );
       getActionBar().setTitle( R.string.dummy_headline );
       Log.v( TAG, "onCreate: beginTransaction..." );
-      getFragmentManager().beginTransaction().add( resourceId, dFragment ).commit();
+      getFragmentManager().beginTransaction().add( R.id.area_detail_container, currFragment ).commit();
       Log.v( TAG, "onCreate: add transaction...OK" );
     }
   }
@@ -166,5 +159,17 @@ public class areaDetailActivity extends FragmentCommonActivity
   {
     Log.v( TAG, "onStop..." );
     super.onStop();
+  }
+
+  @Override
+  public void onItemSelected( AdapterView<?> arg0, View arg1, int arg2, long arg3 )
+  {
+    Log.v( TAG, "ITEM Selected!" );
+  }
+
+  @Override
+  public void onNothingSelected( AdapterView<?> arg0 )
+  {
+    Log.v( TAG, "ITEM NOT Selected!" );
   }
 }
