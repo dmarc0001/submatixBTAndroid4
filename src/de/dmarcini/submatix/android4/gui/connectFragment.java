@@ -14,8 +14,10 @@ import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
@@ -48,9 +50,9 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   private ImageButton                 connButton      = null;
   private TextView                    connectTextView = null;
   protected ProgressDialog            progressDialog  = null;
-  private FragmentCommonActivity      myActivity      = null;
+  // private FragmentCommonActivity myActivity = null;
   private boolean                     runDiscovering  = false;
-  Activity                            runningActivity = null;
+  private Activity                    runningActivity = null;
   //
   // der Broadcast Empfänger der Nachrichten über gefundene BT Geräte findet
   //
@@ -78,7 +80,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
                                                               // den Gerätenamen in den String aus der Resource (lokalisiert) einbauen und in die waitbox setzen
                                                               String dispStr = ( ( device.getName() == null ) ? device.getAddress() : device.getName() );
                                                               progressDialog.setMessage( String.format(
-                                                                      getActivity().getResources().getString( R.string.progress_wait_for_discover_message_continue ), dispStr ) );
+                                                                      runningActivity.getResources().getString( R.string.progress_wait_for_discover_message_continue ), dispStr ) );
                                                             }
                                                             // If it's already paired, skip it, because it's been listed already
                                                             if( ( device.getBondState() != BluetoothDevice.BOND_BONDED ) && ( device.getName() != null )
@@ -170,11 +172,11 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     }
     else
     {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "paired Device: " + getActivity().getString( R.string.no_device ) );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "paired Device: " + runningActivity.getString( R.string.no_device ) );
       String[] entr = new String[BluetoothDeviceArrayAdapter.BT_DEVAR_COUNT];
-      entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = getActivity().getString( R.string.no_device );
+      entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = runningActivity.getString( R.string.no_device );
       entr[BluetoothDeviceArrayAdapter.BT_DEVAR_MAC] = "";
-      entr[BluetoothDeviceArrayAdapter.BT_DEVAR_NAME] = getActivity().getString( R.string.no_device );
+      entr[BluetoothDeviceArrayAdapter.BT_DEVAR_NAME] = runningActivity.getString( R.string.no_device );
       entr[BluetoothDeviceArrayAdapter.BT_DEVAR_DBID] = "0";
       entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISPAIRED] = "false";
       entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISONLINE] = "false";
@@ -192,9 +194,9 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   public void msgConnectError( BtServiceMessage msg )
   {
     Toast.makeText(
-            getActivity().getApplicationContext(),
-            getActivity().getString( R.string.toast_cant_bt_connect ) + ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getAlias( devSpinner.getSelectedItemPosition() ),
-            Toast.LENGTH_LONG ).show();
+            runningActivity.getApplicationContext(),
+            runningActivity.getString( R.string.toast_cant_bt_connect )
+                    + ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getAlias( devSpinner.getSelectedItemPosition() ), Toast.LENGTH_LONG ).show();
   }
 
   @Override
@@ -256,13 +258,14 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   public void onAttach( Activity activity )
   {
     super.onAttach( activity );
+    runningActivity = activity;
     Log.w( TAG, "ATTACH" );
   }
 
   @Override
   public void onClick( View cView )
   {
-    int connState = ( ( FragmentCommonActivity )getActivity() ).getConnectionStatus();
+    int connState = ( ( FragmentCommonActivity )runningActivity ).getConnectionStatus();
     if( BuildConfig.DEBUG ) Log.d( TAG, "ON CLICK!" );
     btArrayAdapter = ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter();
     //
@@ -275,7 +278,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
         setToggleButtonTextAndStat( connState );
         return;
       }
-      if( btArrayAdapter.isEmpty() || btArrayAdapter.getAlias( 0 ).startsWith( getActivity().getString( R.string.no_device ).substring( 0, 5 ) ) )
+      if( btArrayAdapter.isEmpty() || btArrayAdapter.getAlias( 0 ).startsWith( runningActivity.getString( R.string.no_device ).substring( 0, 5 ) ) )
       {
         Log.v( TAG, "not devices in Adapter yet..." );
         setToggleButtonTextAndStat( connState );
@@ -291,17 +294,17 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
           //
           tb.setImageResource( R.drawable.bluetooth_icon_color );
           String device = ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getMAC( devSpinner.getSelectedItemPosition() );
-          myActivity.doConnectBtDevice( device );
+          ( ( FragmentCommonActivity )runningActivity ).doConnectBtDevice( device );
           break;
         case ProjectConst.CONN_STATE_CONNECTING:
           Log.v( TAG, "cancel connecting.." );
-          myActivity.doDisconnectBtDevice();
+          ( ( FragmentCommonActivity )runningActivity ).doDisconnectBtDevice();
         case ProjectConst.CONN_STATE_CONNECTED:
           Log.v( TAG, "switch connect to OFF" );
           //
           // wenn da noch einer werkelt, anhalten und kompostieren
           //
-          myActivity.doDisconnectBtDevice();
+          ( ( FragmentCommonActivity )runningActivity ).doDisconnectBtDevice();
           break;
       }
     }
@@ -310,7 +313,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     {
       Log.v( TAG, "start discovering for BT Devices..." );
       // ist da nur die Kennzeichnung für LEER?
-      if( btArrayAdapter.isEmpty() || btArrayAdapter.getAlias( 0 ).startsWith( getActivity().getString( R.string.no_device ).substring( 0, 5 ) ) )
+      if( btArrayAdapter.isEmpty() || btArrayAdapter.getAlias( 0 ).startsWith( runningActivity.getString( R.string.no_device ).substring( 0, 5 ) ) )
       {
         Log.v( TAG, "not devices in Adapter yet..." );
         btArrayAdapter.clear();
@@ -330,7 +333,6 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate()..." );
     // Funktionen der Activity nutzen
-    myActivity = ( ( FragmentCommonActivity )getActivity() );
   }
 
   @Override
@@ -342,7 +344,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     {
       FragmentCommonActivity.mBtAdapter.cancelDiscovery();
     }
-    ( ( FragmentCommonActivity )getActivity() ).clearServiceListener();
+    ( ( FragmentCommonActivity )runningActivity ).clearServiceListener();
   }
 
   @Override
@@ -362,7 +364,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   {
     super.onPause();
     Log.v( TAG, "onPause()..." );
-    myActivity.clearServiceListener();
+    ( ( FragmentCommonActivity )runningActivity ).clearServiceListener();
   }
 
   /**
@@ -373,10 +375,10 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   {
     super.onResume();
     Log.v( TAG, "onResume()..." );
-    myActivity.setServiceListener( this );
+    ( ( FragmentCommonActivity )runningActivity ).setServiceListener( this );
     fillNewAdapterWithPairedDevices();
     // setze den verbindungsstatus visuell
-    setToggleButtonTextAndStat( myActivity.getConnectionStatus() );
+    setToggleButtonTextAndStat( ( ( FragmentCommonActivity )runningActivity ).getConnectionStatus() );
   }
 
   /**
@@ -401,10 +403,10 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     if( !enabled )
     {
       Log.v( TAG, "dialog show...." );
-      progressDialog = new ProgressDialog( getActivity() );
+      progressDialog = new ProgressDialog( runningActivity );
       progressDialog.setTitle( R.string.progress_wait_for_discover_title );
       progressDialog.setIndeterminate( true );
-      progressDialog.setMessage( getActivity().getResources().getString( R.string.progress_wait_for_discover_message_start ) );
+      progressDialog.setMessage( runningActivity.getResources().getString( R.string.progress_wait_for_discover_message_start ) );
       progressDialog.show();
     }
     setToggleButtonTextAndStat( ProjectConst.CONN_STATE_NONE );
@@ -424,7 +426,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
    */
   private void setToggleButtonTextAndStat( int connState )
   {
-    Resources res = getActivity().getResources();
+    Resources res = runningActivity.getResources();
     try
     {
       switch ( connState )
@@ -489,12 +491,12 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     // Register broadcasts während Geräte gesucht werden
     //
     IntentFilter filter = new IntentFilter( BluetoothDevice.ACTION_FOUND );
-    getActivity().registerReceiver( mReceiver, filter );
+    runningActivity.registerReceiver( mReceiver, filter );
     //
     // Register broadcasts wenn die Suche beendet wurde
     //
     filter = new IntentFilter( BluetoothAdapter.ACTION_DISCOVERY_FINISHED );
-    getActivity().registerReceiver( mReceiver, filter );
+    runningActivity.registerReceiver( mReceiver, filter );
     //
     // Discovering Marker setzen
     this.runDiscovering = true;
@@ -518,6 +520,73 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   {
     FragmentCommonActivity.mBtAdapter.cancelDiscovery();
     // Unregister broadcast listeners
-    getActivity().unregisterReceiver( mReceiver );
+    runningActivity.unregisterReceiver( mReceiver );
+  }
+
+  /**
+   * Wenn das View erzeugt wird (nach onCreate), noch ein paar Sachen erledigen
+   */
+  @Override
+  public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
+  {
+    View rootView;
+    Log.v( TAG, "onCreateView()..." );
+    //
+    // wenn kein Container vorhanden ist, dann gibts auch keinen View
+    //
+    if( container == null )
+    {
+      Log.v( TAG, "onCreateView() container is NULL ..." );
+      return( null );
+    }
+    //
+    // wenn die laufende Activity eine areaDetailActivity ist, dann gibts das View schon
+    //
+    if( runningActivity instanceof areaDetailActivity )
+    {
+      Log.v( TAG, "onCreateView() running from areaDetailActivity ..." );
+      return( null );
+    }
+    //
+    // Verbindungsseite via twoPane ausgewählt
+    //
+    rootView = makeConnectionView( inflater, container );
+    return rootView;
+  }
+
+  /**
+   * 
+   * Die Anzeige der Verbunden/trennen Seite
+   * 
+   * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 04.11.2012
+   * @param inflater
+   * @param container
+   * @return
+   */
+  private View makeConnectionView( LayoutInflater inflater, ViewGroup container )
+  {
+    View rootView;
+    //
+    Log.v( TAG, "makeConnectionView()..." );
+    //
+    // View aus Resource laden
+    //
+    rootView = inflater.inflate( R.layout.fragment_connect, container, false );
+    //
+    // Objekte lokalisieren
+    //
+    discoverButton = ( Button )rootView.findViewById( R.id.connectDiscoverButton );
+    devSpinner = ( Spinner )rootView.findViewById( R.id.connectBlueToothDeviceSpinner );
+    connButton = ( ImageButton )rootView.findViewById( R.id.connectButton );
+    connectTextView = ( TextView )rootView.findViewById( R.id.connectStatusText );
+    if( discoverButton == null || devSpinner == null || connButton == null )
+    {
+      throw new NullPointerException( "can init GUI (not found an Element)" );
+    }
+    return( rootView );
   }
 }
