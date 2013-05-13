@@ -503,7 +503,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     if( mTwoPane )
     {
       //
-      // zweischirmbetrieb
+      // zweischirmbetrieb, die Activity bleibt die areaListActivity
       //
       Log.i( TAG, "onListItemClick: towPane mode!" );
       switch ( mItem.nId )
@@ -567,6 +567,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
       Log.i( TAG, "onListItemClick: onePane modus! Call intent DetailActivity fur itenid<" + mItem.nId + ">" );
       Intent detailIntent = new Intent( this, areaDetailActivity.class );
       detailIntent.putExtras( arguments );
+      // die neue Activity starten
       startActivity( detailIntent );
     }
   }

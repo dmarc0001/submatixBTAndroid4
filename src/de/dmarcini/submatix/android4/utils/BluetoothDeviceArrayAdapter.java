@@ -378,7 +378,7 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    * 
    *         Stand: 13.03.2013
    * @param position
-   * @return
+   * @return ist es online markiert?
    */
   public boolean isDeviceOnline( int position )
   {
