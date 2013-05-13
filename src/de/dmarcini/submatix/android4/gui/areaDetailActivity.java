@@ -115,7 +115,6 @@ public class areaDetailActivity extends FragmentCommonActivity implements OnItem
             getActionBar().setLogo( mItem.resId );
             Log.v( TAG, "onCreate: beginTransaction..." );
             getFragmentManager().beginTransaction().replace( R.id.connectOuterLayout, currFragment ).commit();
-            // getFragmentManager().beginTransaction().add( resourceId, currFragment ).commit();
             Log.v( TAG, "onCreate: add transaction...OK" );
         }
       }
