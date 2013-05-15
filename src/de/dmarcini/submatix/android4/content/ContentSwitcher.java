@@ -40,7 +40,8 @@ public class ContentSwitcher
     public String              sId;
     public String              content;
     public int                 nId;
-    public int                 resId;
+    public int                 resIdOffline;
+    public int                 resIdOnline;
 
     /**
      * 
@@ -57,7 +58,8 @@ public class ContentSwitcher
     {
       this.sId = id;
       this.content = content;
-      this.resId = R.drawable.placeholder;
+      this.resIdOffline = R.drawable.placeholder;
+      this.resIdOnline = R.drawable.placeholder;
       try
       {
         this.nId = Integer.parseInt( id );
@@ -85,7 +87,8 @@ public class ContentSwitcher
       this.sId = String.format( "%d", id );
       this.nId = id;
       this.content = content;
-      this.resId = R.drawable.placeholder;
+      this.resIdOffline = R.drawable.placeholder;
+      this.resIdOnline = R.drawable.placeholder;
     }
 
     /**
@@ -98,15 +101,17 @@ public class ContentSwitcher
      * 
      *         Stand: 23.12.2012
      * @param id
-     * @param resId
+     * @param resIdOffline
+     * @param resIdOnline
      * @param content
      */
-    public ProgItem( int id, int resId, String content )
+    public ProgItem( int id, int resIdOffline, int resIdOnline, String content )
     {
       this.sId = String.format( "%d", id );
       this.nId = id;
       this.content = content;
-      this.resId = resId;
+      this.resIdOffline = resIdOffline;
+      this.resIdOnline = resIdOnline;
     }
 
     @Override
