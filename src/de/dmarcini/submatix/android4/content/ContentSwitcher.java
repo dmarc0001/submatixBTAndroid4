@@ -39,6 +39,7 @@ public class ContentSwitcher
     public static final String TAG = ProgItem.class.getSimpleName();
     public String              sId;
     public String              content;
+    public boolean             workOffline;
     public int                 nId;
     public int                 resIdOffline;
     public int                 resIdOnline;
@@ -53,11 +54,13 @@ public class ContentSwitcher
      *         Stand: 17.12.2012
      * @param id
      * @param content
+     * @param workOffline
      */
-    public ProgItem( String id, String content )
+    public ProgItem( String id, String content, boolean workOffline )
     {
       this.sId = id;
       this.content = content;
+      this.workOffline = workOffline;
       this.resIdOffline = R.drawable.placeholder;
       this.resIdOnline = R.drawable.placeholder;
       try
@@ -81,19 +84,21 @@ public class ContentSwitcher
      *         Stand: 17.12.2012
      * @param id
      * @param content
+     * @param workOffline
      */
-    public ProgItem( int id, String content )
+    public ProgItem( int id, String content, boolean workOffline )
     {
       this.sId = String.format( "%d", id );
       this.nId = id;
       this.content = content;
+      this.workOffline = workOffline;
       this.resIdOffline = R.drawable.placeholder;
       this.resIdOnline = R.drawable.placeholder;
     }
 
     /**
      * 
-     * Einen Eintrag mit Grafil-Resourcenid einfügen
+     * Einen Eintrag mit Grafik-Resourcenid einfügen
      * 
      * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.content
      * 
@@ -104,12 +109,14 @@ public class ContentSwitcher
      * @param resIdOffline
      * @param resIdOnline
      * @param content
+     * @param workOffline
      */
-    public ProgItem( int id, int resIdOffline, int resIdOnline, String content )
+    public ProgItem( int id, int resIdOffline, int resIdOnline, String content, boolean workOffline )
     {
       this.sId = String.format( "%d", id );
       this.nId = id;
       this.content = content;
+      this.workOffline = workOffline;
       this.resIdOffline = resIdOffline;
       this.resIdOnline = resIdOnline;
     }
@@ -155,7 +162,7 @@ public class ContentSwitcher
 
   static
   {
-    addItem( new ProgItem( "1", "dummy 1" ) );
+    addItem( new ProgItem( "1", "dummy 1", true ) );
   }
 
   /**
