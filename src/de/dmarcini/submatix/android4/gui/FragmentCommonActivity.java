@@ -117,12 +117,24 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         // Computer wurde getrennt
         // ################################################################
         case ProjectConst.MESSAGE_CONNECTED:
+          if( mTwoPane )
+          {
+            // wenn das im TwoPane Mode ist, muss im areaListFragment noch die Art der icons gemacht werden 
+            Log.v( TAG, "ICONS auf CONNECTED stellen..." );
+            ( ( areaListFragment )getFragmentManager().findFragmentById( R.id.area_list ) ).setListAdapterForOnlinestatus( true );
+          }
           serviceListener.msgConnected( smsg );
           break;
         // ################################################################
         // Computer wurde getrennt
         // ################################################################
         case ProjectConst.MESSAGE_DISCONNECTED:
+          if( mTwoPane )
+          {
+            // wenn das im TwoPane Mode ist, muss im areaListFragment noch die Art der icons gemacht werden 
+            Log.v( TAG, "ICONS auf DISCONNECTED stellen" );
+            ( ( areaListFragment )getFragmentManager().findFragmentById( R.id.area_list ) ).setListAdapterForOnlinestatus( false );
+          }
           serviceListener.msgDisconnected( smsg );
           break;
         // ################################################################
@@ -470,6 +482,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   {
     ContentSwitcher.ProgItem mItem = null;
     Bundle arguments = new Bundle();
+    boolean isOnline = false;
     //
     //
     // zunächst will ich mal wissen, was das werden soll!
@@ -498,6 +511,13 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         sureDial.show( getFragmentManager().beginTransaction(), "programexit" );
         return;
     }
+    //
+    // sind wir online?
+    //
+    if( getConnectionStatus() == ProjectConst.CONN_STATE_CONNECTED )
+    {
+      isOnline = true;
+    }
     // ////////////////////////////////////////////////////////////////////////
     // jetzt noch zwischen Tablett mit Schirmsplitt und Smartphone unterscheiden
     // ////////////////////////////////////////////////////////////////////////
@@ -507,60 +527,100 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
       // zweischirmbetrieb, die Activity bleibt die areaListActivity
       //
       Log.i( TAG, "onListItemClick: towPane mode!" );
-      switch ( mItem.nId )
+      //
+      // Abhängig vom Onlinestatus
+      //
+      if( isOnline )
       {
-        case R.string.progitem_config:
-          //
-          // Der Benutzer wählt den Konfigurationseintrag für den SPX
-          //
-          Log.v( TAG, "onListItemClick: create SPX42PreferencesFragment..." );
-          SPX42PreferencesFragment cFragment = new SPX42PreferencesFragment( isIndividual );
-          cFragment.setArguments( arguments );
-          getActionBar().setTitle( R.string.conf_headline );
-          getActionBar().setLogo( mItem.resId );
-          getFragmentManager().beginTransaction().replace( R.id.area_detail_container, cFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
-          break;
         //
-        case R.string.progitem_progpref:
-          //
-          // der Benutzer will Programmeinstellungen setzen
-          //
-          Log.v( TAG, "onListItemClick: set program preferences..." );
-          ProgramPreferencesFragment ppFragment = new ProgramPreferencesFragment();
-          ppFragment.setArguments( arguments );
-          getActionBar().setTitle( R.string.conf_prog_headline );
-          getActionBar().setLogo( mItem.resId );
-          getFragmentManager().beginTransaction().replace( R.id.area_detail_container, ppFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
-          break;
-        case R.string.progitem_gaslist:
-          //
-          // der Benutzer wählt den Gaslisten Editmode
-          //
-          Log.v( TAG, "onListItemClick: set gas preferences..." );
-          SPX42GaslistPreferencesFragment glFragment = new SPX42GaslistPreferencesFragment( isTrimix );
-          glFragment.setArguments( arguments );
-          getActionBar().setTitle( R.string.gaslist_headline );
-          getActionBar().setLogo( mItem.resId );
-          getFragmentManager().beginTransaction().replace( R.id.area_detail_container, glFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
-          break;
+        // wenn der SPX online ist, Funktionen freischalten
         //
-        default:
-          Log.w( TAG, "Not programitem found for <" + mItem.nId + ">" );
-        case R.string.progitem_connect:
+        getActionBar().setLogo( mItem.resIdOnline );
+        switch ( mItem.nId )
+        {
+          case R.string.progitem_config:
+            //
+            // Der Benutzer wählt den Konfigurationseintrag für den SPX
+            //
+            Log.v( TAG, "onListItemClick: create SPX42PreferencesFragment..." );
+            SPX42PreferencesFragment cFragment = new SPX42PreferencesFragment( isIndividual );
+            cFragment.setArguments( arguments );
+            getActionBar().setTitle( R.string.conf_headline );
+            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, cFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+            break;
           //
-          // keine passende ID gefunden oder
-          // der Benutzer wählt den Verbindungseintrag
+          case R.string.progitem_progpref:
+            //
+            // der Benutzer will Programmeinstellungen setzen
+            //
+            Log.v( TAG, "onListItemClick: set program preferences..." );
+            ProgramPreferencesFragment ppFragment = new ProgramPreferencesFragment();
+            ppFragment.setArguments( arguments );
+            getActionBar().setTitle( R.string.conf_prog_headline );
+            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, ppFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+            break;
+          case R.string.progitem_gaslist:
+            //
+            // der Benutzer wählt den Gaslisten Editmode
+            //
+            Log.v( TAG, "onListItemClick: set gas preferences..." );
+            SPX42GaslistPreferencesFragment glFragment = new SPX42GaslistPreferencesFragment( isTrimix );
+            glFragment.setArguments( arguments );
+            getActionBar().setTitle( R.string.gaslist_headline );
+            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, glFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+            break;
           //
-          connectFragment connFragment = ( connectFragment )getFragmentManager().findFragmentById( R.id.connectLinearLayout );
-          if( connFragment == null )
-          {
-            connFragment = new connectFragment();
-          }
-          getActionBar().setTitle( R.string.connect_headline );
-          getActionBar().setLogo( mItem.resId );
-          connFragment.setArguments( arguments );
-          getFragmentManager().beginTransaction().replace( R.id.area_detail_container, connFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+          default:
+            Log.w( TAG, "Not programitem found for <" + mItem.nId + ">" );
+          case R.string.progitem_connect:
+            //
+            // keine passende ID gefunden oder
+            // der Benutzer wählt den Verbindungseintrag
+            //
+            connectFragment connFragment = ( connectFragment )getFragmentManager().findFragmentById( R.id.connectLinearLayout );
+            if( connFragment == null )
+            {
+              connFragment = new connectFragment();
+            }
+            getActionBar().setTitle( R.string.connect_headline );
+            connFragment.setArguments( arguments );
+            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, connFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+            //
+        }
+      }
+      else
+      {
+        //
+        // wenn der SPX OFFLINE ist, nur OFFLINE Funktionen freigeben
+        getActionBar().setLogo( mItem.resIdOffline );
+        switch ( mItem.nId )
+        {
+          case R.string.progitem_progpref:
+            //
+            // der Benutzer will Programmeinstellungen setzen
+            //
+            Log.v( TAG, "onListItemClick: set program preferences..." );
+            ProgramPreferencesFragment ppFragment = new ProgramPreferencesFragment();
+            ppFragment.setArguments( arguments );
+            getActionBar().setTitle( R.string.conf_prog_headline );
+            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, ppFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+            break;
           //
+          default:
+            //
+            // keine passende ID gefunden oder
+            // der Benutzer wählt den Verbindungseintrag
+            //
+            connectFragment connFragment = ( connectFragment )getFragmentManager().findFragmentById( R.id.connectLinearLayout );
+            if( connFragment == null )
+            {
+              connFragment = new connectFragment();
+            }
+            getActionBar().setTitle( R.string.connect_headline );
+            connFragment.setArguments( arguments );
+            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, connFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+            //
+        }
       }
     }
     else

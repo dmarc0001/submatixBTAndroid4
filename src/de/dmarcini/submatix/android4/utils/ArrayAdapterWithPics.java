@@ -30,7 +30,8 @@ import de.dmarcini.submatix.android4.content.ContentSwitcher;
  */
 public class ArrayAdapterWithPics extends ArrayAdapter<ContentSwitcher.ProgItem>
 {
-  private int themeId = R.style.AppDarkTheme;
+  private int     themeId  = R.style.AppDarkTheme;
+  private boolean isOnline = false;                ;
 
   // R.drawable.activated_red_icon_color;
   /**
@@ -39,13 +40,15 @@ public class ArrayAdapterWithPics extends ArrayAdapter<ContentSwitcher.ProgItem>
    * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 23.12.2012
    * @param context
    * @param textViewResourceId
+   * @param isOnline
    * @param objects
    * @param themeId
    */
-  public ArrayAdapterWithPics( Context context, int textViewResourceId, List<ContentSwitcher.ProgItem> objects, int themeId )
+  public ArrayAdapterWithPics( Context context, int textViewResourceId, boolean isOnline, List<ContentSwitcher.ProgItem> objects, int themeId )
   {
     super( context, textViewResourceId, objects );
     this.themeId = themeId;
+    this.isOnline = isOnline;
   }
 
   /* private view holder class */
@@ -88,7 +91,14 @@ public class ArrayAdapterWithPics extends ArrayAdapter<ContentSwitcher.ProgItem>
       holder = ( ViewHolder )convertView.getTag();
     }
     holder.txtTitle.setText( progItem.content );
-    holder.imageView.setImageResource( progItem.resId );
+    if( this.isOnline )
+    {
+      holder.imageView.setImageResource( progItem.resIdOnline );
+    }
+    else
+    {
+      holder.imageView.setImageResource( progItem.resIdOffline );
+    }
     if( parent instanceof ListView )
     {
       ListView pView = ( ListView )parent;

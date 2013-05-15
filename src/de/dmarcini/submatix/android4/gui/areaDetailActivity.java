@@ -63,7 +63,7 @@ public class areaDetailActivity extends FragmentCommonActivity implements OnItem
             //
             Log.v( TAG, "onCreate: create config PreferenceActivity..." );
             getActionBar().setTitle( R.string.conf_headline );
-            getActionBar().setLogo( mItem.resId );
+            getActionBar().setLogo( mItem.resIdOffline );
             Log.v( TAG, "onCreate: set layout..." );
             setContentView( R.layout.activity_area_detail );
             Log.v( TAG, "onCreate: begin replace view..." );
@@ -78,7 +78,7 @@ public class areaDetailActivity extends FragmentCommonActivity implements OnItem
             //
             Log.v( TAG, "onCreate: create program PreferenceActivity..." );
             getActionBar().setTitle( R.string.conf_prog_headline );
-            getActionBar().setLogo( mItem.resId );
+            getActionBar().setLogo( mItem.resIdOffline );
             Log.v( TAG, "onCreate: set layout..." );
             setContentView( R.layout.activity_area_detail );
             Log.v( TAG, "onCreate: begin replace view..." );
@@ -93,7 +93,7 @@ public class areaDetailActivity extends FragmentCommonActivity implements OnItem
             //
             Log.w( TAG, "onCreate: create galsist preference activity..." );
             getActionBar().setTitle( R.string.gaslist_headline );
-            getActionBar().setLogo( mItem.resId );
+            getActionBar().setLogo( mItem.resIdOffline );
             Log.v( TAG, "onCreate: set layout..." );
             setContentView( R.layout.activity_area_detail );
             Log.v( TAG, "onCreate: begin replace view..." );
@@ -112,7 +112,7 @@ public class areaDetailActivity extends FragmentCommonActivity implements OnItem
             currFragment = ( new connectFragment() );
             setContentView( R.layout.fragment_connect );
             getActionBar().setTitle( R.string.connect_headline );
-            getActionBar().setLogo( mItem.resId );
+            getActionBar().setLogo( mItem.resIdOffline );
             Log.v( TAG, "onCreate: beginTransaction..." );
             getFragmentManager().beginTransaction().replace( R.id.connectOuterLayout, currFragment ).commit();
             Log.v( TAG, "onCreate: add transaction...OK" );

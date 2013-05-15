@@ -12,6 +12,7 @@ import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.content.ContentSwitcher;
 import de.dmarcini.submatix.android4.utils.ArrayAdapterWithPics;
+import de.dmarcini.submatix.android4.utils.ProjectConst;
 
 /**
  * A list fragment representing a list of areas. This fragment also supports tablet devices by allowing list items to be given an 'activated' state upon selection. This helps
@@ -22,6 +23,7 @@ public class areaListFragment extends ListFragment
   private static final String TAG                      = areaListFragment.class.getSimpleName();
   private static final String STATE_ACTIVATED_POSITION = "activated_position";
   private int                 mActivatedPosition       = ListView.INVALID_POSITION;
+  private boolean             whishedTheme             = true;
 
   /**
    * Der Konstruktor Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.gui
@@ -37,12 +39,38 @@ public class areaListFragment extends ListFragment
   @Override
   public void onCreate( Bundle savedInstanceState )
   {
+    boolean isConnected = false;
+    //
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate()..." );
     SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( getActivity() );
-    boolean whishedTheme = sPref.getBoolean( "keyProgOthersThemeIsDark", false );
+    whishedTheme = sPref.getBoolean( "keyProgOthersThemeIsDark", false );
     Log.v( TAG, "onCreate(): setListAdapter...(" + ( whishedTheme ? "DARK" : "LIGHT" ) + ")" );
-    setListAdapter( new ArrayAdapterWithPics( getActivity(), 0, ContentSwitcher.getProgramItemsList(), ( whishedTheme ? R.style.AppDarkTheme : R.style.AppLightTheme ) ) );
+    if( ( ( FragmentCommonActivity )getActivity() ).getConnectionStatus() == ProjectConst.CONN_STATE_CONNECTED )
+    {
+      isConnected = true;
+    }
+    setListAdapterForOnlinestatus( isConnected );
+  }
+
+  /**
+   * 
+   * Setze die Icons der Menüauswahl auf die Online/Offline Variante
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 15.05.2013
+   * @param isOnline
+   */
+  public void setListAdapterForOnlinestatus( boolean isOnline )
+  {
+    setListAdapter( new ArrayAdapterWithPics( getActivity(), 0, isOnline, ContentSwitcher.getProgramItemsList(), ( whishedTheme ? R.style.AppDarkTheme : R.style.AppLightTheme ) ) );
+    if( mActivatedPosition != ListView.INVALID_POSITION )
+    {
+      setActivatedPosition( mActivatedPosition );
+    }
   }
 
   @Override
