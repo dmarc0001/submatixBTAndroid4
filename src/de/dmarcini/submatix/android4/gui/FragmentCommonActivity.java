@@ -117,25 +117,25 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         // Computer wurde getrennt
         // ################################################################
         case ProjectConst.MESSAGE_CONNECTED:
+          serviceListener.msgConnected( smsg );
           if( mTwoPane )
           {
             // wenn das im TwoPane Mode ist, muss im areaListFragment noch die Art der icons gemacht werden 
             Log.v( TAG, "ICONS auf CONNECTED stellen..." );
             ( ( areaListFragment )getFragmentManager().findFragmentById( R.id.area_list ) ).setListAdapterForOnlinestatus( true );
           }
-          serviceListener.msgConnected( smsg );
           break;
         // ################################################################
         // Computer wurde getrennt
         // ################################################################
         case ProjectConst.MESSAGE_DISCONNECTED:
+          serviceListener.msgDisconnected( smsg );
           if( mTwoPane )
           {
             // wenn das im TwoPane Mode ist, muss im areaListFragment noch die Art der icons gemacht werden 
             Log.v( TAG, "ICONS auf DISCONNECTED stellen" );
             ( ( areaListFragment )getFragmentManager().findFragmentById( R.id.area_list ) ).setListAdapterForOnlinestatus( false );
           }
-          serviceListener.msgDisconnected( smsg );
           break;
         // ################################################################
         // Computer wurde getrennt
@@ -783,6 +783,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
    */
   public void setServiceListener( IBtServiceListener listener )
   {
+    Log.v( TAG, "setServiceListener()..." );
     serviceListener = listener;
   }
 

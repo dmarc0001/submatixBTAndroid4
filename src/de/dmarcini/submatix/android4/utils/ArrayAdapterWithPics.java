@@ -9,6 +9,7 @@
  */
 package de.dmarcini.submatix.android4.utils;
 
+import java.util.Iterator;
 import java.util.List;
 
 import android.app.Activity;
@@ -46,7 +47,21 @@ public class ArrayAdapterWithPics extends ArrayAdapter<ContentSwitcher.ProgItem>
    */
   public ArrayAdapterWithPics( Context context, int textViewResourceId, boolean isOnline, List<ContentSwitcher.ProgItem> objects, int themeId )
   {
-    super( context, textViewResourceId, objects );
+    super( context, textViewResourceId );
+    //
+    // Alle Objekte erst einmal durchgehen
+    //
+    Iterator<ContentSwitcher.ProgItem> it = objects.iterator();
+    while( it.hasNext() )
+    {
+      ContentSwitcher.ProgItem item = it.next();
+      if( isOnline || item.workOffline )
+      {
+        // wenn wir online sind oder die Funktion auch offline erlaubt ist
+        // dann in die Liste aufnehmen
+        super.add( item );
+      }
+    }
     this.themeId = themeId;
     this.isOnline = isOnline;
   }

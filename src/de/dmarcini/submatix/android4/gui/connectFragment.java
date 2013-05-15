@@ -187,6 +187,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   @Override
   public void msgConnected( BtServiceMessage msg )
   {
+    Log.v( TAG, "msgConnected()..." );
     setToggleButtonTextAndStat( ProjectConst.CONN_STATE_CONNECTED );
   }
 

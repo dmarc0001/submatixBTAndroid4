@@ -39,18 +39,10 @@ public class areaListFragment extends ListFragment
   @Override
   public void onCreate( Bundle savedInstanceState )
   {
-    boolean isConnected = false;
-    //
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate()..." );
     SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( getActivity() );
     whishedTheme = sPref.getBoolean( "keyProgOthersThemeIsDark", false );
-    Log.v( TAG, "onCreate(): setListAdapter...(" + ( whishedTheme ? "DARK" : "LIGHT" ) + ")" );
-    if( ( ( FragmentCommonActivity )getActivity() ).getConnectionStatus() == ProjectConst.CONN_STATE_CONNECTED )
-    {
-      isConnected = true;
-    }
-    setListAdapterForOnlinestatus( isConnected );
   }
 
   /**
@@ -66,6 +58,7 @@ public class areaListFragment extends ListFragment
    */
   public void setListAdapterForOnlinestatus( boolean isOnline )
   {
+    Log.v( TAG, "setListAdapterForOnlinestatus()..." );
     setListAdapter( new ArrayAdapterWithPics( getActivity(), 0, isOnline, ContentSwitcher.getProgramItemsList(), ( whishedTheme ? R.style.AppDarkTheme : R.style.AppLightTheme ) ) );
     if( mActivatedPosition != ListView.INVALID_POSITION )
     {
@@ -103,8 +96,16 @@ public class areaListFragment extends ListFragment
   @Override
   public synchronized void onResume()
   {
+    boolean isConnected = false;
+    //
     super.onResume();
     Log.v( TAG, "onResume()..." );
+    Log.v( TAG, "onResume(): setListAdapter...(" + ( whishedTheme ? "DARK" : "LIGHT" ) + ")" );
+    if( ( ( FragmentCommonActivity )getActivity() ).getConnectionStatus() == ProjectConst.CONN_STATE_CONNECTED )
+    {
+      isConnected = true;
+    }
+    setListAdapterForOnlinestatus( isConnected );
   }
 
   @Override
