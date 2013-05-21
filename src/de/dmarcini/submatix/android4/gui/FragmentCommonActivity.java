@@ -101,6 +101,15 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         return;
       }
       BtServiceMessage smsg = (BtServiceMessage)msg.obj;
+      //
+      // versuche mal das Fragment mit der Liste zu finden
+      //
+      frag = ( areaListFragment )getFragmentManager().findFragmentById( R.id.area_list );
+      if( frag == null )
+      {
+        frag = ( areaListFragment )getFragmentManager().findFragmentById( R.id.item_list );
+      }
+      
       switch ( msg.what )
       {
         // ################################################################
@@ -120,12 +129,15 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         // ################################################################
         case ProjectConst.MESSAGE_CONNECTED:
           serviceListener.msgConnected( smsg );
-          // wenn das im TwoPane Mode ist, muss im areaListFragment noch die Art der icons gemacht werden 
-          frag = ( areaListFragment )getFragmentManager().findFragmentById( R.id.area_list );
+          // die Menüs anpassen 
           if( frag != null )
           {
             Log.v( TAG, "ICONS auf CONNECTED stellen..." );
             frag.setListAdapterForOnlinestatus( true );
+          }
+          else
+          {
+            Log.v( TAG, "no fragment found: ICONS auf CONNECTED... " );
           }
           break;
         // ################################################################
@@ -133,11 +145,15 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         // ################################################################
         case ProjectConst.MESSAGE_DISCONNECTED:
           serviceListener.msgDisconnected( smsg );
-          frag = ( areaListFragment )getFragmentManager().findFragmentById( R.id.area_list );
+          // die Menüs anpassen 
           if( frag != null )
           {
             Log.v( TAG, "ICONS auf DISCONNECTED stellen" );
             frag.setListAdapterForOnlinestatus( false );
+          }
+          else
+          {
+            Log.v( TAG, "no fragment found: ICONS auf DISCONNECTED... " );
           }
           break;
         // ################################################################
@@ -145,6 +161,16 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         // ################################################################
         case ProjectConst.MESSAGE_CONNECTERROR:
           serviceListener.msgConnectError( smsg );
+          // die Menüs anpassen 
+          if( frag != null )
+          {
+            Log.v( TAG, "ICONS auf DISCONNECTED stellen" );
+            frag.setListAdapterForOnlinestatus( false );
+          }
+          else
+          {
+            Log.v( TAG, "no fragment found: ICONS auf DISCONNECTED... " );
+          }
           break;
 
           // ################################################################
