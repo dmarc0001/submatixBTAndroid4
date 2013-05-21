@@ -96,22 +96,28 @@ public class areaListFragment extends ListFragment
   @Override
   public synchronized void onResume()
   {
-    boolean isConnected = false;
-    //
     super.onResume();
     Log.v( TAG, "onResume()..." );
-    Log.v( TAG, "onResume(): setListAdapter...(" + ( whishedTheme ? "DARK" : "LIGHT" ) + ")" );
-    if( ( ( FragmentCommonActivity )getActivity() ).getConnectionStatus() == ProjectConst.CONN_STATE_CONNECTED )
-    {
-      isConnected = true;
-    }
-    setListAdapterForOnlinestatus( isConnected );
   }
 
   @Override
   public void onAttach( Activity activity )
   {
     super.onAttach( activity );
+  }
+
+  @Override
+  public void onActivityCreated( Bundle bundle )
+  {
+    boolean isConnected = false;
+    //
+    super.onActivityCreated( bundle );
+    Log.v( TAG, "onActivityCreated(): setListAdapter...(" + ( whishedTheme ? "DARK" : "LIGHT" ) + ")" );
+    if( ( ( FragmentCommonActivity )getActivity() ).getConnectionStatus() == ProjectConst.CONN_STATE_CONNECTED )
+    {
+      isConnected = true;
+    }
+    setListAdapterForOnlinestatus( isConnected );
   }
 
   @Override

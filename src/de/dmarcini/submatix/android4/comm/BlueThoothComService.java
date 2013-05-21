@@ -83,6 +83,8 @@ public class BlueThoothComService extends Service
       mClientHandler.add( mHandler );
       isRunning = true;
       timeToStopService = 0L;
+      // gibt der Activity gleich den Status
+      setState( mConnectionState );
     }
   }
 
@@ -511,16 +513,6 @@ public class BlueThoothComService extends Service
     mConnectedThread = new ConnectedThread( socket );
     Log.v( TAG, "start mConnectedThread..." );
     mConnectedThread.start();
-    // Send the name of the connected device back to the UI Activity
-    // if( mHandler != null )
-    // {
-    // Log.v( TAG, "connected() send message MESSAGE_DEVICE_NAME..." );
-    // Message msg = mHandler.obtainMessage( ProjectConst.MESSAGE_DEVICE_NAME );
-    // Bundle bundle = new Bundle();
-    // bundle.putString( ProjectConst.DEVICE_NAME, device.getName() );
-    // msg.setData( bundle );
-    // mHandler.sendMessage( msg );
-    // }
     Log.v( TAG, "call setState" );
     setState( ProjectConst.CONN_STATE_CONNECTED );
   }
@@ -576,7 +568,7 @@ public class BlueThoothComService extends Service
     {
       if( System.currentTimeMillis() > timeToStopService )
       {
-        Log.i( TAG, "Service stopping..." );
+        Log.i( TAG, "Service stopping time to stop after last client..." );
         stopSelf();
       }
     }

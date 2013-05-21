@@ -11,7 +11,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.ActivityManager.RunningServiceInfo;
 import android.app.DialogFragment;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
@@ -46,6 +45,8 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
 public class FragmentCommonActivity extends Activity implements AreYouSureDialogFragment.NoticeDialogListener, IBtServiceListener
 {
   private static final String       TAG             = FragmentCommonActivity.class.getSimpleName();
+  private static final String       SERVICENAME     = BlueThoothComService.class.getCanonicalName();
+  private static final String       PACKAGENAME     = "de.dmarcini.submatix.android4";
   protected static boolean          mTwoPane        = false;
   protected static boolean          isIndividual    = false;
   protected static boolean          isTrimix        = true;
@@ -65,7 +66,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     @Override
     public void onServiceConnected( ComponentName name, IBinder service )
     {
-      if( BuildConfig.DEBUG ) if( BuildConfig.DEBUG ) Log.d(TAG,"onServiceConnected...");
+      if( BuildConfig.DEBUG ) Log.d(TAG,"onServiceConnected()...");
       binder = ( LocalBinder )service;
       mService = binder.getService();
       binder.registerServiceHandler( mHandler );
@@ -93,6 +94,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     @Override
     public void handleMessage( Message msg )
     {
+      areaListFragment frag;
       if( !( msg.obj instanceof BtServiceMessage ) )
       {
         Log.e(TAG,"Recived Message is NOT tyoe of BtServiceMessage!");
@@ -118,11 +120,12 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         // ################################################################
         case ProjectConst.MESSAGE_CONNECTED:
           serviceListener.msgConnected( smsg );
-          if( mTwoPane )
+          // wenn das im TwoPane Mode ist, muss im areaListFragment noch die Art der icons gemacht werden 
+          frag = ( areaListFragment )getFragmentManager().findFragmentById( R.id.area_list );
+          if( frag != null )
           {
-            // wenn das im TwoPane Mode ist, muss im areaListFragment noch die Art der icons gemacht werden 
             Log.v( TAG, "ICONS auf CONNECTED stellen..." );
-            ( ( areaListFragment )getFragmentManager().findFragmentById( R.id.area_list ) ).setListAdapterForOnlinestatus( true );
+            frag.setListAdapterForOnlinestatus( true );
           }
           break;
         // ################################################################
@@ -130,11 +133,11 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         // ################################################################
         case ProjectConst.MESSAGE_DISCONNECTED:
           serviceListener.msgDisconnected( smsg );
-          if( mTwoPane )
+          frag = ( areaListFragment )getFragmentManager().findFragmentById( R.id.area_list );
+          if( frag != null )
           {
-            // wenn das im TwoPane Mode ist, muss im areaListFragment noch die Art der icons gemacht werden 
             Log.v( TAG, "ICONS auf DISCONNECTED stellen" );
-            ( ( areaListFragment )getFragmentManager().findFragmentById( R.id.area_list ) ).setListAdapterForOnlinestatus( false );
+            frag.setListAdapterForOnlinestatus( false );
           }
           break;
         // ################################################################
@@ -318,17 +321,20 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     //
     // Service starten, wenn er nicht schon läuft
     //
-    final ActivityManager activityManager = ( ActivityManager )getSystemService( ACTIVITY_SERVICE );
-    final List<RunningServiceInfo> services = activityManager.getRunningServices( Integer.MAX_VALUE );
+    Log.v( TAG, "doBindService()..." );
+    final ActivityManager activityManager = ( ActivityManager )getApplicationContext().getSystemService( ACTIVITY_SERVICE );
+    final List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices( Integer.MAX_VALUE );
     boolean isServiceFound = false;
     //
     for( int i = 0; i < services.size(); i++ )
     {
-      // if( BuildConfig.DEBUG ) Log.d( TAG, "Service Nr." + i + ":" + services.get( i ).service );
-      if( "de.dmarcini.submatix.android4.comm".equals( services.get( i ).service.getPackageName() ) )
+      // if( BuildConfig.DEBUG ) Log.d( TAG, "Service Nr." + i + ":" + services.get( i ).service + "<" + services.get( i ).service.getPackageName() + ">" );
+      if( ( services.get( i ).service.getPackageName() ).matches( PACKAGENAME ) )
       {
-        if( "BlueThoothComService".equals( services.get( i ).service.getClassName() ) )
+        // if( BuildConfig.DEBUG ) Log.d( TAG, "Service class name <" + services.get( i ).service.getClassName() + ">" );
+        if( SERVICENAME.equals( services.get( i ).service.getClassName() ) )
         {
+          if( BuildConfig.DEBUG ) Log.d( TAG, "Service is running, need not start..." );
           isServiceFound = true;
         }
       }
@@ -373,9 +379,9 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
             if( BuildConfig.DEBUG ) Log.d( TAG, "doUnbindService...unregister Handler..." );
             binder.unregisterServiceHandler( mHandler );
           }
+          unbindService( mConnection );
           mService = null;
           binder = null;
-          unbindService( mConnection );
         }
         mIsBound = false;
         Log.v( TAG, "doUnbindService...OK" );
