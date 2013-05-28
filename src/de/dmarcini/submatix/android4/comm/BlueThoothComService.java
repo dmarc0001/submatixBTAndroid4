@@ -382,6 +382,8 @@ public class BlueThoothComService extends Service
     private final BluetoothSocket mmSocket;
     private final InputStream     mmInStream;
     private Boolean               cancelThread = false;
+    private final byte[]          buffer       = new byte[1024];
+    private final StringBuffer    mInStrBuffer = new StringBuffer( 1024 );
 
     /**
      * 
@@ -486,12 +488,10 @@ public class BlueThoothComService extends Service
     public void run()
     {
       Log.i( TAGREADER, "BEGIN ReaderThread" );
-      StringBuffer mInStrBuffer = new StringBuffer( 1024 );
       String readMessage;
-      byte[] buffer = new byte[1024];
       int bytes, start, end, lstart, lend;
       boolean logCmd, normalCmd;
-      // den Inputstram solange lesen, wie die Verbindung besteht
+      // den Inputstream solange lesen, wie die Verbindung besteht
       cancelThread = false;
       while( !cancelThread )
       {
@@ -499,6 +499,16 @@ public class BlueThoothComService extends Service
         try
         {
           bytes = mmInStream.read( buffer );
+          if( bytes == -1 )
+          {
+            // Verbindung beendet/verloren
+            cancelThread = true;
+            Log.e( TAGREADER, "reader connection lost..." );
+            connectionLost();
+            cancel();
+            break;
+          }
+          readMessage = new String( buffer, 0, bytes );
         }
         catch( IOException e )
         {
@@ -515,19 +525,17 @@ public class BlueThoothComService extends Service
           break;
         }
         readMessage = new String( buffer, 0, bytes );
+        //
+        // was mach ich jetzt mit dem empfangenen Zeuch?
+        //
         // reicht der Platz noch?
-        if( ( mInStrBuffer.capacity() - mInStrBuffer.length() ) < bytes )
+        if( ( mInStrBuffer.capacity() + readMessage.length() ) > ProjectConst.MAXINBUFFER )
         {
-          if( ( mInStrBuffer.capacity() + 1024 ) > ProjectConst.MAXINBUFFER )
-          {
-            Log.e( TAGREADER, "INPUT BUFFER OVERFLOW!" );
-            cancel();
-            break;
-          }
-          // Buffer vergrößern
-          mInStrBuffer.setLength( mInStrBuffer.capacity() + 1024 );
+          Log.e( TAGREADER, "INPUT BUFFER OVERFLOW!" );
+          connectionLost();
+          cancel();
+          break;
         }
-        // Puffer auffüllen
         mInStrBuffer.append( readMessage );
         readMessage = mInStrBuffer.toString();
         // die Nachricht abarbeitern, solange komplette MSG da sind
