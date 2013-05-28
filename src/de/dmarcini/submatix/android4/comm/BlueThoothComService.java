@@ -261,7 +261,10 @@ public class BlueThoothComService extends Service
       try
       {
         cancelThread = true;
-        mmSocket.close();
+        if( mmSocket != null && mmSocket.isConnected() )
+        {
+          mmSocket.close();
+        }
       }
       catch( IOException ex )
       {
@@ -281,63 +284,68 @@ public class BlueThoothComService extends Service
       cancelThread = false;
       while( !cancelThread )
       {
-        if( writeList.isEmpty() )
+        // syncronisiete Methode aufrufen, damit wait und notify machbar sind
+        synchronized( this )
         {
-          try
+          if( writeList.isEmpty() )
           {
-            Thread.yield();
-            wait( 10 );
-          }
-          catch( InterruptedException ex )
-          {}
-        }
-        else
-        {
-          // ich gebe einen Eintrag aus...
-          try
-          {
-            // Watchdog für Schreiben aktivieren
-            // writeWatchDog = ProjectConst.WATCHDOG_FOR_WRITEOPS;
-            // also den String Eintrag in den Outstream...
-            mmOutStream.write( ( writeList.remove( 0 ) ).getBytes() );
-            // kommt das an, den Watchog wieder AUS
-            // writeWatchDog = -1;
-            // zwischen den Kommandos etwas warten, der SPX braucht etwas bis er wieder zuhört...
-            // das gibt dem Swing-Thread etwas Gelegenheit zum Zeichnen oder irgendwas anderem
-            for( int factor = 0; factor < 5; factor++ )
+            try
             {
               Thread.yield();
-              Thread.sleep( 80 );
+              wait( 10 );
             }
+            catch( InterruptedException ex )
+            {}
           }
-          catch( IndexOutOfBoundsException ex )
+          else
           {
-            // TODO
-            // isConnected = false;
-            // if( aListener != null )
-            // {
-            // ActionEvent ev = new ActionEvent( this, ProjectConst.MESSAGE_DISCONNECTED, null );
-            // aListener.actionPerformed( ev );
-            // }
-            cancelThread = true;
-            return;
+            // ich gebe einen Eintrag aus...
+            try
+            {
+              // Watchdog für Schreiben aktivieren
+              // writeWatchDog = ProjectConst.WATCHDOG_FOR_WRITEOPS;
+              // also den String Eintrag in den Outstream...
+              mmOutStream.write( ( writeList.remove( 0 ) ).getBytes() );
+              // kommt das an, den Watchog wieder AUS
+              // writeWatchDog = -1;
+              // zwischen den Kommandos etwas warten, der SPX braucht etwas bis er wieder zuhört...
+              // das gibt dem Swing-Thread etwas Gelegenheit zum Zeichnen oder irgendwas anderem
+              for( int factor = 0; factor < 5; factor++ )
+              {
+                Thread.yield();
+                Thread.sleep( 80 );
+              }
+            }
+            catch( IndexOutOfBoundsException ex )
+            {
+              // TODO
+              // isConnected = false;
+              // if( aListener != null )
+              // {
+              // ActionEvent ev = new ActionEvent( this, ProjectConst.MESSAGE_DISCONNECTED, null );
+              // aListener.actionPerformed( ev );
+              // }
+              cancelThread = true;
+              return;
+            }
+            catch( IOException ex )
+            {
+              // isConnected = false;
+              // if( aListener != null )
+              // {
+              // ActionEvent ev = new ActionEvent( this, ProjectConst.MESSAGE_DISCONNECTED, null );
+              // aListener.actionPerformed( ev );
+              // }
+              cancelThread = true;
+              return;
+            }
+            catch( InterruptedException ex )
+            {}
           }
-          catch( IOException ex )
-          {
-            // isConnected = false;
-            // if( aListener != null )
-            // {
-            // ActionEvent ev = new ActionEvent( this, ProjectConst.MESSAGE_DISCONNECTED, null );
-            // aListener.actionPerformed( ev );
-            // }
-            cancelThread = true;
-            return;
-          }
-          catch( InterruptedException ex )
-          {}
         }
       }
       Log.i( TAGWRITER, "END WriterThread" );
+      connectionLost();
     }
 
     /**
@@ -373,7 +381,6 @@ public class BlueThoothComService extends Service
     private final String          TAGREADER    = ReaderThread.class.getSimpleName();
     private final BluetoothSocket mmSocket;
     private final InputStream     mmInStream;
-    // private final OutputStream mmOutStream;
     private Boolean               cancelThread = false;
 
     /**
@@ -392,20 +399,17 @@ public class BlueThoothComService extends Service
       if( BuildConfig.DEBUG ) Log.d( TAGREADER, "create ReaderThread" );
       mmSocket = socket;
       InputStream tmpIn = null;
-      // OutputStream tmpOut = null;
       cancelThread = false;
       // die BluetoothSocket input and output streams erstellen
       try
       {
         tmpIn = socket.getInputStream();
-        // tmpOut = socket.getOutputStream();
       }
       catch( IOException e )
       {
         Log.e( TAGREADER, "temp sockets not created", e );
       }
       mmInStream = tmpIn;
-      // mmOutStream = tmpOut;
     }
 
     /**
@@ -423,7 +427,10 @@ public class BlueThoothComService extends Service
       try
       {
         cancelThread = true;
-        mmSocket.close();
+        if( mmSocket != null && mmSocket.isConnected() )
+        {
+          mmSocket.close();
+        }
       }
       catch( IOException ex )
       {
@@ -478,14 +485,15 @@ public class BlueThoothComService extends Service
     @Override
     public void run()
     {
-      Log.i( TAGREADER, "BEGIN WriterThread" );
+      Log.i( TAGREADER, "BEGIN ReaderThread" );
       StringBuffer mInStrBuffer = new StringBuffer( 1024 );
       String readMessage;
       byte[] buffer = new byte[1024];
       int bytes, start, end, lstart, lend;
       boolean logCmd, normalCmd;
       // den Inputstram solange lesen, wie die Verbindung besteht
-      while( true )
+      cancelThread = false;
+      while( !cancelThread )
       {
         // lese von InputStream
         try
@@ -586,6 +594,8 @@ public class BlueThoothComService extends Service
           }
         }
       }
+      Log.i( TAGREADER, "END ReaderThread" );
+      connectionLost();
     }
   }
 
