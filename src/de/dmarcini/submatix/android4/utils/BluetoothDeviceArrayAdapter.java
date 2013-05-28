@@ -390,6 +390,15 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
     return( false );
   }
 
+  public void setDeviceIsOnline( int position )
+  {
+    if( position < getCount() )
+    {
+      String[] fields = getItem( position );
+      fields[BT_DEVAR_ISONLINE] = "true";
+    }
+  }
+
   /**
    * 
    * Ist die MAC-Adresse schon in der Liste?
@@ -408,6 +417,31 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
     for( int i = 0; i < count; i++ )
     {
       if( item[BT_DEVAR_MAC].equals( getItem( i )[BT_DEVAR_MAC] ) )
+      {
+        return( i );
+      }
+    }
+    return( -1 );
+  }
+
+  /**
+   * 
+   * Gib die Position des Gerätes mit der MAC "item" zurück, oder -1
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 28.05.2013
+   * @param item
+   * @return
+   */
+  public int getIndexForMac( String item )
+  {
+    int count = super.getCount();
+    for( int i = 0; i < count; i++ )
+    {
+      if( item.equals( getItem( i )[BT_DEVAR_MAC] ) )
       {
         return( i );
       }
