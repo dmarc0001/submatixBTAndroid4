@@ -865,4 +865,22 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "connection error (device not online?)" );
   }
+
+  /**
+   * 
+   * Frage nach der Seriennummer
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 28.05.2013 TODO
+   */
+  public void askForSerialNumber()
+  {
+    if( mService != null )
+    {
+      mService.askForSerialNumber();
+    }
+  }
 }
