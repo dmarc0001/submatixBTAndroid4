@@ -1,5 +1,6 @@
 package de.dmarcini.submatix.android4.gui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -15,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
+import de.dmarcini.submatix.android4.comm.BtServiceMessage;
 
 /**
  * Ein Objekt zum bearbeiten der SPX42 Einstellungen Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
@@ -23,10 +25,11 @@ import de.dmarcini.submatix.android4.R;
  * 
  *         TODO Abhängigkeit bei Gradienten zwischen Voreinstellungen/custom und Presets berücksichtigen
  */
-public class SPX42PreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener
+public class SPX42PreferencesFragment extends PreferenceFragment implements IBtServiceListener, OnSharedPreferenceChangeListener
 {
-  private static final String TAG          = SPX42PreferencesFragment.class.getSimpleName();
-  private boolean             isIndividual = false;
+  private static final String TAG             = SPX42PreferencesFragment.class.getSimpleName();
+  private boolean             isIndividual    = false;
+  private Activity            runningActivity = null;
 
   /**
    * Sperre den Standartkonstruktor!
@@ -79,6 +82,14 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements OnSh
       Log.e( TAG, "getIntegerFromStringResource(): String <" + strVal + "> is not an correct integer" );
     }
     return( retVal );
+  }
+
+  @Override
+  public void onAttach( Activity activity )
+  {
+    super.onAttach( activity );
+    runningActivity = activity;
+    Log.w( TAG, "ATTACH" );
   }
 
   @Override
@@ -135,14 +146,16 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements OnSh
   public void onPause()
   {
     super.onPause();
-    Log.v( TAG, "onPause..." );
+    Log.v( TAG, "onPause()..." );
+    ( ( FragmentCommonActivity )runningActivity ).clearServiceListener();
   }
 
   @Override
-  public void onResume()
+  public synchronized void onResume()
   {
     super.onResume();
-    Log.v( TAG, "onResume..." );
+    Log.v( TAG, "onResume()..." );
+    ( ( FragmentCommonActivity )runningActivity ).setServiceListener( this );
   }
 
   @Override
@@ -370,5 +383,36 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements OnSh
       lP = ( ListPreference )pS.findPreference( "keyIndividualLoginterval" );
       lP.setSummary( String.format( res.getString( R.string.conf_ind_interval_header_summary ), lP.getEntry() ) );
     }
+  }
+
+  @Override
+  public void msgConnecting( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgConnected( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+    Log.v( TAG, "msgConnected()..." );
+  }
+
+  @Override
+  public void msgDisconnected( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgRecivedTick( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgConnectError( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
   }
 }
