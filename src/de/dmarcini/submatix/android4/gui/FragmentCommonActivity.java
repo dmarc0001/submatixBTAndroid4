@@ -97,7 +97,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
       areaListFragment frag;
       if( !( msg.obj instanceof BtServiceMessage ) )
       {
-        Log.e(TAG,"Recived Message is NOT tyoe of BtServiceMessage!");
+        Log.e(TAG,"Recived Message is NOT type of BtServiceMessage!");
         return;
       }
       BtServiceMessage smsg = (BtServiceMessage)msg.obj;

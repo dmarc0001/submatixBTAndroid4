@@ -159,7 +159,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     // die Konfiguration des SPX erfragen
     fActivity.setServiceListener( this );
-    fActivity.askForSerialNumber();
+    // fActivity.askForSerialNumber();
   }
 
   @Override
@@ -400,6 +400,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   {
     // TODO Automatisch generierter Methodenstub
     Log.v( TAG, "msgConnected()..." );
+    FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
+    fActivity.askForSerialNumber();
   }
 
   @Override
