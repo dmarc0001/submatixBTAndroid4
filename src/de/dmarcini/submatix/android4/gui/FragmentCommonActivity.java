@@ -174,8 +174,8 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
           break;
 
           // ################################################################
-        // Sonst....
-        // ################################################################
+          // Sonst....
+          // ################################################################
         default:
           Log.w( TAG, "unknown message with id <" + smsg.getId() + "> recived!" );
       }
@@ -745,6 +745,26 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
       return( mService.getConnectionState() );
     }
     return( ProjectConst.CONN_STATE_NONE );
+  }
+
+  /**
+   * 
+   * Mit welchem Gerät (Addr) bin ich verbunden?
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 28.05.2013
+   * @return MAC-Addr des Gerätes
+   */
+  public String getConnectedDevice()
+  {
+    if( mService != null )
+    {
+      return( mService.getConnectedDevice() );
+    }
+    return( null );
   }
 
   /**
