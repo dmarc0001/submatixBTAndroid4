@@ -155,7 +155,11 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   {
     super.onResume();
     Log.v( TAG, "onResume()..." );
-    ( ( FragmentCommonActivity )runningActivity ).setServiceListener( this );
+    //
+    FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
+    // die Konfiguration des SPX erfragen
+    fActivity.setServiceListener( this );
+    fActivity.askForSerialNumber();
   }
 
   @Override
