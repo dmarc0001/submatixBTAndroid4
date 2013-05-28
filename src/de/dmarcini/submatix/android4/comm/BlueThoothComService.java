@@ -26,25 +26,26 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
 
 public class BlueThoothComService extends Service
 {
-  private static final String    TAG               = BlueThoothComService.class.getSimpleName();
-  private static final long      msToEndService    = 6000L;
-  private long                   tickToCounter     = 0L;
-  private long                   timeToStopService = 0L;
-  private NotificationManager    nm;
-  static int                     NOTIFICATION      = 815;
-  private final Timer            timer             = new Timer();
-  private int                    counter           = 0;
-  private final int              incrementby       = 1;
-  private boolean                isRunning         = false;
-  ArrayList<Handler>             mClientHandler    = new ArrayList<Handler>();                  // Messagehandler für Clienten
-  int                            mValue            = 0;                                         // Holds last value set by a client.
-  private final IBinder          mBinder           = new LocalBinder();
-  private BluetoothAdapter       mAdapter          = null;
-  private static ConnectThread   mConnectThread    = null;
-  private static ConnectedThread mConnectedThread  = null;
-  private static volatile int    mConnectionState;
-  private volatile boolean       isLogentryMode    = false;
-  private String                 connectedDevice   = null;
+  private static final String  TAG               = BlueThoothComService.class.getSimpleName();
+  private static final long    msToEndService    = 6000L;
+  private long                 tickToCounter     = 0L;
+  private long                 timeToStopService = 0L;
+  private NotificationManager  nm;
+  static int                   NOTIFICATION      = 815;
+  private final Timer          timer             = new Timer();
+  private int                  counter           = 0;
+  private final int            incrementby       = 1;
+  private boolean              isRunning         = false;
+  ArrayList<Handler>           mClientHandler    = new ArrayList<Handler>();                  // Messagehandler für Clienten
+  int                          mValue            = 0;                                         // Holds last value set by a client.
+  private final IBinder        mBinder           = new LocalBinder();
+  private BluetoothAdapter     mAdapter          = null;
+  private static ConnectThread mConnectThread    = null;
+  private static ReaderThread  mReaderThread     = null;
+  private static WriterThread  mWriterThread     = null;
+  private static volatile int  mConnectionState;
+  private volatile boolean     isLogentryMode    = false;
+  private String               connectedDevice   = null;
 
   /**
    * 
@@ -204,13 +205,162 @@ public class BlueThoothComService extends Service
       }
       // Start the connected thread
       Log.v( TAGCON, "run connected()" );
-      connected( mmSocket, mmDevice );
+      deviceConnected( mmSocket, mmDevice );
+    }
+  }
+
+  private class WriterThread extends Thread
+  {
+    private final String            TAGWRITER    = WriterThread.class.getSimpleName();
+    private final BluetoothSocket   mmSocket;
+    private final OutputStream      mmOutStream;
+    private Boolean                 cancelThread = false;
+    private final ArrayList<String> writeList    = new ArrayList<String>();
+
+    /**
+     * 
+     * Konstruktor des Writer Thread
+     * 
+     * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+     * 
+     * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+     * 
+     *         Stand: 28.05.2013
+     * @param socket
+     */
+    public WriterThread( BluetoothSocket socket )
+    {
+      if( BuildConfig.DEBUG ) Log.d( TAGWRITER, "create WriterThread" );
+      mmSocket = socket;
+      OutputStream tmpOut = null;
+      cancelThread = false;
+      // die BluetoothSocket input and output streams erstellen
+      try
+      {
+        tmpOut = socket.getOutputStream();
+      }
+      catch( IOException e )
+      {
+        Log.e( TAGWRITER, "temp sockets not created", e );
+      }
+      mmOutStream = tmpOut;
+    }
+
+    /**
+     * 
+     * Thread abbrechen
+     * 
+     * Project: SubmatixBluethoothLogger Package: de.dmarcini.submatix.logger.service
+     * 
+     * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+     * 
+     *         Stand: 28.05.2013
+     */
+    public void cancel()
+    {
+      try
+      {
+        cancelThread = true;
+        mmSocket.close();
+      }
+      catch( IOException ex )
+      {
+        Log.e( TAGWRITER, "close() of connect socket failed", ex );
+      }
+    }
+
+    /**
+     * Hier läuft der Thread
+     */
+    @Override
+    public void run()
+    {
+      Log.i( TAGWRITER, "BEGIN WriterThread" );
+      // den Inputstram solange schreiben, wie die Verbindung besteht
+      writeList.clear();
+      cancelThread = false;
+      while( !cancelThread )
+      {
+        if( writeList.isEmpty() )
+        {
+          try
+          {
+            Thread.yield();
+            wait( 10 );
+          }
+          catch( InterruptedException ex )
+          {}
+        }
+        else
+        {
+          // ich gebe einen Eintrag aus...
+          try
+          {
+            // Watchdog für Schreiben aktivieren
+            // writeWatchDog = ProjectConst.WATCHDOG_FOR_WRITEOPS;
+            // also den String Eintrag in den Outstream...
+            mmOutStream.write( ( writeList.remove( 0 ) ).getBytes() );
+            // kommt das an, den Watchog wieder AUS
+            // writeWatchDog = -1;
+            // zwischen den Kommandos etwas warten, der SPX braucht etwas bis er wieder zuhört...
+            // das gibt dem Swing-Thread etwas Gelegenheit zum Zeichnen oder irgendwas anderem
+            for( int factor = 0; factor < 5; factor++ )
+            {
+              Thread.yield();
+              Thread.sleep( 80 );
+            }
+          }
+          catch( IndexOutOfBoundsException ex )
+          {
+            // TODO
+            // isConnected = false;
+            // if( aListener != null )
+            // {
+            // ActionEvent ev = new ActionEvent( this, ProjectConst.MESSAGE_DISCONNECTED, null );
+            // aListener.actionPerformed( ev );
+            // }
+            cancelThread = true;
+            return;
+          }
+          catch( IOException ex )
+          {
+            // isConnected = false;
+            // if( aListener != null )
+            // {
+            // ActionEvent ev = new ActionEvent( this, ProjectConst.MESSAGE_DISCONNECTED, null );
+            // aListener.actionPerformed( ev );
+            // }
+            cancelThread = true;
+            return;
+          }
+          catch( InterruptedException ex )
+          {}
+        }
+      }
+      Log.i( TAGWRITER, "END WriterThread" );
+    }
+
+    /**
+     * 
+     * Schreibe Daten zum SPX
+     * 
+     * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+     * 
+     * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+     * 
+     *         Stand: 28.05.2013
+     * @param msg
+     */
+    public synchronized void writeToDevice( String msg )
+    {
+      writeList.add( msg );
+      notifyAll();
     }
   }
 
   /**
    * 
-   * Der Thread, der während der Verbindung alle Datenströme zum und vom Gerät bearbeitet
+   * Der Thread, der während der Verbindung alle Datenströme vom Gerät bearbeitet
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
@@ -218,12 +368,12 @@ public class BlueThoothComService extends Service
    * 
    *         Stand: 02.03.2013
    */
-  private class ConnectedThread extends Thread
+  private class ReaderThread extends Thread
   {
-    private final String          TAGCOT       = ConnectedThread.class.getSimpleName();
+    private final String          TAGREADER    = ReaderThread.class.getSimpleName();
     private final BluetoothSocket mmSocket;
     private final InputStream     mmInStream;
-    private final OutputStream    mmOutStream;
+    // private final OutputStream mmOutStream;
     private Boolean               cancelThread = false;
 
     /**
@@ -237,25 +387,25 @@ public class BlueThoothComService extends Service
      *         Stand: 24.02.2012
      * @param socket
      */
-    public ConnectedThread( BluetoothSocket socket )
+    public ReaderThread( BluetoothSocket socket )
     {
-      if( BuildConfig.DEBUG ) Log.d( TAGCOT, "create ConnectedThread" );
+      if( BuildConfig.DEBUG ) Log.d( TAGREADER, "create ReaderThread" );
       mmSocket = socket;
       InputStream tmpIn = null;
-      OutputStream tmpOut = null;
+      // OutputStream tmpOut = null;
       cancelThread = false;
       // die BluetoothSocket input and output streams erstellen
       try
       {
         tmpIn = socket.getInputStream();
-        tmpOut = socket.getOutputStream();
+        // tmpOut = socket.getOutputStream();
       }
       catch( IOException e )
       {
-        Log.e( TAGCOT, "temp sockets not created", e );
+        Log.e( TAGREADER, "temp sockets not created", e );
       }
       mmInStream = tmpIn;
-      mmOutStream = tmpOut;
+      // mmOutStream = tmpOut;
     }
 
     /**
@@ -277,7 +427,7 @@ public class BlueThoothComService extends Service
       }
       catch( IOException ex )
       {
-        Log.e( TAGCOT, "close() of connect socket failed", ex );
+        Log.e( TAGREADER, "close() of connect socket failed", ex );
       }
     }
 
@@ -298,7 +448,7 @@ public class BlueThoothComService extends Service
     {
       String readMessage;
       int lstart, lend;
-      Log.v( TAGCOT, "execLogentryCmd..." );
+      Log.v( TAGREADER, "execLogentryCmd..." );
       // TODO: hier Code unterbringen
     }
 
@@ -318,7 +468,7 @@ public class BlueThoothComService extends Service
     private void execNormalCmd( int start, int end, StringBuffer mInStrBuffer )
     {
       String readMessage;
-      Log.v( TAGCOT, "execNormalCmd..." );
+      Log.v( TAGREADER, "execNormalCmd..." );
       // TODO: hier Code unterbringen
     }
 
@@ -328,7 +478,7 @@ public class BlueThoothComService extends Service
     @Override
     public void run()
     {
-      Log.i( TAGCOT, "BEGIN mConnectedThread" );
+      Log.i( TAGREADER, "BEGIN WriterThread" );
       StringBuffer mInStrBuffer = new StringBuffer( 1024 );
       String readMessage;
       byte[] buffer = new byte[1024];
@@ -346,11 +496,11 @@ public class BlueThoothComService extends Service
         {
           if( cancelThread )
           {
-            Log.i( TAGCOT, "while cancel thread: disconnected " + e.getLocalizedMessage() );
+            Log.i( TAGREADER, "while cancel thread: disconnected " + e.getLocalizedMessage() );
           }
           else
           {
-            Log.e( TAGCOT, "disconnected " + e.getLocalizedMessage() );
+            Log.e( TAGREADER, "disconnected " + e.getLocalizedMessage() );
           }
           connectionLost();
           cancel();
@@ -362,7 +512,7 @@ public class BlueThoothComService extends Service
         {
           if( ( mInStrBuffer.capacity() + 1024 ) > ProjectConst.MAXINBUFFER )
           {
-            Log.e( TAGCOT, "INPUT BUFFER OVERFLOW!" );
+            Log.e( TAGREADER, "INPUT BUFFER OVERFLOW!" );
             cancel();
             break;
           }
@@ -491,7 +641,7 @@ public class BlueThoothComService extends Service
    * @param mmSocket2
    * @param mmDevice2
    */
-  private void connected( BluetoothSocket socket, BluetoothDevice device )
+  private void deviceConnected( BluetoothSocket socket, BluetoothDevice device )
   {
     Log.v( TAG, "connected()..." );
     // den Verbindunsthread stoppen, seine Aufgabe ist erfüllt
@@ -502,17 +652,28 @@ public class BlueThoothComService extends Service
       mConnectThread = null;
     }
     // Falls da noch verbundene Thread sind, stoppe diese
-    if( mConnectedThread != null )
+    if( mReaderThread != null )
     {
-      Log.v( TAG, "stop old mConnectedThread..." );
-      mConnectedThread.cancel();
-      mConnectedThread = null;
+      Log.v( TAG, "stop old mReaderThread..." );
+      mReaderThread.cancel();
+      mReaderThread = null;
     }
-    // starte den Verbindungsthread zur Bearbeitung der Datenströme
-    Log.v( TAG, "create mConnectedThread..." );
-    mConnectedThread = new ConnectedThread( socket );
-    Log.v( TAG, "start mConnectedThread..." );
-    mConnectedThread.start();
+    if( mWriterThread != null )
+    {
+      Log.v( TAG, "stop old mWriterThread..." );
+      mWriterThread.cancel();
+      mWriterThread = null;
+    }
+    // starte den Lesethread zur Bearbeitung der Daten vom SPX
+    Log.v( TAG, "create mReaderThread..." );
+    mReaderThread = new ReaderThread( socket );
+    Log.v( TAG, "start mReaderThread..." );
+    mReaderThread.start();
+    // starte den Schreibhread zur Bearbeitung der Kommandos zum SPX
+    Log.v( TAG, "create mWriterThread..." );
+    mWriterThread = new WriterThread( socket );
+    Log.v( TAG, "start mWriterThread..." );
+    mWriterThread.start();
     Log.v( TAG, "call setState" );
     setState( ProjectConst.CONN_STATE_CONNECTED );
   }
@@ -745,10 +906,10 @@ public class BlueThoothComService extends Service
       }
     }
     // Thread stoppen, bevor eine Verbindung aufgebaut werden kann
-    if( mConnectedThread != null )
+    if( mReaderThread != null )
     {
-      mConnectedThread.cancel();
-      mConnectedThread = null;
+      mReaderThread.cancel();
+      mReaderThread = null;
     }
     // Start the thread to connect with the given device
     mConnectThread = new ConnectThread( device );
@@ -775,10 +936,15 @@ public class BlueThoothComService extends Service
       mConnectThread.cancel();
       mConnectThread = null;
     }
-    if( mConnectedThread != null )
+    if( mReaderThread != null )
     {
-      mConnectedThread.cancel();
-      mConnectedThread = null;
+      mReaderThread.cancel();
+      mReaderThread = null;
+    }
+    if( mWriterThread != null )
+    {
+      mWriterThread.cancel();
+      mWriterThread = null;
     }
     connectedDevice = null;
     // connectedDeviceAlias = null;
@@ -822,5 +988,54 @@ public class BlueThoothComService extends Service
       }
     }
     return( null );
+  }
+
+  /**
+   * 
+   * Schreibe Daten zum SPX
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 28.05.2013
+   * @param msg
+   */
+  public synchronized void writeToDevice( String msg )
+  {
+    if( mConnectionState == ProjectConst.CONN_STATE_CONNECTED && mWriterThread != null )
+    {
+      mWriterThread.writeToDevice( msg );
+    }
+  }
+
+  /**
+   * 
+   * Frage den SPX nach der Seriennummer
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 28.05.2013
+   */
+  public void askForSerialNumber()
+  {
+    this.writeToDevice( String.format( "%s~%x%s", ProjectConst.STX, ProjectConst.SPX_SERIAL_NUMBER, ProjectConst.ETX ) );
+  }
+
+  /**
+   * 
+   * Frag den SPX, ob er noch da ist
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 28.05.2013
+   */
+  public void askForSPXAlive()
+  {
+    this.writeToDevice( String.format( "%s~%x%s", ProjectConst.STX, ProjectConst.SPX_ALIVE, ProjectConst.ETX ) );
   }
 }
