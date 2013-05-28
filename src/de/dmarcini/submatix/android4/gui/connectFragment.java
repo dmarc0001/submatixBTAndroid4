@@ -189,6 +189,48 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   {
     Log.v( TAG, "msgConnected()..." );
     setToggleButtonTextAndStat( ProjectConst.CONN_STATE_CONNECTED );
+    setSpinnerToConnectedDevice();
+  }
+
+  /**
+   * 
+   * Setze den Spinner auf den Eintrag mir dem verbundenen Gerät
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 28.05.2013
+   */
+  private void setSpinnerToConnectedDevice()
+  {
+    String deviceAddr = null;
+    int deviceIndex = -1;
+    Log.v( TAG, "setSpinnerToConnectedDevice()..." );
+    try
+    {
+      // ArrayAdapter erfragen
+      BluetoothDeviceArrayAdapter adapter = ( ( BluetoothDeviceArrayAdapter )( devSpinner.getAdapter() ) );
+      // mit welchem Gerät bin ich verbunden?
+      deviceAddr = ( ( FragmentCommonActivity )runningActivity ).getConnectedDevice();
+      Log.v( TAG, "setSpinnerToConnectedDevice() connected Device: <" + deviceAddr + ">" );
+      // welcher index gehört zu dem Gerät?
+      deviceIndex = adapter.getIndexForMac( deviceAddr );
+      Log.v( TAG, "setSpinnerToConnectedDevice() index in Adapter: <" + deviceIndex + ">" );
+      // Online Markieren
+      adapter.setDeviceIsOnline( deviceIndex );
+      // Update erzwingen
+      devSpinner.setAdapter( adapter );
+      // Selektieren
+      devSpinner.setSelection( deviceIndex, false );
+      Log.v( TAG, "setSpinnerToConnectedDevice() set Spinner to index <" + deviceIndex + ">" );
+    }
+    catch( Exception ex )
+    {
+      Log.e( TAG, "setSpinnerToConnectedDevice(), ex: <" + ex.getLocalizedMessage() + ">" );
+      Log.w( TAG, "setSpinnerToConnectedDevice() exception: Spinner to 0" );
+      devSpinner.setSelection( 0, false );
+    }
   }
 
   @Override
