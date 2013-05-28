@@ -800,4 +800,27 @@ public class BlueThoothComService extends Service
   {
     return( mConnectionState );
   }
+
+  /**
+   * 
+   * Mit welchem Gerät (Addrese) bin ich verbunden?
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 28.05.2013
+   * @return TODO
+   */
+  public String getConnectedDevice()
+  {
+    if( mConnectionState == ProjectConst.CONN_STATE_CONNECTED )
+    {
+      if( connectedDevice != null )
+      {
+        return( connectedDevice );
+      }
+    }
+    return( null );
+  }
 }
