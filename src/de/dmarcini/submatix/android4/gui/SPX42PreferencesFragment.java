@@ -421,4 +421,16 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   {
     // TODO Automatisch generierter Methodenstub
   }
+
+  @Override
+  public void msgRecivedSerial( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgRecivedAlive( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
 }

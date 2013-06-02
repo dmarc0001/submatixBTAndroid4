@@ -184,53 +184,48 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     }
   }
 
+  /**
+   * 
+   * Die Anzeige der Verbunden/trennen Seite
+   * 
+   * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 04.11.2012
+   * @param inflater
+   * @param container
+   * @return
+   */
+  private View makeConnectionView( LayoutInflater inflater, ViewGroup container )
+  {
+    View rootView;
+    //
+    Log.v( TAG, "makeConnectionView()..." );
+    //
+    // View aus Resource laden
+    //
+    rootView = inflater.inflate( R.layout.fragment_connect, container, false );
+    //
+    // Objekte lokalisieren
+    //
+    discoverButton = ( Button )rootView.findViewById( R.id.connectDiscoverButton );
+    devSpinner = ( Spinner )rootView.findViewById( R.id.connectBlueToothDeviceSpinner );
+    connButton = ( ImageButton )rootView.findViewById( R.id.connectButton );
+    connectTextView = ( TextView )rootView.findViewById( R.id.connectStatusText );
+    if( discoverButton == null || devSpinner == null || connButton == null )
+    {
+      throw new NullPointerException( "can init GUI (not found an Element)" );
+    }
+    return( rootView );
+  }
+
   @Override
   public void msgConnected( BtServiceMessage msg )
   {
     Log.v( TAG, "msgConnected()..." );
     setToggleButtonTextAndStat( ProjectConst.CONN_STATE_CONNECTED );
     setSpinnerToConnectedDevice();
-  }
-
-  /**
-   * 
-   * Setze den Spinner auf den Eintrag mir dem verbundenen Gerät
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 28.05.2013
-   */
-  private void setSpinnerToConnectedDevice()
-  {
-    String deviceAddr = null;
-    int deviceIndex = -1;
-    Log.v( TAG, "setSpinnerToConnectedDevice()..." );
-    try
-    {
-      // ArrayAdapter erfragen
-      BluetoothDeviceArrayAdapter adapter = ( ( BluetoothDeviceArrayAdapter )( devSpinner.getAdapter() ) );
-      // mit welchem Gerät bin ich verbunden?
-      deviceAddr = ( ( FragmentCommonActivity )runningActivity ).getConnectedDevice();
-      Log.v( TAG, "setSpinnerToConnectedDevice() connected Device: <" + deviceAddr + ">" );
-      // welcher index gehört zu dem Gerät?
-      deviceIndex = adapter.getIndexForMac( deviceAddr );
-      Log.v( TAG, "setSpinnerToConnectedDevice() index in Adapter: <" + deviceIndex + ">" );
-      // Online Markieren
-      adapter.setDeviceIsOnline( deviceIndex );
-      // Update erzwingen
-      devSpinner.setAdapter( adapter );
-      // Selektieren
-      devSpinner.setSelection( deviceIndex, false );
-      Log.v( TAG, "setSpinnerToConnectedDevice() set Spinner to index <" + deviceIndex + ">" );
-    }
-    catch( Exception ex )
-    {
-      Log.e( TAG, "setSpinnerToConnectedDevice(), ex: <" + ex.getLocalizedMessage() + ">" );
-      Log.w( TAG, "setSpinnerToConnectedDevice() exception: Spinner to 0" );
-      devSpinner.setSelection( 0, false );
-    }
   }
 
   @Override
@@ -252,6 +247,18 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   public void msgDisconnected( BtServiceMessage msg )
   {
     setToggleButtonTextAndStat( ProjectConst.CONN_STATE_NONE );
+  }
+
+  @Override
+  public void msgRecivedAlive( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgRecivedSerial( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
   }
 
   @Override
@@ -378,6 +385,37 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     // Funktionen der Activity nutzen
   }
 
+  /**
+   * Wenn das View erzeugt wird (nach onCreate), noch ein paar Sachen erledigen
+   */
+  @Override
+  public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
+  {
+    View rootView;
+    Log.v( TAG, "onCreateView()..." );
+    //
+    // wenn kein Container vorhanden ist, dann gibts auch keinen View
+    //
+    if( container == null )
+    {
+      Log.v( TAG, "onCreateView() container is NULL ..." );
+      return( null );
+    }
+    //
+    // wenn die laufende Activity eine areaDetailActivity ist, dann gibts das View schon
+    //
+    if( runningActivity instanceof areaDetailActivity )
+    {
+      Log.v( TAG, "onCreateView() running from areaDetailActivity ..." );
+      return( null );
+    }
+    //
+    // Verbindungsseite via twoPane ausgewählt
+    //
+    rootView = makeConnectionView( inflater, container );
+    return rootView;
+  }
+
   @Override
   public void onDestroy()
   {
@@ -453,6 +491,47 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
       progressDialog.show();
     }
     setToggleButtonTextAndStat( ProjectConst.CONN_STATE_NONE );
+  }
+
+  /**
+   * 
+   * Setze den Spinner auf den Eintrag mir dem verbundenen Gerät
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 28.05.2013
+   */
+  private void setSpinnerToConnectedDevice()
+  {
+    String deviceAddr = null;
+    int deviceIndex = -1;
+    Log.v( TAG, "setSpinnerToConnectedDevice()..." );
+    try
+    {
+      // ArrayAdapter erfragen
+      BluetoothDeviceArrayAdapter adapter = ( ( BluetoothDeviceArrayAdapter )( devSpinner.getAdapter() ) );
+      // mit welchem Gerät bin ich verbunden?
+      deviceAddr = ( ( FragmentCommonActivity )runningActivity ).getConnectedDevice();
+      Log.v( TAG, "setSpinnerToConnectedDevice() connected Device: <" + deviceAddr + ">" );
+      // welcher index gehört zu dem Gerät?
+      deviceIndex = adapter.getIndexForMac( deviceAddr );
+      Log.v( TAG, "setSpinnerToConnectedDevice() index in Adapter: <" + deviceIndex + ">" );
+      // Online Markieren
+      adapter.setDeviceIsOnline( deviceIndex );
+      // Update erzwingen
+      devSpinner.setAdapter( adapter );
+      // Selektieren
+      devSpinner.setSelection( deviceIndex, false );
+      Log.v( TAG, "setSpinnerToConnectedDevice() set Spinner to index <" + deviceIndex + ">" );
+    }
+    catch( Exception ex )
+    {
+      Log.e( TAG, "setSpinnerToConnectedDevice(), ex: <" + ex.getLocalizedMessage() + ">" );
+      Log.w( TAG, "setSpinnerToConnectedDevice() exception: Spinner to 0" );
+      devSpinner.setSelection( 0, false );
+    }
   }
 
   /**
@@ -564,72 +643,5 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     FragmentCommonActivity.mBtAdapter.cancelDiscovery();
     // Unregister broadcast listeners
     runningActivity.unregisterReceiver( mReceiver );
-  }
-
-  /**
-   * Wenn das View erzeugt wird (nach onCreate), noch ein paar Sachen erledigen
-   */
-  @Override
-  public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
-  {
-    View rootView;
-    Log.v( TAG, "onCreateView()..." );
-    //
-    // wenn kein Container vorhanden ist, dann gibts auch keinen View
-    //
-    if( container == null )
-    {
-      Log.v( TAG, "onCreateView() container is NULL ..." );
-      return( null );
-    }
-    //
-    // wenn die laufende Activity eine areaDetailActivity ist, dann gibts das View schon
-    //
-    if( runningActivity instanceof areaDetailActivity )
-    {
-      Log.v( TAG, "onCreateView() running from areaDetailActivity ..." );
-      return( null );
-    }
-    //
-    // Verbindungsseite via twoPane ausgewählt
-    //
-    rootView = makeConnectionView( inflater, container );
-    return rootView;
-  }
-
-  /**
-   * 
-   * Die Anzeige der Verbunden/trennen Seite
-   * 
-   * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 04.11.2012
-   * @param inflater
-   * @param container
-   * @return
-   */
-  private View makeConnectionView( LayoutInflater inflater, ViewGroup container )
-  {
-    View rootView;
-    //
-    Log.v( TAG, "makeConnectionView()..." );
-    //
-    // View aus Resource laden
-    //
-    rootView = inflater.inflate( R.layout.fragment_connect, container, false );
-    //
-    // Objekte lokalisieren
-    //
-    discoverButton = ( Button )rootView.findViewById( R.id.connectDiscoverButton );
-    devSpinner = ( Spinner )rootView.findViewById( R.id.connectBlueToothDeviceSpinner );
-    connButton = ( ImageButton )rootView.findViewById( R.id.connectButton );
-    connectTextView = ( TextView )rootView.findViewById( R.id.connectStatusText );
-    if( discoverButton == null || devSpinner == null || connButton == null )
-    {
-      throw new NullPointerException( "can init GUI (not found an Element)" );
-    }
-    return( rootView );
   }
 }
