@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.regex.Pattern;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -26,26 +27,31 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
 
 public class BlueThoothComService extends Service
 {
-  private static final String  TAG               = BlueThoothComService.class.getSimpleName();
-  private static final long    msToEndService    = 6000L;
-  private long                 tickToCounter     = 0L;
-  private long                 timeToStopService = 0L;
+  private static final String  TAG                         = BlueThoothComService.class.getSimpleName();
+  private static final long    msToEndService              = 6000L;
+  private static final Pattern fieldPattern0x09            = Pattern.compile( ProjectConst.LOGSELECTOR );
+  private static final Pattern fieldPatternDp              = Pattern.compile( ":" );
+  private long                 tickToCounter               = 0L;
+  private long                 timeToStopService           = 0L;
   private NotificationManager  nm;
-  static int                   NOTIFICATION      = 815;
-  private final Timer          timer             = new Timer();
-  private int                  counter           = 0;
-  private final int            incrementby       = 1;
-  private boolean              isRunning         = false;
-  ArrayList<Handler>           mClientHandler    = new ArrayList<Handler>();                  // Messagehandler für Clienten
-  int                          mValue            = 0;                                         // Holds last value set by a client.
-  private final IBinder        mBinder           = new LocalBinder();
-  private BluetoothAdapter     mAdapter          = null;
-  private static ConnectThread mConnectThread    = null;
-  private static ReaderThread  mReaderThread     = null;
-  private static WriterThread  mWriterThread     = null;
+  static int                   NOTIFICATION                = 815;
+  private final Timer          timerThread                 = new Timer();
+  private long                 timerCounter                = 0;
+  private int                  timerTickCounter            = 0;
+  private int                  writeWatchDog               = -1;
+  private final int            incrementby                 = 1;
+  private boolean              isRunning                   = false;
+  ArrayList<Handler>           mClientHandler              = new ArrayList<Handler>();                   // Messagehandler für Clienten
+  int                          mValue                      = 0;                                          // Holds last value set by a client.
+  private final IBinder        mBinder                     = new LocalBinder();
+  private BluetoothAdapter     mAdapter                    = null;
+  private static ConnectThread mConnectThread              = null;
+  private static ReaderThread  mReaderThread               = null;
+  private static WriterThread  mWriterThread               = null;
   private static volatile int  mConnectionState;
-  private volatile boolean     isLogentryMode    = false;
-  private String               connectedDevice   = null;
+  private volatile boolean     isLogentryMode              = false;
+  private String               connectedDevice             = null;
+  private String               connectedDeviceSerialNumber = null;
 
   /**
    * 
@@ -303,11 +309,11 @@ public class BlueThoothComService extends Service
             try
             {
               // Watchdog für Schreiben aktivieren
-              // writeWatchDog = ProjectConst.WATCHDOG_FOR_WRITEOPS;
+              writeWatchDog = ProjectConst.WATCHDOG_FOR_WRITEOPS;
               // also den String Eintrag in den Outstream...
               mmOutStream.write( ( writeList.remove( 0 ) ).getBytes() );
               // kommt das an, den Watchog wieder AUS
-              // writeWatchDog = -1;
+              writeWatchDog = -1;
               // zwischen den Kommandos etwas warten, der SPX braucht etwas bis er wieder zuhört...
               // das gibt dem Swing-Thread etwas Gelegenheit zum Zeichnen oder irgendwas anderem
               for( int factor = 0; factor < 5; factor++ )
@@ -477,8 +483,254 @@ public class BlueThoothComService extends Service
     private void execNormalCmd( int start, int end, StringBuffer mInStrBuffer )
     {
       String readMessage;
+      String[] fields;
+      int command;
+      BtServiceMessage msg;
       Log.v( TAGREADER, "execNormalCmd..." );
-      // TODO: hier Code unterbringen
+      // muss der anfang weg?
+      if( start > 0 )
+      {
+        // das davor kann dann weg...
+        mInStrBuffer = mInStrBuffer.delete( 0, start );
+        readMessage = mInStrBuffer.toString();
+        // Indizies korrigieren
+        end = mInStrBuffer.indexOf( ProjectConst.ETX );
+        start = 0;
+      }
+      // jetz beginnt der String immer bei 0, lese das Ding
+      readMessage = mInStrBuffer.substring( 1, end );
+      // lösche das schon mal aus dem Puffer raus!
+      mInStrBuffer = mInStrBuffer.delete( 0, end + 1 );
+      Log.v( TAGREADER, "normal Message Recived <" + readMessage + ">" );
+      // Trenne die Parameter voneinander, fields[0] ist dann das Kommando
+      fields = fieldPatternDp.split( readMessage );
+      //
+      //
+      //
+      if( 0 == readMessage.indexOf( ProjectConst.IS_END_LOGLISTENTRY ) )
+      {
+        // Logbucheinträge fertig gelesen
+        msg = new BtServiceMessage( ProjectConst.MESSAGE_DIRENTRY_END );
+        Log.v( TAGREADER, "SPX Logdir end readet!" );
+        sendMessageToApp( msg );
+        return;
+      }
+      //
+      // Messages für die Weiterverarbeitung präparieren
+      //
+      fields[0] = fields[0].replaceFirst( "~", "" );
+      try
+      {
+        command = Integer.parseInt( fields[0], 16 );
+      }
+      catch( NumberFormatException ex )
+      {
+        Log.e( TAGREADER, "Convert String to Int (" + ex.getLocalizedMessage() + ")" );
+        return;
+      }
+      //
+      // bekomme heraus, welcher Art die ankommende Message ist
+      //
+      switch ( command )
+      {
+        case ProjectConst.SPX_MANUFACTURERS:
+          // Sende Nachricht Gerätename empfangen!
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_MANUFACTURER_READ, new String( fields[1] ) );
+          sendMessageToApp( msg );
+          Log.v( TAGREADER, "SPX Devicename recived! <" + fields[1] + ">" );
+          break;
+        case ProjectConst.SPX_ALIVE:
+          // Ackuspannung übertragen
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_SPXALIVE, new String( fields[1] ) );
+          sendMessageToApp( msg );
+          Log.v( TAGREADER, "SPX is Alive, Acku value recived." );
+          break;
+        // case ProjectConst.SPX_APPLICATION_ID:
+        // // Sende Nachricht Firmwareversion empfangen!
+        // if( aListener != null )
+        // {
+        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_FWVERSION_READ, new String( fields[1] ), System.currentTimeMillis() / 100, 0 );
+        // aListener.actionPerformed( ex );
+        // }
+        // if( log ) LOGGER.fine( "Application ID (Firmware Version)  recived! <" + fields[1] + ">" );
+        // break;
+        case ProjectConst.SPX_SERIAL_NUMBER:
+          // Sende Nachricht Seriennummer empfangen!
+          connectedDeviceSerialNumber = new String( fields[1] );
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_SERIAL_READ, new String( fields[1] ) );
+          sendMessageToApp( msg );
+          Log.v( TAGREADER, "Serial Number recived! <" + fields[1] + ">" );
+          break;
+        // case ProjectConst.SPX_SET_SETUP_DEKO:
+        // // Quittung für Setze DECO
+        // if( log ) LOGGER.fine( "Response for set deco <" + readMessage + "> was recived." );
+        // //
+        // // TODO: readDecoPrefs();
+        // //
+        // break;
+        // case ProjectConst.SPX_SET_SETUP_SETPOINT:
+        // // Quittung für Setzen der Auto-Setpointeinstelungen
+        // if( log ) LOGGER.fine( "SPX_SET_SETUP_SETPOINT Acknoweledge recived <" + readMessage + ">" );
+        // break;
+        // case ProjectConst.SPX_SET_SETUP_DISPLAYSETTINGS:
+        // // Quittung für Setzen der Displayeinstellungen
+        // if( log ) LOGGER.fine( "SET_SETUP_DISPLAYSETTINGS Acknoweledge recived <" + readMessage + ">" );
+        // break;
+        // case ProjectConst.SPX_SET_SETUP_UNITS:
+        // // Quittung für Setzen der Einheiten
+        // if( log ) LOGGER.fine( "SPX_SET_SETUP_UNITS Acknoweledge recived <" + readMessage + ">" );
+        // break;
+        // case ProjectConst.SPX_SET_SETUP_INDIVIDUAL:
+        // // Quittung für Individualeinstellungen
+        // if( log ) LOGGER.fine( "SPX_SET_SETUP_INDIVIDUAL Acknoweledge recived <" + readMessage + ">" );
+        // break;
+        // case ProjectConst.SPX_GET_SETUP_DEKO:
+        // // Kommando DEC liefert zurück:
+        // // ~34:LL:HH:D:Y:C
+        // // LL=GF-Low, HH=GF-High,
+        // // D=Deepstops (0/1)
+        // // Y=Dynamische Gradienten (0/1)
+        // // C=Last Decostop (0=3 Meter/1=6 Meter)
+        // if( aListener != null )
+        // {
+        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_DECO_READ, new String( readMessage ), System.currentTimeMillis() / 100, 0 );
+        // aListener.actionPerformed( ex );
+        // }
+        // if( log ) LOGGER.fine( "DECO_EINST recived <" + readMessage + ">" );
+        // break;
+        // case ProjectConst.SPX_GET_SETUP_SETPOINT:
+        // // Kommando GET_SETUP_SETPOINT liefert
+        // // ~35:A:P
+        // // A = Setpoint bei (0,1,2,3) = (0,5,15,20)
+        // // P = Partialdruck (0..4) 1.0 .. 1.4
+        // if( aListener != null )
+        // {
+        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_SETPOINT_READ, new String( readMessage ), System.currentTimeMillis() / 100, 0 );
+        // aListener.actionPerformed( ex );
+        // }
+        // if( log ) LOGGER.fine( "GET_SETUP_SETPOINT recived <" + readMessage + ">" );
+        // break;
+        // case ProjectConst.SPX_GET_SETUP_DISPLAYSETTINGS:
+        // // Kommando GET_SETUP_DISPLAYSETTINGS liefert
+        // // ~36:D:A
+        // // D= 0->10&, 1->50%, 2->100%
+        // // A= 0->Landscape 1->180Grad
+        // if( aListener != null )
+        // {
+        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_DISPLAY_READ, new String( readMessage ), System.currentTimeMillis() / 100, 0 );
+        // aListener.actionPerformed( ex );
+        // }
+        // if( log ) LOGGER.fine( "GET_SETUP_DISPLAYSETTINGS recived <" + readMessage + ">" );
+        // break;
+        // case ProjectConst.SPX_GET_SETUP_UNITS:
+        // // Kommando GET_SETUP_UNITS
+        // // ~37:UD:UL:UW
+        // // UD= Fahrenheit/Celsius => immer 0 in der aktuellen Firmware 2.6.7.7_U
+        // // UL= 0=metrisch 1=imperial
+        // // UW= 0->Salzwasser 1->Süßwasser
+        // if( aListener != null )
+        // {
+        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_UNITS_READ, new String( readMessage ), System.currentTimeMillis() / 100, 0 );
+        // aListener.actionPerformed( ex );
+        // }
+        // if( log ) LOGGER.fine( "GET_SETUP_UNITS recived <" + readMessage + ">" );
+        // break;
+        // case ProjectConst.SPX_GET_SETUP_INDIVIDUAL:
+        // // Kommando GET_SETUP_INDIVIDUAL liefert
+        // // ~38:SE:PS:SC:SN:LI
+        // // SE: Sensors 0->ON 1->OFF
+        // // PS: PSCRMODE 0->OFF 1->ON
+        // // SC: SensorCount
+        // // SN: Sound 0->OFF 1->ON
+        // // LI: Loginterval 0->10sec 1->30Sec 2->60 Sec
+        // if( aListener != null )
+        // {
+        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_INDIVID_READ, new String( readMessage ), System.currentTimeMillis() / 100, 0 );
+        // aListener.actionPerformed( ex );
+        // }
+        // if( log ) LOGGER.fine( "GET_SETUP_INDIVIDUAL recived <" + readMessage + ">" );
+        // break;
+        // case ProjectConst.SPX_GET_SETUP_GASLIST:
+        // // Kommando GET_SETUP_GASLIST
+        // // ~39:NR:ST:HE:BA:AA:CG
+        // // NR: Numer des Gases
+        // // ST Stickstoff in Prozent (hex)
+        // // HELIUM
+        // // Bailout
+        // // AA Diluent 1 oder 2 oder keins
+        // // CG curent Gas
+        // if( aListener != null )
+        // {
+        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_GAS_READ, new String( readMessage ), System.currentTimeMillis() / 100, 0 );
+        // aListener.actionPerformed( ex );
+        // }
+        // if( log ) LOGGER.fine( "GET_SETUP_GASLIST recived <" + readMessage + ">" );
+        // break;
+        // case ProjectConst.SPX_SET_SETUP_GASLIST:
+        // // Besaetigung fuer Gas setzen bekommen
+        // if( aListener != null )
+        // {
+        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_GAS_WRITTEN, new String( readMessage ), System.currentTimeMillis() / 100, 0 );
+        // aListener.actionPerformed( ex );
+        // }
+        // if( log ) LOGGER.fine( "SET_SETUP_GASLIST recived <" + readMessage + ">" );
+        // break;
+        // case ProjectConst.SPX_GET_LOG_INDEX:
+        // // Ein Logbuch Verzeichniseintrag gefunden
+        // if( aListener != null )
+        // {
+        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_DIRENTRY_READ, new String( readMessage ), System.currentTimeMillis() / 100, 0 );
+        // aListener.actionPerformed( ex );
+        // }
+        // if( log ) LOGGER.fine( "SPX_GET_LOG_INDEX recived!" );
+        // break;
+        // case ProjectConst.SPX_GET_LOG_NUMBER_SE:
+        // if( 0 == fields[1].indexOf( "1" ) )
+        // {
+        // // Übertragung Logfile gestartet
+        // if( aListener != null )
+        // {
+        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_LOGENTRY_START, new String( fields[2] ), System.currentTimeMillis() / 100, 0 );
+        // aListener.actionPerformed( ex );
+        // }
+        // if( log ) LOGGER.fine( "Logfile transmission started..." );
+        // isLogentryMode = true;
+        // }
+        // else if( 0 == fields[1].indexOf( "0" ) )
+        // {
+        // {
+        // // Übertragung beendet
+        // if( aListener != null )
+        // {
+        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_LOGENTRY_STOP, new String( fields[2] ), System.currentTimeMillis() / 100, 0 );
+        // aListener.actionPerformed( ex );
+        // }
+        // if( log ) LOGGER.fine( "Logfile transmission finished." );
+        // isLogentryMode = false;
+        // }
+        // }
+        // break;
+        // case ProjectConst.SPX_GET_DEVICE_OFF:
+        // // SPX meldet, er geht aus dem Sync-Mode
+        // if( aListener != null )
+        // {
+        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_SYCSTAT_OFF, new String( readMessage ), System.currentTimeMillis() / 100, 0 );
+        // aListener.actionPerformed( ex );
+        // }
+        // if( log ) LOGGER.fine( "SPX42 switch syncmode OFF! Connection will failure!" );
+        // break;
+        // case ProjectConst.SPX_LICENSE_STATE:
+        // // LICENSE_STATE gefunden
+        // if( aListener != null )
+        // {
+        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_LICENSE_STATE_READ, new String( readMessage ), System.currentTimeMillis() / 100, 0 );
+        // aListener.actionPerformed( ex );
+        // }
+        // if( log ) LOGGER.fine( "LICENSE_STATE recived <" + readMessage + ">" );
+        // break;
+        default:
+          Log.w( TAGREADER, "unknown Messagetype recived <" + readMessage + ">" );
+      }
     }
 
     /**
@@ -495,7 +747,7 @@ public class BlueThoothComService extends Service
       cancelThread = false;
       while( !cancelThread )
       {
-        // lese von InputStream
+        // lese von InputStream, maximal buffer.length bytes lesen
         try
         {
           bytes = mmInStream.read( buffer );
@@ -536,7 +788,9 @@ public class BlueThoothComService extends Service
           cancel();
           break;
         }
+        // Die empfangene Nachricht an den Puffer anhängen
         mInStrBuffer.append( readMessage );
+        // den Puffer in einen String überführen
         readMessage = mInStrBuffer.toString();
         // die Nachricht abarbeitern, solange komplette MSG da sind
         start = mInStrBuffer.indexOf( ProjectConst.STX );
@@ -634,14 +888,14 @@ public class BlueThoothComService extends Service
     nm = ( NotificationManager )getSystemService( NOTIFICATION_SERVICE );
     Log.i( TAG, "Service Started." );
     isRunning = true;
-    // der Überwachungsthread läuft solange der Service aktiv ist
-    timer.scheduleAtFixedRate( new TimerTask() {
+    // der Überwachungsthread läuft solange der Service aktiv ist aller 1 Sekunde
+    timerThread.scheduleAtFixedRate( new TimerTask() {
       @Override
       public void run()
       {
         onTimerTick();
       }
-    }, 10, 100L );
+    }, 100, 1000L );
     // Service ist Erzeugt!
     showNotification( getText( R.string.notify_service ), getText( R.string.notify_service_started ) );
     mAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -694,6 +948,7 @@ public class BlueThoothComService extends Service
     mWriterThread.start();
     Log.v( TAG, "call setState" );
     setState( ProjectConst.CONN_STATE_CONNECTED );
+    timerCounter = System.currentTimeMillis() + 10;
   }
 
   /**
@@ -733,7 +988,7 @@ public class BlueThoothComService extends Service
 
   /**
    * 
-   * Wenn der Timer ein Ereignis hat
+   * Wenn der Timer ein Ereignis hat (alle 1000 ms)
    * 
    * Project: BtServiceVersuch Package: de.dmarcini.android.btservive
    * 
@@ -743,6 +998,8 @@ public class BlueThoothComService extends Service
    */
   private void onTimerTick()
   {
+    BtServiceMessage msg;
+    //
     if( timeToStopService != 0L )
     {
       if( System.currentTimeMillis() > timeToStopService )
@@ -753,18 +1010,41 @@ public class BlueThoothComService extends Service
     }
     if( System.currentTimeMillis() > tickToCounter )
     {
-      // if( BuildConfig.DEBUG ) Log.d( TAG, "Timer :<" + counter + ">" );
       tickToCounter = System.currentTimeMillis() + 2000L;
       try
       {
-        counter += incrementby;
-        BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_TICK );
+        timerTickCounter += incrementby;
+        msg = new BtServiceMessage( ProjectConst.MESSAGE_TICK );
         sendMessageToApp( msg );
       }
       catch( Throwable t )
       {
-        // you should always ultimately catch all exceptions in timer tasks.
+        // you should always ultimately catch all exceptions in timerThread tasks.
         Log.e( TAG, "Timer Tick Failed.", t );
+      }
+    }
+    // wenn ein Gerät verbunden ist
+    if( mConnectionState == ProjectConst.CONN_STATE_CONNECTED )
+    {
+      // ist ein 90 Sekunden Intervall vergangen?
+      if( timerCounter <= System.currentTimeMillis() )
+      {
+        askForSPXAlive();
+        timerCounter = System.currentTimeMillis() + 90000L;
+      }
+      // soll der Soft-Watchdog aktiv sein?
+      if( writeWatchDog > -1 )
+      {
+        // ist der Timout aubgelaufen?
+        if( writeWatchDog == 0 )
+        {
+          // ein Wachhund ist abgelaufen, benachrichtige den User!
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_COMMTIMEOUT );
+          sendMessageToApp( msg );
+          writeWatchDog = -1;
+        }
+        // runterzählen, bei -1 ist eh schluss
+        writeWatchDog--;
       }
     }
   }
@@ -804,11 +1084,11 @@ public class BlueThoothComService extends Service
   public void onDestroy()
   {
     super.onDestroy();
-    if( timer != null )
+    if( timerThread != null )
     {
-      timer.cancel();
+      timerThread.cancel();
     }
-    counter = 0;
+    timerTickCounter = 0;
     nm.cancel( NOTIFICATION ); // Cancel the persistent notification.
     Log.i( TAG, "Service Stopped." );
     isRunning = false;
@@ -827,6 +1107,7 @@ public class BlueThoothComService extends Service
   private void connectionLost()
   {
     connectedDevice = null;
+    connectedDeviceSerialNumber = null;
     // connectedDeviceAlias = null;
     setState( ProjectConst.CONN_STATE_NONE );
     BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
@@ -881,6 +1162,7 @@ public class BlueThoothComService extends Service
   private void connectionFailed()
   {
     connectedDevice = null;
+    connectedDeviceSerialNumber = null;
     // connectedDeviceAlias = null;
     setState( ProjectConst.CONN_STATE_NONE );
     BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
@@ -907,6 +1189,7 @@ public class BlueThoothComService extends Service
     BluetoothDevice device = null;
     Log.v( TAG, "connect to: " + addr );
     connectedDevice = null;
+    connectedDeviceSerialNumber = null;
     // connectedDeviceAlias = null;
     if( mAdapter == null )
     {
@@ -1055,5 +1338,21 @@ public class BlueThoothComService extends Service
   public void askForSPXAlive()
   {
     this.writeToDevice( String.format( "%s~%x%s", ProjectConst.STX, ProjectConst.SPX_ALIVE, ProjectConst.ETX ) );
+  }
+
+  /**
+   * 
+   * Gib die Seriennummer des Gerätes zurück (wenn vorhanden)
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 02.06.2013
+   * @return
+   */
+  public synchronized String getConnectedDeviceSerialNumber()
+  {
+    return( connectedDeviceSerialNumber );
   }
 }
