@@ -9,7 +9,7 @@
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="SubmatixBTLoggerAndroid_4"/>
 <booleanAttribute key="org.eclipse.ui.externaltools.ATTR_BUILDER_ENABLED" value="true"/>
 <stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="${workspace_loc:/SubmatixBTLoggerAndroid_4/utils/versionsScript.xml}"/>
-<stringAttribute key="org.eclipse.ui.externaltools.ATTR_RUN_BUILD_KINDS" value=""/>
+<stringAttribute key="org.eclipse.ui.externaltools.ATTR_RUN_BUILD_KINDS" value="full,incremental,"/>
 <booleanAttribute key="org.eclipse.ui.externaltools.ATTR_TRIGGERS_CONFIGURED" value="true"/>
 <stringAttribute key="org.eclipse.ui.externaltools.ATTR_WORKING_DIRECTORY" value="${workspace_loc:/SubmatixBTLoggerAndroid_4}"/>
 </launchConfiguration>
