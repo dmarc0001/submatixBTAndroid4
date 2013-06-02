@@ -284,6 +284,8 @@ public class BlueThoothComService extends Service
     @Override
     public void run()
     {
+      BtServiceMessage msg;
+      //
       Log.i( TAGWRITER, "BEGIN WriterThread" );
       // den Inputstram solange schreiben, wie die Verbindung besteht
       writeList.clear();
@@ -324,24 +326,17 @@ public class BlueThoothComService extends Service
             }
             catch( IndexOutOfBoundsException ex )
             {
-              // TODO
-              // isConnected = false;
-              // if( aListener != null )
-              // {
-              // ActionEvent ev = new ActionEvent( this, ProjectConst.MESSAGE_DISCONNECTED, null );
-              // aListener.actionPerformed( ev );
-              // }
+              Log.e( TAG, "WriterThread IndexOutOfBoundsException: <" + ex.getLocalizedMessage() + ">" );
+              msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
+              sendMessageToApp( msg );
               cancelThread = true;
               return;
             }
             catch( IOException ex )
             {
-              // isConnected = false;
-              // if( aListener != null )
-              // {
-              // ActionEvent ev = new ActionEvent( this, ProjectConst.MESSAGE_DISCONNECTED, null );
-              // aListener.actionPerformed( ev );
-              // }
+              Log.e( TAG, "WriterThread Exception: <" + ex.getLocalizedMessage() + ">" );
+              msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
+              sendMessageToApp( msg );
               cancelThread = true;
               return;
             }
