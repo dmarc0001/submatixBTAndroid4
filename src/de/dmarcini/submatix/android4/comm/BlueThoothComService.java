@@ -27,74 +27,6 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
 
 public class BlueThoothComService extends Service
 {
-  private static final String  TAG                         = BlueThoothComService.class.getSimpleName();
-  private static final long    msToEndService              = 6000L;
-  private static final Pattern fieldPattern0x09            = Pattern.compile( ProjectConst.LOGSELECTOR );
-  private static final Pattern fieldPatternDp              = Pattern.compile( ":" );
-  private long                 tickToCounter               = 0L;
-  private long                 timeToStopService           = 0L;
-  private NotificationManager  nm;
-  static int                   NOTIFICATION                = 815;
-  private final Timer          timerThread                 = new Timer();
-  private long                 timerCounter                = 0;
-  private int                  timerTickCounter            = 0;
-  private int                  writeWatchDog               = -1;
-  private final int            incrementby                 = 1;
-  private boolean              isRunning                   = false;
-  ArrayList<Handler>           mClientHandler              = new ArrayList<Handler>();                   // Messagehandler für Clienten
-  int                          mValue                      = 0;                                          // Holds last value set by a client.
-  private final IBinder        mBinder                     = new LocalBinder();
-  private BluetoothAdapter     mAdapter                    = null;
-  private static ConnectThread mConnectThread              = null;
-  private static ReaderThread  mReaderThread               = null;
-  private static WriterThread  mWriterThread               = null;
-  private static volatile int  mConnectionState;
-  private volatile boolean     isLogentryMode              = false;
-  private String               connectedDevice             = null;
-  private String               connectedDeviceSerialNumber = null;
-
-  /**
-   * 
-   * Der Binder sorgt später für die Übergabe der referenz zum Service (Lokaler Service!)
-   * 
-   * Project: BtServiceVersuch Package: de.dmarcini.android.btservive
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 21.02.2013
-   */
-  public class LocalBinder extends Binder
-  {
-    public BlueThoothComService getService()
-    {
-      return BlueThoothComService.this;
-    }
-
-    public void unregisterServiceHandler( Handler mHandler )
-    {
-      // if( mIsBusy ) return( null );
-      Log.i( TAG, "Client unregister" );
-      mClientHandler.remove( mHandler );
-      if( mClientHandler.isEmpty() )
-      {
-        Log.i( TAG, "last Client ist removed..." );
-        isRunning = false;
-        // zeit bis zum Ende des Service setzen
-        timeToStopService = System.currentTimeMillis() + msToEndService;
-      }
-    }
-
-    public void registerServiceHandler( Handler mHandler )
-    {
-      Log.i( TAG, "Client register" );
-      mClientHandler.add( mHandler );
-      isRunning = true;
-      timeToStopService = 0L;
-      // gibt der Activity gleich den Status
-      setState( mConnectionState );
-    }
-  }
-
   /**
    * 
    * Der Thread zum Verbinden eines BT Devices
@@ -215,155 +147,45 @@ public class BlueThoothComService extends Service
     }
   }
 
-  private class WriterThread extends Thread
+  /**
+   * 
+   * Der Binder sorgt später für die Übergabe der referenz zum Service (Lokaler Service!)
+   * 
+   * Project: BtServiceVersuch Package: de.dmarcini.android.btservive
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 21.02.2013
+   */
+  public class LocalBinder extends Binder
   {
-    private final String            TAGWRITER    = WriterThread.class.getSimpleName();
-    private final BluetoothSocket   mmSocket;
-    private final OutputStream      mmOutStream;
-    private Boolean                 cancelThread = false;
-    private final ArrayList<String> writeList    = new ArrayList<String>();
-
-    /**
-     * 
-     * Konstruktor des Writer Thread
-     * 
-     * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
-     * 
-     * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-     * 
-     *         Stand: 28.05.2013
-     * @param socket
-     */
-    public WriterThread( BluetoothSocket socket )
+    public BlueThoothComService getService()
     {
-      if( BuildConfig.DEBUG ) Log.d( TAGWRITER, "create WriterThread" );
-      mmSocket = socket;
-      OutputStream tmpOut = null;
-      cancelThread = false;
-      // die BluetoothSocket input and output streams erstellen
-      try
-      {
-        tmpOut = socket.getOutputStream();
-      }
-      catch( IOException e )
-      {
-        Log.e( TAGWRITER, "temp sockets not created", e );
-      }
-      mmOutStream = tmpOut;
+      return BlueThoothComService.this;
     }
 
-    /**
-     * 
-     * Thread abbrechen
-     * 
-     * Project: SubmatixBluethoothLogger Package: de.dmarcini.submatix.logger.service
-     * 
-     * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-     * 
-     *         Stand: 28.05.2013
-     */
-    public void cancel()
+    public void registerServiceHandler( Handler mHandler )
     {
-      try
-      {
-        cancelThread = true;
-        if( mmSocket != null && mmSocket.isConnected() )
-        {
-          mmSocket.close();
-        }
-      }
-      catch( IOException ex )
-      {
-        Log.e( TAGWRITER, "close() of connect socket failed", ex );
-      }
+      Log.i( TAG, "Client register" );
+      mClientHandler.add( mHandler );
+      isRunning = true;
+      timeToStopService = 0L;
+      // gibt der Activity gleich den Status
+      setState( mConnectionState );
     }
 
-    /**
-     * Hier läuft der Thread
-     */
-    @Override
-    public void run()
+    public void unregisterServiceHandler( Handler mHandler )
     {
-      BtServiceMessage msg;
-      //
-      Log.i( TAGWRITER, "BEGIN WriterThread" );
-      // den Inputstram solange schreiben, wie die Verbindung besteht
-      writeList.clear();
-      cancelThread = false;
-      while( !cancelThread )
+      // if( mIsBusy ) return( null );
+      Log.i( TAG, "Client unregister" );
+      mClientHandler.remove( mHandler );
+      if( mClientHandler.isEmpty() )
       {
-        // syncronisiete Methode aufrufen, damit wait und notify machbar sind
-        synchronized( this )
-        {
-          if( writeList.isEmpty() )
-          {
-            try
-            {
-              Thread.yield();
-              wait( 10 );
-            }
-            catch( InterruptedException ex )
-            {}
-          }
-          else
-          {
-            // ich gebe einen Eintrag aus...
-            try
-            {
-              // Watchdog für Schreiben aktivieren
-              writeWatchDog = ProjectConst.WATCHDOG_FOR_WRITEOPS;
-              // also den String Eintrag in den Outstream...
-              mmOutStream.write( ( writeList.remove( 0 ) ).getBytes() );
-              // kommt das an, den Watchog wieder AUS
-              writeWatchDog = -1;
-              // zwischen den Kommandos etwas warten, der SPX braucht etwas bis er wieder zuhört...
-              // das gibt dem Swing-Thread etwas Gelegenheit zum Zeichnen oder irgendwas anderem
-              for( int factor = 0; factor < 5; factor++ )
-              {
-                Thread.yield();
-                Thread.sleep( 80 );
-              }
-            }
-            catch( IndexOutOfBoundsException ex )
-            {
-              Log.e( TAG, "WriterThread IndexOutOfBoundsException: <" + ex.getLocalizedMessage() + ">" );
-              msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
-              sendMessageToApp( msg );
-              cancelThread = true;
-              return;
-            }
-            catch( IOException ex )
-            {
-              Log.e( TAG, "WriterThread Exception: <" + ex.getLocalizedMessage() + ">" );
-              msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
-              sendMessageToApp( msg );
-              cancelThread = true;
-              return;
-            }
-            catch( InterruptedException ex )
-            {}
-          }
-        }
+        Log.i( TAG, "last Client ist removed..." );
+        isRunning = false;
+        // zeit bis zum Ende des Service setzen
+        timeToStopService = System.currentTimeMillis() + msToEndService;
       }
-      Log.i( TAGWRITER, "END WriterThread" );
-      connectionLost();
-    }
-
-    /**
-     * 
-     * Schreibe Daten zum SPX
-     * 
-     * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
-     * 
-     * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-     * 
-     *         Stand: 28.05.2013
-     * @param msg
-     */
-    public synchronized void writeToDevice( String msg )
-    {
-      writeList.add( msg );
-      notifyAll();
     }
   }
 
@@ -540,15 +362,32 @@ public class BlueThoothComService extends Service
           sendMessageToApp( msg );
           if( BuildConfig.DEBUG ) Log.d( TAGREADER, "SPX is Alive, Acku value recived." );
           break;
-        // case ProjectConst.SPX_APPLICATION_ID:
-        // // Sende Nachricht Firmwareversion empfangen!
-        // if( aListener != null )
-        // {
-        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_FWVERSION_READ, new String( fields[1] ), System.currentTimeMillis() / 100, 0 );
-        // aListener.actionPerformed( ex );
-        // }
-        // if( log ) LOGGER.fine( "Application ID (Firmware Version)  recived! <" + fields[1] + ">" );
-        // break;
+        case ProjectConst.SPX_APPLICATION_ID:
+          // Sende Nachricht Firmwareversion empfangen!
+          //
+          // Mach erst mal die Bestimmung, ob ich die unterstützte
+          //
+          if( fields[1].startsWith( ProjectConst.FIRMWARE_2_6_7_7V ) )
+          {
+            firmware = ProjectConst.FW_2_6_7_7V;
+          }
+          else if( fields[1].startsWith( ProjectConst.FIRMWARE_2_7H ) )
+          {
+            firmware = ProjectConst.FW_2_7H;
+          }
+          else if( fields[1].startsWith( ProjectConst.FIRMWARE_2_7V ) )
+          {
+            firmware = ProjectConst.FW_2_7V;
+          }
+          else
+          {
+            firmware = ProjectConst.FW_NOT_SET;
+            Log.e( TAGREADER, "firmwareversion not supportet (" + fields[1] + ")" );
+          }
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_FWVERSION_READ, new String( fields[1] ) );
+          sendMessageToApp( msg );
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "Application ID (Firmware Version)  recived! <" + fields[1] + ">" );
+          break;
         case ProjectConst.SPX_SERIAL_NUMBER:
           // Sende Nachricht Seriennummer empfangen!
           connectedDeviceSerialNumber = new String( fields[1] );
@@ -563,10 +402,12 @@ public class BlueThoothComService extends Service
         // // TODO: readDecoPrefs();
         // //
         // break;
-        // case ProjectConst.SPX_SET_SETUP_SETPOINT:
-        // // Quittung für Setzen der Auto-Setpointeinstelungen
-        // if( log ) LOGGER.fine( "SPX_SET_SETUP_SETPOINT Acknoweledge recived <" + readMessage + ">" );
-        // break;
+        case ProjectConst.SPX_SET_SETUP_SETPOINT:
+          // Quittung für Setzen der Auto-Setpointeinstelungen
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_SETPOINT_ACK );
+          sendMessageToApp( msg );
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "SPX_SET_SETUP_SETPOINT Acknoweledge recived " );
+          break;
         // case ProjectConst.SPX_SET_SETUP_DISPLAYSETTINGS:
         // // Quittung für Setzen der Displayeinstellungen
         // if( log ) LOGGER.fine( "SET_SETUP_DISPLAYSETTINGS Acknoweledge recived <" + readMessage + ">" );
@@ -593,18 +434,16 @@ public class BlueThoothComService extends Service
         // }
         // if( log ) LOGGER.fine( "DECO_EINST recived <" + readMessage + ">" );
         // break;
-        // case ProjectConst.SPX_GET_SETUP_SETPOINT:
-        // // Kommando GET_SETUP_SETPOINT liefert
-        // // ~35:A:P
-        // // A = Setpoint bei (0,1,2,3) = (0,5,15,20)
-        // // P = Partialdruck (0..4) 1.0 .. 1.4
-        // if( aListener != null )
-        // {
-        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_SETPOINT_READ, new String( readMessage ), System.currentTimeMillis() / 100, 0 );
-        // aListener.actionPerformed( ex );
-        // }
-        // if( log ) LOGGER.fine( "GET_SETUP_SETPOINT recived <" + readMessage + ">" );
-        // break;
+        case ProjectConst.SPX_GET_SETUP_SETPOINT:
+          // Kommando GET_SETUP_SETPOINT liefert
+          // ~35:A:P
+          // A = Setpoint bei (0,1,2,3) = (0,5,15,20)
+          // P = Partialdruck (0..4) 1.0 .. 1.4
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_SETPOINT_READ, new String[]
+          { fields[1], fields[2] } );
+          sendMessageToApp( msg );
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "Setpoint recived!" );
+          break;
         // case ProjectConst.SPX_GET_SETUP_DISPLAYSETTINGS:
         // // Kommando GET_SETUP_DISPLAYSETTINGS liefert
         // // ~36:D:A
@@ -705,15 +544,12 @@ public class BlueThoothComService extends Service
         // }
         // }
         // break;
-        // case ProjectConst.SPX_GET_DEVICE_OFF:
-        // // SPX meldet, er geht aus dem Sync-Mode
-        // if( aListener != null )
-        // {
-        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_SYCSTAT_OFF, new String( readMessage ), System.currentTimeMillis() / 100, 0 );
-        // aListener.actionPerformed( ex );
-        // }
-        // if( log ) LOGGER.fine( "SPX42 switch syncmode OFF! Connection will failure!" );
-        // break;
+        case ProjectConst.SPX_GET_DEVICE_OFF:
+          // SPX meldet, er geht aus dem Sync-Mode
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
+          sendMessageToApp( msg );
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "SPX42 switch syncmode OFF! Connection will failure!" );
+          break;
         // case ProjectConst.SPX_LICENSE_STATE:
         // // LICENSE_STATE gefunden
         // if( aListener != null )
@@ -856,44 +692,342 @@ public class BlueThoothComService extends Service
     }
   }
 
-  /**
-   * Wird immer beim Binden eines Clienten aufgerufen
-   */
-  @Override
-  public IBinder onBind( Intent intent )
+  private class WriterThread extends Thread
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onBind..." );
-    showNotification( getText( R.string.notify_service ), getText( R.string.notify_service_connected ) );
-    return mBinder;
-  }
+    private final String            TAGWRITER    = WriterThread.class.getSimpleName();
+    private final BluetoothSocket   mmSocket;
+    private final OutputStream      mmOutStream;
+    private Boolean                 cancelThread = false;
+    private final ArrayList<String> writeList    = new ArrayList<String>();
 
-  @Override
-  public boolean onUnbind( Intent intent )
-  {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onUnbind..." );
-    showNotification( getText( R.string.notify_service ), getText( R.string.notify_service_disconnected ) );
-    return( super.onUnbind( intent ) );
-  }
-
-  @Override
-  public void onCreate()
-  {
-    super.onCreate();
-    timeToStopService = 0L;
-    nm = ( NotificationManager )getSystemService( NOTIFICATION_SERVICE );
-    Log.i( TAG, "Service Started." );
-    isRunning = true;
-    // der Überwachungsthread läuft solange der Service aktiv ist aller 1 Sekunde
-    timerThread.scheduleAtFixedRate( new TimerTask() {
-      @Override
-      public void run()
+    /**
+     * 
+     * Konstruktor des Writer Thread
+     * 
+     * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+     * 
+     * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+     * 
+     *         Stand: 28.05.2013
+     * @param socket
+     */
+    public WriterThread( BluetoothSocket socket )
+    {
+      if( BuildConfig.DEBUG ) Log.d( TAGWRITER, "create WriterThread" );
+      mmSocket = socket;
+      OutputStream tmpOut = null;
+      cancelThread = false;
+      // die BluetoothSocket input and output streams erstellen
+      try
       {
-        onTimerTick();
+        tmpOut = socket.getOutputStream();
       }
-    }, 100, 1000L );
-    // Service ist Erzeugt!
-    showNotification( getText( R.string.notify_service ), getText( R.string.notify_service_started ) );
-    mAdapter = BluetoothAdapter.getDefaultAdapter();
+      catch( IOException e )
+      {
+        Log.e( TAGWRITER, "temp sockets not created", e );
+      }
+      mmOutStream = tmpOut;
+    }
+
+    /**
+     * 
+     * Thread abbrechen
+     * 
+     * Project: SubmatixBluethoothLogger Package: de.dmarcini.submatix.logger.service
+     * 
+     * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+     * 
+     *         Stand: 28.05.2013
+     */
+    public void cancel()
+    {
+      try
+      {
+        cancelThread = true;
+        if( mmSocket != null && mmSocket.isConnected() )
+        {
+          mmSocket.close();
+        }
+      }
+      catch( IOException ex )
+      {
+        Log.e( TAGWRITER, "close() of connect socket failed", ex );
+      }
+    }
+
+    /**
+     * Hier läuft der Thread
+     */
+    @Override
+    public void run()
+    {
+      BtServiceMessage msg;
+      //
+      Log.i( TAGWRITER, "BEGIN WriterThread" );
+      // den Inputstram solange schreiben, wie die Verbindung besteht
+      writeList.clear();
+      cancelThread = false;
+      while( !cancelThread )
+      {
+        // syncronisiete Methode aufrufen, damit wait und notify machbar sind
+        synchronized( this )
+        {
+          if( writeList.isEmpty() )
+          {
+            try
+            {
+              Thread.yield();
+              wait( 10 );
+            }
+            catch( InterruptedException ex )
+            {}
+          }
+          else
+          {
+            // ich gebe einen Eintrag aus...
+            try
+            {
+              // Watchdog für Schreiben aktivieren
+              writeWatchDog = ProjectConst.WATCHDOG_FOR_WRITEOPS;
+              // also den String Eintrag in den Outstream...
+              mmOutStream.write( ( writeList.remove( 0 ) ).getBytes() );
+              // kommt das an, den Watchog wieder AUS
+              writeWatchDog = -1;
+              // zwischen den Kommandos etwas warten, der SPX braucht etwas bis er wieder zuhört...
+              // das gibt dem Swing-Thread etwas Gelegenheit zum Zeichnen oder irgendwas anderem
+              for( int factor = 0; factor < 5; factor++ )
+              {
+                Thread.yield();
+                Thread.sleep( 80 );
+              }
+            }
+            catch( IndexOutOfBoundsException ex )
+            {
+              Log.e( TAG, "WriterThread IndexOutOfBoundsException: <" + ex.getLocalizedMessage() + ">" );
+              msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
+              sendMessageToApp( msg );
+              cancelThread = true;
+              return;
+            }
+            catch( IOException ex )
+            {
+              Log.e( TAG, "WriterThread Exception: <" + ex.getLocalizedMessage() + ">" );
+              msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
+              sendMessageToApp( msg );
+              cancelThread = true;
+              return;
+            }
+            catch( InterruptedException ex )
+            {}
+          }
+        }
+      }
+      Log.i( TAGWRITER, "END WriterThread" );
+      connectionLost();
+    }
+
+    /**
+     * 
+     * Schreibe Daten zum SPX
+     * 
+     * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+     * 
+     * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+     * 
+     *         Stand: 28.05.2013
+     * @param msg
+     */
+    public synchronized void writeToDevice( String msg )
+    {
+      writeList.add( msg );
+      notifyAll();
+    }
+  }
+
+  private static final String  TAG                         = BlueThoothComService.class.getSimpleName();
+  private static final long    msToEndService              = 6000L;
+  private static final Pattern fieldPattern0x09            = Pattern.compile( ProjectConst.LOGSELECTOR );
+  private static final Pattern fieldPatternDp              = Pattern.compile( ":" );
+  private long                 tickToCounter               = 0L;
+  private long                 timeToStopService           = 0L;
+  private NotificationManager  nm;
+  static int                   NOTIFICATION                = 815;
+  private final Timer          timerThread                 = new Timer();
+  private long                 timerCounter                = 0;
+  private int                  timerTickCounter            = 0;
+  private int                  writeWatchDog               = -1;
+  private final int            incrementby                 = 1;
+  private boolean              isRunning                   = false;
+  ArrayList<Handler>           mClientHandler              = new ArrayList<Handler>();                   // Messagehandler für Clienten
+  int                          mValue                      = 0;                                          // Holds last value set by a client.
+  private final IBinder        mBinder                     = new LocalBinder();
+  private BluetoothAdapter     mAdapter                    = null;
+  private static ConnectThread mConnectThread              = null;
+  private static ReaderThread  mReaderThread               = null;
+  private static WriterThread  mWriterThread               = null;
+  private static volatile int  mConnectionState;
+  private volatile boolean     isLogentryMode              = false;
+  private String               connectedDevice             = null;
+  private String               connectedDeviceSerialNumber = null;
+  private int                  firmware                    = ProjectConst.FW_NOT_SET;
+
+  /**
+   * 
+   * Lese die Konfiguration vom SPX42
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 02.06.2013
+   */
+  public void askForConfigFromSPX42()
+  {
+    String kdoString;
+    kdoString = String.format( "%s~%x~%x~%x~%x~%x~%x~%x%s", ProjectConst.STX, ProjectConst.SPX_GET_SETUP_DEKO, ProjectConst.SPX_GET_SETUP_SETPOINT,
+            ProjectConst.SPX_GET_SETUP_DISPLAYSETTINGS, ProjectConst.SPX_GET_SETUP_UNITS, ProjectConst.SPX_GET_SETUP_INDIVIDUAL, ProjectConst.SPX_LICENSE_STATE,
+            ProjectConst.SPX_ALIVE, ProjectConst.ETX );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "readConfigFromSPX()...send <" + kdoString + ">" );
+    this.writeToDevice( kdoString );
+  }
+
+  /**
+   * 
+   * frag den SPX nach seiener Firmware
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 02.06.2013
+   * 
+   */
+  public void askForFirmwareVersion()
+  {
+    this.writeSPXMsgToDevice( String.format( "%d", ProjectConst.SPX_APPLICATION_ID ) );
+  }
+
+  /**
+   * 
+   * Frage den SPX nach der Seriennummer
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 28.05.2013
+   */
+  public void askForSerialNumber()
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "askForSerialNumber..." );
+    this.writeSPXMsgToDevice( String.format( "%d", ProjectConst.SPX_SERIAL_NUMBER ) );
+  }
+
+  /**
+   * 
+   * Frag den SPX, ob er noch da ist
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 28.05.2013
+   */
+  public void askForSPXAlive()
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "askForSPXAlive..." );
+    this.writeSPXMsgToDevice( String.format( "%d", ProjectConst.SPX_ALIVE ) );
+  }
+
+  /**
+   * 
+   * Verbinde mit einem Gerät
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 02.03.2013
+   * @param addr
+   */
+  public synchronized void connect( String addr )
+  {
+    BluetoothDevice device = null;
+    Log.v( TAG, "connect to: " + addr );
+    connectedDevice = null;
+    connectedDeviceSerialNumber = null;
+    // connectedDeviceAlias = null;
+    if( mAdapter == null )
+    {
+      Log.e( TAG, "None bt-adapter found!" );
+      return;
+    }
+    device = mAdapter.getRemoteDevice( addr );
+    // Thread stoppen, bevor eine Verbindung aufgebaut werden kann
+    if( mConnectionState == ProjectConst.CONN_STATE_CONNECTING )
+    {
+      if( mConnectThread != null )
+      {
+        mConnectThread.cancel();
+        mConnectThread = null;
+      }
+    }
+    // Thread stoppen, bevor eine Verbindung aufgebaut werden kann
+    if( mReaderThread != null )
+    {
+      mReaderThread.cancel();
+      mReaderThread = null;
+    }
+    // Start the thread to connect with the given device
+    mConnectThread = new ConnectThread( device );
+    connectedDevice = addr;
+    mConnectThread.start();
+    setState( ProjectConst.CONN_STATE_CONNECTING );
+  }
+
+  /**
+   * 
+   * Wenn die Verbindung nicht geklappt hat
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 04.03.2013
+   */
+  private void connectionFailed()
+  {
+    connectedDevice = null;
+    connectedDeviceSerialNumber = null;
+    // connectedDeviceAlias = null;
+    setState( ProjectConst.CONN_STATE_NONE );
+    BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
+    // Melde des Status an die Clienten
+    sendMessageToApp( msg );
+    BtServiceMessage msg1 = new BtServiceMessage( ProjectConst.MESSAGE_CONNECTERROR );
+    // Melde des Status an die Clienten
+    sendMessageToApp( msg1 );
+  }
+
+  /**
+   * 
+   * Wenn die Verbindung verloren geht
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 13.03.2013
+   */
+  private void connectionLost()
+  {
+    connectedDevice = null;
+    connectedDeviceSerialNumber = null;
+    // connectedDeviceAlias = null;
+    setState( ProjectConst.CONN_STATE_NONE );
+    BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
+    // Melde des Status an die Clienten
+    sendMessageToApp( msg );
   }
 
   /**
@@ -948,30 +1082,136 @@ public class BlueThoothComService extends Service
 
   /**
    * 
-   * Zeigt Notification in der Statuszeile an!
+   * Verbindung zum Gerät trennen
    * 
-   * Project: BtServiceVersuch Package: de.dmarcini.android.btservive
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 21.02.2013
+   *         Stand: 02.03.2013
    */
-  private void showNotification( CharSequence head, CharSequence msg )
+  public void disconnect()
   {
-    // Icon Titel und Inhalt anzeigen, Intent beim Anckickcne setzen
-    PendingIntent contentIntent = PendingIntent.getActivity( getApplicationContext(), 0, new Intent( getApplicationContext(), areaListActivity.class ),
-            PendingIntent.FLAG_UPDATE_CURRENT );
-    //@formatter:off
-    Notification notification = new Notification.Builder( getBaseContext() )
-                                  .setContentTitle( head )
-                                  .setContentText( msg )
-                                  .setSmallIcon( R.drawable.bluetooth_icon_color )
-                                  .setTicker( getText( R.string.notify_service_ticker ) )
-                                  .setContentIntent(contentIntent)
-                                  .getNotification();
-    //@formatter:on
-    // Send the notification.
-    nm.notify( NOTIFICATION, notification );
+    Log.v( TAG, "stopping bt-connection" );
+    if( mConnectThread != null )
+    {
+      mConnectThread.cancel();
+      mConnectThread = null;
+    }
+    if( mReaderThread != null )
+    {
+      mReaderThread.cancel();
+      mReaderThread = null;
+    }
+    if( mWriterThread != null )
+    {
+      mWriterThread.cancel();
+      mWriterThread = null;
+    }
+    connectedDevice = null;
+    // connectedDeviceAlias = null;
+    setState( ProjectConst.CONN_STATE_NONE );
+  }
+
+  /**
+   * 
+   * Mit welchem Gerät (Addrese) bin ich verbunden?
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 28.05.2013
+   * @return status
+   */
+  public String getConnectedDevice()
+  {
+    if( mConnectionState == ProjectConst.CONN_STATE_CONNECTED )
+    {
+      if( connectedDevice != null )
+      {
+        return( connectedDevice );
+      }
+    }
+    return( null );
+  }
+
+  /**
+   * 
+   * Gib die Seriennummer des Gerätes zurück (wenn vorhanden)
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 02.06.2013
+   * @return
+   */
+  public synchronized String getConnectedDeviceSerialNumber()
+  {
+    return( connectedDeviceSerialNumber );
+  }
+
+  /**
+   * 
+   * Welcher Verbindunsstatus hat die BT Schnittstelle?
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 04.03.2013
+   * @return verbindungsstatus
+   */
+  public int getConnectionState()
+  {
+    return( mConnectionState );
+  }
+
+  /**
+   * Wird immer beim Binden eines Clienten aufgerufen
+   */
+  @Override
+  public IBinder onBind( Intent intent )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onBind..." );
+    showNotification( getText( R.string.notify_service ), getText( R.string.notify_service_connected ) );
+    return mBinder;
+  }
+
+  @Override
+  public void onCreate()
+  {
+    super.onCreate();
+    timeToStopService = 0L;
+    nm = ( NotificationManager )getSystemService( NOTIFICATION_SERVICE );
+    Log.i( TAG, "Service Started." );
+    isRunning = true;
+    // der Überwachungsthread läuft solange der Service aktiv ist aller 1 Sekunde
+    timerThread.scheduleAtFixedRate( new TimerTask() {
+      @Override
+      public void run()
+      {
+        onTimerTick();
+      }
+    }, 100, 1000L );
+    // Service ist Erzeugt!
+    showNotification( getText( R.string.notify_service ), getText( R.string.notify_service_started ) );
+    mAdapter = BluetoothAdapter.getDefaultAdapter();
+  }
+
+  @Override
+  public void onDestroy()
+  {
+    super.onDestroy();
+    if( timerThread != null )
+    {
+      timerThread.cancel();
+    }
+    timerTickCounter = 0;
+    nm.cancel( NOTIFICATION ); // Cancel the persistent notification.
+    Log.i( TAG, "Service Stopped." );
+    isRunning = false;
   }
 
   @Override
@@ -1044,6 +1284,14 @@ public class BlueThoothComService extends Service
     }
   }
 
+  @Override
+  public boolean onUnbind( Intent intent )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onUnbind..." );
+    showNotification( getText( R.string.notify_service ), getText( R.string.notify_service_disconnected ) );
+    return( super.onUnbind( intent ) );
+  }
+
   /**
    * 
    * Eine Nachricht (entkoppelt) zu den Empfängern schicken
@@ -1073,41 +1321,6 @@ public class BlueThoothComService extends Service
         Log.e( TAG, "error while sendMessageToApp: " + ex.getLocalizedMessage() );
       }
     }
-  }
-
-  @Override
-  public void onDestroy()
-  {
-    super.onDestroy();
-    if( timerThread != null )
-    {
-      timerThread.cancel();
-    }
-    timerTickCounter = 0;
-    nm.cancel( NOTIFICATION ); // Cancel the persistent notification.
-    Log.i( TAG, "Service Stopped." );
-    isRunning = false;
-  }
-
-  /**
-   * 
-   * Wenn die Verbindung verloren geht
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 13.03.2013
-   */
-  private void connectionLost()
-  {
-    connectedDevice = null;
-    connectedDeviceSerialNumber = null;
-    // connectedDeviceAlias = null;
-    setState( ProjectConst.CONN_STATE_NONE );
-    BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
-    // Melde des Status an die Clienten
-    sendMessageToApp( msg );
   }
 
   /**
@@ -1146,144 +1359,85 @@ public class BlueThoothComService extends Service
 
   /**
    * 
-   * Wenn die Verbindung nicht geklappt hat
+   * Zeigt Notification in der Statuszeile an!
    * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * Project: BtServiceVersuch Package: de.dmarcini.android.btservive
    * 
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 04.03.2013
+   *         Stand: 21.02.2013
    */
-  private void connectionFailed()
+  private void showNotification( CharSequence head, CharSequence msg )
   {
-    connectedDevice = null;
-    connectedDeviceSerialNumber = null;
-    // connectedDeviceAlias = null;
-    setState( ProjectConst.CONN_STATE_NONE );
-    BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
-    // Melde des Status an die Clienten
-    sendMessageToApp( msg );
-    BtServiceMessage msg1 = new BtServiceMessage( ProjectConst.MESSAGE_CONNECTERROR );
-    // Melde des Status an die Clienten
-    sendMessageToApp( msg1 );
+    // Icon Titel und Inhalt anzeigen, Intent beim Anckickcne setzen
+    PendingIntent contentIntent = PendingIntent.getActivity( getApplicationContext(), 0, new Intent( getApplicationContext(), areaListActivity.class ),
+            PendingIntent.FLAG_UPDATE_CURRENT );
+    //@formatter:off
+    Notification notification = new Notification.Builder( getBaseContext() )
+                                  .setContentTitle( head )
+                                  .setContentText( msg )
+                                  .setSmallIcon( R.drawable.bluetooth_icon_color )
+                                  .setTicker( getText( R.string.notify_service_ticker ) )
+                                  .setContentIntent(contentIntent)
+                                  .getNotification();
+    //@formatter:on
+    // Send the notification.
+    nm.notify( NOTIFICATION, notification );
   }
 
   /**
    * 
-   * Verbinde mit einem Gerät
+   * Schreibe in den SPX Autosetpoint und Setpoint als Indexwerte 0..3 oder 0..4
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 02.03.2013
-   * @param addr
+   *         Stand: 02.06.2013
+   * @param auto
+   * @param pressure
    */
-  public synchronized void connect( String addr )
+  public void writeAutoSetpoint( int auto, int pressure )
   {
-    BluetoothDevice device = null;
-    Log.v( TAG, "connect to: " + addr );
-    connectedDevice = null;
-    connectedDeviceSerialNumber = null;
-    // connectedDeviceAlias = null;
-    if( mAdapter == null )
+    String kdoString;
+    if( BuildConfig.DEBUG ) Log.d( TAG, "write setpoint propertys" );
+    switch ( firmware )
     {
-      Log.e( TAG, "None bt-adapter found!" );
-      return;
+      case ProjectConst.FW_2_6_7_7V:
+        //
+        // Kommando SPX_SET_SETUP_SETPOINT
+        // ~30:P:A
+        // P = Partialdruck (0..4) 1.0 .. 1.4
+        // A = Setpoint bei (0,1,2,3,4) = (0,5,15,20,25)
+        kdoString = String.format( "~%x:%x:%x", ProjectConst.SPX_SET_SETUP_SETPOINT, pressure, auto );
+        break;
+      default:
+      case ProjectConst.FW_2_7V:
+      case ProjectConst.FW_2_7H:
+        // ~30:A:P
+        // A = Setpoint bei (0,1,2,3,4) = (0,5,15,20,25)
+        // P = Partialdruck (0..4) 1.0 .. 1.4
+        kdoString = String.format( "~%x:%x:%x", ProjectConst.SPX_SET_SETUP_SETPOINT, auto, pressure );
+        break;
     }
-    device = mAdapter.getRemoteDevice( addr );
-    // Thread stoppen, bevor eine Verbindung aufgebaut werden kann
-    if( mConnectionState == ProjectConst.CONN_STATE_CONNECTING )
-    {
-      if( mConnectThread != null )
-      {
-        mConnectThread.cancel();
-        mConnectThread = null;
-      }
-    }
-    // Thread stoppen, bevor eine Verbindung aufgebaut werden kann
-    if( mReaderThread != null )
-    {
-      mReaderThread.cancel();
-      mReaderThread = null;
-    }
-    // Start the thread to connect with the given device
-    mConnectThread = new ConnectThread( device );
-    connectedDevice = addr;
-    mConnectThread.start();
-    setState( ProjectConst.CONN_STATE_CONNECTING );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "sending <" + kdoString + ">" );
+    this.writeSPXMsgToDevice( kdoString );
   }
 
   /**
    * 
-   * Verbindung zum Gerät trennen
+   * Screibe Kommando zum SPX, füge protokoll Start/Ende an
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 02.03.2013
+   *         Stand: 02.06.2013
+   * @param msg
    */
-  public void disconnect()
+  public synchronized void writeSPXMsgToDevice( String msg )
   {
-    Log.v( TAG, "stopping bt-connection" );
-    if( mConnectThread != null )
-    {
-      mConnectThread.cancel();
-      mConnectThread = null;
-    }
-    if( mReaderThread != null )
-    {
-      mReaderThread.cancel();
-      mReaderThread = null;
-    }
-    if( mWriterThread != null )
-    {
-      mWriterThread.cancel();
-      mWriterThread = null;
-    }
-    connectedDevice = null;
-    // connectedDeviceAlias = null;
-    setState( ProjectConst.CONN_STATE_NONE );
-  }
-
-  /**
-   * 
-   * Welcher Verbindunsstatus hat die BT Schnittstelle?
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 04.03.2013
-   * @return verbindungsstatus
-   */
-  public int getConnectionState()
-  {
-    return( mConnectionState );
-  }
-
-  /**
-   * 
-   * Mit welchem Gerät (Addrese) bin ich verbunden?
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 28.05.2013
-   * @return status
-   */
-  public String getConnectedDevice()
-  {
-    if( mConnectionState == ProjectConst.CONN_STATE_CONNECTED )
-    {
-      if( connectedDevice != null )
-      {
-        return( connectedDevice );
-      }
-    }
-    return( null );
+    this.writeToDevice( ProjectConst.STX + msg + ProjectConst.ETX );
   }
 
   /**
@@ -1303,73 +1457,5 @@ public class BlueThoothComService extends Service
     {
       mWriterThread.writeToDevice( msg );
     }
-  }
-
-  /**
-   * 
-   * Frage den SPX nach der Seriennummer
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 28.05.2013
-   */
-  public void askForSerialNumber()
-  {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "askForSerialNumber..." );
-    this.writeToDevice( String.format( "%s~%x%s", ProjectConst.STX, ProjectConst.SPX_SERIAL_NUMBER, ProjectConst.ETX ) );
-  }
-
-  /**
-   * 
-   * Frag den SPX, ob er noch da ist
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 28.05.2013
-   */
-  public void askForSPXAlive()
-  {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "askForSPXAlive..." );
-    this.writeToDevice( String.format( "%s~%x%s", ProjectConst.STX, ProjectConst.SPX_ALIVE, ProjectConst.ETX ) );
-  }
-
-  /**
-   * 
-   * Gib die Seriennummer des Gerätes zurück (wenn vorhanden)
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 02.06.2013
-   * @return
-   */
-  public synchronized String getConnectedDeviceSerialNumber()
-  {
-    return( connectedDeviceSerialNumber );
-  }
-
-  /**
-   * 
-   * Lese die Konfiguration vom SPX42
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 02.06.2013
-   */
-  public void readConfigFromSPX42()
-  {
-    String kdoString;
-    kdoString = String.format( "%s~%x~%x~%x~%x~%x~%x~%x%s", ProjectConst.STX, ProjectConst.SPX_GET_SETUP_DEKO, ProjectConst.SPX_GET_SETUP_SETPOINT,
-            ProjectConst.SPX_GET_SETUP_DISPLAYSETTINGS, ProjectConst.SPX_GET_SETUP_UNITS, ProjectConst.SPX_GET_SETUP_INDIVIDUAL, ProjectConst.SPX_LICENSE_STATE,
-            ProjectConst.SPX_ALIVE, ProjectConst.ETX );
-    if( BuildConfig.DEBUG ) Log.d( TAG, "readConfigFromSPX()...send <" + kdoString + ">" );
-    this.writeToDevice( kdoString );
   }
 }

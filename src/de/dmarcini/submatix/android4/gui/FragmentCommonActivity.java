@@ -44,18 +44,32 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
  */
 public class FragmentCommonActivity extends Activity implements AreYouSureDialogFragment.NoticeDialogListener, IBtServiceListener
 {
-  private static final String       TAG             = FragmentCommonActivity.class.getSimpleName();
-  private static final String       SERVICENAME     = BlueThoothComService.class.getCanonicalName();
-  private static final String       PACKAGENAME     = "de.dmarcini.submatix.android4";
-  protected static boolean          mTwoPane        = false;
-  protected static boolean          isIndividual    = false;
-  protected static boolean          isTrimix        = true;
-  protected static BluetoothAdapter mBtAdapter      = null;
+  private static final String       TAG          = FragmentCommonActivity.class.getSimpleName();
+  private static final String       SERVICENAME  = BlueThoothComService.class.getCanonicalName();
+  private static final String       PACKAGENAME  = "de.dmarcini.submatix.android4";
+  protected static boolean          mTwoPane     = false;
+  protected static boolean          isIndividual = false;
+  protected static boolean          isTrimix     = true;
+  protected static BluetoothAdapter mBtAdapter   = null;
+
+  public static final int getAppStyle()
+  {
+    return( currentStyleId );
+  }
+
+
+
+
+
+
+
+
   private BlueThoothComService      mService        = null;
   private LocalBinder               binder          = null;
   private IBtServiceListener        serviceListener = null;
   private volatile boolean          mIsBound        = false;
   private static int                currentStyleId  = R.style.AppDarkTheme;
+  
   //
   //@formatter:off
   //
@@ -85,7 +99,6 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
       binder = null;
     }
   };
-  
   //
   // Ein Messagehandler, der vom Service kommende Messages bearbeitet
   //
@@ -172,6 +185,44 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
             Log.v( TAG, "no fragment found: ICONS auf DISCONNECTED... " );
           }
           break;
+          // ################################################################
+          // Seriennummer des ccomputers wurde gelesen
+          // ################################################################
+          case ProjectConst.MESSAGE_SERIAL_READ:
+            serviceListener.msgRecivedSerial( smsg );
+          break;          
+          // ################################################################
+          // SPX sendet "ALIVE" und Ackuspannung
+          // ################################################################
+          case ProjectConst.MESSAGE_SPXALIVE:
+            serviceListener.msgRecivedAlive( smsg );
+          break;          
+          // ################################################################
+          // SPX sendet Herstellerkennung
+          // ################################################################
+          case ProjectConst.MESSAGE_MANUFACTURER_READ:
+            serviceListener.msgReciveManufacturer( smsg );
+          break;          
+          // ################################################################
+          // SPX sendet Firmwareversion
+          // ################################################################
+          case ProjectConst.MESSAGE_FWVERSION_READ:
+            serviceListener.msgReciveFirmwareversion( smsg );
+          break;          
+          // ################################################################
+          // SPX sendet Setpoint
+          // ################################################################
+          case ProjectConst.MESSAGE_SETPOINT_READ:
+            serviceListener.msgReciveAutosetpoint( smsg );
+          break;          
+          // ################################################################
+          // SPX Setpoint setzen bestätigt
+          // ################################################################
+          case ProjectConst.MESSAGE_SETPOINT_ACK:
+            serviceListener.msgReciveAutosetpointAck( smsg );
+          break;          
+          
+          
 
           // ################################################################
           // Sonst....
@@ -181,6 +232,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
       }
     }
   };
+
   //
   //@formatter:on
   //
@@ -199,6 +251,266 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
 
   /**
    * 
+   * Frage den SPX nach der Konfiguration
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 02.06.2013
+   */
+  public void askForConfigFromSPX42()
+  {
+    if( mService != null )
+    {
+      mService.askForConfigFromSPX42();
+    }
+  }
+
+  /**
+   * 
+   * Grad beim SPX nach der Firmwareversion
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 02.06.2013
+   */
+  public void askForFirmwareVersion()
+  {
+    if( mService != null )
+    {
+      mService.askForFirmwareVersion();
+    }
+  }
+
+  /**
+   * 
+   * Frage nach der Seriennummer
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 28.05.2013
+   */
+  public void askForSerialNumber()
+  {
+    if( mService != null )
+    {
+      mService.askForSerialNumber();
+    }
+  }
+
+  /**
+   * 
+   * Frage den SPX ob er am Leben ist und wie seine Ackuspannung ist
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 02.06.2013
+   */
+  public void askForSPXAlive()
+  {
+    if( mService != null )
+    {
+      mService.askForSPXAlive();
+    }
+  }
+
+  /**
+   * 
+   * Den Listener löschen, d.h. die Activity macht das wieder selber
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 24.02.2013
+   */
+  public void clearServiceListener()
+  {
+    serviceListener = this;
+  }
+
+  /**
+   * 
+   * Service binden, ggf starten
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 23.02.2013
+   */
+  private void doBindService()
+  {
+    //
+    // Service starten, wenn er nicht schon läuft
+    //
+    Log.v( TAG, "doBindService()..." );
+    final ActivityManager activityManager = ( ActivityManager )getApplicationContext().getSystemService( ACTIVITY_SERVICE );
+    final List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices( Integer.MAX_VALUE );
+    boolean isServiceFound = false;
+    //
+    for( int i = 0; i < services.size(); i++ )
+    {
+      // if( BuildConfig.DEBUG ) Log.d( TAG, "Service Nr." + i + ":" + services.get( i ).service + "<" + services.get( i ).service.getPackageName() + ">" );
+      if( ( services.get( i ).service.getPackageName() ).matches( PACKAGENAME ) )
+      {
+        // if( BuildConfig.DEBUG ) Log.d( TAG, "Service class name <" + services.get( i ).service.getClassName() + ">" );
+        if( SERVICENAME.equals( services.get( i ).service.getClassName() ) )
+        {
+          if( BuildConfig.DEBUG ) Log.d( TAG, "Service is running, need not start..." );
+          isServiceFound = true;
+        }
+      }
+    }
+    if( !isServiceFound )
+    {
+      if( BuildConfig.DEBUG ) Log.d( TAG, "Starting Service..." );
+      Intent service = new Intent( this, BlueThoothComService.class );
+      startService( service );
+    }
+    //
+    // binde Service
+    //
+    Log.i( TAG, "bind  BT service..." );
+    Intent intent = new Intent( this, BlueThoothComService.class );
+    bindService( intent, mConnection, Context.BIND_AUTO_CREATE );
+    mIsBound = true;
+  }
+
+  /**
+   * 
+   * Verbinde Blutethooth Gerät
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 04.03.2013
+   * @param device
+   */
+  public void doConnectBtDevice( String device )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "recived do connect device <%s>", device ) );
+    if( mIsBound )
+    {
+      mService.connect( device );
+    }
+  }
+
+  /**
+   * 
+   * Trenne Bluethooth Gerät
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 04.03.2013
+   */
+  public void doDisconnectBtDevice()
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "recived do disconnect device " );
+    if( mIsBound )
+    {
+      mService.disconnect();
+    }
+  }
+
+  /**
+   * 
+   * Service unbinden
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 23.02.2013
+   */
+  private void doUnbindService()
+  {
+    if( mIsBound )
+    {
+      // If we have received the service, and hence registered with it, then now is the time to unregister.
+      if( mService != null )
+      {
+        Log.v( TAG, "doUnbindService..." );
+        if( mService != null )
+        {
+          if( mService != null && binder != null )
+          {
+            if( BuildConfig.DEBUG ) Log.d( TAG, "doUnbindService...unregister Handler..." );
+            binder.unregisterServiceHandler( mHandler );
+          }
+          unbindService( mConnection );
+          mService = null;
+          binder = null;
+        }
+        mIsBound = false;
+        Log.v( TAG, "doUnbindService...OK" );
+      }
+    }
+  }
+
+  @Override
+  public void finishFromChild( Activity child )
+  {
+    Log.i( TAG, "child process called finish()..." );
+    //
+    // wenn eine Clientactivity mit finish() beendet
+    // wurde, ist hier auch schluss
+    //
+    finish();
+  }
+
+  /**
+   * 
+   * Mit welchem Gerät (Addr) bin ich verbunden?
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 28.05.2013
+   * @return MAC-Addr des Gerätes
+   */
+  public String getConnectedDevice()
+  {
+    if( mService != null )
+    {
+      return( mService.getConnectedDevice() );
+    }
+    return( null );
+  }
+
+  /**
+   * 
+   * Verbindungsstatus erfragen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 13.03.2013
+   * @return
+   */
+  public int getConnectionStatus()
+  {
+    if( mService != null )
+    {
+      return( mService.getConnectionState() );
+    }
+    return( ProjectConst.CONN_STATE_NONE );
+  }
+
+  /**
+   * 
    * Ist die Activity mit zwei Anzeigeflächen? (Tablett)
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
@@ -213,21 +525,108 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     return( mTwoPane );
   }
 
+  /**
+   * 
+   * Das Gerät wurde verbunden
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 23.02.2013
+   * @param msg
+   */
   @Override
-  public void finishFromChild( Activity child )
+  public void msgConnected( BtServiceMessage msg )
   {
-    Log.i( TAG, "child process called finish()..." );
-    //
-    // wenn eine Clientactivity mit finish() beendet
-    // wurde, ist hier auch schluss
-    //
-    finish();
+    Log.v( TAG, "connected..." );
+    // in der überschriebenen Funktion befüllen
   }
 
   @Override
-  public void onDestroy()
+  public void msgConnectError( BtServiceMessage msg )
   {
-    super.onDestroy();
+    if( BuildConfig.DEBUG ) Log.d( TAG, "connection error (device not online?)" );
+  }
+
+  /**
+   * 
+   * Wenn das Gerät verbunden wird (beim Verbinden)
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 23.02.2013
+   * @param msg
+   */
+  @Override
+  public void msgConnecting( BtServiceMessage msg )
+  {
+    Log.v( TAG, "connecting..." );
+    // in der überschriebenen Funktion befüllen
+  }
+
+  /**
+   * 
+   * Das Gerät wurde getrennt
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 23.02.2013
+   * @param msg
+   * 
+   */
+  @Override
+  public void msgDisconnected( BtServiceMessage msg )
+  {
+    Log.v( TAG, "disconnected..." );
+    // in der überschriebenen Funktion befüllen
+  }
+
+  @Override
+  public void msgReciveAutosetpoint( BtServiceMessage msg )
+  {
+    String[] setP = ( String[] )msg.getContainer();
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Autosetpoint <" + setP[0] + "m>, partialpressure: <" + setP[1] + "> recived" );
+  }
+
+  @Override
+  public void msgReciveAutosetpointAck( BtServiceMessage msg )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Autosetpoint was succsesful set" );
+  }
+
+  @Override
+  public void msgRecivedAlive( BtServiceMessage msg )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Alive recived" );
+  }
+
+  @Override
+  public void msgRecivedSerial( BtServiceMessage msg )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "serial <" + ( String )msg.getContainer() + "> recived" );
+  }
+
+  @Override
+  public void msgRecivedTick( BtServiceMessage msg )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
+  }
+
+  @Override
+  public void msgReciveFirmwareversion( BtServiceMessage msg )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Firmwareversion <" + ( String )msg.getContainer() + "> recived" );
+  }
+
+  @Override
+  public void msgReciveManufacturer( BtServiceMessage msg )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Manufacturer <" + ( String )msg.getContainer() + "> recived" );
   }
 
   @Override
@@ -266,11 +665,6 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
       default:
         Log.w( TAG, "unknown Request code for activity result" );
     }
-  }
-
-  public static final int getAppStyle()
-  {
-    return( currentStyleId );
   }
 
   /**
@@ -332,126 +726,10 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     }
   }
 
-  /**
-   * 
-   * Service binden, ggf starten
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 23.02.2013
-   */
-  private void doBindService()
+  @Override
+  public void onDestroy()
   {
-    //
-    // Service starten, wenn er nicht schon läuft
-    //
-    Log.v( TAG, "doBindService()..." );
-    final ActivityManager activityManager = ( ActivityManager )getApplicationContext().getSystemService( ACTIVITY_SERVICE );
-    final List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices( Integer.MAX_VALUE );
-    boolean isServiceFound = false;
-    //
-    for( int i = 0; i < services.size(); i++ )
-    {
-      // if( BuildConfig.DEBUG ) Log.d( TAG, "Service Nr." + i + ":" + services.get( i ).service + "<" + services.get( i ).service.getPackageName() + ">" );
-      if( ( services.get( i ).service.getPackageName() ).matches( PACKAGENAME ) )
-      {
-        // if( BuildConfig.DEBUG ) Log.d( TAG, "Service class name <" + services.get( i ).service.getClassName() + ">" );
-        if( SERVICENAME.equals( services.get( i ).service.getClassName() ) )
-        {
-          if( BuildConfig.DEBUG ) Log.d( TAG, "Service is running, need not start..." );
-          isServiceFound = true;
-        }
-      }
-    }
-    if( !isServiceFound )
-    {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "Starting Service..." );
-      Intent service = new Intent( this, BlueThoothComService.class );
-      startService( service );
-    }
-    //
-    // binde Service
-    //
-    Log.i( TAG, "bind  BT service..." );
-    Intent intent = new Intent( this, BlueThoothComService.class );
-    bindService( intent, mConnection, Context.BIND_AUTO_CREATE );
-    mIsBound = true;
-  }
-
-  /**
-   * 
-   * Service unbinden
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 23.02.2013
-   */
-  private void doUnbindService()
-  {
-    if( mIsBound )
-    {
-      // If we have received the service, and hence registered with it, then now is the time to unregister.
-      if( mService != null )
-      {
-        Log.v( TAG, "doUnbindService..." );
-        if( mService != null )
-        {
-          if( mService != null && binder != null )
-          {
-            if( BuildConfig.DEBUG ) Log.d( TAG, "doUnbindService...unregister Handler..." );
-            binder.unregisterServiceHandler( mHandler );
-          }
-          unbindService( mConnection );
-          mService = null;
-          binder = null;
-        }
-        mIsBound = false;
-        Log.v( TAG, "doUnbindService...OK" );
-      }
-    }
-  }
-
-  /**
-   * 
-   * Verbinde Blutethooth Gerät
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 04.03.2013
-   * @param device
-   */
-  public void doConnectBtDevice( String device )
-  {
-    if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "recived do connect device <%s>", device ) );
-    if( mIsBound )
-    {
-      mService.connect( device );
-    }
-  }
-
-  /**
-   * 
-   * Trenne Bluethooth Gerät
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 04.03.2013
-   */
-  public void doDisconnectBtDevice()
-  {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "recived do disconnect device " );
-    if( mIsBound )
-    {
-      mService.disconnect();
-    }
+    super.onDestroy();
   }
 
   /**
@@ -729,101 +1007,6 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
 
   /**
    * 
-   * Verbindungsstatus erfragen
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 13.03.2013
-   * @return
-   */
-  public int getConnectionStatus()
-  {
-    if( mService != null )
-    {
-      return( mService.getConnectionState() );
-    }
-    return( ProjectConst.CONN_STATE_NONE );
-  }
-
-  /**
-   * 
-   * Mit welchem Gerät (Addr) bin ich verbunden?
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 28.05.2013
-   * @return MAC-Addr des Gerätes
-   */
-  public String getConnectedDevice()
-  {
-    if( mService != null )
-    {
-      return( mService.getConnectedDevice() );
-    }
-    return( null );
-  }
-
-  /**
-   * 
-   * Wenn das Gerät verbunden wird (beim Verbinden)
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 23.02.2013
-   * @param msg
-   */
-  @Override
-  public void msgConnecting( BtServiceMessage msg )
-  {
-    Log.v( TAG, "connecting..." );
-    // in der überschriebenen Funktion befüllen
-  }
-
-  /**
-   * 
-   * Das Gerät wurde verbunden
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 23.02.2013
-   * @param msg
-   */
-  @Override
-  public void msgConnected( BtServiceMessage msg )
-  {
-    Log.v( TAG, "connected..." );
-    // in der überschriebenen Funktion befüllen
-  }
-
-  /**
-   * 
-   * Das Gerät wurde getrennt
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 23.02.2013
-   * @param msg
-   * 
-   */
-  @Override
-  public void msgDisconnected( BtServiceMessage msg )
-  {
-    Log.v( TAG, "disconnected..." );
-    // in der überschriebenen Funktion befüllen
-  }
-
-  /**
-   * 
    * Wenn ein Fragment die Nachrichten erhalten soll, muß es den listener übergben...
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
@@ -837,62 +1020,52 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   {
     Log.v( TAG, "setServiceListener()..." );
     serviceListener = listener;
-  }
-
-  /**
-   * 
-   * Den Listener löschen, d.h. die Activity macht das wieder selber
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 24.02.2013
-   */
-  public void clearServiceListener()
-  {
-    serviceListener = this;
-  }
-
-  @Override
-  public void msgRecivedTick( BtServiceMessage msg )
-  {
-    if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
-  }
-
-  @Override
-  public void msgConnectError( BtServiceMessage msg )
-  {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "connection error (device not online?)" );
-  }
-
-  /**
-   * 
-   * Frage nach der Seriennummer
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 28.05.2013 TODO
-   */
-  public void askForSerialNumber()
-  {
-    if( mService != null )
+    // wenn ich im "Tablettmodus" bin, wird natürlich keine
+    // neue Activity gestartet, d.h. es wird dann auch kein onConnect erzeugt.
+    // Somit muss ich da etwas nachhelfen.
+    if( mTwoPane )
     {
-      mService.askForSerialNumber();
+      if( mService != null )
+      {
+        BtServiceMessage msg;
+        int state = mService.getConnectionState();
+        switch ( state )
+        {
+          default:
+          case ProjectConst.CONN_STATE_NONE:
+            msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
+            serviceListener.msgDisconnected( msg );
+            break;
+          case ProjectConst.CONN_STATE_CONNECTING:
+            msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECTING );
+            serviceListener.msgConnecting( msg );
+            break;
+          case ProjectConst.CONN_STATE_CONNECTED:
+            msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECTED );
+            serviceListener.msgConnected( msg );
+            break;
+        }
+      }
     }
   }
 
-  @Override
-  public void msgRecivedSerial( BtServiceMessage msg )
+  /**
+   * 
+   * schreibe den Setpoint ins Gerät
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 02.06.2013
+   * @param auto
+   * @param pressure
+   */
+  public void writeAutoSetpoint( int auto, int pressure )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "serial <" + ( String )msg.getContainer() + "> recived" );
-  }
-
-  @Override
-  public void msgRecivedAlive( BtServiceMessage msg )
-  {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Alive recived" );
+    if( mService != null )
+    {
+      mService.writeAutoSetpoint( auto, pressure );
+    }
   }
 }
