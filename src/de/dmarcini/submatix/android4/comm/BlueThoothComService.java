@@ -210,7 +210,7 @@ public class BlueThoothComService extends Service
         mConnectThread = null;
       }
       // Start the connected thread
-      Log.v( TAGCON, "run connected()" );
+      if( BuildConfig.DEBUG ) Log.d( TAGCON, "run connected()" );
       deviceConnected( mmSocket, mmDevice );
     }
   }
@@ -463,7 +463,7 @@ public class BlueThoothComService extends Service
     {
       String readMessage;
       int lstart, lend;
-      Log.v( TAGREADER, "execLogentryCmd..." );
+      if( BuildConfig.DEBUG ) Log.d( TAGREADER, "execLogentryCmd..." );
       // TODO: hier Code unterbringen
     }
 
@@ -486,7 +486,7 @@ public class BlueThoothComService extends Service
       String[] fields;
       int command;
       BtServiceMessage msg;
-      Log.v( TAGREADER, "execNormalCmd..." );
+      if( BuildConfig.DEBUG ) Log.d( TAGREADER, "execNormalCmd..." );
       // muss der anfang weg?
       if( start > 0 )
       {
@@ -501,7 +501,7 @@ public class BlueThoothComService extends Service
       readMessage = mInStrBuffer.substring( 1, end );
       // lösche das schon mal aus dem Puffer raus!
       mInStrBuffer = mInStrBuffer.delete( 0, end + 1 );
-      Log.v( TAGREADER, "normal Message Recived <" + readMessage + ">" );
+      if( BuildConfig.DEBUG ) Log.d( TAGREADER, "normal Message Recived <" + readMessage + ">" );
       // Trenne die Parameter voneinander, fields[0] ist dann das Kommando
       fields = fieldPatternDp.split( readMessage );
       //
@@ -537,13 +537,13 @@ public class BlueThoothComService extends Service
           // Sende Nachricht Gerätename empfangen!
           msg = new BtServiceMessage( ProjectConst.MESSAGE_MANUFACTURER_READ, new String( fields[1] ) );
           sendMessageToApp( msg );
-          Log.v( TAGREADER, "SPX Devicename recived! <" + fields[1] + ">" );
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "SPX Devicename recived! <" + fields[1] + ">" );
           break;
         case ProjectConst.SPX_ALIVE:
           // Ackuspannung übertragen
           msg = new BtServiceMessage( ProjectConst.MESSAGE_SPXALIVE, new String( fields[1] ) );
           sendMessageToApp( msg );
-          Log.v( TAGREADER, "SPX is Alive, Acku value recived." );
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "SPX is Alive, Acku value recived." );
           break;
         // case ProjectConst.SPX_APPLICATION_ID:
         // // Sende Nachricht Firmwareversion empfangen!
@@ -559,7 +559,7 @@ public class BlueThoothComService extends Service
           connectedDeviceSerialNumber = new String( fields[1] );
           msg = new BtServiceMessage( ProjectConst.MESSAGE_SERIAL_READ, new String( fields[1] ) );
           sendMessageToApp( msg );
-          Log.v( TAGREADER, "Serial Number recived! <" + fields[1] + ">" );
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "Serial Number recived! <" + fields[1] + ">" );
           break;
         // case ProjectConst.SPX_SET_SETUP_DEKO:
         // // Quittung für Setze DECO
@@ -919,36 +919,36 @@ public class BlueThoothComService extends Service
     // den Verbindunsthread stoppen, seine Aufgabe ist erfüllt
     if( mConnectThread != null )
     {
-      Log.v( TAG, "stop old mConnectThread..." );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "stop old mConnectThread..." );
       // mConnectThread.cancel();
       mConnectThread = null;
     }
     // Falls da noch verbundene Thread sind, stoppe diese
     if( mReaderThread != null )
     {
-      Log.v( TAG, "stop old mReaderThread..." );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "stop old mReaderThread..." );
       mReaderThread.cancel();
       mReaderThread = null;
     }
     if( mWriterThread != null )
     {
-      Log.v( TAG, "stop old mWriterThread..." );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "stop old mWriterThread..." );
       mWriterThread.cancel();
       mWriterThread = null;
     }
     // starte den Lesethread zur Bearbeitung der Daten vom SPX
-    Log.v( TAG, "create mReaderThread..." );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "create mReaderThread..." );
     mReaderThread = new ReaderThread( socket );
-    Log.v( TAG, "start mReaderThread..." );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "start mReaderThread..." );
     mReaderThread.start();
     // starte den Schreibhread zur Bearbeitung der Kommandos zum SPX
-    Log.v( TAG, "create mWriterThread..." );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "create mWriterThread..." );
     mWriterThread = new WriterThread( socket );
-    Log.v( TAG, "start mWriterThread..." );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "start mWriterThread..." );
     mWriterThread.start();
-    Log.v( TAG, "call setState" );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "call setState" );
     setState( ProjectConst.CONN_STATE_CONNECTED );
-    timerCounter = System.currentTimeMillis() + 10;
+    timerCounter = System.currentTimeMillis() + 100;
   }
 
   /**
@@ -1277,7 +1277,7 @@ public class BlueThoothComService extends Service
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 28.05.2013
-   * @return TODO
+   * @return status
    */
   public String getConnectedDevice()
   {
@@ -1322,6 +1322,7 @@ public class BlueThoothComService extends Service
    */
   public void askForSerialNumber()
   {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "askForSerialNumber..." );
     this.writeToDevice( String.format( "%s~%x%s", ProjectConst.STX, ProjectConst.SPX_SERIAL_NUMBER, ProjectConst.ETX ) );
   }
 
@@ -1337,6 +1338,7 @@ public class BlueThoothComService extends Service
    */
   public void askForSPXAlive()
   {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "askForSPXAlive..." );
     this.writeToDevice( String.format( "%s~%x%s", ProjectConst.STX, ProjectConst.SPX_ALIVE, ProjectConst.ETX ) );
   }
 
@@ -1354,5 +1356,25 @@ public class BlueThoothComService extends Service
   public synchronized String getConnectedDeviceSerialNumber()
   {
     return( connectedDeviceSerialNumber );
+  }
+
+  /**
+   * 
+   * Lese die Konfiguration vom SPX42
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 02.06.2013
+   */
+  public void readConfigFromSPX42()
+  {
+    String kdoString;
+    kdoString = String.format( "%s~%x~%x~%x~%x~%x~%x~%x%s", ProjectConst.STX, ProjectConst.SPX_GET_SETUP_DEKO, ProjectConst.SPX_GET_SETUP_SETPOINT,
+            ProjectConst.SPX_GET_SETUP_DISPLAYSETTINGS, ProjectConst.SPX_GET_SETUP_UNITS, ProjectConst.SPX_GET_SETUP_INDIVIDUAL, ProjectConst.SPX_LICENSE_STATE,
+            ProjectConst.SPX_ALIVE, ProjectConst.ETX );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "readConfigFromSPX()...send <" + kdoString + ">" );
+    this.writeToDevice( kdoString );
   }
 }
