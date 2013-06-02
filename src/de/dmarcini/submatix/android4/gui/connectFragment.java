@@ -644,4 +644,28 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     // Unregister broadcast listeners
     runningActivity.unregisterReceiver( mReceiver );
   }
+
+  @Override
+  public void msgReciveManufacturer( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgReciveFirmwareversion( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgReciveAutosetpoint( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgReciveAutosetpointAck( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
 }

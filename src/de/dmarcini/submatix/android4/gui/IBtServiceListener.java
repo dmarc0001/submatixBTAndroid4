@@ -17,4 +17,12 @@ public interface IBtServiceListener
   public void msgRecivedAlive( BtServiceMessage msg );
 
   public void msgConnectError( BtServiceMessage msg );
+
+  public void msgReciveManufacturer( BtServiceMessage msg );
+
+  public void msgReciveFirmwareversion( BtServiceMessage msg );
+
+  public void msgReciveAutosetpoint( BtServiceMessage msg );
+
+  public void msgReciveAutosetpointAck( BtServiceMessage msg );
 }

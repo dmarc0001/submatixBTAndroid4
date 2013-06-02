@@ -53,6 +53,7 @@ public final class ProjectConst
   public static final String FIRMWARE_2_7V              = "V2.7_V";
   public static final String FIRMWARE_2_7H              = "V2.7_H";
   
+  public static final int    FW_NOT_SET                 = -1;
   public static final int    FW_2_6_7_7V                = 0;
   public static final int    FW_2_7V                    = 1;
   public static final int    FW_2_7H                    = 2;
@@ -158,6 +159,9 @@ public final class ProjectConst
   public static final int    MESSAGE_DIRENTRY_END       = ActionEvent.RESERVED_ID_MAX + 9;
   public static final int    MESSAGE_SPXALIVE           = ActionEvent.RESERVED_ID_MAX + 10;
   public static final int    MESSAGE_COMMTIMEOUT        = ActionEvent.RESERVED_ID_MAX + 11;
+  public static final int    MESSAGE_FWVERSION_READ     = ActionEvent.RESERVED_ID_MAX + 12;
+  public static final int    MESSAGE_SETPOINT_READ      = ActionEvent.RESERVED_ID_MAX + 13;
+  public static final int    MESSAGE_SETPOINT_ACK       = ActionEvent.RESERVED_ID_MAX + 14;
   
   //
 //  public static final int    MESSAGE_STATE_CHANGE       = ActionEvent.RESERVED_ID_MAX + 2;
@@ -166,7 +170,6 @@ public final class ProjectConst
 //  public static final int    MESSAGE_DEVICE_NAME        = ActionEvent.RESERVED_ID_MAX + 5;
 //  public static final int    MESSAGE_TOAST              = ActionEvent.RESERVED_ID_MAX + 6;
 //  public static final int    MESSAGE_DECO_READ          = ActionEvent.RESERVED_ID_MAX + 8;
-//  public static final int    MESSAGE_SETPOINT_READ      = ActionEvent.RESERVED_ID_MAX + 9;
 //  public static final int    MESSAGE_DISPLAY_READ       = ActionEvent.RESERVED_ID_MAX + 10;
 //  public static final int    MESSAGE_INDIVID_READ       = ActionEvent.RESERVED_ID_MAX + 11;
 //  public static final int    MESSAGE_GAS_READ           = ActionEvent.RESERVED_ID_MAX + 12;
@@ -183,7 +186,6 @@ public final class ProjectConst
 //  public static final int    MESSAGE_DB_DELETE_WAIT     = ActionEvent.RESERVED_ID_MAX + 24;
 //  public static final int    MESSAGE_GAS_WRITTEN        = ActionEvent.RESERVED_ID_MAX + 25;
 //  public static final int    MESSAGE_UNITS_READ         = ActionEvent.RESERVED_ID_MAX + 29;
-//  public static final int    MESSAGE_FWVERSION_READ     = ActionEvent.RESERVED_ID_MAX + 31;
 //  public static final int    MESSAGE_BTRECOVEROK        = ActionEvent.RESERVED_ID_MAX + 32;
 //  public static final int    MESSAGE_BTRECOVERERR       = ActionEvent.RESERVED_ID_MAX + 33;
 //  public static final int    MESSAGE_BTWAITFOR          = ActionEvent.RESERVED_ID_MAX + 34;
