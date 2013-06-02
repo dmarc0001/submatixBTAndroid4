@@ -883,4 +883,16 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
       mService.askForSerialNumber();
     }
   }
+
+  @Override
+  public void msgRecivedSerial( BtServiceMessage msg )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "serial <" + ( String )msg.getContainer() + "> recived" );
+  }
+
+  @Override
+  public void msgRecivedAlive( BtServiceMessage msg )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Alive recived" );
+  }
 }

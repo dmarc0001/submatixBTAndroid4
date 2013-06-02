@@ -12,5 +12,9 @@ public interface IBtServiceListener
 
   public void msgRecivedTick( BtServiceMessage msg );
 
+  public void msgRecivedSerial( BtServiceMessage msg );
+
+  public void msgRecivedAlive( BtServiceMessage msg );
+
   public void msgConnectError( BtServiceMessage msg );
 }
