@@ -434,7 +434,7 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    * 
    *         Stand: 28.05.2013
    * @param item
-   * @return
+   * @return Index des Eintrages
    */
   public int getIndexForMac( String item )
   {

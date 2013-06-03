@@ -7,6 +7,8 @@
  */
 package de.dmarcini.submatix.android4.gui;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import android.app.Activity;
@@ -44,32 +46,24 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
  */
 public class FragmentCommonActivity extends Activity implements AreYouSureDialogFragment.NoticeDialogListener, IBtServiceListener
 {
-  private static final String       TAG          = FragmentCommonActivity.class.getSimpleName();
-  private static final String       SERVICENAME  = BlueThoothComService.class.getCanonicalName();
-  private static final String       PACKAGENAME  = "de.dmarcini.submatix.android4";
-  protected static boolean          mTwoPane     = false;
-  protected static boolean          isIndividual = false;
-  protected static boolean          isTrimix     = true;
-  protected static BluetoothAdapter mBtAdapter   = null;
+  private static final String                 TAG             = FragmentCommonActivity.class.getSimpleName();
+  private static final String                 SERVICENAME     = BlueThoothComService.class.getCanonicalName();
+  private static final String                 PACKAGENAME     = "de.dmarcini.submatix.android4";
+  protected static boolean                    mTwoPane        = false;
+  protected static boolean                    isIndividual    = false;
+  protected static boolean                    isTrimix        = true;
+  protected static BluetoothAdapter           mBtAdapter      = null;
+  private BlueThoothComService                mService        = null;
+  private LocalBinder                         binder          = null;
+  private final ArrayList<IBtServiceListener> serviceListener = new ArrayList<IBtServiceListener>();
+  private volatile boolean                    mIsBound        = false;
+  private static int                          currentStyleId  = R.style.AppDarkTheme;
 
   public static final int getAppStyle()
   {
     return( currentStyleId );
   }
 
-
-
-
-
-
-
-
-  private BlueThoothComService      mService        = null;
-  private LocalBinder               binder          = null;
-  private IBtServiceListener        serviceListener = null;
-  private volatile boolean          mIsBound        = false;
-  private static int                currentStyleId  = R.style.AppDarkTheme;
-  
   //
   //@formatter:off
   //
@@ -107,128 +101,18 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     @Override
     public void handleMessage( Message msg )
     {
-      areaListFragment frag;
       if( !( msg.obj instanceof BtServiceMessage ) )
       {
         Log.e(TAG,"Recived Message is NOT type of BtServiceMessage!");
         return;
       }
       BtServiceMessage smsg = (BtServiceMessage)msg.obj;
-      //
-      // versuche mal das Fragment mit der Liste zu finden
-      //
-      frag = ( areaListFragment )getFragmentManager().findFragmentById( R.id.area_list );
-      if( frag == null )
-      {
-        frag = ( areaListFragment )getFragmentManager().findFragmentById( R.id.item_list );
-      }
       
-      switch ( msg.what )
+      // an alle Listener versenden!
+      Iterator<IBtServiceListener> it = serviceListener.iterator();
+      while( it.hasNext() )
       {
-        // ################################################################
-        // Service TICK empfangen
-        // ################################################################
-        case ProjectConst.MESSAGE_TICK:
-          serviceListener.msgRecivedTick( smsg );
-          break;
-        // ################################################################
-        // Computer wird gerade verbunden
-        // ################################################################
-        case ProjectConst.MESSAGE_CONNECTING:
-          serviceListener.msgConnecting( smsg );
-          break;
-        // ################################################################
-        // Computer wurde getrennt
-        // ################################################################
-        case ProjectConst.MESSAGE_CONNECTED:
-          serviceListener.msgConnected( smsg );
-          // die Menüs anpassen 
-          if( frag != null )
-          {
-            Log.v( TAG, "ICONS auf CONNECTED stellen..." );
-            frag.setListAdapterForOnlinestatus( true );
-          }
-          else
-          {
-            Log.v( TAG, "no fragment found: ICONS auf CONNECTED... " );
-          }
-          break;
-        // ################################################################
-        // Computer wurde getrennt
-        // ################################################################
-        case ProjectConst.MESSAGE_DISCONNECTED:
-          serviceListener.msgDisconnected( smsg );
-          // die Menüs anpassen 
-          if( frag != null )
-          {
-            Log.v( TAG, "ICONS auf DISCONNECTED stellen" );
-            frag.setListAdapterForOnlinestatus( false );
-          }
-          else
-          {
-            Log.v( TAG, "no fragment found: ICONS auf DISCONNECTED... " );
-          }
-          break;
-        // ################################################################
-        // Computer wurde getrennt
-        // ################################################################
-        case ProjectConst.MESSAGE_CONNECTERROR:
-          serviceListener.msgConnectError( smsg );
-          // die Menüs anpassen 
-          if( frag != null )
-          {
-            Log.v( TAG, "ICONS auf DISCONNECTED stellen" );
-            frag.setListAdapterForOnlinestatus( false );
-          }
-          else
-          {
-            Log.v( TAG, "no fragment found: ICONS auf DISCONNECTED... " );
-          }
-          break;
-          // ################################################################
-          // Seriennummer des ccomputers wurde gelesen
-          // ################################################################
-          case ProjectConst.MESSAGE_SERIAL_READ:
-            serviceListener.msgRecivedSerial( smsg );
-          break;          
-          // ################################################################
-          // SPX sendet "ALIVE" und Ackuspannung
-          // ################################################################
-          case ProjectConst.MESSAGE_SPXALIVE:
-            serviceListener.msgRecivedAlive( smsg );
-          break;          
-          // ################################################################
-          // SPX sendet Herstellerkennung
-          // ################################################################
-          case ProjectConst.MESSAGE_MANUFACTURER_READ:
-            serviceListener.msgReciveManufacturer( smsg );
-          break;          
-          // ################################################################
-          // SPX sendet Firmwareversion
-          // ################################################################
-          case ProjectConst.MESSAGE_FWVERSION_READ:
-            serviceListener.msgReciveFirmwareversion( smsg );
-          break;          
-          // ################################################################
-          // SPX sendet Setpoint
-          // ################################################################
-          case ProjectConst.MESSAGE_SETPOINT_READ:
-            serviceListener.msgReciveAutosetpoint( smsg );
-          break;          
-          // ################################################################
-          // SPX Setpoint setzen bestätigt
-          // ################################################################
-          case ProjectConst.MESSAGE_SETPOINT_ACK:
-            serviceListener.msgReciveAutosetpointAck( smsg );
-          break;          
-          
-          
-
-          // ################################################################
-          // Sonst....
-          // ################################################################
-        default:
-          Log.w( TAG, "unknown message with id <" + smsg.getId() + "> recived!" );
+        it.next().handleMessages( msg.what, smsg );
       }
     }
   };
@@ -330,10 +214,19 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 24.02.2013
+   * @param listener
    */
-  public void clearServiceListener()
+  public void removeServiceListener( IBtServiceListener listener )
   {
-    serviceListener = this;
+    if( BuildConfig.DEBUG ) Log.d( TAG, "clearServiceListener()..." );
+    //
+    // wenn der listener vorhanden ist, entferne ihn aus der Liste
+    //
+    int index = serviceListener.indexOf( listener );
+    if( index > -1 )
+    {
+      serviceListener.remove( index );
+    }
   }
 
   /**
@@ -498,7 +391,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 13.03.2013
-   * @return
+   * @return der Verbindungsstatus
    */
   public int getConnectionStatus()
   {
@@ -540,7 +433,6 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   public void msgConnected( BtServiceMessage msg )
   {
     Log.v( TAG, "connected..." );
-    // in der überschriebenen Funktion befüllen
   }
 
   @Override
@@ -564,7 +456,6 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   public void msgConnecting( BtServiceMessage msg )
   {
     Log.v( TAG, "connecting..." );
-    // in der überschriebenen Funktion befüllen
   }
 
   /**
@@ -583,14 +474,13 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   public void msgDisconnected( BtServiceMessage msg )
   {
     Log.v( TAG, "disconnected..." );
-    // in der überschriebenen Funktion befüllen
   }
 
   @Override
   public void msgReciveAutosetpoint( BtServiceMessage msg )
   {
     String[] setP = ( String[] )msg.getContainer();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Autosetpoint <" + setP[0] + "m>, partialpressure: <" + setP[1] + "> recived" );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Autosetpoint <" + setP[0] + ">, partialpressure: <" + setP[1] + "> recived" );
   }
 
   @Override
@@ -614,7 +504,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   @Override
   public void msgRecivedTick( BtServiceMessage msg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
+    // if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
   }
 
   @Override
@@ -679,7 +569,8 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   {
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate..." );
-    serviceListener = this;
+    serviceListener.clear();
+    serviceListener.add( this );
     // den defaultadapter lesen
     mBtAdapter = BluetoothAdapter.getDefaultAdapter();
     Log.v( TAG, "onCreate: setContentView..." );
@@ -1016,34 +907,43 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
    *         Stand: 24.02.2013
    * @param listener
    */
-  public void setServiceListener( IBtServiceListener listener )
+  public void addServiceListener( IBtServiceListener listener )
   {
     Log.v( TAG, "setServiceListener()..." );
-    serviceListener = listener;
+    if( !serviceListener.contains( listener ) )
+    {
+      serviceListener.add( listener );
+    }
+    //
     // wenn ich im "Tablettmodus" bin, wird natürlich keine
     // neue Activity gestartet, d.h. es wird dann auch kein onConnect erzeugt.
     // Somit muss ich da etwas nachhelfen.
+    //
     if( mTwoPane )
     {
       if( mService != null )
       {
         BtServiceMessage msg;
         int state = mService.getConnectionState();
+        // welche Message muss ich machen?
         switch ( state )
         {
           default:
           case ProjectConst.CONN_STATE_NONE:
             msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
-            serviceListener.msgDisconnected( msg );
             break;
           case ProjectConst.CONN_STATE_CONNECTING:
             msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECTING );
-            serviceListener.msgConnecting( msg );
             break;
           case ProjectConst.CONN_STATE_CONNECTED:
             msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECTED );
-            serviceListener.msgConnected( msg );
             break;
+        }
+        // an alle Listener versenden!
+        Iterator<IBtServiceListener> it = serviceListener.iterator();
+        while( it.hasNext() )
+        {
+          it.next().msgConnected( msg );
         }
       }
     }
@@ -1066,6 +966,126 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     if( mService != null )
     {
       mService.writeAutoSetpoint( auto, pressure );
+    }
+  }
+
+  @Override
+  public void handleMessages( int what, BtServiceMessage smsg )
+  {
+    areaListFragment frag;
+    //
+    // versuche mal das Fragment mit der Liste zu finden
+    //
+    frag = ( areaListFragment )getFragmentManager().findFragmentById( R.id.area_list );
+    if( frag == null )
+    {
+      frag = ( areaListFragment )getFragmentManager().findFragmentById( R.id.item_list );
+    }
+    // was war denn los? Welche Nachricht kam rein?
+    switch ( what )
+    {
+    //
+    // ################################################################
+    // Service TICK empfangen
+    // ################################################################
+      case ProjectConst.MESSAGE_TICK:
+        msgRecivedTick( smsg );
+        break;
+      // ################################################################
+      // Computer wird gerade verbunden
+      // ################################################################
+      case ProjectConst.MESSAGE_CONNECTING:
+        msgConnecting( smsg );
+        break;
+      // ################################################################
+      // Computer wurde getrennt
+      // ################################################################
+      case ProjectConst.MESSAGE_CONNECTED:
+        msgConnected( smsg );
+        // die Menüs anpassen
+        if( frag != null )
+        {
+          Log.v( TAG, "ICONS auf CONNECTED stellen..." );
+          frag.setListAdapterForOnlinestatus( true );
+        }
+        else
+        {
+          Log.v( TAG, "no fragment found: ICONS auf CONNECTED... " );
+        }
+        break;
+      // ################################################################
+      // Computer wurde getrennt
+      // ################################################################
+      case ProjectConst.MESSAGE_DISCONNECTED:
+        msgDisconnected( smsg );
+        // die Menüs anpassen
+        if( frag != null )
+        {
+          Log.v( TAG, "ICONS auf DISCONNECTED stellen" );
+          frag.setListAdapterForOnlinestatus( false );
+        }
+        else
+        {
+          Log.v( TAG, "no fragment found: ICONS auf DISCONNECTED... " );
+        }
+        break;
+      // ################################################################
+      // Computer wurde getrennt
+      // ################################################################
+      case ProjectConst.MESSAGE_CONNECTERROR:
+        msgConnectError( smsg );
+        // die Menüs anpassen
+        if( frag != null )
+        {
+          Log.v( TAG, "ICONS auf DISCONNECTED stellen" );
+          frag.setListAdapterForOnlinestatus( false );
+        }
+        else
+        {
+          Log.v( TAG, "no fragment found: ICONS auf DISCONNECTED... " );
+        }
+        break;
+      // ################################################################
+      // Seriennummer des ccomputers wurde gelesen
+      // ################################################################
+      case ProjectConst.MESSAGE_SERIAL_READ:
+        msgRecivedSerial( smsg );
+        break;
+      // ################################################################
+      // SPX sendet "ALIVE" und Ackuspannung
+      // ################################################################
+      case ProjectConst.MESSAGE_SPXALIVE:
+        msgRecivedAlive( smsg );
+        break;
+      // ################################################################
+      // SPX sendet Herstellerkennung
+      // ################################################################
+      case ProjectConst.MESSAGE_MANUFACTURER_READ:
+        msgReciveManufacturer( smsg );
+        break;
+      // ################################################################
+      // SPX sendet Firmwareversion
+      // ################################################################
+      case ProjectConst.MESSAGE_FWVERSION_READ:
+        msgReciveFirmwareversion( smsg );
+        break;
+      // ################################################################
+      // SPX sendet Setpoint
+      // ################################################################
+      case ProjectConst.MESSAGE_SETPOINT_READ:
+        msgReciveAutosetpoint( smsg );
+        break;
+      // ################################################################
+      // SPX Setpoint setzen bestätigt
+      // ################################################################
+      case ProjectConst.MESSAGE_SETPOINT_ACK:
+        msgReciveAutosetpointAck( smsg );
+        break;
+      // ################################################################
+      // Sonst....
+      // ################################################################
+      default:
+        Log.w( TAG, "unknown message with id <" + smsg.getId() + "> recived!" );
     }
   }
 }

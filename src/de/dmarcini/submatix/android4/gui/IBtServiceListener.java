@@ -4,25 +4,27 @@ import de.dmarcini.submatix.android4.comm.BtServiceMessage;
 
 public interface IBtServiceListener
 {
-  public void msgConnecting( BtServiceMessage msg );
+  public void handleMessages( final int what, final BtServiceMessage msg );
 
-  public void msgConnected( BtServiceMessage msg );
+  public void msgConnecting( final BtServiceMessage msg );
 
-  public void msgDisconnected( BtServiceMessage msg );
+  public void msgConnected( final BtServiceMessage msg );
 
-  public void msgRecivedTick( BtServiceMessage msg );
+  public void msgDisconnected( final BtServiceMessage msg );
 
-  public void msgRecivedSerial( BtServiceMessage msg );
+  public void msgRecivedTick( final BtServiceMessage msg );
 
-  public void msgRecivedAlive( BtServiceMessage msg );
+  public void msgRecivedSerial( final BtServiceMessage msg );
 
-  public void msgConnectError( BtServiceMessage msg );
+  public void msgRecivedAlive( final BtServiceMessage msg );
 
-  public void msgReciveManufacturer( BtServiceMessage msg );
+  public void msgConnectError( final BtServiceMessage msg );
 
-  public void msgReciveFirmwareversion( BtServiceMessage msg );
+  public void msgReciveManufacturer( final BtServiceMessage msg );
 
-  public void msgReciveAutosetpoint( BtServiceMessage msg );
+  public void msgReciveFirmwareversion( final BtServiceMessage msg );
 
-  public void msgReciveAutosetpointAck( BtServiceMessage msg );
+  public void msgReciveAutosetpoint( final BtServiceMessage msg );
+
+  public void msgReciveAutosetpointAck( final BtServiceMessage msg );
 }

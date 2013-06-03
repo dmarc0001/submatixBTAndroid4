@@ -425,7 +425,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     {
       FragmentCommonActivity.mBtAdapter.cancelDiscovery();
     }
-    ( ( FragmentCommonActivity )runningActivity ).clearServiceListener();
+    ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
   }
 
   @Override
@@ -445,7 +445,11 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   {
     super.onPause();
     Log.v( TAG, "onPause()..." );
-    ( ( FragmentCommonActivity )runningActivity ).clearServiceListener();
+    //
+    // die abgeleiteten Objekte führen das auch aus
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onPause(): clear service listener for preferences fragment..." );
+    ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
   }
 
   /**
@@ -456,7 +460,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   {
     super.onResume();
     Log.v( TAG, "onResume()..." );
-    ( ( FragmentCommonActivity )runningActivity ).setServiceListener( this );
+    ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
     fillNewAdapterWithPairedDevices();
     // setze den verbindungsstatus visuell
     setToggleButtonTextAndStat( ( ( FragmentCommonActivity )runningActivity ).getConnectionStatus() );
@@ -667,5 +671,56 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   public void msgReciveAutosetpointAck( BtServiceMessage msg )
   {
     // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void handleMessages( int what, BtServiceMessage smsg )
+  {
+    // was war denn los? Welche Nachricht kam rein?
+    switch ( what )
+    {
+    //
+    // ################################################################
+    // Service TICK empfangen
+    // ################################################################
+      case ProjectConst.MESSAGE_TICK:
+        msgRecivedTick( smsg );
+        break;
+      // ################################################################
+      // Computer wird gerade verbunden
+      // ################################################################
+      case ProjectConst.MESSAGE_CONNECTING:
+        msgConnecting( smsg );
+        break;
+      // ################################################################
+      // Computer wurde getrennt
+      // ################################################################
+      case ProjectConst.MESSAGE_CONNECTED:
+        msgConnected( smsg );
+        break;
+      // ################################################################
+      // Computer wurde getrennt
+      // ################################################################
+      case ProjectConst.MESSAGE_DISCONNECTED:
+        msgDisconnected( smsg );
+        break;
+      // ################################################################
+      // Computer wurde getrennt
+      // ################################################################
+      case ProjectConst.MESSAGE_CONNECTERROR:
+        msgConnectError( smsg );
+        break;
+      // ################################################################
+      // SPX sendet "ALIVE" und Ackuspannung
+      // ################################################################
+      case ProjectConst.MESSAGE_SPXALIVE:
+        msgRecivedAlive( smsg );
+        break;
+      // ################################################################
+      // Sonst....
+      // ################################################################
+      default:
+        Log.w( TAG, "unhadled message message with id <" + smsg.getId() + "> recived!" );
+    }
   }
 }

@@ -17,6 +17,7 @@ import android.view.View;
 import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
+import de.dmarcini.submatix.android4.utils.ProjectConst;
 
 /**
  * Ein Objekt zum bearbeiten der SPX42 Einstellungen Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
@@ -65,37 +66,18 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     }
   }
 
-  /**
-   * Den Integerwert oder Null zurückgeben für eine Stringresource Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 31.12.2012
-   * @param id
-   * @return
-   */
-  private int getIntegerFromStringResource( int id )
-  {
-    int retVal = 0;
-    String strVal = getResources().getString( id );
-    try
-    {
-      retVal = Integer.parseInt( strVal );
-    }
-    catch( NumberFormatException ex )
-    {
-      Log.e( TAG, "getIntegerFromStringResource(): String <" + strVal + "> is not an correct integer" );
-    }
-    return( retVal );
-  }
-
   @Override
   public void msgConnected( BtServiceMessage msg )
   {
     // TODO Automatisch generierter Methodenstub
-    Log.v( TAG, "msgConnected()..." );
+    Log.v( TAG, "msgConnected()...ask for SPX config..." );
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     ignorePrefChange = false;
+    if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for serial number..." );
     fActivity.askForSerialNumber();
+    if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for Firmware version..." );
     fActivity.askForFirmwareVersion();
+    if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for SPX config..." );
     fActivity.askForConfigFromSPX42();
   }
 
@@ -133,7 +115,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     String autoSetpointKey = "keySetpointAutosetpointDepth";
     String highSetpointKey = "keySetpointHighsetpointValue";
     ListPreference lP = null;
-    Preference pref = null;
+    // Preference pref = null;
     String[] setPoint;
     int autoSp, sP;
     //
@@ -186,8 +168,14 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       // setze den Index auf den Wert, der ausgelesen wurde
       // empfangen werden kann 0..3, also kan ich das 1:1 übernehmen
       //
+      if( BuildConfig.DEBUG ) Log.d( TAG, "set autosetpoint value to preference..." );
       lP.setValueIndex( autoSp );
     }
+    else
+    {
+      Log.e( TAG, "can't set autosetpoint value to preference..." );
+    }
+    //
     if( getPreferenceScreen().findPreference( highSetpointKey ) instanceof ListPreference )
     {
       lP = ( ListPreference )getPreferenceScreen().findPreference( highSetpointKey );
@@ -202,14 +190,19 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       // setze den Index auf den Wert, der ausgelesen wurde
       // empfangen werden kann 0..4, also kan ich das 1:1 übernehmen
       //
+      if( BuildConfig.DEBUG ) Log.d( TAG, "set highsetpoint value to preference..." );
       lP.setValueIndex( sP );
+    }
+    else
+    {
+      Log.e( TAG, "can't set highsetpoint value to preference..." );
     }
   }
 
   @Override
   public void msgReciveAutosetpointAck( BtServiceMessage msg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Autosetpoint successful set" );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Autosetpoint successful set (preferences)" );
     ignorePrefChange = false;
   }
 
@@ -304,7 +297,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // lösche Listener, der überwacht, wenn Preferenzen geändert wurden
     //
     getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener( this );
-    ( ( FragmentCommonActivity )runningActivity ).clearServiceListener();
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onPause(): clear service listener for preferences fragment..." );
+    ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
   }
 
   @Override
@@ -319,7 +313,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     ignorePrefChange = true;
     // Service Listener setzen
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
-    fActivity.setServiceListener( this );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onResume(): set service listener for preferences fragment..." );
+    fActivity.addServiceListener( this );
   }
 
   @Override
@@ -612,6 +607,87 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       //
       lP = ( ListPreference )pS.findPreference( "keyIndividualLoginterval" );
       lP.setSummary( String.format( res.getString( R.string.conf_ind_interval_header_summary ), lP.getEntry() ) );
+    }
+  }
+
+  @Override
+  public void handleMessages( int what, BtServiceMessage smsg )
+  {
+    // was war denn los? Welche Nachricht kam rein?
+    switch ( what )
+    {
+    //
+    // ################################################################
+    // Service TICK empfangen
+    // ################################################################
+      case ProjectConst.MESSAGE_TICK:
+        msgRecivedTick( smsg );
+        break;
+      // ################################################################
+      // Computer wird gerade verbunden
+      // ################################################################
+      case ProjectConst.MESSAGE_CONNECTING:
+        msgConnecting( smsg );
+        break;
+      // ################################################################
+      // Computer wurde getrennt
+      // ################################################################
+      case ProjectConst.MESSAGE_CONNECTED:
+        msgConnected( smsg );
+        break;
+      // ################################################################
+      // Computer wurde getrennt
+      // ################################################################
+      case ProjectConst.MESSAGE_DISCONNECTED:
+        msgDisconnected( smsg );
+        break;
+      // ################################################################
+      // Computer wurde getrennt
+      // ################################################################
+      case ProjectConst.MESSAGE_CONNECTERROR:
+        msgConnectError( smsg );
+        break;
+      // ################################################################
+      // Seriennummer des ccomputers wurde gelesen
+      // ################################################################
+      case ProjectConst.MESSAGE_SERIAL_READ:
+        msgRecivedSerial( smsg );
+        break;
+      // ################################################################
+      // SPX sendet "ALIVE" und Ackuspannung
+      // ################################################################
+      case ProjectConst.MESSAGE_SPXALIVE:
+        msgRecivedAlive( smsg );
+        break;
+      // ################################################################
+      // SPX sendet Herstellerkennung
+      // ################################################################
+      case ProjectConst.MESSAGE_MANUFACTURER_READ:
+        msgReciveManufacturer( smsg );
+        break;
+      // ################################################################
+      // SPX sendet Firmwareversion
+      // ################################################################
+      case ProjectConst.MESSAGE_FWVERSION_READ:
+        msgReciveFirmwareversion( smsg );
+        break;
+      // ################################################################
+      // SPX sendet Setpoint
+      // ################################################################
+      case ProjectConst.MESSAGE_SETPOINT_READ:
+        msgReciveAutosetpoint( smsg );
+        break;
+      // ################################################################
+      // SPX Setpoint setzen bestätigt
+      // ################################################################
+      case ProjectConst.MESSAGE_SETPOINT_ACK:
+        msgReciveAutosetpointAck( smsg );
+        break;
+      // ################################################################
+      // Sonst....
+      // ################################################################
+      default:
+        Log.w( TAG, "unhandled message with id <" + smsg.getId() + "> recived!" );
     }
   }
 }

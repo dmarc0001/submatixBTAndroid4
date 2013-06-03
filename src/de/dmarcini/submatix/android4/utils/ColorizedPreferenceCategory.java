@@ -56,7 +56,7 @@ public class ColorizedPreferenceCategory extends PreferenceCategory
    * We catch the view after its creation, and before the activity will use it, in order to make our changes
    * 
    * @param parent
-   * @return
+   * @return Der Kategirietitel
    */
   @Override
   protected View onCreateView( ViewGroup parent )

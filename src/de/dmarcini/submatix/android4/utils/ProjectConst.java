@@ -80,10 +80,10 @@ public final class ProjectConst
   public static final int SPX_MANUFACTURERS             = 0x01;
   public static final int SPX_FACTORY_NUMBER            = 0x02;
   public static final int SPX_ALIVE                     = 0x03;
-  public static final int SPX_APPLICATION_ID            = 0x04;
-  public static final int SPX_DEV_IDENTIFIER            = 0x05;
+  public static final int SPX_APPLICATION_ID            = 0x04; //! Firmwareversion des SPX
+  public static final int SPX_DEV_IDENTIFIER            = 0x05; 
   public static final int SPX_DEVSOFTVERSION            = 0x06;
-  public static final int SPX_SERIAL_NUMBER             = 0x07;
+  public static final int SPX_SERIAL_NUMBER             = 0x07; //! Seriennummer des SPX
   public static final int SPX_SER1_FROM_SER0            = 0x08;
   public static final int SPX_TIME                      = 0x20;
   public static final int SPX_DATE                      = 0x21;
