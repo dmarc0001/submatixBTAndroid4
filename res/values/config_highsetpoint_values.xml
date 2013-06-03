@@ -19,9 +19,6 @@
     
     <!-- Highsetpoint (wenn autosetpoint enable ab der vorgewählten Tiefe...) -->
     <string-array name="highsetpointNamesArray">
-      <item >0.7 bar</item>
-      <item >0.8 bar</item>
-      <item >0.9 bar</item>
       <item >1.0 bar</item>
       <item >1.1 bar</item>
       <item >1.2 bar</item>
@@ -32,9 +29,6 @@
     </string-array>
     
     <string-array name="highsetpointValuesArray">
-      <item >0.7</item>
-      <item >0.8</item>
-      <item >0.9</item>
       <item >1.0</item>
       <item >1.1</item>
       <item >1.2</item>
