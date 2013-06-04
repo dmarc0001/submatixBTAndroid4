@@ -629,15 +629,19 @@ public class BlueThoothComService extends Service
             Log.d( TAGREADER, "SPX42 switch syncmode OFF! Connection will failure!" );
           }
           break;
-        // case ProjectConst.SPX_LICENSE_STATE:
-        // // LICENSE_STATE gefunden
-        // if( aListener != null )
-        // {
-        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_LICENSE_STATE_READ, new String( readMessage ), System.currentTimeMillis() / 100, 0 );
-        // aListener.actionPerformed( ex );
-        // }
-        // if( log ) LOGGER.fine( "LICENSE_STATE recived <" + readMessage + ">" );
-        // break;
+        case ProjectConst.SPX_LICENSE_STATE:
+          // Kommando SPX_LICENSE_STATE
+          // <~45:LS:CE>
+          // LS : License State 0=Nitrox,1=Normoxic Trimix,2=Full Trimix
+          // CE : Custom Enabled 0= disabled, 1=enabled
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_LICENSE_STATE_READ, new String[]
+          { fields[1], fields[2] } );
+          sendMessageToApp( msg );
+          if( BuildConfig.DEBUG )
+          {
+            Log.d( TAGREADER, "SPX42 license state recived!" );
+          }
+          break;
         default:
           Log.w( TAGREADER, "unknown Messagetype recived <" + readMessage + ">" );
       }
@@ -855,7 +859,6 @@ public class BlueThoothComService extends Service
       //
       Log.i( TAGWRITER, "BEGIN WriterThread" );
       // den Inputstram solange schreiben, wie die Verbindung besteht
-      writeList.clear();
       cancelThread = false;
       while( !cancelThread )
       {
@@ -891,6 +894,7 @@ public class BlueThoothComService extends Service
               msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
               sendMessageToApp( msg );
               cancelThread = true;
+              writeList.clear();
               return;
             }
             catch( IOException ex )
@@ -899,6 +903,7 @@ public class BlueThoothComService extends Service
               msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
               sendMessageToApp( msg );
               cancelThread = true;
+              writeList.clear();
               return;
             }
             catch( InterruptedException ex )
@@ -964,7 +969,7 @@ public class BlueThoothComService extends Service
    */
   public void askForFirmwareVersion()
   {
-    this.writeSPXMsgToDevice( String.format( "~%d", ProjectConst.SPX_APPLICATION_ID ) );
+    this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_APPLICATION_ID ) );
   }
 
   /**
@@ -983,7 +988,7 @@ public class BlueThoothComService extends Service
     {
       Log.d( TAG, "askForSerialNumber..." );
     }
-    this.writeSPXMsgToDevice( String.format( "~%d", ProjectConst.SPX_SERIAL_NUMBER ) );
+    this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_SERIAL_NUMBER ) );
   }
 
   /**
@@ -1002,7 +1007,16 @@ public class BlueThoothComService extends Service
     {
       Log.d( TAG, "askForSPXAlive..." );
     }
-    this.writeSPXMsgToDevice( String.format( "~%d", ProjectConst.SPX_ALIVE ) );
+    this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_ALIVE ) );
+  }
+
+  public void askForLicenseFromSPX()
+  {
+    if( BuildConfig.DEBUG )
+    {
+      Log.d( TAG, "askForLicenseFromSPX..." );
+    }
+    this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_LICENSE_STATE ) );
   }
 
   /**
