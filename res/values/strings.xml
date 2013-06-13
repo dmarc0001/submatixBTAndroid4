@@ -28,6 +28,8 @@
     <string name="dialog_exit_button">EXIT</string>
     <!-- string name="dialog_ok_button">OK</string -->
     <string name="dialog_cancel_button">Cancel</string>
+    <string name="dialog_please_wait_title">please wait...</string>
+    <string name="dialog_please_wait_read_config">read SPX config...</string>
     
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title">Searching BT Devices..</string>

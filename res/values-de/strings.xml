@@ -27,6 +27,8 @@
     <string name="dialog_exit_button">"Beenden"</string>
     <!-- string name="dialog_ok_button">OK</string -->
     <string name="dialog_cancel_button">"Abbrechen"</string>
+    <string name="dialog_please_wait_title">Bitte warten...</string>
+    <string name="dialog_please_wait_read_config">Lese Konfiguration vom SPX...</string>
     
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title">Suche BT Geräte...</string>
