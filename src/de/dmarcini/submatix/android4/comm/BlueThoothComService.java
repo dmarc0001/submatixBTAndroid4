@@ -971,7 +971,19 @@ public class BlueThoothComService extends Service
    */
   public void askForFirmwareVersion()
   {
-    this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_APPLICATION_ID ) );
+    if( BuildConfig.DEBUG )
+    {
+      Log.d( TAG, "askForSerialNumber..." );
+    }
+    if( connectedDeviceFWVersion != null )
+    {
+      BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_FWVERSION_READ, new String( connectedDeviceFWVersion ) );
+      sendMessageToApp( msg );
+    }
+    else
+    {
+      this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_APPLICATION_ID ) );
+    }
   }
 
   /**
