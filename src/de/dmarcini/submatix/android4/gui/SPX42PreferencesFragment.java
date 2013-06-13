@@ -30,10 +30,11 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
  */
 public class SPX42PreferencesFragment extends PreferenceFragment implements IBtServiceListener, OnSharedPreferenceChangeListener
 {
-  private static final String TAG              = SPX42PreferencesFragment.class.getSimpleName();
-  private static final int    maxEvents        = 12;
-  private Activity            runningActivity  = null;
-  private boolean             ignorePrefChange = false;
+  private static final String    TAG              = SPX42PreferencesFragment.class.getSimpleName();
+  private static final int       maxEvents        = 12;
+  private Activity               runningActivity  = null;
+  private boolean                ignorePrefChange = false;
+  private FragmentProgressDialog pd               = null;
 
   @Override
   public void handleMessages( int what, BtServiceMessage smsg )
@@ -132,6 +133,14 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // Dialog schliesen, wenn geöffnet
     dismissDial();
     openWaitDial( maxEvents, getActivity().getResources().getString( R.string.dialog_please_wait_read_config ) );
+    try
+    {
+      Thread.yield();
+      Thread.sleep( 100 );
+      Thread.yield();
+    }
+    catch( InterruptedException ex )
+    {}
     fActivity.askForConfigFromSPX42();
     ignorePrefChange = false;
   }
@@ -152,23 +161,24 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    */
   private void openWaitDial( int maxevents, String msg )
   {
-    FragmentProgressDialog pd;
+    if( BuildConfig.DEBUG ) Log.d( TAG, "openWaitDial()..." );
     //
-    pd = new FragmentProgressDialog( msg );
-    pd.setCancelable( true );
-    pd.setMax( maxevents );
-    pd.setProgress( 4 );
-    // pd.setTitle( getActivity().getResources().getString( R.string.dialog_please_wait_title ) );
-    // pd.setMessage( msg );
-    // DialogFragment.show() will take care of adding the fragment
-    // in a transaction. We also want to remove any currently showing
-    // dialog, so make our own transaction and take care of that here.
+    // wenn ein Dialog da ist, erst mal aus den Fragmenten entfernen
+    //
     FragmentTransaction ft = getFragmentManager().beginTransaction();
     Fragment prev = getFragmentManager().findFragmentByTag( "dialog" );
     if( prev != null )
     {
       ft.remove( prev );
     }
+    if( pd != null )
+    {
+      pd.dismiss();
+    }
+    pd = new FragmentProgressDialog( msg );
+    pd.setCancelable( true );
+    pd.setMax( maxevents );
+    pd.setProgress( 4 );
     ft.addToBackStack( null );
     pd.show( ft, "dialog" );
   }
@@ -185,11 +195,16 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    */
   private void dismissDial()
   {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "dismissDial()..." );
     FragmentTransaction ft = getFragmentManager().beginTransaction();
     Fragment prev = getFragmentManager().findFragmentByTag( "dialog" );
     if( prev != null )
     {
       ft.remove( prev );
+    }
+    if( pd != null )
+    {
+      pd.dismiss();
     }
   }
 
@@ -319,7 +334,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   @Override
   public void msgRecivedAlive( BtServiceMessage msg )
   {
-    // TODO Automatisch generierter Methodenstub
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Alive <" + ( String )msg.getContainer() + "> recived" );
+    dismissDial();
   }
 
   @Override
@@ -599,7 +615,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     String autoSetpointKey = "keySetpointAutosetpointDepth";
     String highSetpointKey = "keySetpointHighsetpointValue";
     ListPreference lP = null;
-    Preference pref = null;
+    // Preference pref = null;
     int autoSp = 0, sP = 0;
     //
     if( BuildConfig.DEBUG ) Log.d( TAG, "sendAutoSetpoint()..." );
