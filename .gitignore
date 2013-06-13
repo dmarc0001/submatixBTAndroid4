@@ -6,4 +6,5 @@ database/
 *.log.?
 *.log.lck
 *.db
+.memdump
 
