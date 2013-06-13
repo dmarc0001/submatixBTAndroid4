@@ -67,7 +67,7 @@ public class areaDetailActivity extends FragmentCommonActivity implements OnItem
             Log.v( TAG, "onCreate: set layout..." );
             setContentView( R.layout.activity_area_detail );
             Log.v( TAG, "onCreate: begin replace view..." );
-            currFragment = ( new SPX42PreferencesFragment( isIndividual ) );
+            currFragment = ( new SPX42PreferencesFragment() );
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, currFragment ).commit();
             Log.v( TAG, "onCreate: begin replace view...OK" );
             break;
@@ -97,7 +97,7 @@ public class areaDetailActivity extends FragmentCommonActivity implements OnItem
             Log.v( TAG, "onCreate: set layout..." );
             setContentView( R.layout.activity_area_detail );
             Log.v( TAG, "onCreate: begin replace view..." );
-            currFragment = ( new SPX42GaslistPreferencesFragment( isTrimix ) );
+            currFragment = ( new SPX42GaslistPreferencesFragment() );
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, currFragment ).commit();
             Log.v( TAG, "onCreate: begin replace view...OK" );
             break;
