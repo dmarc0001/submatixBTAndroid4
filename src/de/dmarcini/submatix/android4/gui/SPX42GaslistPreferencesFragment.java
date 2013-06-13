@@ -36,39 +36,6 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
 {
   private static final String TAG            = SPX42GaslistPreferencesFragment.class.getSimpleName();
   private String              gasKeyTemplate = null;
-  @SuppressWarnings( "unused" )
-  private boolean             isTrimix       = false;
-
-  /**
-   * 
-   * Gesperrter Konstruktor
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 01.01.2013
-   */
-  @SuppressWarnings( "unused" )
-  private SPX42GaslistPreferencesFragment()
-  {};
-
-  /**
-   * 
-   * Konstruktor mit Lizenzinfo für Trimix
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 01.01.2013
-   * @param isTrimix
-   */
-  public SPX42GaslistPreferencesFragment( boolean isTrimix )
-  {
-    super();
-    this.isTrimix = isTrimix;
-  }
 
   @Override
   public void onCreate( Bundle savedInstanceState )
