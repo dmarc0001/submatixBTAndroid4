@@ -184,6 +184,81 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     }
   }
 
+  @Override
+  public void handleMessages( int what, BtServiceMessage smsg )
+  {
+    // was war denn los? Welche Nachricht kam rein?
+    switch ( what )
+    {
+    //
+    // ################################################################
+    // Service TICK empfangen
+    // ################################################################
+      case ProjectConst.MESSAGE_TICK:
+        msgRecivedTick( smsg );
+        break;
+      // ################################################################
+      // Computer wird gerade verbunden
+      // ################################################################
+      case ProjectConst.MESSAGE_CONNECTING:
+        msgConnecting( smsg );
+        break;
+      // ################################################################
+      // Computer wurde getrennt
+      // ################################################################
+      case ProjectConst.MESSAGE_CONNECTED:
+        msgConnected( smsg );
+        break;
+      // ################################################################
+      // Computer wurde getrennt
+      // ################################################################
+      case ProjectConst.MESSAGE_DISCONNECTED:
+        msgDisconnected( smsg );
+        break;
+      // ################################################################
+      // Computer wurde getrennt
+      // ################################################################
+      case ProjectConst.MESSAGE_CONNECTERROR:
+        msgConnectError( smsg );
+        break;
+      // ################################################################
+      // Seriennummer des ccomputers wurde gelesen
+      // ################################################################
+      case ProjectConst.MESSAGE_SERIAL_READ:
+        msgRecivedSerial( smsg );
+        break;
+      // ################################################################
+      // SPX sendet "ALIVE" und Ackuspannung
+      // ################################################################
+      case ProjectConst.MESSAGE_SPXALIVE:
+        msgRecivedAlive( smsg );
+        break;
+      // ################################################################
+      // SPX sendet Herstellerkennung
+      // ################################################################
+      case ProjectConst.MESSAGE_MANUFACTURER_READ:
+        msgReciveManufacturer( smsg );
+        break;
+      // ################################################################
+      // SPX Lizenz lesen
+      // ################################################################
+      case ProjectConst.MESSAGE_LICENSE_STATE_READ:
+        msgReciveLicenseState( smsg );
+        break;
+      // ################################################################
+      // SPX sendet Firmwareversion
+      // ################################################################
+      case ProjectConst.MESSAGE_FWVERSION_READ:
+        msgReciveFirmwareversion( smsg );
+        break;
+      // ################################################################
+      // Sonst....
+      // ################################################################
+      default:
+        Log.w( TAG, "unhadled message message with id <" + smsg.getId() + "> recived!" );
+    }
+  }
+
   /**
    * 
    * Die Anzeige der Verbunden/trennen Seite
@@ -250,6 +325,18 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   }
 
   @Override
+  public void msgReciveAutosetpoint( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgReciveAutosetpointAck( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
   public void msgRecivedAlive( BtServiceMessage msg )
   {
     // TODO Automatisch generierter Methodenstub
@@ -265,6 +352,24 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   public void msgRecivedTick( BtServiceMessage msg )
   {
     // if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
+  }
+
+  @Override
+  public void msgReciveFirmwareversion( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgReciveLicenseState( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgReciveManufacturer( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
   }
 
   @Override
@@ -317,7 +422,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   {
     int connState = ( ( FragmentCommonActivity )runningActivity ).getConnectionStatus();
     if( BuildConfig.DEBUG ) Log.d( TAG, "ON CLICK!" );
-    btArrayAdapter = ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter();
+    // btArrayAdapter = ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter();
     //
     if( cView instanceof ImageButton )
     {
@@ -461,7 +566,11 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     super.onResume();
     Log.v( TAG, "onResume()..." );
     ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
-    fillNewAdapterWithPairedDevices();
+    // wenn zu diesem Zeitpunkt das Array noch nicht gefüllt ist, dann mach das nun
+    if( 0 == btArrayAdapter.getCount() )
+    {
+      fillNewAdapterWithPairedDevices();
+    }
     // setze den verbindungsstatus visuell
     setToggleButtonTextAndStat( ( ( FragmentCommonActivity )runningActivity ).getConnectionStatus() );
   }
@@ -514,18 +623,23 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     Log.v( TAG, "setSpinnerToConnectedDevice()..." );
     try
     {
+      // wenn zu diesem Zeitpunkt das Array noch nicht gefüllt ist, dann mach das nun
+      if( 0 == btArrayAdapter.getCount() )
+      {
+        fillNewAdapterWithPairedDevices();
+      }
       // ArrayAdapter erfragen
-      BluetoothDeviceArrayAdapter adapter = ( ( BluetoothDeviceArrayAdapter )( devSpinner.getAdapter() ) );
+      // BluetoothDeviceArrayAdapter adapter = ( ( BluetoothDeviceArrayAdapter )( devSpinner.getAdapter() ) );
       // mit welchem Gerät bin ich verbunden?
       deviceAddr = ( ( FragmentCommonActivity )runningActivity ).getConnectedDevice();
       Log.v( TAG, "setSpinnerToConnectedDevice() connected Device: <" + deviceAddr + ">" );
       // welcher index gehört zu dem Gerät?
-      deviceIndex = adapter.getIndexForMac( deviceAddr );
+      deviceIndex = btArrayAdapter.getIndexForMac( deviceAddr );
       Log.v( TAG, "setSpinnerToConnectedDevice() index in Adapter: <" + deviceIndex + ">" );
       // Online Markieren
-      adapter.setDeviceIsOnline( deviceIndex );
+      btArrayAdapter.setDeviceIsOnline( deviceIndex );
       // Update erzwingen
-      devSpinner.setAdapter( adapter );
+      devSpinner.setAdapter( btArrayAdapter );
       // Selektieren
       devSpinner.setSelection( deviceIndex, false );
       Log.v( TAG, "setSpinnerToConnectedDevice() set Spinner to index <" + deviceIndex + ">" );
@@ -647,80 +761,5 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     FragmentCommonActivity.mBtAdapter.cancelDiscovery();
     // Unregister broadcast listeners
     runningActivity.unregisterReceiver( mReceiver );
-  }
-
-  @Override
-  public void msgReciveManufacturer( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void msgReciveFirmwareversion( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void msgReciveAutosetpoint( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void msgReciveAutosetpointAck( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void handleMessages( int what, BtServiceMessage smsg )
-  {
-    // was war denn los? Welche Nachricht kam rein?
-    switch ( what )
-    {
-    //
-    // ################################################################
-    // Service TICK empfangen
-    // ################################################################
-      case ProjectConst.MESSAGE_TICK:
-        msgRecivedTick( smsg );
-        break;
-      // ################################################################
-      // Computer wird gerade verbunden
-      // ################################################################
-      case ProjectConst.MESSAGE_CONNECTING:
-        msgConnecting( smsg );
-        break;
-      // ################################################################
-      // Computer wurde getrennt
-      // ################################################################
-      case ProjectConst.MESSAGE_CONNECTED:
-        msgConnected( smsg );
-        break;
-      // ################################################################
-      // Computer wurde getrennt
-      // ################################################################
-      case ProjectConst.MESSAGE_DISCONNECTED:
-        msgDisconnected( smsg );
-        break;
-      // ################################################################
-      // Computer wurde getrennt
-      // ################################################################
-      case ProjectConst.MESSAGE_CONNECTERROR:
-        msgConnectError( smsg );
-        break;
-      // ################################################################
-      // SPX sendet "ALIVE" und Ackuspannung
-      // ################################################################
-      case ProjectConst.MESSAGE_SPXALIVE:
-        msgRecivedAlive( smsg );
-        break;
-      // ################################################################
-      // Sonst....
-      // ################################################################
-      default:
-        Log.w( TAG, "unhadled message message with id <" + smsg.getId() + "> recived!" );
-    }
   }
 }
