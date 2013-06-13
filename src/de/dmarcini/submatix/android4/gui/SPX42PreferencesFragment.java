@@ -1,6 +1,8 @@
 package de.dmarcini.submatix.android4.gui;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -29,40 +31,94 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
 public class SPX42PreferencesFragment extends PreferenceFragment implements IBtServiceListener, OnSharedPreferenceChangeListener
 {
   private static final String TAG              = SPX42PreferencesFragment.class.getSimpleName();
-  private boolean             isIndividual     = false;
+  private static final int    maxEvents        = 12;
   private Activity            runningActivity  = null;
-  private String              serialNumber     = null;
-  private String              firmwareVersion  = null;
   private boolean             ignorePrefChange = false;
 
-  /**
-   * Sperre den Standartkonstruktor!
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 01.01.2013
-   */
-  @SuppressWarnings( "unused" )
-  private SPX42PreferencesFragment()
-  {}
-
-  /**
-   * Bei der Konstruktion soll angegeben sein, welcher Lizenzstatus vorhanden ist Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 01.01.2013
-   * @param isIndividual
-   */
-  public SPX42PreferencesFragment( boolean isIndividual )
+  @Override
+  public void handleMessages( int what, BtServiceMessage smsg )
   {
-    super();
-    this.isIndividual = isIndividual;
-    if( isIndividual )
+    // was war denn los? Welche Nachricht kam rein?
+    switch ( what )
     {
-      Log.i( TAG, "SPX42 preferences starts with \"individual\" license..." );
-    }
-    else
-    {
-      Log.i( TAG, "SPX42 preferences starts without \"individual\" license..." );
+    //
+    // ################################################################
+    // Service TICK empfangen
+    // ################################################################
+      case ProjectConst.MESSAGE_TICK:
+        msgRecivedTick( smsg );
+        break;
+      // ################################################################
+      // Computer wird gerade verbunden
+      // ################################################################
+      case ProjectConst.MESSAGE_CONNECTING:
+        msgConnecting( smsg );
+        break;
+      // ################################################################
+      // Computer wurde getrennt
+      // ################################################################
+      case ProjectConst.MESSAGE_CONNECTED:
+        msgConnected( smsg );
+        break;
+      // ################################################################
+      // Computer wurde getrennt
+      // ################################################################
+      case ProjectConst.MESSAGE_DISCONNECTED:
+        msgDisconnected( smsg );
+        break;
+      // ################################################################
+      // Computer wurde getrennt
+      // ################################################################
+      case ProjectConst.MESSAGE_CONNECTERROR:
+        msgConnectError( smsg );
+        break;
+      // ################################################################
+      // Seriennummer des ccomputers wurde gelesen
+      // ################################################################
+      case ProjectConst.MESSAGE_SERIAL_READ:
+        msgRecivedSerial( smsg );
+        break;
+      // ################################################################
+      // SPX sendet "ALIVE" und Ackuspannung
+      // ################################################################
+      case ProjectConst.MESSAGE_SPXALIVE:
+        msgRecivedAlive( smsg );
+        break;
+      // ################################################################
+      // SPX sendet Herstellerkennung
+      // ################################################################
+      case ProjectConst.MESSAGE_MANUFACTURER_READ:
+        msgReciveManufacturer( smsg );
+        break;
+      // ################################################################
+      // SPX sendet Firmwareversion
+      // ################################################################
+      case ProjectConst.MESSAGE_FWVERSION_READ:
+        msgReciveFirmwareversion( smsg );
+        break;
+      // ################################################################
+      // SPX sendet Setpoint
+      // ################################################################
+      case ProjectConst.MESSAGE_SETPOINT_READ:
+        msgReciveAutosetpoint( smsg );
+        break;
+      // ################################################################
+      // SPX Setpoint setzen bestätigt
+      // ################################################################
+      case ProjectConst.MESSAGE_SETPOINT_ACK:
+        msgReciveAutosetpointAck( smsg );
+        break;
+      // ################################################################
+      // SPX Lizenz lesen
+      // ################################################################
+      case ProjectConst.MESSAGE_LICENSE_STATE_READ:
+        msgReciveLicenseState( smsg );
+        break;
+      // ################################################################
+      // Sonst....
+      // ################################################################
+      default:
+        Log.w( TAG, "unhandled message with id <" + smsg.getId() + "> recived!" );
     }
   }
 
@@ -72,13 +128,69 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // TODO Automatisch generierter Methodenstub
     Log.v( TAG, "msgConnected()...ask for SPX config..." );
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
-    ignorePrefChange = false;
-    if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for serial number..." );
-    fActivity.askForSerialNumber();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for Firmware version..." );
-    fActivity.askForFirmwareVersion();
     if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for SPX config..." );
+    // Dialog schliesen, wenn geöffnet
+    dismissDial();
+    openWaitDial( maxEvents, getActivity().getResources().getString( R.string.dialog_please_wait_read_config ) );
     fActivity.askForConfigFromSPX42();
+    ignorePrefChange = false;
+  }
+
+  /**
+   * 
+   * den Bitte-warten Dialog anzeigen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 13.06.2013
+   * @param maxevents
+   *          maximal zu erwartende ereignisse
+   * @param msg
+   *          Nachricht
+   */
+  private void openWaitDial( int maxevents, String msg )
+  {
+    FragmentProgressDialog pd;
+    //
+    pd = new FragmentProgressDialog( msg );
+    pd.setCancelable( true );
+    pd.setMax( maxevents );
+    pd.setProgress( 4 );
+    // pd.setTitle( getActivity().getResources().getString( R.string.dialog_please_wait_title ) );
+    // pd.setMessage( msg );
+    // DialogFragment.show() will take care of adding the fragment
+    // in a transaction. We also want to remove any currently showing
+    // dialog, so make our own transaction and take care of that here.
+    FragmentTransaction ft = getFragmentManager().beginTransaction();
+    Fragment prev = getFragmentManager().findFragmentByTag( "dialog" );
+    if( prev != null )
+    {
+      ft.remove( prev );
+    }
+    ft.addToBackStack( null );
+    pd.show( ft, "dialog" );
+  }
+
+  /**
+   * 
+   * bitte-Warten Box verschwinden lassen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 13.06.2013
+   */
+  private void dismissDial()
+  {
+    FragmentTransaction ft = getFragmentManager().beginTransaction();
+    Fragment prev = getFragmentManager().findFragmentByTag( "dialog" );
+    if( prev != null )
+    {
+      ft.remove( prev );
+    }
   }
 
   @Override
@@ -100,8 +212,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   @Override
   public void msgDisconnected( BtServiceMessage msg )
   {
-    serialNumber = null;
-    firmwareVersion = null;
     // zum Menü zurück
     Intent intent = new Intent( getActivity(), areaListActivity.class );
     intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
@@ -216,7 +326,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   public void msgRecivedSerial( BtServiceMessage msg )
   {
     // TODO Automatisch generierter Methodenstub
-    serialNumber = ( String )msg.getContainer();
   }
 
   @Override
@@ -228,14 +337,19 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   @Override
   public void msgReciveFirmwareversion( BtServiceMessage msg )
   {
-    firmwareVersion = ( String )msg.getContainer();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Firmware <" + firmwareVersion + "> recived" );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Firmware <" + ( String )msg.getContainer() + "> recived" );
+  }
+
+  @Override
+  public void msgReciveLicenseState( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
   }
 
   @Override
   public void msgReciveManufacturer( BtServiceMessage msg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Manufacturer <" + firmwareVersion + "> recived" );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Manufacturer <" + ( String )msg.getContainer() + "> recived" );
   }
 
   @Override
@@ -252,7 +366,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate()..." );
     Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_individual + ">..." );
-    if( isIndividual )
+    if( FragmentCommonActivity.isIndividual )
     {
       addPreferencesFromResource( R.xml.config_spx42_preference_individual );
     }
@@ -595,7 +709,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // das nur bei Individuallizenz
     //
-    if( isIndividual )
+    if( FragmentCommonActivity.isIndividual )
     {
       //
       // Sensors Count for Warning
@@ -607,87 +721,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       //
       lP = ( ListPreference )pS.findPreference( "keyIndividualLoginterval" );
       lP.setSummary( String.format( res.getString( R.string.conf_ind_interval_header_summary ), lP.getEntry() ) );
-    }
-  }
-
-  @Override
-  public void handleMessages( int what, BtServiceMessage smsg )
-  {
-    // was war denn los? Welche Nachricht kam rein?
-    switch ( what )
-    {
-    //
-    // ################################################################
-    // Service TICK empfangen
-    // ################################################################
-      case ProjectConst.MESSAGE_TICK:
-        msgRecivedTick( smsg );
-        break;
-      // ################################################################
-      // Computer wird gerade verbunden
-      // ################################################################
-      case ProjectConst.MESSAGE_CONNECTING:
-        msgConnecting( smsg );
-        break;
-      // ################################################################
-      // Computer wurde getrennt
-      // ################################################################
-      case ProjectConst.MESSAGE_CONNECTED:
-        msgConnected( smsg );
-        break;
-      // ################################################################
-      // Computer wurde getrennt
-      // ################################################################
-      case ProjectConst.MESSAGE_DISCONNECTED:
-        msgDisconnected( smsg );
-        break;
-      // ################################################################
-      // Computer wurde getrennt
-      // ################################################################
-      case ProjectConst.MESSAGE_CONNECTERROR:
-        msgConnectError( smsg );
-        break;
-      // ################################################################
-      // Seriennummer des ccomputers wurde gelesen
-      // ################################################################
-      case ProjectConst.MESSAGE_SERIAL_READ:
-        msgRecivedSerial( smsg );
-        break;
-      // ################################################################
-      // SPX sendet "ALIVE" und Ackuspannung
-      // ################################################################
-      case ProjectConst.MESSAGE_SPXALIVE:
-        msgRecivedAlive( smsg );
-        break;
-      // ################################################################
-      // SPX sendet Herstellerkennung
-      // ################################################################
-      case ProjectConst.MESSAGE_MANUFACTURER_READ:
-        msgReciveManufacturer( smsg );
-        break;
-      // ################################################################
-      // SPX sendet Firmwareversion
-      // ################################################################
-      case ProjectConst.MESSAGE_FWVERSION_READ:
-        msgReciveFirmwareversion( smsg );
-        break;
-      // ################################################################
-      // SPX sendet Setpoint
-      // ################################################################
-      case ProjectConst.MESSAGE_SETPOINT_READ:
-        msgReciveAutosetpoint( smsg );
-        break;
-      // ################################################################
-      // SPX Setpoint setzen bestätigt
-      // ################################################################
-      case ProjectConst.MESSAGE_SETPOINT_ACK:
-        msgReciveAutosetpointAck( smsg );
-        break;
-      // ################################################################
-      // Sonst....
-      // ################################################################
-      default:
-        Log.w( TAG, "unhandled message with id <" + smsg.getId() + "> recived!" );
     }
   }
 }
