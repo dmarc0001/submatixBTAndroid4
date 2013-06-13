@@ -5,4 +5,5 @@
     <dimen name="icon_margin_left">16dp</dimen>
     <dimen name="icon_margin_top">24dp</dimen>
     <dimen name="default_left_right_margin">16dp</dimen>
+    <dimen name="standart_margin">8dp</dimen>
 </resources>
