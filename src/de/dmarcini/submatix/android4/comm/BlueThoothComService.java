@@ -51,6 +51,9 @@ public class BlueThoothComService extends Service
   private volatile boolean     isLogentryMode              = false;
   private String               connectedDevice             = null;
   private String               connectedDeviceSerialNumber = null;
+  private String               connectedDeviceManufacturer = null;
+  private String               connectedDeviceFWVersion    = null;
+  private String[]             connectedDeviceLicense      = null;
   private int                  firmware                    = ProjectConst.FW_NOT_SET;
   // @formatter:on
   /**
@@ -394,6 +397,7 @@ public class BlueThoothComService extends Service
       {
         case ProjectConst.SPX_MANUFACTURERS:
           // Sende Nachricht Gerätename empfangen!
+          connectedDeviceManufacturer = fields[1];
           msg = new BtServiceMessage( ProjectConst.MESSAGE_MANUFACTURER_READ, new String( fields[1] ) );
           sendMessageToApp( msg );
           if( BuildConfig.DEBUG )
@@ -415,10 +419,7 @@ public class BlueThoothComService extends Service
           //
           // Mach erst mal die Bestimmung, ob ich die unterstützte
           //
-          if( BuildConfig.DEBUG )
-          {
-            Log.d( TAGREADER, "FIRMWARE string: <" + fields[1] + ">" );
-          }
+          connectedDeviceFWVersion = fields[1];
           if( fields[1].startsWith( ProjectConst.FIRMWARE_2_6_7_7V ) )
           {
             if( BuildConfig.DEBUG )
@@ -634,8 +635,9 @@ public class BlueThoothComService extends Service
           // <~45:LS:CE>
           // LS : License State 0=Nitrox,1=Normoxic Trimix,2=Full Trimix
           // CE : Custom Enabled 0= disabled, 1=enabled
-          msg = new BtServiceMessage( ProjectConst.MESSAGE_LICENSE_STATE_READ, new String[]
-          { fields[1], fields[2] } );
+          connectedDeviceLicense = new String[]
+          { fields[1], fields[2] };
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_LICENSE_STATE_READ, connectedDeviceLicense );
           sendMessageToApp( msg );
           if( BuildConfig.DEBUG )
           {
@@ -988,7 +990,15 @@ public class BlueThoothComService extends Service
     {
       Log.d( TAG, "askForSerialNumber..." );
     }
-    this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_SERIAL_NUMBER ) );
+    if( connectedDeviceSerialNumber != null )
+    {
+      BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_SERIAL_READ, new String( connectedDeviceSerialNumber ) );
+      sendMessageToApp( msg );
+    }
+    else
+    {
+      this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_SERIAL_NUMBER ) );
+    }
   }
 
   /**
@@ -1010,13 +1020,61 @@ public class BlueThoothComService extends Service
     this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_ALIVE ) );
   }
 
+  /**
+   * 
+   * Erfrage die Lizenz vom SPX
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 04.06.2013
+   */
   public void askForLicenseFromSPX()
   {
     if( BuildConfig.DEBUG )
     {
       Log.d( TAG, "askForLicenseFromSPX..." );
     }
-    this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_LICENSE_STATE ) );
+    if( connectedDeviceLicense != null )
+    {
+      BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_LICENSE_STATE_READ, connectedDeviceLicense );
+      sendMessageToApp( msg );
+    }
+    else
+    {
+      this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_LICENSE_STATE ) );
+    }
+  }
+
+  /**
+   * 
+   * Erfrage den Herstellerstring
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 04.06.2013
+   */
+  public void askForManufacturer()
+  {
+    if( BuildConfig.DEBUG )
+    {
+      Log.d( TAG, "askForLicenseFromSPX..." );
+    }
+    //
+    // wenn der schon mal abgefragt wurde, kann ich das "cachen"
+    //
+    if( connectedDeviceManufacturer != null )
+    {
+      BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_MANUFACTURER_READ, new String( connectedDeviceManufacturer ) );
+      sendMessageToApp( msg );
+    }
+    else
+    {
+      this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_MANUFACTURERS ) );
+    }
   }
 
   /**
@@ -1077,8 +1135,6 @@ public class BlueThoothComService extends Service
    */
   private void connectionFailed()
   {
-    connectedDevice = null;
-    connectedDeviceSerialNumber = null;
     // connectedDeviceAlias = null;
     setState( ProjectConst.CONN_STATE_NONE );
     BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
@@ -1101,8 +1157,6 @@ public class BlueThoothComService extends Service
    */
   private void connectionLost()
   {
-    connectedDevice = null;
-    connectedDeviceSerialNumber = null;
     // connectedDeviceAlias = null;
     setState( ProjectConst.CONN_STATE_NONE );
     BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
@@ -1212,8 +1266,6 @@ public class BlueThoothComService extends Service
       mWriterThread.cancel();
       mWriterThread = null;
     }
-    connectedDevice = null;
-    // connectedDeviceAlias = null;
     setState( ProjectConst.CONN_STATE_NONE );
   }
 
@@ -1463,6 +1515,12 @@ public class BlueThoothComService extends Service
     {
       default:
       case ProjectConst.CONN_STATE_NONE:
+        // die Daten löschen
+        connectedDevice = null;
+        connectedDeviceSerialNumber = null;
+        connectedDeviceManufacturer = null;
+        connectedDeviceFWVersion = null;
+        connectedDeviceLicense = null;
         msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
         break;
       case ProjectConst.CONN_STATE_CONNECTING:
