@@ -588,6 +588,18 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         msgReciveLicenseState( smsg );
         break;
       // ################################################################
+      // Deko einstellungen empfangen
+      // ################################################################
+      case ProjectConst.MESSAGE_DECO_READ:
+        msgReciveDeco( smsg );
+        break;
+      // ################################################################
+      // Deko setzen erfolgreich
+      // ################################################################
+      case ProjectConst.MESSAGE_DECO_ACK:
+        msgReciveDecoAck( smsg );
+        break;
+      // ################################################################
       // Sonst....
       // ################################################################
       default:
@@ -1168,5 +1180,35 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     {
       mService.writeAutoSetpoint( auto, pressure );
     }
+  }
+
+  /**
+   * 
+   * schreibe DECO-Preferenzen auf das Gerät
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 13.07.2013
+   */
+  public void writeDecoPrefs( int logG, int highG, int deepSt, int dynGr, int lastStop )
+  {
+    if( mService != null )
+    {
+      mService.writeDecoPrefs( logG, highG, deepSt, dynGr, lastStop );
+    }
+  }
+
+  @Override
+  public void msgReciveDecoAck( BtServiceMessage msg )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX set deco ACK recived" );
+  }
+
+  @Override
+  public void msgReciveDeco( BtServiceMessage msg )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX deco config recived" );
   }
 }
