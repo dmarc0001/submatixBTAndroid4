@@ -466,13 +466,15 @@ public class BlueThoothComService extends Service
             Log.d( TAGREADER, "Serial Number recived! <" + fields[1] + ">" );
           }
           break;
-        // case ProjectConst.SPX_SET_SETUP_DEKO:
-        // // Quittung für Setze DECO
-        // if( log ) LOGGER.fine( "Response for set deco <" + readMessage + "> was recived." );
-        // //
-        // // TODO: readDecoPrefs();
-        // //
-        // break;
+        case ProjectConst.SPX_SET_SETUP_DEKO:
+          // Quittung für Setze DECO
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_DECO_ACK );
+          sendMessageToApp( msg );
+          if( BuildConfig.DEBUG )
+          {
+            Log.d( TAGREADER, "SPX_SET_SETUP_DEKO Acknoweledge recived" );
+          }
+          break;
         case ProjectConst.SPX_SET_SETUP_SETPOINT:
           // Quittung für Setzen der Auto-Setpointeinstelungen
           msg = new BtServiceMessage( ProjectConst.MESSAGE_SETPOINT_ACK );
@@ -494,20 +496,21 @@ public class BlueThoothComService extends Service
         // // Quittung für Individualeinstellungen
         // if( log ) LOGGER.fine( "SPX_SET_SETUP_INDIVIDUAL Acknoweledge recived <" + readMessage + ">" );
         // break;
-        // case ProjectConst.SPX_GET_SETUP_DEKO:
-        // // Kommando DEC liefert zurück:
-        // // ~34:LL:HH:D:Y:C
-        // // LL=GF-Low, HH=GF-High,
-        // // D=Deepstops (0/1)
-        // // Y=Dynamische Gradienten (0/1)
-        // // C=Last Decostop (0=3 Meter/1=6 Meter)
-        // if( aListener != null )
-        // {
-        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_DECO_READ, new String( readMessage ), System.currentTimeMillis() / 100, 0 );
-        // aListener.actionPerformed( ex );
-        // }
-        // if( log ) LOGGER.fine( "DECO_EINST recived <" + readMessage + ">" );
-        // break;
+        case ProjectConst.SPX_GET_SETUP_DEKO:
+          // Kommando DEC liefert zurück:
+          // ~34:LL:HH:D:Y:C
+          // LL=GF-Low, HH=GF-High,
+          // D=Deepstops (0/1)
+          // Y=Dynamische Gradienten (0/1)
+          // C=Last Decostop (0=3 Meter/1=6 Meter)
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_DECO_READ, new String[]
+          { fields[1], fields[2], fields[3], fields[4], fields[5] } );
+          sendMessageToApp( msg );
+          if( BuildConfig.DEBUG )
+          {
+            Log.d( TAGREADER, "MESSAGE_DECO_READ recived " );
+          }
+          break;
         case ProjectConst.SPX_GET_SETUP_SETPOINT:
           // Kommando GET_SETUP_SETPOINT liefert
           // ~35:A:P
@@ -1622,6 +1625,56 @@ public class BlueThoothComService extends Service
           debugString = String.format( "NEWER-FIRMWARE <~%x:A%x:P%x>", ProjectConst.SPX_SET_SETUP_SETPOINT, auto, pressure );
           Log.d( TAG, "sending <" + debugString + ">" );
         }
+        break;
+    }
+    this.writeSPXMsgToDevice( kdoString );
+  }
+
+  /**
+   * 
+   * schreibe DECO Parameter in den SPX
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 13.07.2013
+   * @param lowG
+   *          Low gradient
+   * @param highG
+   *          High Gradient
+   * @param deepSt
+   *          Deppsstop Enable?
+   * @param dynGr
+   *          Dyn gradients enable?
+   * @param lastStop
+   *          last stop 3 oder 6 Meter?
+   */
+  public void writeDecoPrefs( int lowG, int highG, int deepSt, int dynGr, int lastStop )
+  {
+    String kdoString;
+    //
+    switch ( firmware )
+    {
+      case ProjectConst.FW_2_6_7_7V:
+        // ~29:GH:GL:LS:DY:DS
+        // GH = Gradient HIGH
+        // GL = Gradient LOW
+        // LS = Last Stop 0=>6m 1=>3m
+        // DY = Dynamische gradienten 0->off 1->on
+        // DS = Deepstops 0=> enabled, 1=>disabled
+        kdoString = String.format( "~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_DEKO, highG, lowG, lastStop, dynGr, deepSt );
+        break;
+      default:
+      case ProjectConst.FW_2_7V:
+      case ProjectConst.FW_2_7H:
+        // Kommando SPX_SET_SETUP_DEKO
+        // ~29:GL:GH:DS:DY:LS
+        // GL=GF-Low, GH=GF-High,
+        // DS=Deepstops (0/1)
+        // DY=Dynamische Gradienten (0/1)
+        // LS=Last Decostop (0=3 Meter/1=6 Meter)
+        kdoString = String.format( "~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_DEKO, lowG, highG, deepSt, dynGr, lastStop );
         break;
     }
     this.writeSPXMsgToDevice( kdoString );
