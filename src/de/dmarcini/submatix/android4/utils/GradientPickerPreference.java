@@ -359,6 +359,74 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
   }
 
   /**
+   * 
+   * Setze einen Wert für die Gradienten
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 13.07.2013
+   * @param paramStr
+   *          "LOW:HIGH"
+   * @return erfolgreich oder nicht
+   */
+  public boolean setValue( String paramStr )
+  {
+    return( makeValuesFromString( paramStr ) );
+  }
+
+  /**
+   * 
+   * Gib Wert als Dezimalwerte zurück
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 13.07.2013
+   * @return String "XX:XX"
+   */
+  public String getValueDecimal()
+  {
+    return( String.format( "%02d:%02d", lowGradient, highGradient ) );
+  }
+
+  /**
+   * 
+   * Gib Wert als Hex zurück
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 13.07.2013
+   * @return String "XX:XX"
+   */
+  public String getValueHex()
+  {
+    return( String.format( "%02x:%02x", lowGradient, highGradient ) );
+  }
+
+  /**
+   * 
+   * Gib Wert als Dezimalwerte zurück
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 13.07.2013
+   * @return int[2]
+   */
+  public int[] getValue()
+  {
+    int[] val =
+    { lowGradient, highGradient };
+    return( val );
+  }
+
+  /**
    * Mach aus dem Parameterstring die Werte für die Gradienten Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
    * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 02.01.2013
