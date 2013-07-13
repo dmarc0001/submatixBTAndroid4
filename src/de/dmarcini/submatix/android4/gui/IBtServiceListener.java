@@ -29,4 +29,8 @@ public interface IBtServiceListener
   public void msgReciveAutosetpointAck( final BtServiceMessage msg );
 
   public void msgReciveLicenseState( final BtServiceMessage msg );
+
+  public void msgReciveDeco( final BtServiceMessage msg );
+
+  public void msgReciveDecoAck( final BtServiceMessage msg );
 }
