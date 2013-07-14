@@ -434,13 +434,13 @@ public class BlueThoothComService extends Service
           // Quittung für Setzen der Displayeinstellungen
           msg = new BtServiceMessage( ProjectConst.MESSAGE_DECO_ACK );
           sendMessageToApp( msg );
-          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "MESSAGE_DECO_READ recived " );
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "MESSAGE_DECO_ACK recived " );
           break;
         case ProjectConst.SPX_SET_SETUP_UNITS:
           // Quittung für das Setzen der Masseinheiten
           msg = new BtServiceMessage( ProjectConst.MESSAGE_UNITS_ACK );
           sendMessageToApp( msg );
-          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "MESSAGE_DECO_READ recived " );
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "MESSAGE_UNITS_ACK recived " );
           break;
         // case ProjectConst.SPX_SET_SETUP_INDIVIDUAL:
         // // Quittung für Individualeinstellungen
@@ -481,7 +481,7 @@ public class BlueThoothComService extends Service
         case ProjectConst.SPX_GET_SETUP_UNITS:
           // Kommando GET_SETUP_UNITS
           // ~37:UD:UL:UW
-          // UD= Fahrenheit/Celsius => immer 0 in der aktuellen Firmware 2.6.7.7_U
+          // UD= Fahrenheit/Celsius => immer 0 in der Firmware 2.6.7.7_U
           // UL= 0=metrisch 1=imperial
           // UW= 0->Salzwasser 1->Süßwasser
           msg = new BtServiceMessage( ProjectConst.MESSAGE_UNITS_READ, new String[]
