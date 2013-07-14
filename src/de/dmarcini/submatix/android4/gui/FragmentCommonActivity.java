@@ -814,13 +814,13 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   @Override
   public void msgReciveIndividuals( BtServiceMessage msg )
   {
-    // TODO Automatisch generierter Methodenstub
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX INDIVIDUALS settings recived" );
   }
 
   @Override
   public void msgReciveIndividualsAck( BtServiceMessage msg )
   {
-    // TODO Automatisch generierter Methodenstub
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX INDIVIDUALS settings ACK recived" );
   }
 
   @Override
@@ -1360,6 +1360,29 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     if( mService != null )
     {
       mService.writeUnitPrefs( isTempMetric, isDepthMetric, isFreshwater );
+    }
+  }
+
+  /**
+   * 
+   * schreibe INDIVIDUAL Einstellungen in den SPX42
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 14.07.2013
+   * @param sensorsOff
+   * @param pscrOff
+   * @param sensorsCount
+   * @param soundOn
+   * @param logInterval
+   */
+  public void writeIndividualPrefs( int sensorsOff, int pscrOff, int sensorsCount, int soundOn, int logInterval )
+  {
+    if( mService != null )
+    {
+      mService.writeIndividualPrefs( sensorsOff, pscrOff, sensorsCount, soundOn, logInterval );
     }
   }
 }
