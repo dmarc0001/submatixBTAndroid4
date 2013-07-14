@@ -650,6 +650,25 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   }
 
   @Override
+  public void msgReciveIndividuals( BtServiceMessage msg )
+  {
+    // Kommando GET_SETUP_INDIVIDUAL liefert
+    // ~38:SE:PS:SC:SN:LI
+    // SE: Sensors 0->ON 1->OFF
+    // PS: PSCRMODE 0->OFF 1->ON
+    // SC: SensorCount
+    // SN: Sound 0->OFF 1->ON
+    // LI: Loginterval 0->10sec 1->30Sec 2->60 Sec
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgReciveIndividualsAck( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
   public void msgReciveLicenseState( BtServiceMessage msg )
   {
     // TODO Automatisch generierter Methodenstub

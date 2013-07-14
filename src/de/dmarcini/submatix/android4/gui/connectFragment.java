@@ -385,6 +385,18 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   }
 
   @Override
+  public void msgReciveIndividuals( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgReciveIndividualsAck( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
   public void msgReciveLicenseState( BtServiceMessage msg )
   {
     // TODO Automatisch generierter Methodenstub
