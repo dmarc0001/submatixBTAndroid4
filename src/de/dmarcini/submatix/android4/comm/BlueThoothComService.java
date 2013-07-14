@@ -940,6 +940,27 @@ public class BlueThoothComService extends Service
 
   /**
    * 
+   * Frage nach der Konfiguration der DECO-Parameter
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 13.07.2013
+   */
+  public void askForDecoConfig()
+  {
+    String kdoString;
+    kdoString = String.format( "%s~%x~%x%s", ProjectConst.STX, ProjectConst.SPX_GET_SETUP_DEKO, ProjectConst.SPX_ALIVE, ProjectConst.ETX );
+    if( BuildConfig.DEBUG )
+    {
+      Log.d( TAG, "askForDecoConfig()...send <" + kdoString + ">" );
+    }
+    this.writeToDevice( kdoString );
+  }
+
+  /**
+   * 
    * Lese die Konfiguration vom SPX42
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
