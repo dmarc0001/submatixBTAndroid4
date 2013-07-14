@@ -262,6 +262,24 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
 
   /**
    * 
+   * Frage den SPX nach seinem Hersteller
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 04.06.2013
+   */
+  public void askForManufacturer()
+  {
+    if( mService != null )
+    {
+      mService.askForManufacturer();
+    }
+  }
+
+  /**
+   * 
    * Frage nach der Seriennummer
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
@@ -293,24 +311,6 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     if( mService != null )
     {
       mService.askForSPXAlive();
-    }
-  }
-
-  /**
-   * 
-   * Frage den SPX nach seinem Hersteller
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 04.06.2013
-   */
-  public void askForManufacturer()
-  {
-    if( mService != null )
-    {
-      mService.askForManufacturer();
     }
   }
 
@@ -618,6 +618,18 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         msgReciveDecoAck( smsg );
         break;
       // ################################################################
+      // Display Einstellungen empfangen
+      // ################################################################
+      case ProjectConst.MESSAGE_DISPLAY_READ:
+        msgReciveDisplay( smsg );
+        break;
+      // ################################################################
+      // Deko setzen erfolgreich
+      // ################################################################
+      case ProjectConst.MESSAGE_DISPLAY_ACK:
+        msgReciveDisplayAck( smsg );
+        break;
+      // ################################################################
       // Sonst....
       // ################################################################
       default:
@@ -730,6 +742,30 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   public void msgRecivedAlive( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Alive recived" );
+  }
+
+  @Override
+  public void msgReciveDeco( BtServiceMessage msg )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX deco config recived" );
+  }
+
+  @Override
+  public void msgReciveDecoAck( BtServiceMessage msg )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX set deco ACK recived" );
+  }
+
+  @Override
+  public void msgReciveDisplay( BtServiceMessage msg )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX display config recived" );
+  }
+
+  @Override
+  public void msgReciveDisplayAck( BtServiceMessage msg )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX display config ACK recived" );
   }
 
   @Override
@@ -1216,17 +1252,5 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     {
       mService.writeDecoPrefs( logG, highG, deepSt, dynGr, lastStop );
     }
-  }
-
-  @Override
-  public void msgReciveDecoAck( BtServiceMessage msg )
-  {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX set deco ACK recived" );
-  }
-
-  @Override
-  public void msgReciveDeco( BtServiceMessage msg )
-  {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX deco config recived" );
   }
 }
