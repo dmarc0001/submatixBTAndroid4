@@ -37,4 +37,8 @@ public interface IBtServiceListener
   public void msgReciveDisplay( final BtServiceMessage msg );
 
   public void msgReciveDisplayAck( final BtServiceMessage msg );
+
+  public void msgReciveUnits( final BtServiceMessage msg );
+
+  public void msgReciveUnitsAck( final BtServiceMessage msg );
 }

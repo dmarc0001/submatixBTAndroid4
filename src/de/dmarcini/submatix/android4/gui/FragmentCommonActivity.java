@@ -816,6 +816,18 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   }
 
   @Override
+  public void msgReciveUnits( BtServiceMessage msg )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX device units settings recived" );
+  }
+
+  @Override
+  public void msgReciveUnitsAck( BtServiceMessage msg )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX device units settings ACK recived" );
+  }
+
+  @Override
   public void onActivityResult( int requestCode, int resultCode, Intent data )
   {
     Log.v( TAG, "onActivityResult()... " );
