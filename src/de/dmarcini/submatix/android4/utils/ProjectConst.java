@@ -165,6 +165,8 @@ public final class ProjectConst
   public static final int    MESSAGE_LICENSE_STATE_READ = ActionEvent.RESERVED_ID_MAX + 15;
   public static final int    MESSAGE_DECO_READ          = ActionEvent.RESERVED_ID_MAX + 16;
   public static final int    MESSAGE_DECO_ACK           = ActionEvent.RESERVED_ID_MAX + 17;
+  public static final int    MESSAGE_DISPLAY_READ       = ActionEvent.RESERVED_ID_MAX + 18;
+  public static final int    MESSAGE_DISPLAY_ACK        = ActionEvent.RESERVED_ID_MAX + 19;
   
   //
 //  public static final int    MESSAGE_STATE_CHANGE       = ActionEvent.RESERVED_ID_MAX + 2;
@@ -172,7 +174,6 @@ public final class ProjectConst
 //  public static final int    MESSAGE_WRITE              = ActionEvent.RESERVED_ID_MAX + 4;
 //  public static final int    MESSAGE_DEVICE_NAME        = ActionEvent.RESERVED_ID_MAX + 5;
 //  public static final int    MESSAGE_TOAST              = ActionEvent.RESERVED_ID_MAX + 6;
-//  public static final int    MESSAGE_DISPLAY_READ       = ActionEvent.RESERVED_ID_MAX + 10;
 //  public static final int    MESSAGE_INDIVID_READ       = ActionEvent.RESERVED_ID_MAX + 11;
 //  public static final int    MESSAGE_GAS_READ           = ActionEvent.RESERVED_ID_MAX + 12;
 //  public static final int    MESSAGE_KDO45_READ         = ActionEvent.RESERVED_ID_MAX + 13;
