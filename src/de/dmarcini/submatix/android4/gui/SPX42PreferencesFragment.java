@@ -402,6 +402,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       Log.e( TAG, "msgReciveDeco(): Setpoint Object is not an correct integer! (" + ex.getLocalizedMessage() + ")" );
       return;
     }
+    ignorePrefChange = true;
     if( BuildConfig.DEBUG )
       Log.d( TAG, String.format( "SPX deco settings are low:%d, high:%d, deepstops:%d, dyn gradients:%d, last deco:%d", lowG, highG, deepStops, dynGr, lastStop ) );
     //
@@ -422,6 +423,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       if( sp == null )
       {
         Log.e( TAG, "msgReciveDeco: Key <" + decoLastStop + "> was not found an SwitchPreference! abort!" );
+        ignorePrefChange = false;
         return;
       }
       //
@@ -443,6 +445,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       if( sp == null )
       {
         Log.e( TAG, "msgReciveDeco: Key <" + decoDynGradients + "> was not found an SwitchPreference! abort!" );
+        ignorePrefChange = false;
         return;
       }
       //
@@ -464,6 +467,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       if( sp == null )
       {
         Log.e( TAG, "msgReciveDeco: Key <" + decoDeepStops + "> was not found an SwitchPreference! abort!" );
+        ignorePrefChange = false;
         return;
       }
       //
@@ -476,6 +480,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     {
       Log.e( TAG, "can't set dynGradients value to preference..." );
     }
+    ignorePrefChange = false;
   }
 
   @Override
@@ -531,6 +536,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       Log.e( TAG, "msgReciveDisplay: Setpoint Object is not an correct integer! (" + ex.getLocalizedMessage() + ")" );
       return;
     }
+    ignorePrefChange = true;
     //
     // jetzt Helligkeit eintragen
     //
@@ -541,6 +547,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       if( lP == null )
       {
         Log.e( TAG, "msgReciveDisplay: Key <" + displayLuminance + "> was not found an ListPreference! abort!" );
+        ignorePrefChange = false;
         return;
       }
       //
@@ -564,6 +571,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       if( lP == null )
       {
         Log.e( TAG, "msgReciveDisplay: Key <" + displayOrient + "> was not found an ListPreference! abort!" );
+        ignorePrefChange = false;
         return;
       }
       //
@@ -577,6 +585,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     {
       Log.e( TAG, "msgReciveDisplay: can't set display angle preset value to preference..." );
     }
+    ignorePrefChange = false;
   }
 
   @Override
@@ -975,7 +984,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     int lowG, highG, deepStops, dynGr, lastStop;
     //
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs()..." );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs..." );
     //
     // Low/High Gradient erfragen
     //
@@ -984,20 +993,20 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       GradientPickerPreference dgp = ( GradientPickerPreference )getPreferenceScreen().findPreference( decoGradient );
       if( dgp == null )
       {
-        Log.e( TAG, "msgReciveDeco: Key <" + decoGradient + "> was not found an GradientPickerPreference! abort!" );
+        Log.e( TAG, "sendDecoPrefs: Key <" + decoGradient + "> was not found an GradientPickerPreference! abort!" );
         return;
       }
       //
       // jetzt die Werte für Gradienten übernehmen
       //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "get Gradients value from preference..." );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs: get Gradients value from preference..." );
       int[] val = dgp.getValue();
       lowG = val[0];
       highG = val[1];
     }
     else
     {
-      Log.e( TAG, "can't set gradient value to preference..." );
+      Log.e( TAG, "sendDecoPrefs: can't set gradient value to preference..." );
       return;
     }
     //
@@ -1008,13 +1017,13 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( decoLastStop );
       if( sp == null )
       {
-        Log.e( TAG, "msgReciveDeco: Key <" + decoLastStop + "> was not found an SwitchPreference! abort!" );
+        Log.e( TAG, "sendDecoPrefs: Key <" + decoLastStop + "> was not found an SwitchPreference! abort!" );
         return;
       }
       //
       // jetzt die Werte für LastStop übernehmen
       //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "get deco last stop value from preference..." );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs: get deco last stop value from preference..." );
       if( sp.isChecked() )
       {
         lastStop = 1;
@@ -1026,7 +1035,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     }
     else
     {
-      Log.e( TAG, "can't set decoLastStop value to preference..." );
+      Log.e( TAG, "sendDecoPrefs: can't set decoLastStop value to preference..." );
       return;
     }
     //
@@ -1037,13 +1046,13 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( decoDynGradients );
       if( sp == null )
       {
-        Log.e( TAG, "msgReciveDeco: Key <" + decoDynGradients + "> was not found an SwitchPreference! abort!" );
+        Log.e( TAG, "sendDecoPrefs: Key <" + decoDynGradients + "> was not found an SwitchPreference! abort!" );
         return;
       }
       //
       // jetzt die Werte für LastStop übernehmen
       //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "get dynGradients value from preference..." );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs: get dynGradients value from preference..." );
       if( sp.isChecked() )
       {
         dynGr = 1;
@@ -1055,7 +1064,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     }
     else
     {
-      Log.e( TAG, "can't set dynGradients value to preference..." );
+      Log.e( TAG, "sendDecoPrefs: can't set dynGradients value to preference..." );
       return;
     }
     //
@@ -1066,13 +1075,13 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( decoDeepStops );
       if( sp == null )
       {
-        Log.e( TAG, "msgReciveDeco: Key <" + decoDeepStops + "> was not found an SwitchPreference! abort!" );
+        Log.e( TAG, "sendDecoPrefs: Key <" + decoDeepStops + "> was not found an SwitchPreference! abort!" );
         return;
       }
       //
       // jetzt die Werte für LastStop übernehmen
       //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "get deepStops value from preference..." );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs: get deepStops value from preference..." );
       if( sp.isChecked() )
       {
         deepStops = 1;
@@ -1084,12 +1093,12 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     }
     else
     {
-      Log.e( TAG, "can't set dynGradients value to preference..." );
+      Log.e( TAG, "sendDecoPrefs: can't set dynGradients value to preference..." );
       return;
     }
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     ignorePrefChange = true;
-    if( BuildConfig.DEBUG ) Log.d( TAG, "write deco prefs via runningActivity..." );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs: write deco prefs via runningActivity..." );
     fActivity.writeDecoPrefs( lowG, highG, deepStops, dynGr, lastStop );
   }
 
@@ -1108,10 +1117,62 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     String displayLuminance = "keyDisplayLuminance";
     String displayOrientation = "keyDisplayOrientation";
     ListPreference lP = null;
+    int lumin = 1, orient = 0;
+    if( BuildConfig.DEBUG ) Log.d( TAG, "sendDisplayPrefs()..." );
+    //
+    // Helligkeit erfragen
+    //
+    if( getPreferenceScreen().findPreference( displayLuminance ) instanceof ListPreference )
+    {
+      lP = ( ListPreference )getPreferenceScreen().findPreference( displayLuminance );
+      if( lP == null )
+      {
+        Log.e( TAG, "sendDisplayPrefs: Key <" + displayLuminance + "> was not found an ListPreference! abort!" );
+        return;
+      }
+      //
+      // jetzt die Werte für Helligkeit übernehmen
+      //
+      if( BuildConfig.DEBUG ) Log.d( TAG, "get display luminance value from preference..." );
+      lumin = lP.findIndexOfValue( lP.getValue() );
+      if( lumin == -1 ) lumin = 2;
+    }
+    else
+    {
+      Log.e( TAG, "can't get value for luminance from preference.." );
+      return;
+    }
+    //
+    // Display Ausrichtung erfragen
+    //
+    if( getPreferenceScreen().findPreference( displayOrientation ) instanceof ListPreference )
+    {
+      lP = ( ListPreference )getPreferenceScreen().findPreference( displayOrientation );
+      if( lP == null )
+      {
+        Log.e( TAG, "sendDisplayPrefs: Key <" + displayOrientation + "> was not found an ListPreference! abort!" );
+        return;
+      }
+      //
+      // jetzt die Werte für Ausrichtung übernehmen
+      //
+      if( BuildConfig.DEBUG ) Log.d( TAG, "get display orientation value from preference..." );
+      orient = lP.findIndexOfValue( lP.getValue() );
+      if( orient == -1 ) orient = 0;
+    }
+    else
+    {
+      Log.e( TAG, "sendDisplayPrefs: can't get value for display orientation from preference.." );
+      return;
+    }
+    FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
+    ignorePrefChange = true;
+    if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "sendDisplayPrefs: write display prefs via runningActivity lum:%d, orient:%d...", lumin, orient ) );
+    fActivity.writeDisplayPrefs( lumin, orient );
   }
 
   /**
-   * Setze alle Summarys auf ihren aktuellen Wert (wi das die Activity nichzt selber macht) Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * Setze alle Summarys auf ihren aktuellen Wert (weil das die Activity nicht selber macht) Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
    * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 31.12.2012
    */
@@ -1120,7 +1181,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     ListPreference lP = null;
     PreferenceScreen pS = getPreferenceScreen();
     Resources res = getResources();
-    SharedPreferences shared = getPreferenceManager().getSharedPreferences();
+    // SharedPreferences shared = getPreferenceManager().getSharedPreferences();
     //
     // Autoset
     //

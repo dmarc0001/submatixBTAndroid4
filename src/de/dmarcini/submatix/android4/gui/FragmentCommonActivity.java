@@ -747,7 +747,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   @Override
   public void msgReciveDeco( BtServiceMessage msg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX deco config recived" );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX deco settings recived" );
   }
 
   @Override
@@ -759,13 +759,13 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   @Override
   public void msgReciveDisplay( BtServiceMessage msg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX display config recived" );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX display settings recived" );
   }
 
   @Override
   public void msgReciveDisplayAck( BtServiceMessage msg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX display config ACK recived" );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX display settings ACK recived" );
   }
 
   @Override
@@ -1251,6 +1251,28 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     if( mService != null )
     {
       mService.writeDecoPrefs( logG, highG, deepSt, dynGr, lastStop );
+    }
+  }
+
+  /**
+   * 
+   * schreibe Display Preferenzen in den SPX
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 14.07.2013
+   * @param lumin
+   *          Helligkeit
+   * @param orient
+   *          Orientierung
+   */
+  public void writeDisplayPrefs( int lumin, int orient )
+  {
+    if( mService != null )
+    {
+      mService.writeDisplayPrefs( lumin, orient );
     }
   }
 }
