@@ -499,7 +499,7 @@ public class BlueThoothComService extends Service
           // SC: SensorCount
           // SN: Sound 0->OFF 1->ON
           // LI: Loginterval 0->10sec 1->30Sec 2->60 Sec
-          msg = new BtServiceMessage( ProjectConst.MESSAGE_UNITS_READ, new String[]
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_INDIVID_READ, new String[]
           { fields[1], fields[2], fields[3], fields[4], fields[5] } );
           sendMessageToApp( msg );
           if( BuildConfig.DEBUG ) Log.d( TAGREADER, "Device individual settings recived!" );
@@ -1738,6 +1738,29 @@ public class BlueThoothComService extends Service
     String kdoString;
     kdoString = String.format( "~%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_UNITS, isTempMetric, isDepthMetric, isFreshwater );
     if( BuildConfig.DEBUG ) Log.d( TAG, "writeUnitPrefs: sending <" + kdoString + ">" );
+    this.writeSPXMsgToDevice( kdoString );
+  }
+
+  /**
+   * 
+   * Schreibe individual Einstellungen in den SPX42
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 14.07.2013
+   * @param sensorsOff
+   * @param pscrOff
+   * @param sensorsCount
+   * @param soundOn
+   * @param logInterval
+   */
+  public void writeIndividualPrefs( int sensorsOff, int pscrOff, int sensorsCount, int soundOn, int logInterval )
+  {
+    String kdoString;
+    kdoString = String.format( "~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_INDIVIDUAL, sensorsOff, pscrOff, sensorsCount, soundOn, logInterval );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "writeIndividualPrefs: sending <" + kdoString + ">" );
     this.writeSPXMsgToDevice( kdoString );
   }
 }
