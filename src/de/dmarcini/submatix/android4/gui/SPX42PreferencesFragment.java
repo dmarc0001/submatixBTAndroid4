@@ -643,16 +643,32 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   @Override
   public void msgReciveUnits( BtServiceMessage msg )
   {
+    // Kommando SPX_GET_SETUP_UNITS
+    // ~37:UD:UL:UW
+    // UD= 1=Fahrenheit/0=Celsius => immer 0 in der aktuellen Firmware 2.6.7.7_U
+    // UL= 0=metrisch 1=imperial
+    // UW= 0->Salzwasser 1->Süßwasser
     String unitsIsTempMetric = "keyUnitsIsTempMetric";
     String unitsIsDepthMetric = "keyUnitsIsDepthMetric";
     String unitsIsFreshwater = "keyUnitsIsFreshwater";
     int isTempMetric = 0, isDepthMetric = 0, isFreshwater = 0;
     String[] unitsParm;
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX units settings recived" );
     if( msg.getContainer() instanceof String[] )
     {
       unitsParm = ( String[] )msg.getContainer();
+      if( BuildConfig.DEBUG )
+      {
+        try
+        {
+          Log.d( TAG, "SPX units settings <" + unitsParm[0] + "," + unitsParm[1] + "," + unitsParm[2] + ">recived" );
+        }
+        catch( IndexOutOfBoundsException ex )
+        {
+          Log.e( TAG, "msgReciveUnits: Units Object has not enough elements! (" + ex.getLocalizedMessage() + ")" );
+          return;
+        }
+      }
     }
     else
     {
@@ -711,7 +727,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       // jetzt die Werte für Temperatureinheit übernehmen
       //
       if( BuildConfig.DEBUG ) Log.d( TAG, "set temp unit value to preference..." );
-      sp.setChecked( ( isTempMetric > 0 ) );
+      sp.setChecked( ( isTempMetric == 0 ) );
     }
     else
     {
@@ -733,7 +749,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       // jetzt die Werte für Tiefgeneinheit übernehmen
       //
       if( BuildConfig.DEBUG ) Log.d( TAG, "set depth unit value to preference..." );
-      sp.setChecked( ( isDepthMetric > 0 ) );
+      sp.setChecked( ( isDepthMetric == 0 ) );
     }
     else
     {
