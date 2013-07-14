@@ -355,6 +355,18 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   }
 
   @Override
+  public void msgReciveDisplay( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgReciveDisplayAck( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
   public void msgRecivedSerial( BtServiceMessage msg )
   {
     // TODO Automatisch generierter Methodenstub
