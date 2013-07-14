@@ -167,6 +167,8 @@ public final class ProjectConst
   public static final int    MESSAGE_DECO_ACK           = ActionEvent.RESERVED_ID_MAX + 17;
   public static final int    MESSAGE_DISPLAY_READ       = ActionEvent.RESERVED_ID_MAX + 18;
   public static final int    MESSAGE_DISPLAY_ACK        = ActionEvent.RESERVED_ID_MAX + 19;
+  public static final int    MESSAGE_UNITS_READ         = ActionEvent.RESERVED_ID_MAX + 20;
+  public static final int    MESSAGE_UNITS_ACK          = ActionEvent.RESERVED_ID_MAX + 21;
   
   //
 //  public static final int    MESSAGE_STATE_CHANGE       = ActionEvent.RESERVED_ID_MAX + 2;
@@ -187,7 +189,6 @@ public final class ProjectConst
 //  public static final int    MESSAGE_DB_WRITE_WAIT      = ActionEvent.RESERVED_ID_MAX + 23;
 //  public static final int    MESSAGE_DB_DELETE_WAIT     = ActionEvent.RESERVED_ID_MAX + 24;
 //  public static final int    MESSAGE_GAS_WRITTEN        = ActionEvent.RESERVED_ID_MAX + 25;
-//  public static final int    MESSAGE_UNITS_READ         = ActionEvent.RESERVED_ID_MAX + 29;
 //  public static final int    MESSAGE_BTRECOVEROK        = ActionEvent.RESERVED_ID_MAX + 32;
 //  public static final int    MESSAGE_BTRECOVERERR       = ActionEvent.RESERVED_ID_MAX + 33;
 //  public static final int    MESSAGE_BTWAITFOR          = ActionEvent.RESERVED_ID_MAX + 34;
