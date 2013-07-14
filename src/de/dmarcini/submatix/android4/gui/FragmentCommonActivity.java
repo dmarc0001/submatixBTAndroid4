@@ -208,6 +208,24 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
 
   /**
    * 
+   * Frage nach der DECO-Konfiguration
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 13.07.2013
+   */
+  public void askForDecoConfig()
+  {
+    if( mService != null )
+    {
+      mService.askForDecoConfig();
+    }
+  }
+
+  /**
+   * 
    * Grad beim SPX nach der Firmwareversion
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
