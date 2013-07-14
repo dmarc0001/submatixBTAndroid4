@@ -5,13 +5,6 @@
  * 
  * @author Dirk Marciniak 28.12.2012
  */
-// Kommando GET_SETUP_INDIVIDUAL liefert
-// ~38:SE:PS:SC:SN:LI
-// SE: Sensors 0->ON 1->OFF
-// PS: PSCRMODE 0->OFF 1->ON
-// SC: SensorCount
-// SN: Sound 0->OFF 1->ON
-// LI: Loginterval 0->10sec 1->30Sec 2->60 Sec
 package de.dmarcini.submatix.android4.gui;
 
 import java.util.ArrayList;
@@ -1326,5 +1319,17 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     {
       mService.writeUnitPrefs( isTempMetric, isDepthMetric, isFreshwater );
     }
+  }
+
+  @Override
+  public void msgReciveIndividuals( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgReciveIndividualsAck( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
   }
 }
