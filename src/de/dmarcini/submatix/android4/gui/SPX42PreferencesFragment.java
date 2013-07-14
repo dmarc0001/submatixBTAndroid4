@@ -203,6 +203,18 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
         msgReciveUnitsAck( smsg );
         break;
       // ################################################################
+      // Individuelle Einstellungen lesen
+      // ################################################################
+      case ProjectConst.MESSAGE_INDIVID_READ:
+        msgReciveIndividuals( smsg );
+        break;
+      // ################################################################
+      // Indioviduelle Einstellungen schreiben Bestätigung
+      // ################################################################
+      case ProjectConst.MESSAGE_INDIVID_ACK:
+        msgReciveIndividualsAck( smsg );
+        break;
+      // ################################################################
       // Sonst....
       // ################################################################
       default:
@@ -846,10 +858,12 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_individual + ">..." );
     if( FragmentCommonActivity.isIndividual )
     {
+      if( BuildConfig.DEBUG ) Log.d( TAG, "Preferences in INDIVIDUAL Mode" );
       addPreferencesFromResource( R.xml.config_spx42_preference_individual );
     }
     else
     {
+      if( BuildConfig.DEBUG ) Log.d( TAG, "Preferences in STANDART Mode" );
       addPreferencesFromResource( R.xml.config_spx42_preference_std );
     }
     //

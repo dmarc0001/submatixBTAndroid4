@@ -642,6 +642,18 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         msgReciveUnitsAck( smsg );
         break;
       // ################################################################
+      // Individuelle Einstellungen lesen
+      // ################################################################
+      case ProjectConst.MESSAGE_INDIVID_READ:
+        msgReciveIndividuals( smsg );
+        break;
+      // ################################################################
+      // Indioviduelle Einstellungen schreiben Bestätigung
+      // ################################################################
+      case ProjectConst.MESSAGE_INDIVID_ACK:
+        msgReciveIndividualsAck( smsg );
+        break;
+      // ################################################################
       // Sonst....
       // ################################################################
       default:
@@ -800,6 +812,18 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   }
 
   @Override
+  public void msgReciveIndividuals( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgReciveIndividualsAck( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
   public void msgReciveLicenseState( BtServiceMessage msg )
   {
     // LS : License State 0=Nitrox,1=Normoxic Trimix,2=Full Trimix
@@ -818,6 +842,24 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     }
     // ist individual AN?
     isIndividual = ( lic[1].matches( "1" ) );
+    if( BuildConfig.DEBUG )
+    {
+      Log.d( TAG, "SPX License INDIVIDUAL: <" + isIndividual + ">" );
+      switch ( mixLicense )
+      {
+        case 0:
+          Log.d( TAG, "SPX MIX License : NITROX" );
+          break;
+        case 1:
+          Log.d( TAG, "SPX MIX License : NORMOXIX TRIMIX" );
+          break;
+        case 2:
+          Log.d( TAG, "SPX MIX License : FULL TRIMIX" );
+          break;
+        default:
+          Log.d( TAG, "SPX MIX License : UNKNOWN" );
+      }
+    }
   }
 
   @Override
@@ -1319,17 +1361,5 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     {
       mService.writeUnitPrefs( isTempMetric, isDepthMetric, isFreshwater );
     }
-  }
-
-  @Override
-  public void msgReciveIndividuals( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void msgReciveIndividualsAck( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
   }
 }
