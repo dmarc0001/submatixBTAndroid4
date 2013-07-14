@@ -400,19 +400,13 @@ public class BlueThoothComService extends Service
           connectedDeviceManufacturer = fields[1];
           msg = new BtServiceMessage( ProjectConst.MESSAGE_MANUFACTURER_READ, new String( fields[1] ) );
           sendMessageToApp( msg );
-          if( BuildConfig.DEBUG )
-          {
-            Log.d( TAGREADER, "SPX Devicename recived! <" + fields[1] + ">" );
-          }
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "SPX Devicename recived! <" + fields[1] + ">" );
           break;
         case ProjectConst.SPX_ALIVE:
           // Ackuspannung übertragen
           msg = new BtServiceMessage( ProjectConst.MESSAGE_SPXALIVE, new String( fields[1] ) );
           sendMessageToApp( msg );
-          if( BuildConfig.DEBUG )
-          {
-            Log.d( TAGREADER, "SPX is Alive, Acku value recived." );
-          }
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "SPX is Alive, Acku value recived." );
           break;
         case ProjectConst.SPX_APPLICATION_ID:
           // Sende Nachricht Firmwareversion empfangen!
@@ -422,26 +416,17 @@ public class BlueThoothComService extends Service
           connectedDeviceFWVersion = fields[1];
           if( fields[1].startsWith( ProjectConst.FIRMWARE_2_6_7_7V ) )
           {
-            if( BuildConfig.DEBUG )
-            {
-              Log.d( TAGREADER, "FIRMWARE 2.6.7.7V" );
-            }
+            if( BuildConfig.DEBUG ) Log.d( TAGREADER, "FIRMWARE 2.6.7.7V" );
             firmware = ProjectConst.FW_2_6_7_7V;
           }
           else if( fields[1].startsWith( ProjectConst.FIRMWARE_2_7H ) )
           {
-            if( BuildConfig.DEBUG )
-            {
-              Log.d( TAGREADER, "FIRMWARE 2.7H" );
-            }
+            if( BuildConfig.DEBUG ) Log.d( TAGREADER, "FIRMWARE 2.7H" );
             firmware = ProjectConst.FW_2_7H;
           }
           else if( fields[1].startsWith( ProjectConst.FIRMWARE_2_7V ) )
           {
-            if( BuildConfig.DEBUG )
-            {
-              Log.d( TAGREADER, "FIRMWARE 2.7V" );
-            }
+            if( BuildConfig.DEBUG ) Log.d( TAGREADER, "FIRMWARE 2.7V" );
             firmware = ProjectConst.FW_2_7V;
           }
           else
@@ -451,43 +436,33 @@ public class BlueThoothComService extends Service
           }
           msg = new BtServiceMessage( ProjectConst.MESSAGE_FWVERSION_READ, new String( fields[1] ) );
           sendMessageToApp( msg );
-          if( BuildConfig.DEBUG )
-          {
-            Log.d( TAGREADER, "Application ID (Firmware Version)  recived! <" + fields[1] + ">" );
-          }
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "Application ID (Firmware Version)  recived! <" + fields[1] + ">" );
           break;
         case ProjectConst.SPX_SERIAL_NUMBER:
           // Sende Nachricht Seriennummer empfangen!
           connectedDeviceSerialNumber = new String( fields[1] );
           msg = new BtServiceMessage( ProjectConst.MESSAGE_SERIAL_READ, new String( fields[1] ) );
           sendMessageToApp( msg );
-          if( BuildConfig.DEBUG )
-          {
-            Log.d( TAGREADER, "Serial Number recived! <" + fields[1] + ">" );
-          }
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "Serial Number recived! <" + fields[1] + ">" );
           break;
         case ProjectConst.SPX_SET_SETUP_DEKO:
           // Quittung für Setze DECO
           msg = new BtServiceMessage( ProjectConst.MESSAGE_DECO_ACK );
           sendMessageToApp( msg );
-          if( BuildConfig.DEBUG )
-          {
-            Log.d( TAGREADER, "SPX_SET_SETUP_DEKO Acknoweledge recived" );
-          }
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "SPX_SET_SETUP_DEKO Acknoweledge recived" );
           break;
         case ProjectConst.SPX_SET_SETUP_SETPOINT:
           // Quittung für Setzen der Auto-Setpointeinstelungen
           msg = new BtServiceMessage( ProjectConst.MESSAGE_SETPOINT_ACK );
           sendMessageToApp( msg );
-          if( BuildConfig.DEBUG )
-          {
-            Log.d( TAGREADER, "SPX_SET_SETUP_SETPOINT Acknoweledge recived " );
-          }
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "SPX_SET_SETUP_SETPOINT Acknoweledge recived " );
           break;
-        // case ProjectConst.SPX_SET_SETUP_DISPLAYSETTINGS:
-        // // Quittung für Setzen der Displayeinstellungen
-        // if( log ) LOGGER.fine( "SET_SETUP_DISPLAYSETTINGS Acknoweledge recived <" + readMessage + ">" );
-        // break;
+        case ProjectConst.SPX_SET_SETUP_DISPLAYSETTINGS:
+          // Quittung für Setzen der Displayeinstellungen
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_DECO_ACK );
+          sendMessageToApp( msg );
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "MESSAGE_DECO_READ recived " );
+          break;
         // case ProjectConst.SPX_SET_SETUP_UNITS:
         // // Quittung für Setzen der Einheiten
         // if( log ) LOGGER.fine( "SPX_SET_SETUP_UNITS Acknoweledge recived <" + readMessage + ">" );
@@ -506,10 +481,7 @@ public class BlueThoothComService extends Service
           msg = new BtServiceMessage( ProjectConst.MESSAGE_DECO_READ, new String[]
           { fields[1], fields[2], fields[3], fields[4], fields[5] } );
           sendMessageToApp( msg );
-          if( BuildConfig.DEBUG )
-          {
-            Log.d( TAGREADER, "MESSAGE_DECO_READ recived " );
-          }
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "MESSAGE_DECO_READ recived " );
           break;
         case ProjectConst.SPX_GET_SETUP_SETPOINT:
           // Kommando GET_SETUP_SETPOINT liefert
@@ -519,23 +491,18 @@ public class BlueThoothComService extends Service
           msg = new BtServiceMessage( ProjectConst.MESSAGE_SETPOINT_READ, new String[]
           { fields[1], fields[2] } );
           sendMessageToApp( msg );
-          if( BuildConfig.DEBUG )
-          {
-            Log.d( TAGREADER, "Setpoint recived!" );
-          }
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "Setpoint recived!" );
           break;
-        // case ProjectConst.SPX_GET_SETUP_DISPLAYSETTINGS:
-        // // Kommando GET_SETUP_DISPLAYSETTINGS liefert
-        // // ~36:D:A
-        // // D= 0->10&, 1->50%, 2->100%
-        // // A= 0->Landscape 1->180Grad
-        // if( aListener != null )
-        // {
-        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_DISPLAY_READ, new String( readMessage ), System.currentTimeMillis() / 100, 0 );
-        // aListener.actionPerformed( ex );
-        // }
-        // if( log ) LOGGER.fine( "GET_SETUP_DISPLAYSETTINGS recived <" + readMessage + ">" );
-        // break;
+        case ProjectConst.SPX_GET_SETUP_DISPLAYSETTINGS:
+          // Kommando GET_SETUP_DISPLAYSETTINGS liefert
+          // ~36:D:A
+          // D= 0->10&, 1->50%, 2->100%
+          // A= 0->Landscape 1->180Grad
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_DISPLAY_READ, new String[]
+          { fields[1], fields[2] } );
+          sendMessageToApp( msg );
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "Display settings recived!" );
+          break;
         // case ProjectConst.SPX_GET_SETUP_UNITS:
         // // Kommando GET_SETUP_UNITS
         // // ~37:UD:UL:UW
@@ -628,10 +595,7 @@ public class BlueThoothComService extends Service
           // SPX meldet, er geht aus dem Sync-Mode
           msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
           sendMessageToApp( msg );
-          if( BuildConfig.DEBUG )
-          {
-            Log.d( TAGREADER, "SPX42 switch syncmode OFF! Connection will failure!" );
-          }
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "SPX42 switch syncmode OFF! Connection will failure!" );
           break;
         case ProjectConst.SPX_LICENSE_STATE:
           // Kommando SPX_LICENSE_STATE
@@ -642,10 +606,7 @@ public class BlueThoothComService extends Service
           { fields[1], fields[2] };
           msg = new BtServiceMessage( ProjectConst.MESSAGE_LICENSE_STATE_READ, connectedDeviceLicense );
           sendMessageToApp( msg );
-          if( BuildConfig.DEBUG )
-          {
-            Log.d( TAGREADER, "SPX42 license state recived!" );
-          }
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "SPX42 license state recived!" );
           break;
         default:
           Log.w( TAGREADER, "unknown Messagetype recived <" + readMessage + ">" );
