@@ -1664,6 +1664,25 @@ public class BlueThoothComService extends Service
 
   /**
    * 
+   * Schreibe Display Eigenschaften zum SPX42
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 14.07.2013
+   * @param lumin
+   * @param orient
+   */
+  public void writeDisplayPrefs( int lumin, int orient )
+  {
+    String kdoString;
+    kdoString = String.format( "~%x:%x:%x", ProjectConst.SPX_SET_SETUP_DISPLAYSETTINGS, lumin, orient );
+    this.writeSPXMsgToDevice( kdoString );
+  }
+
+  /**
+   * 
    * Screibe Kommando zum SPX, füge protokoll Start/Ende an
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
