@@ -664,6 +664,17 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   @Override
   public void msgReciveIndividuals( BtServiceMessage msg )
   {
+    String individualsSensorsOn = "keyIndividualSensorsOn";
+    String IndividualPSCROn = "keyIndividualPSCROn";
+    String individualCountSensorWarning = "keyIndividualCountSensorWarning";
+    String individualAcousticWarnings = "keyIndividualAcousticWarnings";
+    String individualLoginterval = "keyIndividualLoginterval";
+    String[] individualParm;
+    int sensorsOff = 0, pscrOff = 0, sensorsCount = 3, soundOn = 1, logInterval = 2;
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX individuals settings recived" );
+    //
+    // gibt es Parameter zu lesen?
     // Kommando GET_SETUP_INDIVIDUAL liefert
     // ~38:SE:PS:SC:SN:LI
     // SE: Sensors 0->ON 1->OFF
@@ -671,13 +682,156 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // SC: SensorCount
     // SN: Sound 0->OFF 1->ON
     // LI: Loginterval 0->10sec 1->30Sec 2->60 Sec
-    // TODO Automatisch generierter Methodenstub
+    //
+    if( msg.getContainer() instanceof String[] )
+    {
+      individualParm = ( String[] )msg.getContainer();
+    }
+    else
+    {
+      Log.e( TAG, "msgReciveDisplay: message object not an String[] !" );
+      return;
+    }
+    //
+    // versuche die Parameter als Integer zu wandeln, gültige Werte erzeugen
+    //
+    try
+    {
+      sensorsOff = Integer.parseInt( individualParm[0], 16 );
+      pscrOff = Integer.parseInt( individualParm[1], 16 );
+      sensorsCount = Integer.parseInt( individualParm[2], 16 );
+      soundOn = Integer.parseInt( individualParm[3], 16 );
+      logInterval = Integer.parseInt( individualParm[4], 16 );
+      if( BuildConfig.DEBUG )
+        Log.d( TAG, String.format( "SPX individuals settings <SE:%d, PS:%d, SC:%d, SN:%d, LI:%d>", sensorsOff, pscrOff, sensorsCount, soundOn, logInterval ) );
+    }
+    catch( IndexOutOfBoundsException ex )
+    {
+      Log.e( TAG, "msgReciveIndividuals: Individuals Object has not enough elements! (" + ex.getLocalizedMessage() + ")" );
+      return;
+    }
+    catch( NumberFormatException ex )
+    {
+      Log.e( TAG, "msgReciveIndividuals: Individuals Object is not an correct integer! (" + ex.getLocalizedMessage() + ")" );
+      return;
+    }
+    ignorePrefChange = true;
+    //
+    // Sensoren an/aus ...
+    //
+    if( getPreferenceScreen().findPreference( individualsSensorsOn ) instanceof SwitchPreference )
+    {
+      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( individualsSensorsOn );
+      if( sp == null )
+      {
+        Log.e( TAG, "msgReciveIndividuals: Key <" + individualsSensorsOn + "> was not found an SwitchPreference! abort!" );
+        ignorePrefChange = false;
+        return;
+      }
+      //
+      // jetzt die Werte für Sensoren an/aus
+      //
+      if( BuildConfig.DEBUG ) Log.d( TAG, "set sensors on/off value to preference..." );
+      sp.setChecked( ( sensorsOff == 0 ) );
+    }
+    else
+    {
+      Log.e( TAG, "can't set sensors on/off value to preference..." );
+    }
+    //
+    // PSCR-Mode an/aus ...
+    //
+    if( getPreferenceScreen().findPreference( IndividualPSCROn ) instanceof SwitchPreference )
+    {
+      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( IndividualPSCROn );
+      if( sp == null )
+      {
+        Log.e( TAG, "msgReciveIndividuals: Key <" + IndividualPSCROn + "> was not found an SwitchPreference! abort!" );
+        ignorePrefChange = false;
+        return;
+      }
+      //
+      // jetzt die Werte für PSCR an/aus
+      //
+      if( BuildConfig.DEBUG ) Log.d( TAG, "set PSCR-Mode on/off value to preference..." );
+      sp.setChecked( ( pscrOff == 1 ) );
+    }
+    else
+    {
+      Log.e( TAG, "can't set PSCR-Mode on/off value to preference..." );
+    }
+    //
+    // Anzahl der Sensoren für die Berechnungen wählen
+    //
+    if( getPreferenceScreen().findPreference( individualCountSensorWarning ) instanceof ListPreference )
+    {
+      // die Preferenz rausuchen
+      ListPreference lP = ( ListPreference )getPreferenceScreen().findPreference( individualCountSensorWarning );
+      if( lP == null )
+      {
+        Log.e( TAG, "msgReciveIndividuals: Key <" + individualCountSensorWarning + "> was not found an ListPreference! abort!" );
+        ignorePrefChange = false;
+        return;
+      }
+      if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveIndividuals: set sensors count value to preference..." );
+      lP.setValueIndex( sensorsCount );
+      lP.setSummary( String.format( getResources().getString( R.string.conf_ind_count_sensorwarning_header_summary ), lP.getEntry() ) );
+    }
+    else
+    {
+      Log.e( TAG, "msgReciveIndividuals: can't set count sensors preset value to preference..." );
+    }
+    //
+    // Akustische Warnungen an/aus ...
+    //
+    if( getPreferenceScreen().findPreference( individualAcousticWarnings ) instanceof SwitchPreference )
+    {
+      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( individualAcousticWarnings );
+      if( sp == null )
+      {
+        Log.e( TAG, "msgReciveIndividuals: Key <" + individualAcousticWarnings + "> was not found an SwitchPreference! abort!" );
+        ignorePrefChange = false;
+        return;
+      }
+      //
+      // jetzt die Werte für Akustische Warnungen an/aus
+      //
+      if( BuildConfig.DEBUG ) Log.d( TAG, "set acoustic warnings on/off value to preference..." );
+      sp.setChecked( ( soundOn == 1 ) );
+    }
+    else
+    {
+      Log.e( TAG, "can't set acoustic warnings on/off value to preference..." );
+    }
+    //
+    // Loginterval in Oberfläche einbauen
+    //
+    if( getPreferenceScreen().findPreference( individualLoginterval ) instanceof ListPreference )
+    {
+      // die Preferenz rausuchen
+      ListPreference lP = ( ListPreference )getPreferenceScreen().findPreference( individualLoginterval );
+      if( lP == null )
+      {
+        Log.e( TAG, "msgReciveIndividuals: Key <" + individualLoginterval + "> was not found an ListPreference! abort!" );
+        ignorePrefChange = false;
+        return;
+      }
+      if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveIndividuals: set loginterval value to preference..." );
+      lP.setValueIndex( logInterval );
+      lP.setSummary( String.format( getResources().getString( R.string.conf_ind_interval_header_summary ), lP.getEntry() ) );
+    }
+    else
+    {
+      Log.e( TAG, "msgReciveIndividuals: can't set log interval preset value to preference..." );
+    }
+    ignorePrefChange = false;
   }
 
   @Override
   public void msgReciveIndividualsAck( BtServiceMessage msg )
   {
-    // TODO Automatisch generierter Methodenstub
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX INDIVIDUALS settings ACK recived" );
+    ignorePrefChange = false;
   }
 
   @Override
@@ -999,6 +1153,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       else if( key.equals( "keyIndividualCountSensorWarning" ) )
       {
         lP.setSummary( String.format( getResources().getString( R.string.conf_ind_count_sensorwarning_header_summary ), lP.getEntry() ) );
+        sendIndividualPrefs();
       }
       //
       // Intervall zwischen zwei Logeinträgen
@@ -1006,6 +1161,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       else if( key.equals( "keyIndividualLoginterval" ) )
       {
         lP.setSummary( String.format( getResources().getString( R.string.conf_ind_interval_header_summary ), lP.getEntry() ) );
+        sendIndividualPrefs();
       }
     }
     else
@@ -1067,6 +1223,27 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       else if( key.equals( "keyUnitsIsFreshwater" ) )
       {
         sendUnitPrefs();
+      }
+      //
+      // wie viele Sensoren
+      //
+      else if( key.equals( "keyIndividualSensorsOn" ) )
+      {
+        sendIndividualPrefs();
+      }
+      //
+      // Salz/Süßwasser
+      //
+      else if( key.equals( "keyIndividualPSCROn" ) )
+      {
+        sendIndividualPrefs();
+      }
+      //
+      // Salz/Süßwasser
+      //
+      else if( key.equals( "keyIndividualAcousticWarnings" ) )
+      {
+        sendIndividualPrefs();
       }
     }
   }
@@ -1409,6 +1586,168 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     ignorePrefChange = true;
     if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "sendDisplayPrefs: write display prefs via runningActivity lum:%d, orient:%d...", lumin, orient ) );
     fActivity.writeDisplayPrefs( lumin, orient );
+  }
+
+  /**
+   * 
+   * sende die individualeinstellungen zum SPX
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 14.07.2013
+   */
+  private void sendIndividualPrefs()
+  {
+    String individualsSensorsOn = "keyIndividualSensorsOn";
+    String IndividualPSCROn = "keyIndividualPSCROn";
+    String individualCountSensorWarning = "keyIndividualCountSensorWarning";
+    String individualAcousticWarnings = "keyIndividualAcousticWarnings";
+    String individualLoginterval = "keyIndividualLoginterval";
+    int sensorsOff = 0, pscrOff = 0, sensorsCount = 2, soundOn = 1, logInterval = 2;
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs()..." );
+    // ~38:SE:PS:SC:SN:LI
+    // SE: Sensors 0->ON 1->OFF
+    // PS: PSCRMODE 0->OFF 1->ON
+    // SC: SensorCount
+    // SN: Sound 0->OFF 1->ON
+    // LI: Loginterval 0->10sec 1->30Sec 2->60 Sec
+    //
+    // Sensoren an/aus ...
+    //
+    if( getPreferenceScreen().findPreference( individualsSensorsOn ) instanceof SwitchPreference )
+    {
+      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( individualsSensorsOn );
+      if( sp == null )
+      {
+        Log.e( TAG, "sendIndividualPrefs: Key <" + individualsSensorsOn + "> was not found an SwitchPreference! abort!" );
+        return;
+      }
+      //
+      // jetzt die Werte für Sensoren an/aus
+      //
+      if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read sensors on/off value from preference..." );
+      if( sp.isChecked() )
+      {
+        sensorsOff = 0;
+      }
+      else
+      {
+        sensorsOff = 1;
+      }
+    }
+    else
+    {
+      Log.e( TAG, "sendIndividualPrefs: can't read sensors on/off value from preference..." );
+      return;
+    }
+    //
+    // PSCR-Mode an/aus ...
+    //
+    if( getPreferenceScreen().findPreference( IndividualPSCROn ) instanceof SwitchPreference )
+    {
+      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( IndividualPSCROn );
+      if( sp == null )
+      {
+        Log.e( TAG, "sendIndividualPrefs: Key <" + IndividualPSCROn + "> was not found an SwitchPreference! abort!" );
+        return;
+      }
+      //
+      // jetzt die Werte für PSCR an/aus
+      //
+      if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs read PSCR-Mode on/off value from preference..." );
+      if( sp.isChecked() )
+      {
+        pscrOff = 1;
+      }
+      else
+      {
+        pscrOff = 0;
+      }
+    }
+    else
+    {
+      Log.e( TAG, "sendIndividualPrefs: can't read PSCR-Mode on/off value from preference..." );
+    }
+    //
+    // Anzahl der Sensoren für die Berechnungen
+    //
+    if( getPreferenceScreen().findPreference( individualCountSensorWarning ) instanceof ListPreference )
+    {
+      // die Preferenz rausuchen
+      ListPreference lP = ( ListPreference )getPreferenceScreen().findPreference( individualCountSensorWarning );
+      if( lP == null )
+      {
+        Log.e( TAG, "sendIndividualPrefs: Key <" + individualCountSensorWarning + "> was not found an ListPreference! abort!" );
+        ignorePrefChange = false;
+        return;
+      }
+      if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read sensors count value from preference..." );
+      sensorsCount = lP.findIndexOfValue( lP.getValue() );
+      if( sensorsCount == -1 ) sensorsCount = 2;
+    }
+    else
+    {
+      Log.e( TAG, "sendIndividualPrefs: can't read count sensors preset value from preference..." );
+    }
+    //
+    // Akustische Warnungen an/aus ...
+    //
+    if( getPreferenceScreen().findPreference( individualAcousticWarnings ) instanceof SwitchPreference )
+    {
+      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( individualAcousticWarnings );
+      if( sp == null )
+      {
+        Log.e( TAG, "msgReciveIndividuals: Key <" + individualAcousticWarnings + "> was not found an SwitchPreference! abort!" );
+        ignorePrefChange = false;
+        return;
+      }
+      //
+      // jetzt die Werte für Akustische Warnungen an/aus
+      //
+      if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read acoustic warnings on/off value from preference..." );
+      if( sp.isChecked() )
+      {
+        soundOn = 1;
+      }
+      else
+      {
+        soundOn = 0;
+      }
+    }
+    else
+    {
+      Log.e( TAG, "sendIndividualPrefs: can't read acoustic warnings on/off value from preference..." );
+    }
+    //
+    // Loginterval in Oberfläche einbauen
+    //
+    if( getPreferenceScreen().findPreference( individualLoginterval ) instanceof ListPreference )
+    {
+      // die Preferenz rausuchen
+      ListPreference lP = ( ListPreference )getPreferenceScreen().findPreference( individualLoginterval );
+      if( lP == null )
+      {
+        Log.e( TAG, "sendIndividualPrefs: Key <" + individualLoginterval + "> was not found an ListPreference! abort!" );
+        ignorePrefChange = false;
+        return;
+      }
+      if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read loginterval value from preference..." );
+      logInterval = lP.findIndexOfValue( lP.getValue() );
+      if( logInterval == -1 ) logInterval = 2;
+    }
+    else
+    {
+      Log.e( TAG, "sendIndividualPrefs: can't read log interval preset value from preference..." );
+    }
+    FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
+    ignorePrefChange = true;
+    if( BuildConfig.DEBUG )
+      Log.d( TAG, String.format( "sendIndividualPrefs: write individual prefs via runningActivity :<SE:%d, PS:%d, SC:%d, SN:%d, LI:%d>...", sensorsOff, pscrOff, sensorsCount,
+              soundOn, logInterval ) );
+    fActivity.writeIndividualPrefs( sensorsOff, pscrOff, sensorsCount, soundOn, logInterval );
   }
 
   /**
