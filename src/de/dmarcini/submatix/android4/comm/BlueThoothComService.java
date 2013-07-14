@@ -1593,7 +1593,7 @@ public class BlueThoothComService extends Service
         if( BuildConfig.DEBUG )
         {
           debugString = String.format( "OLD-FIRMWARE <~%x:P%x:A%x>", ProjectConst.SPX_SET_SETUP_SETPOINT, pressure, auto );
-          Log.d( TAG, "sending <" + debugString + ">" );
+          Log.d( TAG, "writeAutoSetpoint: sending <" + debugString + ">" );
         }
         break;
       default:
@@ -1606,7 +1606,7 @@ public class BlueThoothComService extends Service
         if( BuildConfig.DEBUG )
         {
           debugString = String.format( "NEWER-FIRMWARE <~%x:A%x:P%x>", ProjectConst.SPX_SET_SETUP_SETPOINT, auto, pressure );
-          Log.d( TAG, "sending <" + debugString + ">" );
+          Log.d( TAG, "writeAutoSetpoint: sending <" + debugString + ">" );
         }
         break;
     }
@@ -1647,6 +1647,7 @@ public class BlueThoothComService extends Service
         // DY = Dynamische gradienten 0->off 1->on
         // DS = Deepstops 0=> enabled, 1=>disabled
         kdoString = String.format( "~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_DEKO, highG, lowG, lastStop, dynGr, deepSt );
+        if( BuildConfig.DEBUG ) Log.d( TAG, "writeDecoPrefs: sending <OLDER-FIRMWARE <" + kdoString + ">>" );
         break;
       default:
       case ProjectConst.FW_2_7V:
@@ -1658,6 +1659,7 @@ public class BlueThoothComService extends Service
         // DY=Dynamische Gradienten (0/1)
         // LS=Last Decostop (0=3 Meter/1=6 Meter)
         kdoString = String.format( "~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_DEKO, lowG, highG, deepSt, dynGr, lastStop );
+        if( BuildConfig.DEBUG ) Log.d( TAG, "writeDecoPrefs: sending <NEWER-FIRMWARE <" + kdoString + ">>" );
         break;
     }
     this.writeSPXMsgToDevice( kdoString );
@@ -1679,6 +1681,7 @@ public class BlueThoothComService extends Service
   {
     String kdoString;
     kdoString = String.format( "~%x:%x:%x", ProjectConst.SPX_SET_SETUP_DISPLAYSETTINGS, lumin, orient );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "writeDisplayPrefs: sending <" + kdoString + ">" );
     this.writeSPXMsgToDevice( kdoString );
   }
 
@@ -1734,6 +1737,7 @@ public class BlueThoothComService extends Service
   {
     String kdoString;
     kdoString = String.format( "~%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_UNITS, isTempMetric, isDepthMetric, isFreshwater );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "writeUnitPrefs: sending <" + kdoString + ">" );
     this.writeSPXMsgToDevice( kdoString );
   }
 }
