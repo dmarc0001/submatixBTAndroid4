@@ -630,6 +630,18 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         msgReciveDisplayAck( smsg );
         break;
       // ################################################################
+      // Units vom SPX emnpfangen
+      // ################################################################
+      case ProjectConst.MESSAGE_UNITS_READ:
+        msgReciveUnits( smsg );
+        break;
+      // ################################################################
+      // UNITS setzen erfolgreich
+      // ################################################################
+      case ProjectConst.MESSAGE_UNITS_ACK:
+        msgReciveUnitsAck( smsg );
+        break;
+      // ################################################################
       // Sonst....
       // ################################################################
       default:
