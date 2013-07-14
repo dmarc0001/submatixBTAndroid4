@@ -31,11 +31,12 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
  */
 public class SPX42PreferencesFragment extends PreferenceFragment implements IBtServiceListener, OnSharedPreferenceChangeListener
 {
-  private static final String    TAG              = SPX42PreferencesFragment.class.getSimpleName();
-  private static final int       maxEvents        = 12;
-  private Activity               runningActivity  = null;
-  private boolean                ignorePrefChange = false;
-  private FragmentProgressDialog pd               = null;
+  private static final String    TAG                 = SPX42PreferencesFragment.class.getSimpleName();
+  private static final int       maxEvents           = 12;
+  private Activity               runningActivity     = null;
+  private boolean                ignorePrefChange    = false;
+  private FragmentProgressDialog pd                  = null;
+  private String                 currFirmwareVersion = null;
 
   /**
    * 
@@ -612,6 +613,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   public void msgReciveFirmwareversion( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Firmware <" + ( String )msg.getContainer() + "> recived" );
+    currFirmwareVersion = ( String )msg.getContainer();
   }
 
   @Override
@@ -624,6 +626,137 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   public void msgReciveManufacturer( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Manufacturer <" + ( String )msg.getContainer() + "> recived" );
+  }
+
+  @Override
+  public void msgReciveUnits( BtServiceMessage msg )
+  {
+    String unitsIsTempMetric = "keyUnitsIsTempMetric";
+    String unitsIsDepthMetric = "keyUnitsIsDepthMetric";
+    String unitsIsFreshwater = "keyUnitsIsFreshwater";
+    int isTempMetric = 0, isDepthMetric = 0, isFreshwater = 0;
+    String[] unitsParm;
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX units settings recived" );
+    if( msg.getContainer() instanceof String[] )
+    {
+      unitsParm = ( String[] )msg.getContainer();
+    }
+    else
+    {
+      Log.e( TAG, "msgReciveUnits: message object not an String[] !" );
+      return;
+    }
+    //
+    // versuche die Parameter als Integer zu wandeln, gültige Werte erzeugen
+    //
+    try
+    {
+      isTempMetric = Integer.parseInt( unitsParm[0], 16 );
+      isDepthMetric = Integer.parseInt( unitsParm[1], 16 );
+      isFreshwater = Integer.parseInt( unitsParm[2], 16 );
+    }
+    catch( IndexOutOfBoundsException ex )
+    {
+      Log.e( TAG, "msgReciveUnits: Units Object has not enough elements! (" + ex.getLocalizedMessage() + ")" );
+      return;
+    }
+    catch( NumberFormatException ex )
+    {
+      Log.e( TAG, "msgReciveUnits: Units Object is not an correct integer! (" + ex.getLocalizedMessage() + ")" );
+      return;
+    }
+    //
+    // ist es die fehhlerhafte firmware?
+    //
+    if( isBuggyFirmware() )
+    {
+      // ist es die Fehlerhafte Firmware, IMMER alles gemeinsam auf METRISCH/Imperial setzen
+      if( isDepthMetric == 0 )
+      {
+        isTempMetric = 0;
+      }
+      else
+      {
+        isTempMetric = 1;
+      }
+      if( BuildConfig.DEBUG ) Log.w( TAG, "msgReciveUnits: SPX firmware is buggy version: switch all to " + ( isDepthMetric == 0 ? "metric" : "imperial" ) );
+    }
+    ignorePrefChange = true;
+    //
+    // Temperatur...
+    //
+    if( getPreferenceScreen().findPreference( unitsIsTempMetric ) instanceof SwitchPreference )
+    {
+      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( unitsIsTempMetric );
+      if( sp == null )
+      {
+        Log.e( TAG, "msgReciveUnits: Key <" + unitsIsTempMetric + "> was not found an SwitchPreference! abort!" );
+        ignorePrefChange = false;
+        return;
+      }
+      //
+      // jetzt die Werte für Temperatureinheit übernehmen
+      //
+      if( BuildConfig.DEBUG ) Log.d( TAG, "set temp unit value to preference..." );
+      sp.setChecked( ( isTempMetric > 0 ) );
+    }
+    else
+    {
+      Log.e( TAG, "can't set temp unit value to preference..." );
+    }
+    //
+    // Tiefeneinheit...
+    //
+    if( getPreferenceScreen().findPreference( unitsIsDepthMetric ) instanceof SwitchPreference )
+    {
+      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( unitsIsDepthMetric );
+      if( sp == null )
+      {
+        Log.e( TAG, "msgReciveUnits: Key <" + unitsIsDepthMetric + "> was not found an SwitchPreference! abort!" );
+        ignorePrefChange = false;
+        return;
+      }
+      //
+      // jetzt die Werte für Tiefgeneinheit übernehmen
+      //
+      if( BuildConfig.DEBUG ) Log.d( TAG, "set depth unit value to preference..." );
+      sp.setChecked( ( isDepthMetric > 0 ) );
+    }
+    else
+    {
+      Log.e( TAG, "can't set temp unit value to preference..." );
+    }
+    //
+    // Süsswasser...
+    //
+    if( getPreferenceScreen().findPreference( unitsIsFreshwater ) instanceof SwitchPreference )
+    {
+      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( unitsIsFreshwater );
+      if( sp == null )
+      {
+        Log.e( TAG, "msgReciveUnits: Key <" + unitsIsFreshwater + "> was not found an SwitchPreference! abort!" );
+        ignorePrefChange = false;
+        return;
+      }
+      //
+      // jetzt Wert für Süß oder Salzwasser eintragen
+      //
+      if( BuildConfig.DEBUG ) Log.d( TAG, "set salnity value to preference..." );
+      sp.setChecked( ( isFreshwater > 0 ) );
+    }
+    else
+    {
+      Log.e( TAG, "can't set salnity unit value to preference..." );
+    }
+    ignorePrefChange = false;
+  }
+
+  @Override
+  public void msgReciveUnitsAck( BtServiceMessage msg )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX units settings ACK recived" );
+    ignorePrefChange = false;
   }
 
   @Override
@@ -694,6 +827,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   {
     super.onResume();
     Log.v( TAG, "onResume()..." );
+    currFirmwareVersion = null;
     //
     // setze Listener, der überwacht, wenn Preferenzen geändert wurden
     //
@@ -1401,5 +1535,26 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // die Summary Geschichte schreiben
     if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "setDecoGradientsSummary: write " + getResources().getString( R.string.conf_deco_gradient_summary ), low, high ) );
     getPreferenceScreen().findPreference( "keyDecoGradient" ).setSummary( String.format( getResources().getString( R.string.conf_deco_gradient_summary ), low, high ) );
+  }
+
+  /**
+   * 
+   * Feststellen, ob das die "kaputte" Firmware ist
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 14.07.2013
+   * @return
+   */
+  private boolean isBuggyFirmware()
+  {
+    // Die Firmware gibt IMMER Fahrenheit zurück!
+    if( currFirmwareVersion.equals( ProjectConst.FIRMWARE_2_6_7_7V ) )
+    {
+      return( true );
+    }
+    return false;
   }
 }
