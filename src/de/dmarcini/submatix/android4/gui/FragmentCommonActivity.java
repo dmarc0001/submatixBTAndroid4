@@ -1299,4 +1299,25 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
       mService.writeDisplayPrefs( lumin, orient );
     }
   }
+
+  /**
+   * 
+   * schreibe die Einstellungen für Masseinheiten in den SPX42
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 14.07.2013
+   * @param isTempMetric
+   * @param isDepthMetric
+   * @param isFreshwater
+   */
+  public void writeUnitPrefs( int isTempMetric, int isDepthMetric, int isFreshwater )
+  {
+    if( mService != null )
+    {
+      mService.writeUnitPrefs( isTempMetric, isDepthMetric, isFreshwater );
+    }
+  }
 }
