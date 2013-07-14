@@ -442,10 +442,12 @@ public class BlueThoothComService extends Service
           sendMessageToApp( msg );
           if( BuildConfig.DEBUG ) Log.d( TAGREADER, "MESSAGE_UNITS_ACK recived " );
           break;
-        // case ProjectConst.SPX_SET_SETUP_INDIVIDUAL:
-        // // Quittung für Individualeinstellungen
-        // if( log ) LOGGER.fine( "SPX_SET_SETUP_INDIVIDUAL Acknoweledge recived <" + readMessage + ">" );
-        // break;
+        case ProjectConst.SPX_SET_SETUP_INDIVIDUAL:
+          // Quittung für Individualeinstellungen
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_INDIVID_ACK );
+          sendMessageToApp( msg );
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "MESSAGE_INDIVID_ACK recived " );
+          break;
         case ProjectConst.SPX_GET_SETUP_DEKO:
           // Kommando DEC liefert zurück:
           // ~34:LL:HH:D:Y:C
@@ -489,21 +491,19 @@ public class BlueThoothComService extends Service
           sendMessageToApp( msg );
           if( BuildConfig.DEBUG ) Log.d( TAGREADER, "Device Units recived!" );
           break;
-        // case ProjectConst.SPX_GET_SETUP_INDIVIDUAL:
-        // // Kommando GET_SETUP_INDIVIDUAL liefert
-        // // ~38:SE:PS:SC:SN:LI
-        // // SE: Sensors 0->ON 1->OFF
-        // // PS: PSCRMODE 0->OFF 1->ON
-        // // SC: SensorCount
-        // // SN: Sound 0->OFF 1->ON
-        // // LI: Loginterval 0->10sec 1->30Sec 2->60 Sec
-        // if( aListener != null )
-        // {
-        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_INDIVID_READ, new String( readMessage ), System.currentTimeMillis() / 100, 0 );
-        // aListener.actionPerformed( ex );
-        // }
-        // if( log ) LOGGER.fine( "GET_SETUP_INDIVIDUAL recived <" + readMessage + ">" );
-        // break;
+        case ProjectConst.SPX_GET_SETUP_INDIVIDUAL:
+          // Kommando GET_SETUP_INDIVIDUAL liefert
+          // ~38:SE:PS:SC:SN:LI
+          // SE: Sensors 0->ON 1->OFF
+          // PS: PSCRMODE 0->OFF 1->ON
+          // SC: SensorCount
+          // SN: Sound 0->OFF 1->ON
+          // LI: Loginterval 0->10sec 1->30Sec 2->60 Sec
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_UNITS_READ, new String[]
+          { fields[1], fields[2], fields[3], fields[4], fields[5] } );
+          sendMessageToApp( msg );
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "Device individual settings recived!" );
+          break;
         // case ProjectConst.SPX_GET_SETUP_GASLIST:
         // // Kommando GET_SETUP_GASLIST
         // // ~39:NR:ST:HE:BA:AA:CG
