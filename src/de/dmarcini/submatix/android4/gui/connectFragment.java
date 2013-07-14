@@ -397,6 +397,18 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   }
 
   @Override
+  public void msgReciveUnits( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgReciveUnitsAck( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
   public void onActivityCreated( Bundle bundle )
   {
     super.onActivityCreated( bundle );
