@@ -463,10 +463,12 @@ public class BlueThoothComService extends Service
           sendMessageToApp( msg );
           if( BuildConfig.DEBUG ) Log.d( TAGREADER, "MESSAGE_DECO_READ recived " );
           break;
-        // case ProjectConst.SPX_SET_SETUP_UNITS:
-        // // Quittung für Setzen der Einheiten
-        // if( log ) LOGGER.fine( "SPX_SET_SETUP_UNITS Acknoweledge recived <" + readMessage + ">" );
-        // break;
+        case ProjectConst.SPX_SET_SETUP_UNITS:
+          // Quittung für das Setzen der Masseinheiten
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_UNITS_ACK );
+          sendMessageToApp( msg );
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "MESSAGE_DECO_READ recived " );
+          break;
         // case ProjectConst.SPX_SET_SETUP_INDIVIDUAL:
         // // Quittung für Individualeinstellungen
         // if( log ) LOGGER.fine( "SPX_SET_SETUP_INDIVIDUAL Acknoweledge recived <" + readMessage + ">" );
@@ -503,19 +505,17 @@ public class BlueThoothComService extends Service
           sendMessageToApp( msg );
           if( BuildConfig.DEBUG ) Log.d( TAGREADER, "Display settings recived!" );
           break;
-        // case ProjectConst.SPX_GET_SETUP_UNITS:
-        // // Kommando GET_SETUP_UNITS
-        // // ~37:UD:UL:UW
-        // // UD= Fahrenheit/Celsius => immer 0 in der aktuellen Firmware 2.6.7.7_U
-        // // UL= 0=metrisch 1=imperial
-        // // UW= 0->Salzwasser 1->Süßwasser
-        // if( aListener != null )
-        // {
-        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_UNITS_READ, new String( readMessage ), System.currentTimeMillis() / 100, 0 );
-        // aListener.actionPerformed( ex );
-        // }
-        // if( log ) LOGGER.fine( "GET_SETUP_UNITS recived <" + readMessage + ">" );
-        // break;
+        case ProjectConst.SPX_GET_SETUP_UNITS:
+          // Kommando GET_SETUP_UNITS
+          // ~37:UD:UL:UW
+          // UD= Fahrenheit/Celsius => immer 0 in der aktuellen Firmware 2.6.7.7_U
+          // UL= 0=metrisch 1=imperial
+          // UW= 0->Salzwasser 1->Süßwasser
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_UNITS_READ, new String[]
+          { fields[1], fields[2], fields[3] } );
+          sendMessageToApp( msg );
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "Device Units recived!" );
+          break;
         // case ProjectConst.SPX_GET_SETUP_INDIVIDUAL:
         // // Kommando GET_SETUP_INDIVIDUAL liefert
         // // ~38:SE:PS:SC:SN:LI
