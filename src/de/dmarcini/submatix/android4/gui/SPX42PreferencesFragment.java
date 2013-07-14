@@ -62,6 +62,30 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     }
   }
 
+  private int[] getDecoGradients()
+  {
+    int[] res =
+    { 0, 0 };
+    //
+    if( getPreferenceScreen().findPreference( "keyDecoGradient" ) instanceof GradientPickerPreference )
+    {
+      GradientPickerPreference pr = ( GradientPickerPreference )getPreferenceScreen().findPreference( "keyDecoGradient" );
+      if( pr == null )
+      {
+        Log.e( TAG, "setDecoGradients: not preference found (preference is NULL)" );
+        return( res );
+      }
+      // OK, frag mal nach
+      res = pr.getValue();
+      return( res );
+    }
+    else
+    {
+      Log.e( TAG, "setDecoGradients: not preference found" );
+      return( res );
+    }
+  }
+
   @Override
   public void handleMessages( int what, BtServiceMessage smsg )
   {
@@ -152,6 +176,18 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       // ################################################################
       case ProjectConst.MESSAGE_DECO_ACK:
         msgReciveDecoAck( smsg );
+        break;
+      // ################################################################
+      // Display Einstellungen empfangen
+      // ################################################################
+      case ProjectConst.MESSAGE_DISPLAY_READ:
+        msgReciveDisplay( smsg );
+        break;
+      // ################################################################
+      // Deko setzen erfolgreich
+      // ################################################################
+      case ProjectConst.MESSAGE_DISPLAY_ACK:
+        msgReciveDisplayAck( smsg );
         break;
       // ################################################################
       // Sonst....
@@ -313,149 +349,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     dismissDial();
   }
 
-  private boolean setDecoGradients( String presetCandidate )
-  {
-    int[] vals =
-    { 0, 0 };
-    if( BuildConfig.DEBUG ) Log.d( TAG, "setDecoGradients(STRING): String to split <" + presetCandidate + ">" );
-    String fields[] = presetCandidate.split( ":" );
-    if( ( fields != null ) && ( fields.length >= 2 ) )
-    {
-      Log.d( TAG, String.format( "makeValuesFromString: <%s> <%s>", fields[0], fields[1] ) );
-      Log.d( TAG, "makeValuesFromString: successful split default value!" );
-      try
-      {
-        vals[0] = Integer.parseInt( fields[0] );
-        vals[1] = Integer.parseInt( fields[1] );
-        if( BuildConfig.DEBUG ) Log.d( TAG, "setDecoGradients(STRING): successful set Values" );
-        return( setDecoGradients( vals ) );
-      }
-      catch( NumberFormatException ex )
-      {
-        Log.e( TAG, "setDecoGradients(STRING): <" + ex.getLocalizedMessage() + ">" );
-        return( false );
-      }
-    }
-    else
-    {
-      Log.w( TAG, "setDecoGradients(STRING): not correct default Value (" + presetCandidate + ")" );
-    }
-    return( false );
-  }
-
-  /**
-   * 
-   * Gradienten in der Preferenz setzen
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 13.07.2013
-   * @param presetCandidateStr
-   * @return
-   */
-  private boolean setDecoGradients( int[] presetCandidate )
-  {
-    String decoGradient = "keyDecoGradient";
-    String presetCandidateStr;
-    //
-    // wenn das ohne Voreinstelung kommt, einfach die Werte stehen lassen
-    //
-    if( presetCandidate[0] == 0 && presetCandidate[1] == 0 )
-    {
-      return( false );
-    }
-    //
-    if( getPreferenceScreen().findPreference( decoGradient ) instanceof GradientPickerPreference )
-    {
-      GradientPickerPreference dgp = ( GradientPickerPreference )getPreferenceScreen().findPreference( decoGradient );
-      if( dgp == null )
-      {
-        Log.e( TAG, "msgReciveDeco: Key <" + decoGradient + "> was not found an GradientPickerPreference! abort!" );
-        return( false );
-      }
-      //
-      // jetzt die Werte für Gradienten übernehmen
-      //
-      if( BuildConfig.DEBUG )
-      {
-        presetCandidateStr = String.format( "%02d:%02d", presetCandidate[0], presetCandidate[1] );
-        Log.d( TAG, "set Gradients value to preference (" + presetCandidateStr + ")..." );
-      }
-      dgp.setValue( presetCandidate );
-      setDecoGradientsSummary();
-      if( BuildConfig.DEBUG ) Log.d( TAG, "set Gradients value to preference (" + presetCandidateStr + ")...OK" );
-      return( true );
-    }
-    else
-    {
-      Log.e( TAG, "can't set gradient value to preference..." );
-      return( false );
-    }
-  }
-
-  /**
-   * 
-   * Setze das Preset auf einen definierten Wert oder auf CUSTOM
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 14.07.2013
-   * @param presetCandidate
-   */
-  private void setDecoGradientsPreset( int[] presetCandidate )
-  {
-    String decoGradientsPreset = "keyDecoGradientPresets";
-    String presetCandidateStr = String.format( "%02d:%02d", presetCandidate[0], presetCandidate[1] );
-    int i;
-    //
-    // in die Voreinstellungen übertragen, wenn es ein Preset ist
-    //
-    if( getPreferenceScreen().findPreference( decoGradientsPreset ) instanceof ListPreference )
-    {
-      // zum vergleich, ob ein Preset da ist
-      String[] gradientPresetsVals = getResources().getStringArray( R.array.gradientPresetValuesArray );
-      // die Preferenz rausuchen
-      ListPreference lP = ( ListPreference )getPreferenceScreen().findPreference( decoGradientsPreset );
-      if( lP == null )
-      {
-        Log.e( TAG, "setDecoGradientsPreset: Key <" + decoGradientsPreset + "> was not found an ListPreference! abort!" );
-        return;
-      }
-      // jetzt gucken ob es passt, wenn nichts passt -> "CUSTOM"
-      for( i = 0; i < gradientPresetsVals.length; i++ )
-      {
-        if( presetCandidateStr.equals( gradientPresetsVals[i] ) )
-        {
-          if( BuildConfig.DEBUG )
-          {
-            String[] gradientPresetsNames = getResources().getStringArray( R.array.gradientPresetNamesArray );
-            Log.d( TAG, "setDecoGradientsPreset: deco preset (" + presetCandidateStr + " = " + gradientPresetsNames[i] + ") found!" );
-          }
-          break;
-        }
-      }
-      // wenn nicht gefunden, Preset auf CUSTOM!
-      if( i >= gradientPresetsVals.length )
-      {
-        i = gradientPresetsVals.length - 1;
-      }
-      //
-      // jetzt den Preset übernehmen
-      // Index sollte i sein....
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "setDecoGradientsPreset: set preset value to preference..." );
-      lP.setValueIndex( i );
-    }
-    else
-    {
-      Log.e( TAG, "setDecoGradientsPreset: can't set gradient preset value to preference..." );
-    }
-  }
-
   /*
    * Kommando DEC liefert zurück: ~34:LL:HH:D:Y:C LL=GF-Low, HH=GF-High, D=Deepstops (0/1) Y=Dynamische Gradienten (0/1) C=Last Decostop (0=3 Meter/1=6 Meter)
    */
@@ -590,10 +483,108 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX DECO propertys successful set (preferences)" );
     ignorePrefChange = false;
-    // so, gesendet, nun prüfe ob das ankam
-    // FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
-    // TODO: ignorePrefChange = true;
-    // fActivity.askForDecoConfig();
+  }
+
+  @Override
+  public void msgReciveDisplay( BtServiceMessage msg )
+  {
+    String displayLuminance = "keyDisplayLuminance";
+    String displayOrient = "keyDisplayOrientation";
+    String[] displayParm;
+    int lumin = 0;
+    int orient = 0;
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX display settings recived" );
+    // Kommando GET_SETUP_DISPLAYSETTINGS liefert
+    // ~36:D:A
+    // D= 0->10&, 1->50%, 2->100%
+    // A= 0->Landscape 1->180Grad
+    //
+    // gibt es Parameter zu lesen?
+    //
+    if( msg.getContainer() instanceof String[] )
+    {
+      displayParm = ( String[] )msg.getContainer();
+    }
+    else
+    {
+      Log.e( TAG, "msgReciveDisplay: message object not an String[] !" );
+      return;
+    }
+    //
+    // versuche die Parameter als Integer zu wandeln, gültige Werte erzeugen
+    //
+    try
+    {
+      lumin = Integer.parseInt( displayParm[0], 16 );
+      if( lumin < 0 || lumin > 2 ) lumin = 1;
+      orient = Integer.parseInt( displayParm[1], 16 );
+      if( orient < 0 || orient > 1 ) orient = 0;
+    }
+    catch( IndexOutOfBoundsException ex )
+    {
+      Log.e( TAG, "msgReciveDisplay: Setpoint Object has not enough elements! (" + ex.getLocalizedMessage() + ")" );
+      return;
+    }
+    catch( NumberFormatException ex )
+    {
+      Log.e( TAG, "msgReciveDisplay: Setpoint Object is not an correct integer! (" + ex.getLocalizedMessage() + ")" );
+      return;
+    }
+    //
+    // jetzt Helligkeit eintragen
+    //
+    if( getPreferenceScreen().findPreference( displayLuminance ) instanceof ListPreference )
+    {
+      // die Preferenz rausuchen
+      ListPreference lP = ( ListPreference )getPreferenceScreen().findPreference( displayLuminance );
+      if( lP == null )
+      {
+        Log.e( TAG, "msgReciveDisplay: Key <" + displayLuminance + "> was not found an ListPreference! abort!" );
+        return;
+      }
+      //
+      // jetzt den Preset übernehmen
+      // Index sollte lumin sein....
+      //
+      if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveDisplay: set luminance value to preference..." );
+      lP.setValueIndex( lumin );
+    }
+    else
+    {
+      Log.e( TAG, "msgReciveDisplay: can't set luminance preset value to preference..." );
+    }
+    //
+    // jetzt Orientierung eintragen
+    //
+    if( getPreferenceScreen().findPreference( displayOrient ) instanceof ListPreference )
+    {
+      // die Preferenz rausuchen
+      ListPreference lP = ( ListPreference )getPreferenceScreen().findPreference( displayOrient );
+      if( lP == null )
+      {
+        Log.e( TAG, "msgReciveDisplay: Key <" + displayOrient + "> was not found an ListPreference! abort!" );
+        return;
+      }
+      //
+      // jetzt den Preset übernehmen
+      // Index sollte lumin sein....
+      //
+      if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveDisplay: set display angle value to preference..." );
+      lP.setValueIndex( orient );
+    }
+    else
+    {
+      Log.e( TAG, "msgReciveDisplay: can't set display angle preset value to preference..." );
+    }
+  }
+
+  @Override
+  public void msgReciveDisplayAck( BtServiceMessage msg )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX display settings ACK recived" );
+    ignorePrefChange = false;
+    // TODO Automatisch generierter Methodenstub
   }
 
   @Override
@@ -764,6 +755,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       else if( key.equals( "keyDisplayLuminance" ) )
       {
         lP.setSummary( String.format( getResources().getString( R.string.conf_luminance_header_summary ), lP.getEntry() ) );
+        sendDisplayPrefs();
       }
       //
       // Orientierung Display
@@ -771,6 +763,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       else if( key.equals( "keyDisplayOrientation" ) )
       {
         lP.setSummary( String.format( getResources().getString( R.string.conf_display_orientation_header_summary ), lP.getEntry() ) );
+        sendDisplayPrefs();
       }
       //
       // Sensors Count Warning
@@ -1101,6 +1094,23 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   }
 
   /**
+   * 
+   * Sende Display Einstellungen zum SPX
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 14.07.2013
+   */
+  private void sendDisplayPrefs()
+  {
+    String displayLuminance = "keyDisplayLuminance";
+    String displayOrientation = "keyDisplayOrientation";
+    ListPreference lP = null;
+  }
+
+  /**
    * Setze alle Summarys auf ihren aktuellen Wert (wi das die Activity nichzt selber macht) Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
    * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 31.12.2012
@@ -1158,27 +1168,146 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     }
   }
 
-  private int[] getDecoGradients()
+  /**
+   * 
+   * Gradienten in der Preferenz setzen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 13.07.2013
+   * @param presetCandidateStr
+   * @return
+   */
+  private boolean setDecoGradients( int[] presetCandidate )
   {
-    int[] res =
-    { 0, 0 };
+    String decoGradient = "keyDecoGradient";
+    String presetCandidateStr;
     //
-    if( getPreferenceScreen().findPreference( "keyDecoGradient" ) instanceof GradientPickerPreference )
+    // wenn das ohne Voreinstelung kommt, einfach die Werte stehen lassen
+    //
+    if( presetCandidate[0] == 0 && presetCandidate[1] == 0 )
     {
-      GradientPickerPreference pr = ( GradientPickerPreference )getPreferenceScreen().findPreference( "keyDecoGradient" );
-      if( pr == null )
+      return( false );
+    }
+    //
+    if( getPreferenceScreen().findPreference( decoGradient ) instanceof GradientPickerPreference )
+    {
+      GradientPickerPreference dgp = ( GradientPickerPreference )getPreferenceScreen().findPreference( decoGradient );
+      if( dgp == null )
       {
-        Log.e( TAG, "setDecoGradients: not preference found (preference is NULL)" );
-        return( res );
+        Log.e( TAG, "msgReciveDeco: Key <" + decoGradient + "> was not found an GradientPickerPreference! abort!" );
+        return( false );
       }
-      // OK, frag mal nach
-      res = pr.getValue();
-      return( res );
+      //
+      // jetzt die Werte für Gradienten übernehmen
+      //
+      if( BuildConfig.DEBUG )
+      {
+        presetCandidateStr = String.format( "%02d:%02d", presetCandidate[0], presetCandidate[1] );
+        Log.d( TAG, "set Gradients value to preference (" + presetCandidateStr + ")..." );
+      }
+      dgp.setValue( presetCandidate );
+      setDecoGradientsSummary();
+      if( BuildConfig.DEBUG ) Log.d( TAG, "set Gradients value to preference (" + presetCandidateStr + ")...OK" );
+      return( true );
     }
     else
     {
-      Log.e( TAG, "setDecoGradients: not preference found" );
-      return( res );
+      Log.e( TAG, "can't set gradient value to preference..." );
+      return( false );
+    }
+  }
+
+  private boolean setDecoGradients( String presetCandidate )
+  {
+    int[] vals =
+    { 0, 0 };
+    if( BuildConfig.DEBUG ) Log.d( TAG, "setDecoGradients(STRING): String to split <" + presetCandidate + ">" );
+    String fields[] = presetCandidate.split( ":" );
+    if( ( fields != null ) && ( fields.length >= 2 ) )
+    {
+      Log.d( TAG, String.format( "makeValuesFromString: <%s> <%s>", fields[0], fields[1] ) );
+      Log.d( TAG, "makeValuesFromString: successful split default value!" );
+      try
+      {
+        vals[0] = Integer.parseInt( fields[0] );
+        vals[1] = Integer.parseInt( fields[1] );
+        if( BuildConfig.DEBUG ) Log.d( TAG, "setDecoGradients(STRING): successful set Values" );
+        return( setDecoGradients( vals ) );
+      }
+      catch( NumberFormatException ex )
+      {
+        Log.e( TAG, "setDecoGradients(STRING): <" + ex.getLocalizedMessage() + ">" );
+        return( false );
+      }
+    }
+    else
+    {
+      Log.w( TAG, "setDecoGradients(STRING): not correct default Value (" + presetCandidate + ")" );
+    }
+    return( false );
+  }
+
+  /**
+   * 
+   * Setze das Preset auf einen definierten Wert oder auf CUSTOM
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 14.07.2013
+   * @param presetCandidate
+   */
+  private void setDecoGradientsPreset( int[] presetCandidate )
+  {
+    String decoGradientsPreset = "keyDecoGradientPresets";
+    String presetCandidateStr = String.format( "%02d:%02d", presetCandidate[0], presetCandidate[1] );
+    int i;
+    //
+    // in die Voreinstellungen übertragen, wenn es ein Preset ist
+    //
+    if( getPreferenceScreen().findPreference( decoGradientsPreset ) instanceof ListPreference )
+    {
+      // zum vergleich, ob ein Preset da ist
+      String[] gradientPresetsVals = getResources().getStringArray( R.array.gradientPresetValuesArray );
+      // die Preferenz rausuchen
+      ListPreference lP = ( ListPreference )getPreferenceScreen().findPreference( decoGradientsPreset );
+      if( lP == null )
+      {
+        Log.e( TAG, "setDecoGradientsPreset: Key <" + decoGradientsPreset + "> was not found an ListPreference! abort!" );
+        return;
+      }
+      // jetzt gucken ob es passt, wenn nichts passt -> "CUSTOM"
+      for( i = 0; i < gradientPresetsVals.length; i++ )
+      {
+        if( presetCandidateStr.equals( gradientPresetsVals[i] ) )
+        {
+          if( BuildConfig.DEBUG )
+          {
+            String[] gradientPresetsNames = getResources().getStringArray( R.array.gradientPresetNamesArray );
+            Log.d( TAG, "setDecoGradientsPreset: deco preset (" + presetCandidateStr + " = " + gradientPresetsNames[i] + ") found!" );
+          }
+          break;
+        }
+      }
+      // wenn nicht gefunden, Preset auf CUSTOM!
+      if( i >= gradientPresetsVals.length )
+      {
+        i = gradientPresetsVals.length - 1;
+      }
+      //
+      // jetzt den Preset übernehmen
+      // Index sollte i sein....
+      //
+      if( BuildConfig.DEBUG ) Log.d( TAG, "setDecoGradientsPreset: set preset value to preference..." );
+      lP.setValueIndex( i );
+    }
+    else
+    {
+      Log.e( TAG, "setDecoGradientsPreset: can't set gradient preset value to preference..." );
     }
   }
 
