@@ -28,33 +28,6 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
 // @formatter:off
 public class BlueThoothComService extends Service
 {
-  private static final String  TAG                         = BlueThoothComService.class.getSimpleName();
-  private static final long    msToEndService              = 6000L;
-  //private static final Pattern fieldPattern0x09            = Pattern.compile( ProjectConst.LOGSELECTOR );
-  private static final Pattern fieldPatternDp              = Pattern.compile( ":" );
-  private long                 tickToCounter               = 0L;
-  private long                 timeToStopService           = 0L;
-  private NotificationManager  nm;
-  static int                   NOTIFICATION                = 815;
-  private final Timer          timerThread                 = new Timer();
-  private long                 timerCounter                = 0;
-  private int                  writeWatchDog               = -1;
-  //private boolean              isRunning                   = false;
-  ArrayList<Handler>           mClientHandler              = new ArrayList<Handler>();                   // Messagehandler für Clienten
-  int                          mValue                      = 0;                                          // Holds last value set by a client.
-  private final IBinder        mBinder                     = new LocalBinder();
-  private BluetoothAdapter     mAdapter                    = null;
-  private static ConnectThread mConnectThread              = null;
-  private static ReaderThread  mReaderThread               = null;
-  private static WriterThread  mWriterThread               = null;
-  private static volatile int  mConnectionState;
-  private volatile boolean     isLogentryMode              = false;
-  private String               connectedDevice             = null;
-  private String               connectedDeviceSerialNumber = null;
-  private String               connectedDeviceManufacturer = null;
-  private String               connectedDeviceFWVersion    = null;
-  private String[]             connectedDeviceLicense      = null;
-  private int                  firmware                    = ProjectConst.FW_NOT_SET;
   // @formatter:on
   /**
    * 
@@ -899,26 +872,33 @@ public class BlueThoothComService extends Service
     }
   }
 
-  /**
-   * 
-   * Frage nach der Konfiguration der DECO-Parameter
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 13.07.2013
-   */
-  public void askForDecoConfig()
-  {
-    String kdoString;
-    kdoString = String.format( "%s~%x~%x%s", ProjectConst.STX, ProjectConst.SPX_GET_SETUP_DEKO, ProjectConst.SPX_ALIVE, ProjectConst.ETX );
-    if( BuildConfig.DEBUG )
-    {
-      Log.d( TAG, "askForDecoConfig()...send <" + kdoString + ">" );
-    }
-    this.writeToDevice( kdoString );
-  }
+  private static final String  TAG                         = BlueThoothComService.class.getSimpleName();
+  private static final long    msToEndService              = 6000L;
+  // private static final Pattern fieldPattern0x09 = Pattern.compile( ProjectConst.LOGSELECTOR );
+  private static final Pattern fieldPatternDp              = Pattern.compile( ":" );
+  private long                 tickToCounter               = 0L;
+  private long                 timeToStopService           = 0L;
+  private NotificationManager  nm;
+  static int                   NOTIFICATION                = 815;
+  private final Timer          timerThread                 = new Timer();
+  private long                 timerCounter                = 0;
+  private int                  writeWatchDog               = -1;
+  // private boolean isRunning = false;
+  ArrayList<Handler>           mClientHandler              = new ArrayList<Handler>();                  // Messagehandler für Clienten
+  int                          mValue                      = 0;                                         // Holds last value set by a client.
+  private final IBinder        mBinder                     = new LocalBinder();
+  private BluetoothAdapter     mAdapter                    = null;
+  private static ConnectThread mConnectThread              = null;
+  private static ReaderThread  mReaderThread               = null;
+  private static WriterThread  mWriterThread               = null;
+  private static volatile int  mConnectionState;
+  private volatile boolean     isLogentryMode              = false;
+  private String               connectedDevice             = null;
+  private String               connectedDeviceSerialNumber = null;
+  private String               connectedDeviceManufacturer = null;
+  private String               connectedDeviceFWVersion    = null;
+  private String[]             connectedDeviceLicense      = null;
+  private int                  firmware                    = ProjectConst.FW_NOT_SET;
 
   /**
    * 
@@ -939,6 +919,27 @@ public class BlueThoothComService extends Service
     if( BuildConfig.DEBUG )
     {
       Log.d( TAG, "askForConfigFromSPX42()...send <" + kdoString + ">" );
+    }
+    this.writeToDevice( kdoString );
+  }
+
+  /**
+   * 
+   * Frage nach der Konfiguration der DECO-Parameter
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 13.07.2013
+   */
+  public void askForDecoConfig()
+  {
+    String kdoString;
+    kdoString = String.format( "%s~%x~%x%s", ProjectConst.STX, ProjectConst.SPX_GET_SETUP_DEKO, ProjectConst.SPX_ALIVE, ProjectConst.ETX );
+    if( BuildConfig.DEBUG )
+    {
+      Log.d( TAG, "askForDecoConfig()...send <" + kdoString + ">" );
     }
     this.writeToDevice( kdoString );
   }
@@ -969,52 +970,6 @@ public class BlueThoothComService extends Service
     {
       this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_APPLICATION_ID ) );
     }
-  }
-
-  /**
-   * 
-   * Frage den SPX nach der Seriennummer
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 28.05.2013
-   */
-  public void askForSerialNumber()
-  {
-    if( BuildConfig.DEBUG )
-    {
-      Log.d( TAG, "askForSerialNumber..." );
-    }
-    if( connectedDeviceSerialNumber != null )
-    {
-      BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_SERIAL_READ, new String( connectedDeviceSerialNumber ) );
-      sendMessageToApp( msg );
-    }
-    else
-    {
-      this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_SERIAL_NUMBER ) );
-    }
-  }
-
-  /**
-   * 
-   * Frag den SPX, ob er noch da ist
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 28.05.2013
-   */
-  public void askForSPXAlive()
-  {
-    if( BuildConfig.DEBUG )
-    {
-      Log.d( TAG, "askForSPXAlive..." );
-    }
-    this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_ALIVE ) );
   }
 
   /**
@@ -1072,6 +1027,52 @@ public class BlueThoothComService extends Service
     {
       this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_MANUFACTURERS ) );
     }
+  }
+
+  /**
+   * 
+   * Frage den SPX nach der Seriennummer
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 28.05.2013
+   */
+  public void askForSerialNumber()
+  {
+    if( BuildConfig.DEBUG )
+    {
+      Log.d( TAG, "askForSerialNumber..." );
+    }
+    if( connectedDeviceSerialNumber != null )
+    {
+      BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_SERIAL_READ, new String( connectedDeviceSerialNumber ) );
+      sendMessageToApp( msg );
+    }
+    else
+    {
+      this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_SERIAL_NUMBER ) );
+    }
+  }
+
+  /**
+   * 
+   * Frag den SPX, ob er noch da ist
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 28.05.2013
+   */
+  public void askForSPXAlive()
+  {
+    if( BuildConfig.DEBUG )
+    {
+      Log.d( TAG, "askForSPXAlive..." );
+    }
+    this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_ALIVE ) );
   }
 
   /**
@@ -1714,5 +1715,25 @@ public class BlueThoothComService extends Service
     {
       mWriterThread.writeToDevice( msg );
     }
+  }
+
+  /**
+   * 
+   * Schreibe die Masseinheiten in den SPX42
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 14.07.2013
+   * @param isTempMetric
+   * @param isDepthMetric
+   * @param isFreshwater
+   */
+  public void writeUnitPrefs( int isTempMetric, int isDepthMetric, int isFreshwater )
+  {
+    String kdoString;
+    kdoString = String.format( "~%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_UNITS, isTempMetric, isDepthMetric, isFreshwater );
+    this.writeSPXMsgToDevice( kdoString );
   }
 }
