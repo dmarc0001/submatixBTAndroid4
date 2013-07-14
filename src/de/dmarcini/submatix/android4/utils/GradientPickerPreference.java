@@ -372,7 +372,7 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
    *          "LOW:HIGH"
    * @return erfolgreich oder nicht
    */
-  public boolean setValue( String paramStr )
+  public boolean setValue( final String paramStr )
   {
     if( makeValuesFromString( paramStr ) )
     {
@@ -400,6 +400,53 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
       return( true );
     }
     return( false );
+  }
+
+  /**
+   * 
+   * Setze werte für die Gradienten
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 14.07.2013
+   * @param parm
+   *          int[2]
+   * @return
+   */
+  public boolean setValue( final int[] parm )
+  {
+    try
+    {
+      lowGradient = parm[0];
+      highGradient = parm[1];
+      //
+      if( lowPicker != null )
+      {
+        lowPicker.setValue( lowGradient );
+      }
+      if( highPicker != null )
+      {
+        highPicker.setValue( highGradient );
+      }
+    }
+    catch( NullPointerException ex )
+    {
+      Log.e( TAG, "setValue: Null Pointer Exception: (" + ex.getLocalizedMessage() + ")" );
+      return( false );
+    }
+    catch( ArrayIndexOutOfBoundsException ex )
+    {
+      Log.e( TAG, "setValue: array index out of bounds exception (" + ex.getLocalizedMessage() + ")" );
+      return( false );
+    }
+    catch( Exception ex )
+    {
+      Log.e( TAG, "setValue: Exception: (" + ex.getLocalizedMessage() + ")" );
+      return( false );
+    }
+    return( true );
   }
 
   /**
