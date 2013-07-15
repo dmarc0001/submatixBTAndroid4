@@ -138,7 +138,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
         msgConnectError( smsg );
         break;
       // ################################################################
-      // Seriennummer des ccomputers wurde gelesen
+      // Seriennummer des Computers wurde gelesen
       // ################################################################
       case ProjectConst.MESSAGE_SERIAL_READ:
         msgRecivedSerial( smsg );
