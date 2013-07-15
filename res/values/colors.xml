@@ -4,17 +4,20 @@
   <color name="preferenceCategoryDark.backgroundColor">#37373E</color>
   <color name="preferenceDark.backgroundColor">#2a2a2a</color>
   <color name="connectFragmentDark.spinnerText">#408FFF</color>
+  <color name="connectToastDark.backgroundColor">#C6D6F7</color>
+  <color name="connectToastDark.textColor">#057AFF</color>  
   
   <!-- Light Thema -->
   <color name="preferenceCategoryLight.textColor">#0554FF</color>
   <color name="preferenceCategoryLight.backgroundColor">#DFDFFF</color>
   <color name="preferenceLight.backgroundColor">#F2F2FF</color>
   <color name="connectFragmentLight.spinnerText">#0600B3</color>
+  <color name="connectToastLight.backgroundColor">#CAF7FC</color>
+  <color name="connectToastLight.textColor">#009E1D</color>  
   
   
   <!-- uni colors -->
   <color name="connectFragment.disconnectText">#C41823</color>
   <color name="connectFragment.connectingText">#DBA444</color>
   <color name="connectFragment.connectText">#1B9617</color>
-  
 </resources>

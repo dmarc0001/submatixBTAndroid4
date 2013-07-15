@@ -231,5 +231,8 @@
     <string name="no_device">- no device -</string>
     <string name="array_with_pic_adapter_dummy">PROGRAMITEM</string>
     
+    <!-- TOASTS -->
+    <string name="toast_dummy">communicate</string>
+    
     
 </resources>

@@ -1,4 +1,4 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+﻿<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme for API 14+. This theme completely replaces
@@ -35,8 +35,7 @@
       <item name="android:background">@color/preferenceCategoryDark.backgroundColor</item>
       <item name="android:textColor">@color/preferenceCategoryDark.textColor</item>
     </style>
-    
-    
+       
     <style name="preferenceCategoryLight" parent="preferenceCategoryCommon"> 
       <item name="android:background">@color/preferenceCategoryLight.backgroundColor</item>
       <item name="android:textColor">@color/preferenceCategoryLight.textColor</item>
@@ -45,6 +44,24 @@
     <style name="selectableItemBackground" >
       <item name="android:background" >@color/preferenceDark.backgroundColor</item>
     </style>
+
+    <style name="commToastCommon" >
+      <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+      <item name="android:textStyle">bold</item>
+      <item name="android:paddingLeft">10dp</item>
+      <item name="android:paddingRight">10dp</item>
+      <item name="android:paddingTop">10dp</item>
+      <item name="android:paddingBottom">10dp</item>
+    </style>
     
+    <style name="commToastLight"  parent="commToastCommon">
+      <item name="android:background">@color/connectToastLight.backgroundColor</item>
+      <item name="android:textColor">@color/connectToastLight.textColor</item>
+    </style>
+
+    <style name="commToastDark" parent="commToastCommon">
+      <item name="android:background">@color/connectToastDark.backgroundColor</item>
+      <item name="android:textColor">@color/connectToastDark.textColor</item>
+    </style>
     
 </resources>

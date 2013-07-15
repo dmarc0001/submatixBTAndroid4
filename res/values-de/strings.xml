@@ -231,6 +231,9 @@
     <!-- sonstig  -->
     <string name="no_device">"- Kein Gerät -"</string>
     <string name="array_with_pic_adapter_dummy">"PROGRAMITEM"</string>
+
+    <!-- TOASTS -->
+    <string name="toast_dummy">kommuniziere</string>
     
     
 </resources>
