@@ -49,7 +49,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   private static final String    displayLuminance             = "keyDisplayLuminance";
   private static final String    displayOrient                = "keyDisplayOrientation";
   private static final String    individualSensorsOn          = "keyIndividualSensorsOn";
-  private static final String    individualPSCROn             = "keyindividualPSCROn";
+  private static final String    individualPSCROn             = "keyIndividualPSCROn";
   private static final String    individualCountSensorWarning = "keyIndividualCountSensorWarning";
   private static final String    individualAcousticWarnings   = "keyIndividualAcousticWarnings";
   private static final String    individualLoginterval        = "keyIndividualLoginterval";
@@ -60,6 +60,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   private boolean                ignorePrefChange             = false;
   private FragmentProgressDialog pd                           = null;
   private String                 currFirmwareVersion          = null;
+  private Toast                  theToast                     = null;
 
   /**
    * bitte-Warten Box verschwinden lassen Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
@@ -114,6 +115,60 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       Log.e( TAG, "setDecoGradients: not preference found" );
       return( res );
     }
+  }
+
+  /**
+   * 
+   * Hilfsfunktion zum erfragen einer Referenz auf ListPreference
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 15.07.2013
+   * @param prefKey
+   * @return
+   */
+  private ListPreference getListPreference( String prefKey )
+  {
+    ListPreference lP = null;
+    if( getPreferenceScreen().findPreference( prefKey ) instanceof ListPreference )
+    {
+      lP = ( ListPreference )getPreferenceScreen().findPreference( prefKey );
+      if( lP != null )
+      {
+        return( lP );
+      }
+    }
+    Log.e( TAG, "getListPreference: Key <" + prefKey + "> was not found an ListPreference! abort!" );
+    return( null );
+  }
+
+  /**
+   * 
+   * Hilfsfunktion zum Erfragen einer SwitchReference
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 15.07.2013
+   * @param prefKey
+   * @return
+   */
+  private SwitchPreference getSwitchPreference( String prefKey )
+  {
+    SwitchPreference lP = null;
+    if( getPreferenceScreen().findPreference( prefKey ) instanceof SwitchPreference )
+    {
+      lP = ( SwitchPreference )getPreferenceScreen().findPreference( prefKey );
+      if( lP != null )
+      {
+        return( lP );
+      }
+    }
+    Log.e( TAG, "getSwitchPreference: Key <" + prefKey + "> was not found an SwitchPreference! abort!" );
+    return( null );
   }
 
   @Override
@@ -282,6 +337,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       Thread.yield();
       Thread.sleep( 100 );
       Thread.yield();
+      Thread.sleep( 100 );
+      Thread.yield();
     }
     catch( InterruptedException ex )
     {}
@@ -385,6 +442,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   public void msgReciveAutosetpointAck( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Autosetpoint successful set (preferences)" );
+    showConnectionToast( getResources().getString( R.string.toast_comm_set_autosetpoint_ok ), false );
     ignorePrefChange = false;
   }
 
@@ -409,6 +467,12 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     //
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX deco settings recived" );
+    // Kommando SPX_GET_SETUP_DEKO liefert zurück:
+    // ~34:LL:HH:D:Y:C
+    // LL=GF-Low, HH=GF-High,
+    // D=Deepstops (0/1)
+    // Y=Dynamische Gradienten (0/1)
+    // C=Last Decostop (0=3 Meter/1=6 Meter)
     //
     // versuche einmal, die fünf erwarteten Werte zu bekommen
     //
@@ -428,10 +492,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     {
       lowG = Integer.parseInt( decoParam[0], 16 );
       highG = Integer.parseInt( decoParam[1], 16 );
-      deepStops = Integer.parseInt( decoParam[2] );
-      dynGr = Integer.parseInt( decoParam[3] );
-      lastStop = Integer.parseInt( decoParam[4] );
-      // presetCandidate = String.format( "%02d:%02d", lowG, highG );
+      deepStops = Integer.parseInt( decoParam[2], 16 );
+      dynGr = Integer.parseInt( decoParam[3], 16 );
+      lastStop = Integer.parseInt( decoParam[4], 16 );
       presetCandidate[0] = lowG;
       presetCandidate[1] = highG;
     }
@@ -470,7 +533,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // jetzt die Werte für LastStop übernehmen
     //
     if( BuildConfig.DEBUG ) Log.d( TAG, "set deco last stop value to preference..." );
-    sp.setChecked( ( lastStop > 0 ) );
+    sp.setChecked( ( lastStop == 0 ) );
     //
     // Dynamische Gradienten on/off übernehmen
     //
@@ -506,6 +569,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   public void msgReciveDecoAck( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX DECO propertys successful set (preferences)" );
+    showConnectionToast( getResources().getString( R.string.toast_comm_set_deco_ok ), false );
     ignorePrefChange = false;
   }
 
@@ -592,6 +656,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   public void msgReciveDisplayAck( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX display settings ACK recived" );
+    showConnectionToast( getResources().getString( R.string.toast_comm_set_display_ok ), false );
     ignorePrefChange = false;
     // TODO Automatisch generierter Methodenstub
   }
@@ -740,6 +805,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   public void msgReciveIndividualsAck( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX INDIVIDUALS settings ACK recived" );
+    showConnectionToast( getResources().getString( R.string.toast_comm_set_individuals_ok ), false );
     ignorePrefChange = false;
   }
 
@@ -876,6 +942,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   public void msgReciveUnitsAck( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX units settings ACK recived" );
+    showConnectionToast( getResources().getString( R.string.toast_comm_set_units_ok ), false );
     ignorePrefChange = false;
   }
 
@@ -1213,6 +1280,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     int autoSp = 0, sP = 0;
     //
     if( BuildConfig.DEBUG ) Log.d( TAG, "sendAutoSetpoint()..." );
+    showConnectionToast( getResources().getString( R.string.toast_comm_set_autosetpoint ), true );
     //
     // aus den Voreinstellungen holen
     //
@@ -1259,6 +1327,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     //
     if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs..." );
+    showConnectionToast( getResources().getString( R.string.toast_comm_set_deco ), true );
     //
     // Low/High Gradient erfragen
     //
@@ -1297,11 +1366,11 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs: get deco last stop value from preference..." );
     if( sp.isChecked() )
     {
-      lastStop = 1;
+      lastStop = 0;
     }
     else
     {
-      lastStop = 0;
+      lastStop = 1;
     }
     //
     // Dynamische Gradienten on/off lesen
@@ -1359,6 +1428,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     ListPreference lP = null;
     int lumin = 1, orient = 0;
     if( BuildConfig.DEBUG ) Log.d( TAG, "sendDisplayPrefs()..." );
+    showConnectionToast( getResources().getString( R.string.toast_comm_set_display ), true );
     //
     // Helligkeit erfragen
     //
@@ -1406,6 +1476,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     ListPreference lP;
     //
     if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs()..." );
+    showConnectionToast( getResources().getString( R.string.toast_comm_set_individuals ), true );
     // ~38:SE:PS:SC:SN:LI
     // SE: Sensors 0->ON 1->OFF
     // PS: PSCRMODE 0->OFF 1->ON
@@ -1520,6 +1591,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     SwitchPreference sp;
     //
     if( BuildConfig.DEBUG ) Log.d( TAG, "sendUnitPrefs()..." );
+    showConnectionToast( getResources().getString( R.string.toast_comm_set_units ), true );
     //
     // Temperatur Einheit Celsius oder Imperial
     //
@@ -1589,36 +1661,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     if( BuildConfig.DEBUG )
       Log.d( TAG, String.format( "sendUnitPrefs: write display prefs via runningActivity temp:%d, depth:%d, freshwater:%d...", isTempImperial, isDepthImperial, isFreshwater ) );
     fActivity.writeUnitPrefs( isTempImperial, isDepthImperial, isFreshwater );
-  }
-
-  private ListPreference getListPreference( String prefKey )
-  {
-    ListPreference lP = null;
-    if( getPreferenceScreen().findPreference( prefKey ) instanceof ListPreference )
-    {
-      lP = ( ListPreference )getPreferenceScreen().findPreference( prefKey );
-      if( lP != null )
-      {
-        return( lP );
-      }
-    }
-    Log.e( TAG, "getListPreference: Key <" + prefKey + "> was not found an ListPreference! abort!" );
-    return( null );
-  }
-
-  private SwitchPreference getSwitchPreference( String prefKey )
-  {
-    SwitchPreference lP = null;
-    if( getPreferenceScreen().findPreference( prefKey ) instanceof SwitchPreference )
-    {
-      lP = ( SwitchPreference )getPreferenceScreen().findPreference( prefKey );
-      if( lP != null )
-      {
-        return( lP );
-      }
-    }
-    Log.e( TAG, "getSwitchPreference: Key <" + prefKey + "> was not found an SwitchPreference! abort!" );
-    return( null );
   }
 
   /**
@@ -1832,32 +1874,65 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     getPreferenceScreen().findPreference( decoGradient ).setSummary( String.format( getResources().getString( R.string.conf_deco_gradient_summary ), low, high ) );
   }
 
-  private void showConnectionToast( String msg )
+  /**
+   * 
+   * Erzeuge einen Toast um den User über Kommunikationen zu benachrichtigen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 15.07.2013
+   * @param msg
+   */
+  private void showConnectionToast( String msg, Boolean isLong )
   {
+    View toastLayout;
+    TextView toastMessageTextView;
     //
-    // zum testen mach ich mal TOASTS
+    // Ich mache einen eigenen Toast über die ganze Breite mit eigenem style
     //
-    LayoutInflater inflater = getActivity().getLayoutInflater();
-    Log.w( TAG, "layout inflater is " + ( ( inflater == null ) ? "not there" : "there" ) );
-    View layout = inflater.inflate( R.layout.comm_toast_layout, ( ViewGroup )getActivity().findViewById( R.id.commToastLayout ) );
-    Log.w( TAG, "layout is " + ( ( layout == null ) ? "not there" : "there" ) );
-    TextView text = ( TextView )layout.findViewById( R.id.toastTextView );
-    Log.w( TAG, "text is " + ( ( text == null ) ? "not there" : "there" ) );
-    text.setText( "This is a custom toast" );
-    Toast toast = new Toast( getActivity().getApplicationContext() );
-    if( FragmentCommonActivity.getAppStyle() == R.style.AppDarkTheme )
+    try
     {
-      layout.setBackgroundColor( getResources().getColor( R.color.connectToastDark_backgroundColor ) );
-      text.setTextAppearance( getActivity().getApplicationContext(), R.style.commToastDark );
+      //
+      // einen alten Toast entfernen
+      //
+      if( theToast != null )
+      {
+        theToast.cancel();
+        theToast = null;
+      }
+      theToast = new Toast( getActivity().getApplicationContext() );
+      LayoutInflater inflater = getActivity().getLayoutInflater();
+      toastLayout = inflater.inflate( R.layout.comm_toast_layout, ( ViewGroup )getActivity().findViewById( R.id.commToastLayout ) );
+      toastMessageTextView = ( TextView )toastLayout.findViewById( R.id.toastTextView );
+      toastMessageTextView.setText( msg );
+      //
+      // welcher Style ist angesagt?
+      //
+      if( FragmentCommonActivity.getAppStyle() == R.style.AppDarkTheme )
+      {
+        toastLayout.setBackgroundColor( getResources().getColor( R.color.connectToastDark_backgroundColor ) );
+        toastMessageTextView.setTextAppearance( getActivity().getApplicationContext(), R.style.commToastDark );
+      }
+      else
+      {
+        toastLayout.setBackgroundColor( getResources().getColor( R.color.connectToastLight_backgroundColor ) );
+        toastMessageTextView.setTextAppearance( getActivity().getApplicationContext(), R.style.commToastLight );
+      }
+      // der Toast ist unten, kleiner Abstand zum Boden, ganze Breite
+      theToast.setGravity( Gravity.FILL_HORIZONTAL | Gravity.BOTTOM, 0, 15 );
+      theToast.setDuration( ( isLong ? Toast.LENGTH_LONG : Toast.LENGTH_SHORT ) );
+      theToast.setView( toastLayout );
+      theToast.show();
     }
-    else
+    catch( NullPointerException ex )
     {
-      layout.setBackgroundColor( getResources().getColor( R.color.connectToastLight_backgroundColor ) );
-      text.setTextAppearance( getActivity().getApplicationContext(), R.style.commToastLight );
+      Log.e( TAG, "showConnectionToast: ups, there was not an pointer... Show none TOAST! (" + ex.getLocalizedMessage() + ")" );
     }
-    toast.setGravity( Gravity.FILL_HORIZONTAL | Gravity.BOTTOM, 0, 15 );
-    toast.setDuration( Toast.LENGTH_LONG );
-    toast.setView( layout );
-    toast.show();
+    catch( Exception ex )
+    {
+      Log.e( TAG, "showConnectionToast: ups, there was an exception: (" + ex.getLocalizedMessage() + ")" );
+    }
   }
 }
