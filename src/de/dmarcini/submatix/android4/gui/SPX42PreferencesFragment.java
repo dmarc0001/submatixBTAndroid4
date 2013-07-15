@@ -50,7 +50,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   private static final String    individualLoginterval        = "keyIndividualLoginterval";
   private static final String    unitsIsTempMetric            = "keyUnitsIsTempMetric";
   private static final String    unitsIsDepthImperial         = "keyUnitsIsDepthMetric";
-  private static final String    unitsIsSaltwater             = "keyUnitsIsFreshwater";
+  private static final String    unitsIsFreshwater            = "keyUnitsIsFreshwater";
   //
   private boolean                ignorePrefChange             = false;
   private FragmentProgressDialog pd                           = null;
@@ -342,49 +342,27 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // in die Voreinstellungen übertragen
     //
-    if( getPreferenceScreen().findPreference( setpointAuto ) instanceof ListPreference )
-    {
-      lP = ( ListPreference )getPreferenceScreen().findPreference( setpointAuto );
-      if( lP == null )
-      {
-        Log.e( TAG, "msgReciveAutosetpoint: Key <" + setpointAuto + "> was not found an ListPreference! abort!" );
-        return;
-      }
-      //
-      // Autosetpoint (off/tiefe) einstellen
-      //
-      // setze den Index auf den Wert, der ausgelesen wurde
-      // empfangen werden kann 0..3, also kan ich das 1:1 übernehmen
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "set autosetpoint value to preference..." );
-      lP.setValueIndex( autoSp );
-    }
-    else
-    {
-      Log.e( TAG, "can't set autosetpoint value to preference..." );
-    }
+    lP = getListPreference( setpointAuto );
+    if( lP == null ) return;
     //
-    if( getPreferenceScreen().findPreference( setpointHigh ) instanceof ListPreference )
-    {
-      lP = ( ListPreference )getPreferenceScreen().findPreference( setpointHigh );
-      if( lP == null )
-      {
-        Log.e( TAG, "msgReciveAutosetpoint: Key <" + setpointHigh + "> was not found an ListPreference! abort!" );
-        return;
-      }
-      //
-      // Highsetpoint (partialdruck) einstellen
-      //
-      // setze den Index auf den Wert, der ausgelesen wurde
-      // empfangen werden kann 0..4, also kan ich das 1:1 übernehmen
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "set highsetpoint value to preference..." );
-      lP.setValueIndex( sP );
-    }
-    else
-    {
-      Log.e( TAG, "can't set highsetpoint value to preference..." );
-    }
+    // Autosetpoint (off/tiefe) einstellen
+    //
+    // setze den Index auf den Wert, der ausgelesen wurde
+    // empfangen werden kann 0..3, also kan ich das 1:1 übernehmen
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "set autosetpoint value to preference..." );
+    lP.setValueIndex( autoSp );
+    //
+    lP = getListPreference( setpointHigh );
+    if( lP == null ) return;
+    //
+    // Highsetpoint (partialdruck) einstellen
+    //
+    // setze den Index auf den Wert, der ausgelesen wurde
+    // empfangen werden kann 0..4, also kan ich das 1:1 übernehmen
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "set highsetpoint value to preference..." );
+    lP.setValueIndex( sP );
   }
 
   @Override
@@ -410,7 +388,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     String[] decoParam;
     int[] presetCandidate =
     { 0, 0 };
-    // String presetCandidate = "00:00";
+    SwitchPreference sp;
     int lowG, highG, deepStops, dynGr, lastStop;
     //
     //
@@ -466,69 +444,45 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // LastDeco Stop on/off übernehmen
     //
-    if( getPreferenceScreen().findPreference( decoLastStop ) instanceof SwitchPreference )
+    sp = getSwitchPreference( decoLastStop );
+    if( sp == null )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( decoLastStop );
-      if( sp == null )
-      {
-        Log.e( TAG, "msgReciveDeco: Key <" + decoLastStop + "> was not found an SwitchPreference! abort!" );
-        ignorePrefChange = false;
-        return;
-      }
-      //
-      // jetzt die Werte für LastStop übernehmen
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "set deco last stop value to preference..." );
-      sp.setChecked( ( lastStop > 0 ) );
+      ignorePrefChange = false;
+      return;
     }
-    else
-    {
-      Log.e( TAG, "can't set decoLastStop value to preference..." );
-    }
+    //
+    // jetzt die Werte für LastStop übernehmen
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "set deco last stop value to preference..." );
+    sp.setChecked( ( lastStop > 0 ) );
     //
     // Dynamische Gradienten on/off übernehmen
     //
-    if( getPreferenceScreen().findPreference( decoDynGradients ) instanceof SwitchPreference )
+    sp = getSwitchPreference( decoDynGradients );
+    if( sp == null )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( decoDynGradients );
-      if( sp == null )
-      {
-        Log.e( TAG, "msgReciveDeco: Key <" + decoDynGradients + "> was not found an SwitchPreference! abort!" );
-        ignorePrefChange = false;
-        return;
-      }
-      //
-      // jetzt die Werte für LastStop übernehmen
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "set dynGradients value to preference..." );
-      sp.setChecked( ( dynGr > 0 ) );
+      ignorePrefChange = false;
+      return;
     }
-    else
-    {
-      Log.e( TAG, "can't set dynGradients value to preference..." );
-    }
+    //
+    // jetzt die Werte für LastStop übernehmen
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "set dynGradients value to preference..." );
+    sp.setChecked( ( dynGr > 0 ) );
     //
     // Deep stops on/off übernehmen
     //
-    if( getPreferenceScreen().findPreference( decoDeepStops ) instanceof SwitchPreference )
+    sp = getSwitchPreference( decoDeepStops );
+    if( sp == null )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( decoDeepStops );
-      if( sp == null )
-      {
-        Log.e( TAG, "msgReciveDeco: Key <" + decoDeepStops + "> was not found an SwitchPreference! abort!" );
-        ignorePrefChange = false;
-        return;
-      }
-      //
-      // jetzt die Werte für LastStop übernehmen
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "set deepStops value to preference..." );
-      sp.setChecked( ( deepStops > 0 ) );
+      ignorePrefChange = false;
+      return;
     }
-    else
-    {
-      Log.e( TAG, "can't set dynGradients value to preference..." );
-    }
+    //
+    // jetzt die Werte für LastStop übernehmen
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "set deepStops value to preference..." );
+    sp.setChecked( ( deepStops > 0 ) );
     ignorePrefChange = false;
   }
 
@@ -545,6 +499,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     String[] displayParm;
     int lumin = 0;
     int orient = 0;
+    ListPreference lP;
     //
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX display settings recived" );
     // Kommando GET_SETUP_DISPLAYSETTINGS liefert
@@ -587,51 +542,33 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // jetzt Helligkeit eintragen
     //
-    if( getPreferenceScreen().findPreference( displayLuminance ) instanceof ListPreference )
+    lP = getListPreference( displayLuminance );
+    if( lP == null )
     {
-      // die Preferenz rausuchen
-      ListPreference lP = ( ListPreference )getPreferenceScreen().findPreference( displayLuminance );
-      if( lP == null )
-      {
-        Log.e( TAG, "msgReciveDisplay: Key <" + displayLuminance + "> was not found an ListPreference! abort!" );
-        ignorePrefChange = false;
-        return;
-      }
-      //
-      // jetzt den Preset übernehmen
-      // Index sollte lumin sein....
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveDisplay: set luminance value to preference..." );
-      lP.setValueIndex( lumin );
+      ignorePrefChange = false;
+      return;
     }
-    else
-    {
-      Log.e( TAG, "msgReciveDisplay: can't set luminance preset value to preference..." );
-    }
+    //
+    // jetzt den Preset übernehmen
+    // Index sollte lumin sein....
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveDisplay: set luminance value to preference..." );
+    lP.setValueIndex( lumin );
     //
     // jetzt Orientierung eintragen
     //
-    if( getPreferenceScreen().findPreference( displayOrient ) instanceof ListPreference )
+    lP = getListPreference( displayOrient );
+    if( lP == null )
     {
-      // die Preferenz rausuchen
-      ListPreference lP = ( ListPreference )getPreferenceScreen().findPreference( displayOrient );
-      if( lP == null )
-      {
-        Log.e( TAG, "msgReciveDisplay: Key <" + displayOrient + "> was not found an ListPreference! abort!" );
-        ignorePrefChange = false;
-        return;
-      }
-      //
-      // jetzt den Preset übernehmen
-      // Index sollte lumin sein....
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveDisplay: set display angle value to preference..." );
-      lP.setValueIndex( orient );
+      ignorePrefChange = false;
+      return;
     }
-    else
-    {
-      Log.e( TAG, "msgReciveDisplay: can't set display angle preset value to preference..." );
-    }
+    //
+    // jetzt den Preset übernehmen
+    // Index sollte lumin sein....
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveDisplay: set display angle value to preference..." );
+    lP.setValueIndex( orient );
     ignorePrefChange = false;
   }
 
@@ -667,6 +604,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   {
     String[] individualParm;
     int sensorsOff = 0, pscrOff = 0, sensorsCount = 3, soundOn = 1, logInterval = 2;
+    SwitchPreference sp;
+    ListPreference lP;
     //
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX individuals settings recived" );
     //
@@ -715,111 +654,69 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // Sensoren an/aus ...
     //
-    if( getPreferenceScreen().findPreference( individualSensorsOn ) instanceof SwitchPreference )
+    sp = getSwitchPreference( individualSensorsOn );
+    if( sp == null )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( individualSensorsOn );
-      if( sp == null )
-      {
-        Log.e( TAG, "msgReciveIndividuals: Key <" + individualSensorsOn + "> was not found an SwitchPreference! abort!" );
-        ignorePrefChange = false;
-        return;
-      }
-      //
-      // jetzt die Werte für Sensoren an/aus
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "set sensors on/off value to preference..." );
-      sp.setChecked( ( sensorsOff == 0 ) );
+      ignorePrefChange = false;
+      return;
     }
-    else
-    {
-      Log.e( TAG, "can't set sensors on/off value to preference..." );
-    }
+    //
+    // jetzt die Werte für Sensoren an/aus
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "set sensors on/off value to preference..." );
+    sp.setChecked( ( sensorsOff == 0 ) );
     //
     // PSCR-Mode an/aus ...
     //
-    if( getPreferenceScreen().findPreference( individualPSCROn ) instanceof SwitchPreference )
+    sp = getSwitchPreference( individualPSCROn );
+    if( sp == null )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( individualPSCROn );
-      if( sp == null )
-      {
-        Log.e( TAG, "msgReciveIndividuals: Key <" + individualPSCROn + "> was not found an SwitchPreference! abort!" );
-        ignorePrefChange = false;
-        return;
-      }
-      //
-      // jetzt die Werte für PSCR an/aus
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "set PSCR-Mode on/off value to preference..." );
-      sp.setChecked( ( pscrOff == 1 ) );
+      ignorePrefChange = false;
+      return;
     }
-    else
-    {
-      Log.e( TAG, "can't set PSCR-Mode on/off value to preference..." );
-    }
+    //
+    // jetzt die Werte für PSCR an/aus
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "set PSCR-Mode on/off value to preference..." );
+    sp.setChecked( ( pscrOff == 1 ) );
     //
     // Anzahl der Sensoren für die Berechnungen wählen
     //
-    if( getPreferenceScreen().findPreference( individualCountSensorWarning ) instanceof ListPreference )
+    lP = getListPreference( individualCountSensorWarning );
+    if( lP == null )
     {
-      // die Preferenz rausuchen
-      ListPreference lP = ( ListPreference )getPreferenceScreen().findPreference( individualCountSensorWarning );
-      if( lP == null )
-      {
-        Log.e( TAG, "msgReciveIndividuals: Key <" + individualCountSensorWarning + "> was not found an ListPreference! abort!" );
-        ignorePrefChange = false;
-        return;
-      }
-      if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveIndividuals: set sensors count value to preference..." );
-      lP.setValueIndex( sensorsCount );
-      lP.setSummary( String.format( getResources().getString( R.string.conf_ind_count_sensorwarning_header_summary ), lP.getEntry() ) );
+      ignorePrefChange = false;
+      return;
     }
-    else
-    {
-      Log.e( TAG, "msgReciveIndividuals: can't set count sensors preset value to preference..." );
-    }
+    if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveIndividuals: set sensors count value to preference..." );
+    lP.setValueIndex( sensorsCount );
+    lP.setSummary( String.format( getResources().getString( R.string.conf_ind_count_sensorwarning_header_summary ), lP.getEntry() ) );
     //
     // Akustische Warnungen an/aus ...
     //
-    if( getPreferenceScreen().findPreference( individualAcousticWarnings ) instanceof SwitchPreference )
+    sp = getSwitchPreference( individualAcousticWarnings );
+    if( sp == null )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( individualAcousticWarnings );
-      if( sp == null )
-      {
-        Log.e( TAG, "msgReciveIndividuals: Key <" + individualAcousticWarnings + "> was not found an SwitchPreference! abort!" );
-        ignorePrefChange = false;
-        return;
-      }
-      //
-      // jetzt die Werte für Akustische Warnungen an/aus
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "set acoustic warnings on/off value to preference..." );
-      sp.setChecked( ( soundOn == 1 ) );
+      ignorePrefChange = false;
+      return;
     }
-    else
-    {
-      Log.e( TAG, "can't set acoustic warnings on/off value to preference..." );
-    }
+    //
+    // jetzt die Werte für Akustische Warnungen an/aus
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "set acoustic warnings on/off value to preference..." );
+    sp.setChecked( ( soundOn == 1 ) );
     //
     // Loginterval in Oberfläche einbauen
     //
-    if( getPreferenceScreen().findPreference( individualLoginterval ) instanceof ListPreference )
+    lP = getListPreference( individualLoginterval );
+    if( lP == null )
     {
-      // die Preferenz rausuchen
-      ListPreference lP = ( ListPreference )getPreferenceScreen().findPreference( individualLoginterval );
-      if( lP == null )
-      {
-        Log.e( TAG, "msgReciveIndividuals: Key <" + individualLoginterval + "> was not found an ListPreference! abort!" );
-        ignorePrefChange = false;
-        return;
-      }
-      if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveIndividuals: set loginterval value to preference..." );
-      lP.setValueIndex( logInterval );
-      lP.setSummary( String.format( getResources().getString( R.string.conf_ind_interval_header_summary ), lP.getEntry() ) );
+      ignorePrefChange = false;
+      return;
     }
-    else
-    {
-      Log.e( TAG, "msgReciveIndividuals: can't set log interval preset value to preference..." );
-    }
+    if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveIndividuals: set loginterval value to preference..." );
+    lP.setValueIndex( logInterval );
+    lP.setSummary( String.format( getResources().getString( R.string.conf_ind_interval_header_summary ), lP.getEntry() ) );
     ignorePrefChange = false;
   }
 
@@ -852,6 +749,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // UW= 0->Salzwasser 1->Süßwasser
     int isTempImperial = 0, isDepthImperial = 0, isFreshwater = 0;
     String[] unitsParm;
+    SwitchPreference sp;
     //
     if( msg.getContainer() instanceof String[] )
     {
@@ -916,69 +814,45 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // Temperatur...
     //
-    if( getPreferenceScreen().findPreference( unitsIsTempMetric ) instanceof SwitchPreference )
+    sp = getSwitchPreference( unitsIsTempMetric );
+    if( sp == null )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( unitsIsTempMetric );
-      if( sp == null )
-      {
-        Log.e( TAG, "msgReciveUnits: Key <" + unitsIsTempMetric + "> was not found an SwitchPreference! abort!" );
-        ignorePrefChange = false;
-        return;
-      }
-      //
-      // jetzt die Werte für Temperatureinheit übernehmen
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "set temp unit value to preference..." );
-      sp.setChecked( ( isTempImperial == 0 ) );
+      ignorePrefChange = false;
+      return;
     }
-    else
-    {
-      Log.e( TAG, "can't set temp unit value to preference..." );
-    }
+    //
+    // jetzt die Werte für Temperatureinheit übernehmen
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "set temp unit value to preference..." );
+    sp.setChecked( ( isTempImperial == 0 ) );
     //
     // Tiefeneinheit...
     //
-    if( getPreferenceScreen().findPreference( unitsIsDepthImperial ) instanceof SwitchPreference )
+    sp = getSwitchPreference( unitsIsDepthImperial );
+    if( sp == null )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( unitsIsDepthImperial );
-      if( sp == null )
-      {
-        Log.e( TAG, "msgReciveUnits: Key <" + unitsIsDepthImperial + "> was not found an SwitchPreference! abort!" );
-        ignorePrefChange = false;
-        return;
-      }
-      //
-      // jetzt die Werte für Tiefgeneinheit übernehmen
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "set depth unit value to preference..." );
-      sp.setChecked( ( isDepthImperial == 0 ) );
+      ignorePrefChange = false;
+      return;
     }
-    else
-    {
-      Log.e( TAG, "can't set temp unit value to preference..." );
-    }
+    //
+    // jetzt die Werte für Tiefgeneinheit übernehmen
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "set depth unit value to preference..." );
+    sp.setChecked( ( isDepthImperial == 0 ) );
     //
     // Süsswasser...
     //
-    if( getPreferenceScreen().findPreference( unitsIsSaltwater ) instanceof SwitchPreference )
+    sp = getSwitchPreference( unitsIsFreshwater );
+    if( sp == null )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( unitsIsSaltwater );
-      if( sp == null )
-      {
-        Log.e( TAG, "msgReciveUnits: Key <" + unitsIsSaltwater + "> was not found an SwitchPreference! abort!" );
-        ignorePrefChange = false;
-        return;
-      }
-      //
-      // jetzt Wert für Süß oder Salzwasser eintragen
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "set salnity value to preference..." );
-      sp.setChecked( ( isFreshwater > 0 ) );
+      ignorePrefChange = false;
+      return;
     }
-    else
-    {
-      Log.e( TAG, "can't set salnity unit value to preference..." );
-    }
+    //
+    // jetzt Wert für Süß oder Salzwasser eintragen
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "set salnity value to preference..." );
+    sp.setChecked( ( isFreshwater > 0 ) );
     ignorePrefChange = false;
   }
 
@@ -1213,7 +1087,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       //
       // Salz/Süßwasser
       //
-      else if( key.equals( unitsIsSaltwater ) )
+      else if( key.equals( unitsIsFreshwater ) )
       {
         sendUnitPrefs();
       }
@@ -1326,38 +1200,32 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // aus den Voreinstellungen holen
     //
-    if( getPreferenceScreen().findPreference( setpointAuto ) instanceof ListPreference )
+    lP = getListPreference( setpointAuto );
+    if( lP == null )
     {
-      lP = ( ListPreference )getPreferenceScreen().findPreference( setpointAuto );
-      if( lP == null )
-      {
-        Log.e( TAG, "msgReciveAutosetpoint: Key <" + setpointAuto + "> was not found an ListPreference! abort!" );
-        return;
-      }
-      //
-      // Autosetpoint (off/tiefe) holen
-      //
-      // setze den Index auf den Wert, der ausgelesen wurde
-      // empfangen werden kann 0..3, also kan ich das 1:1 übernehmen
-      //
-      autoSp = lP.findIndexOfValue( lP.getValue() );
+      return;
     }
-    if( getPreferenceScreen().findPreference( setpointHigh ) instanceof ListPreference )
+    //
+    // Autosetpoint (off/tiefe) holen
+    //
+    // setze den Index auf den Wert, der ausgelesen wurde
+    // empfangen werden kann 0..3, also kan ich das 1:1 übernehmen
+    //
+    autoSp = lP.findIndexOfValue( lP.getValue() );
+    //
+    lP = getListPreference( setpointHigh );
+    if( lP == null )
     {
-      lP = ( ListPreference )getPreferenceScreen().findPreference( setpointHigh );
-      if( lP == null )
-      {
-        Log.e( TAG, "msgReciveAutosetpoint: Key <" + setpointHigh + "> was not found an ListPreference! abort!" );
-        return;
-      }
-      //
-      // Highsetpoint (partialdruck) einstellen
-      //
-      // setze den Index auf den Wert, der ausgelesen wurde
-      // empfangen werden kann 0..4, also kan ich das 1:1 übernehmen
-      //
-      sP = lP.findIndexOfValue( lP.getValue() );
+      return;
     }
+    //
+    // Highsetpoint (partialdruck) einstellen
+    //
+    // setze den Index auf den Wert, der ausgelesen wurde
+    // empfangen werden kann 0..4, also kan ich das 1:1 übernehmen
+    //
+    sP = lP.findIndexOfValue( lP.getValue() );
+    //
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     ignorePrefChange = true;
     fActivity.writeAutoSetpoint( autoSp, sP );
@@ -1371,6 +1239,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   private void sendDecoPrefs()
   {
     int lowG, highG, deepStops, dynGr, lastStop;
+    SwitchPreference sp;
     //
     //
     if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs..." );
@@ -1401,89 +1270,62 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // LastDeco Stop on/off übernehmen
     //
-    if( getPreferenceScreen().findPreference( decoLastStop ) instanceof SwitchPreference )
+    sp = getSwitchPreference( decoLastStop );
+    if( sp == null )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( decoLastStop );
-      if( sp == null )
-      {
-        Log.e( TAG, "sendDecoPrefs: Key <" + decoLastStop + "> was not found an SwitchPreference! abort!" );
-        return;
-      }
-      //
-      // jetzt die Werte für LastStop übernehmen
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs: get deco last stop value from preference..." );
-      if( sp.isChecked() )
-      {
-        lastStop = 1;
-      }
-      else
-      {
-        lastStop = 0;
-      }
+      return;
+    }
+    //
+    // jetzt die Werte für LastStop übernehmen
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs: get deco last stop value from preference..." );
+    if( sp.isChecked() )
+    {
+      lastStop = 1;
     }
     else
     {
-      Log.e( TAG, "sendDecoPrefs: can't set decoLastStop value to preference..." );
-      return;
+      lastStop = 0;
     }
     //
     // Dynamische Gradienten on/off lesen
     //
-    if( getPreferenceScreen().findPreference( decoDynGradients ) instanceof SwitchPreference )
+    sp = getSwitchPreference( decoDynGradients );
+    if( sp == null )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( decoDynGradients );
-      if( sp == null )
-      {
-        Log.e( TAG, "sendDecoPrefs: Key <" + decoDynGradients + "> was not found an SwitchPreference! abort!" );
-        return;
-      }
-      //
-      // jetzt die Werte für LastStop übernehmen
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs: get dynGradients value from preference..." );
-      if( sp.isChecked() )
-      {
-        dynGr = 1;
-      }
-      else
-      {
-        dynGr = 0;
-      }
+      return;
+    }
+    //
+    // jetzt die Werte für LastStop übernehmen
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs: get dynGradients value from preference..." );
+    if( sp.isChecked() )
+    {
+      dynGr = 1;
     }
     else
     {
-      Log.e( TAG, "sendDecoPrefs: can't set dynGradients value to preference..." );
-      return;
+      dynGr = 0;
     }
     //
     // Deep stops on/off lesen
     //
-    if( getPreferenceScreen().findPreference( decoDeepStops ) instanceof SwitchPreference )
+    sp = getSwitchPreference( decoDeepStops );
+    if( sp == null )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( decoDeepStops );
-      if( sp == null )
-      {
-        Log.e( TAG, "sendDecoPrefs: Key <" + decoDeepStops + "> was not found an SwitchPreference! abort!" );
-        return;
-      }
-      //
-      // jetzt die Werte für LastStop übernehmen
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs: get deepStops value from preference..." );
-      if( sp.isChecked() )
-      {
-        deepStops = 1;
-      }
-      else
-      {
-        deepStops = 0;
-      }
+      return;
+    }
+    //
+    // jetzt die Werte für LastStop übernehmen
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs: get deepStops value from preference..." );
+    if( sp.isChecked() )
+    {
+      deepStops = 1;
     }
     else
     {
-      Log.e( TAG, "sendDecoPrefs: can't set dynGradients value to preference..." );
-      return;
+      deepStops = 0;
     }
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     ignorePrefChange = true;
@@ -1504,49 +1346,32 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // Helligkeit erfragen
     //
-    if( getPreferenceScreen().findPreference( displayLuminance ) instanceof ListPreference )
+    lP = getListPreference( displayLuminance );
+    if( lP == null )
     {
-      lP = ( ListPreference )getPreferenceScreen().findPreference( displayLuminance );
-      if( lP == null )
-      {
-        Log.e( TAG, "sendDisplayPrefs: Key <" + displayLuminance + "> was not found an ListPreference! abort!" );
-        return;
-      }
-      //
-      // jetzt die Werte für Helligkeit übernehmen
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "get display luminance value from preference..." );
-      lumin = lP.findIndexOfValue( lP.getValue() );
-      if( lumin == -1 ) lumin = 2;
-    }
-    else
-    {
-      Log.e( TAG, "can't get value for luminance from preference.." );
       return;
     }
+    //
+    // jetzt die Werte für Helligkeit übernehmen
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "get display luminance value from preference..." );
+    lumin = lP.findIndexOfValue( lP.getValue() );
+    if( lumin == -1 ) lumin = 2;
     //
     // Display Ausrichtung erfragen
     //
-    if( getPreferenceScreen().findPreference( displayOrient ) instanceof ListPreference )
+    lP = getListPreference( displayOrient );
+    if( lP == null )
     {
-      lP = ( ListPreference )getPreferenceScreen().findPreference( displayOrient );
-      if( lP == null )
-      {
-        Log.e( TAG, "sendDisplayPrefs: Key <" + displayOrient + "> was not found an ListPreference! abort!" );
-        return;
-      }
-      //
-      // jetzt die Werte für Ausrichtung übernehmen
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "get display orientation value from preference..." );
-      orient = lP.findIndexOfValue( lP.getValue() );
-      if( orient == -1 ) orient = 0;
-    }
-    else
-    {
-      Log.e( TAG, "sendDisplayPrefs: can't get value for display orientation from preference.." );
       return;
     }
+    //
+    // jetzt die Werte für Ausrichtung übernehmen
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "get display orientation value from preference..." );
+    orient = lP.findIndexOfValue( lP.getValue() );
+    if( orient == -1 ) orient = 0;
+    //
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     ignorePrefChange = true;
     if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "sendDisplayPrefs: write display prefs via runningActivity lum:%d, orient:%d...", lumin, orient ) );
@@ -1561,6 +1386,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   private void sendIndividualPrefs()
   {
     int sensorsOff = 0, pscrOff = 0, sensorsCount = 2, soundOn = 1, logInterval = 2;
+    SwitchPreference sp;
+    ListPreference lP;
     //
     if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs()..." );
     // ~38:SE:PS:SC:SN:LI
@@ -1572,131 +1399,89 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // Sensoren an/aus ...
     //
-    if( getPreferenceScreen().findPreference( individualSensorsOn ) instanceof SwitchPreference )
+    sp = getSwitchPreference( individualSensorsOn );
+    if( sp == null )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( individualSensorsOn );
-      if( sp == null )
-      {
-        Log.e( TAG, "sendIndividualPrefs: Key <" + individualSensorsOn + "> was not found an SwitchPreference! abort!" );
-        return;
-      }
-      //
-      // jetzt die Werte für Sensoren an/aus
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read sensors on/off value from preference..." );
-      if( sp.isChecked() )
-      {
-        sensorsOff = 0;
-      }
-      else
-      {
-        sensorsOff = 1;
-      }
+      return;
+    }
+    //
+    // jetzt die Werte für Sensoren an/aus
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read sensors on/off value from preference..." );
+    if( sp.isChecked() )
+    {
+      sensorsOff = 0;
     }
     else
     {
-      Log.e( TAG, "sendIndividualPrefs: can't read sensors on/off value from preference..." );
-      return;
+      sensorsOff = 1;
     }
     //
     // PSCR-Mode an/aus ...
     //
-    if( getPreferenceScreen().findPreference( individualPSCROn ) instanceof SwitchPreference )
+    sp = getSwitchPreference( individualPSCROn );
+    if( sp == null )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( individualPSCROn );
-      if( sp == null )
-      {
-        Log.e( TAG, "sendIndividualPrefs: Key <" + individualPSCROn + "> was not found an SwitchPreference! abort!" );
-        return;
-      }
-      //
-      // jetzt die Werte für PSCR an/aus
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs read PSCR-Mode on/off value from preference..." );
-      if( sp.isChecked() )
-      {
-        pscrOff = 1;
-      }
-      else
-      {
-        pscrOff = 0;
-      }
+      return;
+    }
+    //
+    // jetzt die Werte für PSCR an/aus
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs read PSCR-Mode on/off value from preference..." );
+    if( sp.isChecked() )
+    {
+      pscrOff = 1;
     }
     else
     {
-      Log.e( TAG, "sendIndividualPrefs: can't read PSCR-Mode on/off value from preference..." );
+      pscrOff = 0;
     }
     //
     // Anzahl der Sensoren für die Berechnungen
     //
-    if( getPreferenceScreen().findPreference( individualCountSensorWarning ) instanceof ListPreference )
+    lP = getListPreference( individualCountSensorWarning );
+    if( lP == null )
     {
-      // die Preferenz rausuchen
-      ListPreference lP = ( ListPreference )getPreferenceScreen().findPreference( individualCountSensorWarning );
-      if( lP == null )
-      {
-        Log.e( TAG, "sendIndividualPrefs: Key <" + individualCountSensorWarning + "> was not found an ListPreference! abort!" );
-        ignorePrefChange = false;
-        return;
-      }
-      if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read sensors count value from preference..." );
-      sensorsCount = lP.findIndexOfValue( lP.getValue() );
-      if( sensorsCount == -1 ) sensorsCount = 2;
+      ignorePrefChange = false;
+      return;
     }
-    else
-    {
-      Log.e( TAG, "sendIndividualPrefs: can't read count sensors preset value from preference..." );
-    }
+    if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read sensors count value from preference..." );
+    sensorsCount = lP.findIndexOfValue( lP.getValue() );
+    if( sensorsCount == -1 ) sensorsCount = 2;
     //
     // Akustische Warnungen an/aus ...
     //
-    if( getPreferenceScreen().findPreference( individualAcousticWarnings ) instanceof SwitchPreference )
+    sp = getSwitchPreference( individualAcousticWarnings );
+    if( sp == null )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( individualAcousticWarnings );
-      if( sp == null )
-      {
-        Log.e( TAG, "msgReciveIndividuals: Key <" + individualAcousticWarnings + "> was not found an SwitchPreference! abort!" );
-        ignorePrefChange = false;
-        return;
-      }
-      //
-      // jetzt die Werte für Akustische Warnungen an/aus
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read acoustic warnings on/off value from preference..." );
-      if( sp.isChecked() )
-      {
-        soundOn = 1;
-      }
-      else
-      {
-        soundOn = 0;
-      }
+      ignorePrefChange = false;
+      return;
+    }
+    //
+    // jetzt die Werte für Akustische Warnungen an/aus
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read acoustic warnings on/off value from preference..." );
+    if( sp.isChecked() )
+    {
+      soundOn = 1;
     }
     else
     {
-      Log.e( TAG, "sendIndividualPrefs: can't read acoustic warnings on/off value from preference..." );
+      soundOn = 0;
     }
     //
     // Loginterval in Oberfläche einbauen
     //
-    if( getPreferenceScreen().findPreference( individualLoginterval ) instanceof ListPreference )
+    lP = getListPreference( individualLoginterval );
+    if( lP == null )
     {
-      // die Preferenz rausuchen
-      ListPreference lP = ( ListPreference )getPreferenceScreen().findPreference( individualLoginterval );
-      if( lP == null )
-      {
-        Log.e( TAG, "sendIndividualPrefs: Key <" + individualLoginterval + "> was not found an ListPreference! abort!" );
-        ignorePrefChange = false;
-        return;
-      }
-      if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read loginterval value from preference..." );
-      logInterval = lP.findIndexOfValue( lP.getValue() );
-      if( logInterval == -1 ) logInterval = 2;
+      ignorePrefChange = false;
+      return;
     }
-    else
-    {
-      Log.e( TAG, "sendIndividualPrefs: can't read log interval preset value from preference..." );
-    }
+    if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read loginterval value from preference..." );
+    logInterval = lP.findIndexOfValue( lP.getValue() );
+    if( logInterval == -1 ) logInterval = 2;
+    //
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     ignorePrefChange = true;
     if( BuildConfig.DEBUG )
@@ -1716,98 +1501,71 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // UL= 0=metrisch 1=imperial
     // UW= 0->Salzwasser 1->Süßwasser
     int isTempImperial = 0, isDepthImperial = 0, isFreshwater = 1;
-    SwitchPreference sP = null;
+    SwitchPreference sp;
     //
     if( BuildConfig.DEBUG ) Log.d( TAG, "sendUnitPrefs()..." );
     //
     // Temperatur Einheit Celsius oder Imperial
     //
-    if( getPreferenceScreen().findPreference( unitsIsTempMetric ) instanceof SwitchPreference )
+    sp = getSwitchPreference( unitsIsTempMetric );
+    if( sp == null )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( unitsIsTempMetric );
-      if( sp == null )
-      {
-        Log.e( TAG, "sendUnitPrefs: Key <" + unitsIsTempMetric + "> was not found an SwitchPreference! abort!" );
-        return;
-      }
-      //
-      // jetzt die Werte für Temperatureinheit übernehmen
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "sendUnitPrefs: get temp unit value from preference..." );
-      if( sp.isChecked() )
-      {
-        // Celsius!
-        isTempImperial = 0;
-      }
-      else
-      {
-        isTempImperial = 1;
-      }
+      return;
+    }
+    //
+    // jetzt die Werte für Temperatureinheit übernehmen
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "sendUnitPrefs: get temp unit value from preference..." );
+    if( sp.isChecked() )
+    {
+      // Celsius!
+      isTempImperial = 0;
     }
     else
     {
-      Log.e( TAG, "sendUnitPrefs: can't read tempterature unit value to preference..." );
-      return;
+      isTempImperial = 1;
     }
     //
     // Tiefeneinheit imperial oder metrisch
     //
-    if( getPreferenceScreen().findPreference( unitsIsDepthImperial ) instanceof SwitchPreference )
+    sp = getSwitchPreference( unitsIsDepthImperial );
+    if( sp == null )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( unitsIsDepthImperial );
-      if( sp == null )
-      {
-        Log.e( TAG, "sendUnitPrefs: Key <" + unitsIsDepthImperial + "> was not found an SwitchPreference! abort!" );
-        return;
-      }
-      //
-      // jetzt die Werte für Tiefeneinheit übernehmen
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "sendUnitPrefs: get depth unit value from preference..." );
-      if( sp.isChecked() )
-      {
-        // metrisch
-        isDepthImperial = 0;
-      }
-      else
-      {
-        isDepthImperial = 1;
-      }
+      return;
+    }
+    //
+    // jetzt die Werte für Tiefeneinheit übernehmen
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "sendUnitPrefs: get depth unit value from preference..." );
+    if( sp.isChecked() )
+    {
+      // metrisch
+      isDepthImperial = 0;
     }
     else
     {
-      Log.e( TAG, "sendUnitPrefs: can't read depth unit value to preference..." );
-      return;
+      isDepthImperial = 1;
     }
     //
     // Süß oder Salzwasser
     //
-    if( getPreferenceScreen().findPreference( unitsIsSaltwater ) instanceof SwitchPreference )
+    sp = getSwitchPreference( unitsIsFreshwater );
+    if( sp == null )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( unitsIsSaltwater );
-      if( sp == null )
-      {
-        Log.e( TAG, "sendUnitPrefs: Key <" + unitsIsSaltwater + "> was not found an SwitchPreference! abort!" );
-        return;
-      }
-      //
-      // jetzt die Werte für Süß oder Salzwasser übernehmen
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "sendUnitPrefs: get salnity value from preference..." );
-      if( sp.isChecked() )
-      {
-        // süßwasser
-        isFreshwater = 1;
-      }
-      else
-      {
-        isFreshwater = 0;
-      }
+      return;
+    }
+    //
+    // jetzt die Werte für Süß oder Salzwasser übernehmen
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "sendUnitPrefs: get salnity value from preference..." );
+    if( sp.isChecked() )
+    {
+      // süßwasser
+      isFreshwater = 1;
     }
     else
     {
-      Log.e( TAG, "sendUnitPrefs: can't read salnity value to preference..." );
-      return;
+      isFreshwater = 0;
     }
     //
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
@@ -1815,6 +1573,36 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     if( BuildConfig.DEBUG )
       Log.d( TAG, String.format( "sendUnitPrefs: write display prefs via runningActivity temp:%d, depth:%d, freshwater:%d...", isTempImperial, isDepthImperial, isFreshwater ) );
     fActivity.writeUnitPrefs( isTempImperial, isDepthImperial, isFreshwater );
+  }
+
+  private ListPreference getListPreference( String prefKey )
+  {
+    ListPreference lP = null;
+    if( getPreferenceScreen().findPreference( prefKey ) instanceof ListPreference )
+    {
+      lP = ( ListPreference )getPreferenceScreen().findPreference( prefKey );
+      if( lP != null )
+      {
+        return( lP );
+      }
+    }
+    Log.e( TAG, "getListPreference: Key <" + prefKey + "> was not found an ListPreference! abort!" );
+    return( null );
+  }
+
+  private SwitchPreference getSwitchPreference( String prefKey )
+  {
+    SwitchPreference lP = null;
+    if( getPreferenceScreen().findPreference( prefKey ) instanceof SwitchPreference )
+    {
+      lP = ( SwitchPreference )getPreferenceScreen().findPreference( prefKey );
+      if( lP != null )
+      {
+        return( lP );
+      }
+    }
+    Log.e( TAG, "getSwitchPreference: Key <" + prefKey + "> was not found an SwitchPreference! abort!" );
+    return( null );
   }
 
   /**
@@ -1876,7 +1664,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   }
 
   /**
-   * Gradienten in der Preferenz setzen Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * Gradienten in der Preferenz setzen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
    * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 13.07.2013
    * @param presetCandidateStr
@@ -1959,51 +1749,45 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    */
   private void setDecoGradientsPreset( int[] presetCandidate )
   {
+    ListPreference lP;
     String presetCandidateStr = String.format( "%02d:%02d", presetCandidate[0], presetCandidate[1] );
     int i;
     //
     // in die Voreinstellungen übertragen, wenn es ein Preset ist
     //
-    if( getPreferenceScreen().findPreference( decoGradientsPreset ) instanceof ListPreference )
+    lP = getListPreference( decoGradientsPreset );
+    if( lP == null )
     {
-      // zum vergleich, ob ein Preset da ist
-      String[] gradientPresetsVals = getResources().getStringArray( R.array.gradientPresetValuesArray );
-      // die Preferenz rausuchen
-      ListPreference lP = ( ListPreference )getPreferenceScreen().findPreference( decoGradientsPreset );
-      if( lP == null )
+      return;
+    }
+    // zum vergleich, ob ein Preset da ist
+    String[] gradientPresetsVals = getResources().getStringArray( R.array.gradientPresetValuesArray );
+    // die Preferenz rausuchen
+    lP = ( ListPreference )getPreferenceScreen().findPreference( decoGradientsPreset );
+    // jetzt gucken ob es passt, wenn nichts passt -> "CUSTOM"
+    for( i = 0; i < gradientPresetsVals.length; i++ )
+    {
+      if( presetCandidateStr.equals( gradientPresetsVals[i] ) )
       {
-        Log.e( TAG, "setDecoGradientsPreset: Key <" + decoGradientsPreset + "> was not found an ListPreference! abort!" );
-        return;
-      }
-      // jetzt gucken ob es passt, wenn nichts passt -> "CUSTOM"
-      for( i = 0; i < gradientPresetsVals.length; i++ )
-      {
-        if( presetCandidateStr.equals( gradientPresetsVals[i] ) )
+        if( BuildConfig.DEBUG )
         {
-          if( BuildConfig.DEBUG )
-          {
-            String[] gradientPresetsNames = getResources().getStringArray( R.array.gradientPresetNamesArray );
-            Log.d( TAG, "setDecoGradientsPreset: deco preset (" + presetCandidateStr + " = " + gradientPresetsNames[i] + ") found!" );
-          }
-          break;
+          String[] gradientPresetsNames = getResources().getStringArray( R.array.gradientPresetNamesArray );
+          Log.d( TAG, "setDecoGradientsPreset: deco preset (" + presetCandidateStr + " = " + gradientPresetsNames[i] + ") found!" );
         }
+        break;
       }
-      // wenn nicht gefunden, Preset auf CUSTOM!
-      if( i >= gradientPresetsVals.length )
-      {
-        i = gradientPresetsVals.length - 1;
-      }
-      //
-      // jetzt den Preset übernehmen
-      // Index sollte i sein....
-      //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "setDecoGradientsPreset: set preset value to preference..." );
-      lP.setValueIndex( i );
     }
-    else
+    // wenn nicht gefunden, Preset auf CUSTOM!
+    if( i >= gradientPresetsVals.length )
     {
-      Log.e( TAG, "setDecoGradientsPreset: can't set gradient preset value to preference..." );
+      i = gradientPresetsVals.length - 1;
     }
+    //
+    // jetzt den Preset übernehmen
+    // Index sollte i sein....
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "setDecoGradientsPreset: set preset value to preference..." );
+    lP.setValueIndex( i );
   }
 
   /**
