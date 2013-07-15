@@ -51,7 +51,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   private static final String    unitsIsTempMetric            = "keyUnitsIsTempMetric";
   private static final String    unitsIsDepthImperial         = "keyUnitsIsDepthMetric";
   private static final String    unitsIsFreshwater            = "keyUnitsIsFreshwater";
-  //
+  // Ende Schlüsselwerte
   private boolean                ignorePrefChange             = false;
   private FragmentProgressDialog pd                           = null;
   private String                 currFirmwareVersion          = null;
