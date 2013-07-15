@@ -499,10 +499,17 @@ public class BlueThoothComService extends Service
           // SC: SensorCount
           // SN: Sound 0->OFF 1->ON
           // LI: Loginterval 0->10sec 1->30Sec 2->60 Sec
-          msg = new BtServiceMessage( ProjectConst.MESSAGE_INDIVID_READ, new String[]
-          { fields[1], fields[2], fields[3], fields[4], fields[5] } );
-          sendMessageToApp( msg );
-          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "Device individual settings recived!" );
+          if( fields.length == 6 )
+          {
+            msg = new BtServiceMessage( ProjectConst.MESSAGE_INDIVID_READ, new String[]
+            { fields[1], fields[2], fields[3], fields[4], fields[5] } );
+            sendMessageToApp( msg );
+            if( BuildConfig.DEBUG ) Log.d( TAGREADER, "Device individual settings recived!" );
+          }
+          else
+          {
+            if( BuildConfig.DEBUG ) Log.d( TAGREADER, "no individual license...!" );
+          }
           break;
         // case ProjectConst.SPX_GET_SETUP_GASLIST:
         // // Kommando GET_SETUP_GASLIST
