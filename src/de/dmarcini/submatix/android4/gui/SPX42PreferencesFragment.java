@@ -27,26 +27,39 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
  * Ein Objekt zum bearbeiten der SPX42 Einstellungen Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
  * 
  * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 31.12.2012
- * 
  */
 public class SPX42PreferencesFragment extends PreferenceFragment implements IBtServiceListener, OnSharedPreferenceChangeListener
 {
-  private static final String    TAG                 = SPX42PreferencesFragment.class.getSimpleName();
-  private static final int       maxEvents           = 12;
-  private Activity               runningActivity     = null;
-  private boolean                ignorePrefChange    = false;
-  private FragmentProgressDialog pd                  = null;
-  private String                 currFirmwareVersion = null;
+  private static final String    TAG                          = SPX42PreferencesFragment.class.getSimpleName();
+  private static final int       maxEvents                    = 12;
+  private Activity               runningActivity              = null;
+  // Schlüsselwerte für Presets
+  private static final String    setpointAuto                 = "keySetpointAutosetpointDepth";
+  private static final String    setpointHigh                 = "keySetpointHighsetpointValue";
+  private static final String    decoGradient                 = "keyDecoGradient";
+  private static final String    decoGradientsPreset          = "keyDecoGradientPresets";
+  private static final String    decoLastStop                 = "keyDecoLastStop";
+  private static final String    decoDynGradients             = "keyDecoDynGradients";
+  private static final String    decoDeepStops                = "keyDecoDeepStops";
+  private static final String    displayLuminance             = "keyDisplayLuminance";
+  private static final String    displayOrient                = "keyDisplayOrientation";
+  private static final String    individualSensorsOn          = "keyIndividualSensorsOn";
+  private static final String    individualPSCROn             = "keyindividualPSCROn";
+  private static final String    individualCountSensorWarning = "keyIndividualCountSensorWarning";
+  private static final String    individualAcousticWarnings   = "keyIndividualAcousticWarnings";
+  private static final String    individualLoginterval        = "keyIndividualLoginterval";
+  private static final String    unitsIsTempMetric            = "keyUnitsIsTempMetric";
+  private static final String    unitsIsDepthImperial         = "keyUnitsIsDepthMetric";
+  private static final String    unitsIsSaltwater             = "keyUnitsIsFreshwater";
+  //
+  private boolean                ignorePrefChange             = false;
+  private FragmentProgressDialog pd                           = null;
+  private String                 currFirmwareVersion          = null;
 
   /**
+   * bitte-Warten Box verschwinden lassen Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * bitte-Warten Box verschwinden lassen
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 13.06.2013
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 13.06.2013
    */
   private void dismissDial()
   {
@@ -68,9 +81,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     int[] res =
     { 0, 0 };
     //
-    if( getPreferenceScreen().findPreference( "keyDecoGradient" ) instanceof GradientPickerPreference )
+    if( getPreferenceScreen().findPreference( decoGradient ) instanceof GradientPickerPreference )
     {
-      GradientPickerPreference pr = ( GradientPickerPreference )getPreferenceScreen().findPreference( "keyDecoGradient" );
+      GradientPickerPreference pr = ( GradientPickerPreference )getPreferenceScreen().findPreference( decoGradient );
       if( pr == null )
       {
         Log.e( TAG, "setDecoGradients: not preference found (preference is NULL)" );
@@ -223,14 +236,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   }
 
   /**
+   * Feststellen, ob das die "kaputte" Firmware ist Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * Feststellen, ob das die "kaputte" Firmware ist
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 14.07.2013
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 14.07.2013
    * @return
    */
   private boolean isBuggyFirmware()
@@ -294,8 +302,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   @Override
   public void msgReciveAutosetpoint( BtServiceMessage msg )
   {
-    String autoSetpointKey = "keySetpointAutosetpointDepth";
-    String highSetpointKey = "keySetpointHighsetpointValue";
     ListPreference lP = null;
     // Preference pref = null;
     String[] setPoint;
@@ -336,12 +342,12 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // in die Voreinstellungen übertragen
     //
-    if( getPreferenceScreen().findPreference( autoSetpointKey ) instanceof ListPreference )
+    if( getPreferenceScreen().findPreference( setpointAuto ) instanceof ListPreference )
     {
-      lP = ( ListPreference )getPreferenceScreen().findPreference( autoSetpointKey );
+      lP = ( ListPreference )getPreferenceScreen().findPreference( setpointAuto );
       if( lP == null )
       {
-        Log.e( TAG, "msgReciveAutosetpoint: Key <" + autoSetpointKey + "> was not found an ListPreference! abort!" );
+        Log.e( TAG, "msgReciveAutosetpoint: Key <" + setpointAuto + "> was not found an ListPreference! abort!" );
         return;
       }
       //
@@ -358,12 +364,12 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       Log.e( TAG, "can't set autosetpoint value to preference..." );
     }
     //
-    if( getPreferenceScreen().findPreference( highSetpointKey ) instanceof ListPreference )
+    if( getPreferenceScreen().findPreference( setpointHigh ) instanceof ListPreference )
     {
-      lP = ( ListPreference )getPreferenceScreen().findPreference( highSetpointKey );
+      lP = ( ListPreference )getPreferenceScreen().findPreference( setpointHigh );
       if( lP == null )
       {
-        Log.e( TAG, "msgReciveAutosetpoint: Key <" + highSetpointKey + "> was not found an ListPreference! abort!" );
+        Log.e( TAG, "msgReciveAutosetpoint: Key <" + setpointHigh + "> was not found an ListPreference! abort!" );
         return;
       }
       //
@@ -401,9 +407,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   @Override
   public void msgReciveDeco( BtServiceMessage msg )
   {
-    String decoLastStop = "keyDecoLastStop";
-    String decoDynGradients = "keyDecoDynGradients";
-    String decoDeepStops = "keyDecoDeepStops";
     String[] decoParam;
     int[] presetCandidate =
     { 0, 0 };
@@ -539,8 +542,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   @Override
   public void msgReciveDisplay( BtServiceMessage msg )
   {
-    String displayLuminance = "keyDisplayLuminance";
-    String displayOrient = "keyDisplayOrientation";
     String[] displayParm;
     int lumin = 0;
     int orient = 0;
@@ -664,11 +665,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   @Override
   public void msgReciveIndividuals( BtServiceMessage msg )
   {
-    String individualsSensorsOn = "keyIndividualSensorsOn";
-    String IndividualPSCROn = "keyIndividualPSCROn";
-    String individualCountSensorWarning = "keyIndividualCountSensorWarning";
-    String individualAcousticWarnings = "keyIndividualAcousticWarnings";
-    String individualLoginterval = "keyIndividualLoginterval";
     String[] individualParm;
     int sensorsOff = 0, pscrOff = 0, sensorsCount = 3, soundOn = 1, logInterval = 2;
     //
@@ -719,12 +715,12 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // Sensoren an/aus ...
     //
-    if( getPreferenceScreen().findPreference( individualsSensorsOn ) instanceof SwitchPreference )
+    if( getPreferenceScreen().findPreference( individualSensorsOn ) instanceof SwitchPreference )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( individualsSensorsOn );
+      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( individualSensorsOn );
       if( sp == null )
       {
-        Log.e( TAG, "msgReciveIndividuals: Key <" + individualsSensorsOn + "> was not found an SwitchPreference! abort!" );
+        Log.e( TAG, "msgReciveIndividuals: Key <" + individualSensorsOn + "> was not found an SwitchPreference! abort!" );
         ignorePrefChange = false;
         return;
       }
@@ -741,12 +737,12 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // PSCR-Mode an/aus ...
     //
-    if( getPreferenceScreen().findPreference( IndividualPSCROn ) instanceof SwitchPreference )
+    if( getPreferenceScreen().findPreference( individualPSCROn ) instanceof SwitchPreference )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( IndividualPSCROn );
+      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( individualPSCROn );
       if( sp == null )
       {
-        Log.e( TAG, "msgReciveIndividuals: Key <" + IndividualPSCROn + "> was not found an SwitchPreference! abort!" );
+        Log.e( TAG, "msgReciveIndividuals: Key <" + individualPSCROn + "> was not found an SwitchPreference! abort!" );
         ignorePrefChange = false;
         return;
       }
@@ -854,9 +850,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // UD= 1=Fahrenheit/0=Celsius => immer 0 in der aktuellen Firmware 2.6.7.7_U
     // UL= 0=metrisch 1=imperial
     // UW= 0->Salzwasser 1->Süßwasser
-    String unitsIsTempMetric = "keyUnitsIsTempMetric";
-    String unitsIsDepthImperial = "keyUnitsIsDepthMetric";
-    String unitsIsSaltwater = "keyUnitsIsFreshwater";
     int isTempImperial = 0, isDepthImperial = 0, isFreshwater = 0;
     String[] unitsParm;
     //
@@ -1104,7 +1097,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       //
       // Autosetpoint (off/tiefe)
       //
-      if( key.equals( "keySetpointAutosetpointDepth" ) )
+      if( key.equals( setpointAuto ) )
       {
         lP.setSummary( String.format( getResources().getString( R.string.conf_autoset_summary ), lP.getEntry() ) );
         sendAutoSetpoint();
@@ -1112,7 +1105,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       //
       // Highsetpoint (wenn on)
       //
-      else if( key.equals( "keySetpointHighsetpointValue" ) )
+      else if( key.equals( setpointHigh ) )
       {
         lP.setSummary( String.format( getResources().getString( R.string.conf_highset_summary ), lP.getEntry() ) );
         sendAutoSetpoint();
@@ -1120,7 +1113,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       //
       // DECO-Preset, wenn ON
       //
-      else if( key.equals( "keyDecoGradientPresets" ) )
+      else if( key.equals( decoGradientsPreset ) )
       {
         lP.setSummary( String.format( getResources().getString( R.string.conf_deco_presets_summary ), lP.getEntry() ) );
         //
@@ -1134,7 +1127,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       //
       // Helligkeit Display
       //
-      else if( key.equals( "keyDisplayLuminance" ) )
+      else if( key.equals( displayLuminance ) )
       {
         lP.setSummary( String.format( getResources().getString( R.string.conf_luminance_header_summary ), lP.getEntry() ) );
         sendDisplayPrefs();
@@ -1142,7 +1135,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       //
       // Orientierung Display
       //
-      else if( key.equals( "keyDisplayOrientation" ) )
+      else if( key.equals( displayOrient ) )
       {
         lP.setSummary( String.format( getResources().getString( R.string.conf_display_orientation_header_summary ), lP.getEntry() ) );
         sendDisplayPrefs();
@@ -1150,7 +1143,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       //
       // Sensors Count Warning
       //
-      else if( key.equals( "keyIndividualCountSensorWarning" ) )
+      else if( key.equals( individualCountSensorWarning ) )
       {
         lP.setSummary( String.format( getResources().getString( R.string.conf_ind_count_sensorwarning_header_summary ), lP.getEntry() ) );
         sendIndividualPrefs();
@@ -1158,7 +1151,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       //
       // Intervall zwischen zwei Logeinträgen
       //
-      else if( key.equals( "keyIndividualLoginterval" ) )
+      else if( key.equals( individualLoginterval ) )
       {
         lP.setSummary( String.format( getResources().getString( R.string.conf_ind_interval_header_summary ), lP.getEntry() ) );
         sendIndividualPrefs();
@@ -1175,7 +1168,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       //
       // DECO-Gradient verändert
       //
-      if( key.equals( "keyDecoGradient" ) )
+      if( key.equals( decoGradient ) )
       {
         setDecoGradientsSummary();
         int[] val = getDecoGradients();
@@ -1185,63 +1178,63 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       //
       // DECO Last Stop verändert
       //
-      else if( key.equals( "keyDecoLastStop" ) )
+      else if( key.equals( decoLastStop ) )
       {
         sendDecoPrefs();
       }
       //
       // DECO dyn gradients
       //
-      else if( key.equals( "keyDecoDynGradients" ) )
+      else if( key.equals( decoDynGradients ) )
       {
         sendDecoPrefs();
       }
       //
       // DECO deep stops
       //
-      else if( key.equals( "keyDecoDeepStops" ) )
+      else if( key.equals( decoDeepStops ) )
       {
         sendDecoPrefs();
       }
       //
       // Temperatureinheit
       //
-      else if( key.equals( "keyUnitsIsTempMetric" ) )
+      else if( key.equals( unitsIsTempMetric ) )
       {
         sendUnitPrefs();
       }
       //
       // Tiefeneinheit
       //
-      else if( key.equals( "keyUnitsIsDepthMetric" ) )
+      else if( key.equals( unitsIsDepthImperial ) )
       {
         sendUnitPrefs();
       }
       //
       // Salz/Süßwasser
       //
-      else if( key.equals( "keyUnitsIsFreshwater" ) )
+      else if( key.equals( unitsIsSaltwater ) )
       {
         sendUnitPrefs();
       }
       //
       // wie viele Sensoren
       //
-      else if( key.equals( "keyIndividualSensorsOn" ) )
+      else if( key.equals( individualSensorsOn ) )
       {
         sendIndividualPrefs();
       }
       //
       // Salz/Süßwasser
       //
-      else if( key.equals( "keyIndividualPSCROn" ) )
+      else if( key.equals( individualPSCROn ) )
       {
         sendIndividualPrefs();
       }
       //
       // Salz/Süßwasser
       //
-      else if( key.equals( "keyIndividualAcousticWarnings" ) )
+      else if( key.equals( individualAcousticWarnings ) )
       {
         sendIndividualPrefs();
       }
@@ -1286,14 +1279,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   }
 
   /**
+   * den Bitte-warten Dialog anzeigen Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * den Bitte-warten Dialog anzeigen
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 13.06.2013
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 13.06.2013
    * @param maxevents
    *          maximal zu erwartende ereignisse
    * @param msg
@@ -1324,19 +1312,12 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   }
 
   /**
+   * Wenn der User den Setpoint verändert hat, dann schicke das an den SPX Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * Wenn der User den Setpoint verändert hat, dann schicke das an den SPX
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 02.06.2013
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 02.06.2013
    */
   private void sendAutoSetpoint()
   {
-    String autoSetpointKey = "keySetpointAutosetpointDepth";
-    String highSetpointKey = "keySetpointHighsetpointValue";
     ListPreference lP = null;
     // Preference pref = null;
     int autoSp = 0, sP = 0;
@@ -1345,12 +1326,12 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // aus den Voreinstellungen holen
     //
-    if( getPreferenceScreen().findPreference( autoSetpointKey ) instanceof ListPreference )
+    if( getPreferenceScreen().findPreference( setpointAuto ) instanceof ListPreference )
     {
-      lP = ( ListPreference )getPreferenceScreen().findPreference( autoSetpointKey );
+      lP = ( ListPreference )getPreferenceScreen().findPreference( setpointAuto );
       if( lP == null )
       {
-        Log.e( TAG, "msgReciveAutosetpoint: Key <" + autoSetpointKey + "> was not found an ListPreference! abort!" );
+        Log.e( TAG, "msgReciveAutosetpoint: Key <" + setpointAuto + "> was not found an ListPreference! abort!" );
         return;
       }
       //
@@ -1361,12 +1342,12 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       //
       autoSp = lP.findIndexOfValue( lP.getValue() );
     }
-    if( getPreferenceScreen().findPreference( highSetpointKey ) instanceof ListPreference )
+    if( getPreferenceScreen().findPreference( setpointHigh ) instanceof ListPreference )
     {
-      lP = ( ListPreference )getPreferenceScreen().findPreference( highSetpointKey );
+      lP = ( ListPreference )getPreferenceScreen().findPreference( setpointHigh );
       if( lP == null )
       {
-        Log.e( TAG, "msgReciveAutosetpoint: Key <" + highSetpointKey + "> was not found an ListPreference! abort!" );
+        Log.e( TAG, "msgReciveAutosetpoint: Key <" + setpointHigh + "> was not found an ListPreference! abort!" );
         return;
       }
       //
@@ -1383,21 +1364,12 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   }
 
   /**
+   * Sende DECO Preferenzen Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * Sende DECO Preferenzen
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 13.07.2013
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 13.07.2013
    */
   private void sendDecoPrefs()
   {
-    String decoGradient = "keyDecoGradient";
-    String decoLastStop = "keyDecoLastStop";
-    String decoDynGradients = "keyDecoDynGradients";
-    String decoDeepStops = "keyDecoDeepStops";
     int lowG, highG, deepStops, dynGr, lastStop;
     //
     //
@@ -1520,19 +1492,12 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   }
 
   /**
+   * Sende Display Einstellungen zum SPX Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * Sende Display Einstellungen zum SPX
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 14.07.2013
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 14.07.2013
    */
   private void sendDisplayPrefs()
   {
-    String displayLuminance = "keyDisplayLuminance";
-    String displayOrientation = "keyDisplayOrientation";
     ListPreference lP = null;
     int lumin = 1, orient = 0;
     if( BuildConfig.DEBUG ) Log.d( TAG, "sendDisplayPrefs()..." );
@@ -1562,12 +1527,12 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // Display Ausrichtung erfragen
     //
-    if( getPreferenceScreen().findPreference( displayOrientation ) instanceof ListPreference )
+    if( getPreferenceScreen().findPreference( displayOrient ) instanceof ListPreference )
     {
-      lP = ( ListPreference )getPreferenceScreen().findPreference( displayOrientation );
+      lP = ( ListPreference )getPreferenceScreen().findPreference( displayOrient );
       if( lP == null )
       {
-        Log.e( TAG, "sendDisplayPrefs: Key <" + displayOrientation + "> was not found an ListPreference! abort!" );
+        Log.e( TAG, "sendDisplayPrefs: Key <" + displayOrient + "> was not found an ListPreference! abort!" );
         return;
       }
       //
@@ -1589,22 +1554,12 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   }
 
   /**
+   * sende die individualeinstellungen zum SPX Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * sende die individualeinstellungen zum SPX
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 14.07.2013
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 14.07.2013
    */
   private void sendIndividualPrefs()
   {
-    String individualsSensorsOn = "keyIndividualSensorsOn";
-    String IndividualPSCROn = "keyIndividualPSCROn";
-    String individualCountSensorWarning = "keyIndividualCountSensorWarning";
-    String individualAcousticWarnings = "keyIndividualAcousticWarnings";
-    String individualLoginterval = "keyIndividualLoginterval";
     int sensorsOff = 0, pscrOff = 0, sensorsCount = 2, soundOn = 1, logInterval = 2;
     //
     if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs()..." );
@@ -1617,12 +1572,12 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // Sensoren an/aus ...
     //
-    if( getPreferenceScreen().findPreference( individualsSensorsOn ) instanceof SwitchPreference )
+    if( getPreferenceScreen().findPreference( individualSensorsOn ) instanceof SwitchPreference )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( individualsSensorsOn );
+      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( individualSensorsOn );
       if( sp == null )
       {
-        Log.e( TAG, "sendIndividualPrefs: Key <" + individualsSensorsOn + "> was not found an SwitchPreference! abort!" );
+        Log.e( TAG, "sendIndividualPrefs: Key <" + individualSensorsOn + "> was not found an SwitchPreference! abort!" );
         return;
       }
       //
@@ -1646,12 +1601,12 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // PSCR-Mode an/aus ...
     //
-    if( getPreferenceScreen().findPreference( IndividualPSCROn ) instanceof SwitchPreference )
+    if( getPreferenceScreen().findPreference( individualPSCROn ) instanceof SwitchPreference )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( IndividualPSCROn );
+      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( individualPSCROn );
       if( sp == null )
       {
-        Log.e( TAG, "sendIndividualPrefs: Key <" + IndividualPSCROn + "> was not found an SwitchPreference! abort!" );
+        Log.e( TAG, "sendIndividualPrefs: Key <" + individualPSCROn + "> was not found an SwitchPreference! abort!" );
         return;
       }
       //
@@ -1751,23 +1706,15 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   }
 
   /**
+   * Sende geänderte Einstellungen der Masseinheiten an den SPX Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * Sende geänderte Einstellungen der Masseinheiten an den SPX
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 14.07.2013
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 14.07.2013
    */
   private void sendUnitPrefs()
   {
     // UD= 1=Fahrenheit/0=Celsius => immer 0 in der aktuellen Firmware 2.6.7.7_U
     // UL= 0=metrisch 1=imperial
     // UW= 0->Salzwasser 1->Süßwasser
-    String unitsIsTempMetric = "keyUnitsIsTempMetric";
-    String unitsIsDepthMetric = "keyUnitsIsDepthMetric";
-    String unitsIsFreshwater = "keyUnitsIsFreshwater";
     int isTempImperial = 0, isDepthImperial = 0, isFreshwater = 1;
     SwitchPreference sP = null;
     //
@@ -1805,12 +1752,12 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // Tiefeneinheit imperial oder metrisch
     //
-    if( getPreferenceScreen().findPreference( unitsIsDepthMetric ) instanceof SwitchPreference )
+    if( getPreferenceScreen().findPreference( unitsIsDepthImperial ) instanceof SwitchPreference )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( unitsIsDepthMetric );
+      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( unitsIsDepthImperial );
       if( sp == null )
       {
-        Log.e( TAG, "sendUnitPrefs: Key <" + unitsIsDepthMetric + "> was not found an SwitchPreference! abort!" );
+        Log.e( TAG, "sendUnitPrefs: Key <" + unitsIsDepthImperial + "> was not found an SwitchPreference! abort!" );
         return;
       }
       //
@@ -1835,12 +1782,12 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // Süß oder Salzwasser
     //
-    if( getPreferenceScreen().findPreference( unitsIsFreshwater ) instanceof SwitchPreference )
+    if( getPreferenceScreen().findPreference( unitsIsSaltwater ) instanceof SwitchPreference )
     {
-      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( unitsIsFreshwater );
+      SwitchPreference sp = ( SwitchPreference )getPreferenceScreen().findPreference( unitsIsSaltwater );
       if( sp == null )
       {
-        Log.e( TAG, "sendUnitPrefs: Key <" + unitsIsFreshwater + "> was not found an SwitchPreference! abort!" );
+        Log.e( TAG, "sendUnitPrefs: Key <" + unitsIsSaltwater + "> was not found an SwitchPreference! abort!" );
         return;
       }
       //
@@ -1884,17 +1831,17 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // Autoset
     //
-    lP = ( ListPreference )pS.findPreference( "keySetpointAutosetpointDepth" );
+    lP = ( ListPreference )pS.findPreference( setpointAuto );
     lP.setSummary( String.format( res.getString( R.string.conf_autoset_summary ), lP.getEntry() ) );
     //
     // High Setpoint
     //
-    lP = ( ListPreference )pS.findPreference( "keySetpointHighsetpointValue" );
+    lP = ( ListPreference )pS.findPreference( setpointHigh );
     lP.setSummary( String.format( res.getString( R.string.conf_highset_summary ), lP.getEntry() ) );
     //
     // Deco gradienten Preset
     //
-    lP = ( ListPreference )pS.findPreference( "keyDecoGradientPresets" );
+    lP = ( ListPreference )pS.findPreference( decoGradientsPreset );
     lP.setSummary( String.format( res.getString( R.string.conf_deco_presets_summary ), lP.getEntry() ) );
     //
     // Deco gradienten
@@ -1903,12 +1850,12 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // Displayhelligkeit
     //
-    lP = ( ListPreference )pS.findPreference( "keyDisplayLuminance" );
+    lP = ( ListPreference )pS.findPreference( displayLuminance );
     lP.setSummary( String.format( res.getString( R.string.conf_luminance_header_summary ), lP.getEntry() ) );
     //
     // Display Orientierung
     //
-    lP = ( ListPreference )pS.findPreference( "keyDisplayOrientation" );
+    lP = ( ListPreference )pS.findPreference( displayOrient );
     lP.setSummary( String.format( res.getString( R.string.conf_display_orientation_header_summary ), lP.getEntry() ) );
     //
     // das nur bei Individuallizenz
@@ -1918,31 +1865,25 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       //
       // Sensors Count for Warning
       //
-      lP = ( ListPreference )pS.findPreference( "keyIndividualCountSensorWarning" );
+      lP = ( ListPreference )pS.findPreference( individualCountSensorWarning );
       lP.setSummary( String.format( res.getString( R.string.conf_ind_count_sensorwarning_header_summary ), lP.getEntry() ) );
       //
       // Logintervall
       //
-      lP = ( ListPreference )pS.findPreference( "keyIndividualLoginterval" );
+      lP = ( ListPreference )pS.findPreference( individualLoginterval );
       lP.setSummary( String.format( res.getString( R.string.conf_ind_interval_header_summary ), lP.getEntry() ) );
     }
   }
 
   /**
+   * Gradienten in der Preferenz setzen Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * Gradienten in der Preferenz setzen
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 13.07.2013
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 13.07.2013
    * @param presetCandidateStr
    * @return
    */
   private boolean setDecoGradients( int[] presetCandidate )
   {
-    String decoGradient = "keyDecoGradient";
     String presetCandidateStr;
     //
     // wenn das ohne Voreinstelung kommt, einfach die Werte stehen lassen
@@ -2011,19 +1952,13 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   }
 
   /**
+   * Setze das Preset auf einen definierten Wert oder auf CUSTOM Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * Setze das Preset auf einen definierten Wert oder auf CUSTOM
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 14.07.2013
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 14.07.2013
    * @param presetCandidate
    */
   private void setDecoGradientsPreset( int[] presetCandidate )
   {
-    String decoGradientsPreset = "keyDecoGradientPresets";
     String presetCandidateStr = String.format( "%02d:%02d", presetCandidate[0], presetCandidate[1] );
     int i;
     //
@@ -2072,14 +2007,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   }
 
   /**
+   * zusammenstellen der Summary für Gradienten Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * zusammenstellen der Summary für Gradienten
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 13.07.2013
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 13.07.2013
    */
   private void setDecoGradientsSummary()
   {
@@ -2099,6 +2029,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     }
     // die Summary Geschichte schreiben
     if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "setDecoGradientsSummary: write " + getResources().getString( R.string.conf_deco_gradient_summary ), low, high ) );
-    getPreferenceScreen().findPreference( "keyDecoGradient" ).setSummary( String.format( getResources().getString( R.string.conf_deco_gradient_summary ), low, high ) );
+    getPreferenceScreen().findPreference( decoGradient ).setSummary( String.format( getResources().getString( R.string.conf_deco_gradient_summary ), low, high ) );
   }
 }
