@@ -15,8 +15,13 @@ import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
@@ -76,6 +81,17 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     }
   }
 
+  /**
+   * 
+   * Erfrage deco Gradieneten aus Preferenz
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 15.07.2013
+   * @return
+   */
   private int[] getDecoGradients()
   {
     int[] res =
@@ -1814,5 +1830,34 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // die Summary Geschichte schreiben
     if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "setDecoGradientsSummary: write " + getResources().getString( R.string.conf_deco_gradient_summary ), low, high ) );
     getPreferenceScreen().findPreference( decoGradient ).setSummary( String.format( getResources().getString( R.string.conf_deco_gradient_summary ), low, high ) );
+  }
+
+  private void showConnectionToast( String msg )
+  {
+    //
+    // zum testen mach ich mal TOASTS
+    //
+    LayoutInflater inflater = getActivity().getLayoutInflater();
+    Log.w( TAG, "layout inflater is " + ( ( inflater == null ) ? "not there" : "there" ) );
+    View layout = inflater.inflate( R.layout.comm_toast_layout, ( ViewGroup )getActivity().findViewById( R.id.commToastLayout ) );
+    Log.w( TAG, "layout is " + ( ( layout == null ) ? "not there" : "there" ) );
+    TextView text = ( TextView )layout.findViewById( R.id.toastTextView );
+    Log.w( TAG, "text is " + ( ( text == null ) ? "not there" : "there" ) );
+    text.setText( "This is a custom toast" );
+    Toast toast = new Toast( getActivity().getApplicationContext() );
+    if( FragmentCommonActivity.getAppStyle() == R.style.AppDarkTheme )
+    {
+      layout.setBackgroundColor( getResources().getColor( R.color.connectToastDark_backgroundColor ) );
+      text.setTextAppearance( getActivity().getApplicationContext(), R.style.commToastDark );
+    }
+    else
+    {
+      layout.setBackgroundColor( getResources().getColor( R.color.connectToastLight_backgroundColor ) );
+      text.setTextAppearance( getActivity().getApplicationContext(), R.style.commToastLight );
+    }
+    toast.setGravity( Gravity.FILL_HORIZONTAL | Gravity.BOTTOM, 0, 15 );
+    toast.setDuration( Toast.LENGTH_LONG );
+    toast.setView( layout );
+    toast.show();
   }
 }
