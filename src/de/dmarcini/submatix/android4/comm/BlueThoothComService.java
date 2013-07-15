@@ -1187,58 +1187,34 @@ public class BlueThoothComService extends Service
     // den Verbindunsthread stoppen, seine Aufgabe ist erfüllt
     if( mConnectThread != null )
     {
-      if( BuildConfig.DEBUG )
-      {
-        Log.d( TAG, "stop old mConnectThread..." );
-      }
+      if( BuildConfig.DEBUG ) Log.d( TAG, "stop old mConnectThread..." );
       // mConnectThread.cancel();
       mConnectThread = null;
     }
     // Falls da noch verbundene Thread sind, stoppe diese
     if( mReaderThread != null )
     {
-      if( BuildConfig.DEBUG )
-      {
-        Log.d( TAG, "stop old mReaderThread..." );
-      }
+      if( BuildConfig.DEBUG ) Log.d( TAG, "stop old mReaderThread..." );
       mReaderThread.cancel();
       mReaderThread = null;
     }
     if( mWriterThread != null )
     {
-      if( BuildConfig.DEBUG )
-      {
-        Log.d( TAG, "stop old mWriterThread..." );
-      }
+      if( BuildConfig.DEBUG ) Log.d( TAG, "stop old mWriterThread..." );
       mWriterThread.cancel();
       mWriterThread = null;
     }
     // starte den Lesethread zur Bearbeitung der Daten vom SPX
-    if( BuildConfig.DEBUG )
-    {
-      Log.d( TAG, "create mReaderThread..." );
-    }
+    if( BuildConfig.DEBUG ) Log.d( TAG, "create mReaderThread..." );
     mReaderThread = new ReaderThread( socket );
-    if( BuildConfig.DEBUG )
-    {
-      Log.d( TAG, "start mReaderThread..." );
-    }
+    if( BuildConfig.DEBUG ) Log.d( TAG, "start mReaderThread..." );
     mReaderThread.start();
     // starte den Schreibhread zur Bearbeitung der Kommandos zum SPX
-    if( BuildConfig.DEBUG )
-    {
-      Log.d( TAG, "create mWriterThread..." );
-    }
+    if( BuildConfig.DEBUG ) Log.d( TAG, "create mWriterThread..." );
     mWriterThread = new WriterThread( socket );
-    if( BuildConfig.DEBUG )
-    {
-      Log.d( TAG, "start mWriterThread..." );
-    }
+    if( BuildConfig.DEBUG ) Log.d( TAG, "start mWriterThread..." );
     mWriterThread.start();
-    if( BuildConfig.DEBUG )
-    {
-      Log.d( TAG, "call setState" );
-    }
+    if( BuildConfig.DEBUG ) Log.d( TAG, "call setState" );
     setState( ProjectConst.CONN_STATE_CONNECTED );
     timerCounter = System.currentTimeMillis() + 100;
   }
