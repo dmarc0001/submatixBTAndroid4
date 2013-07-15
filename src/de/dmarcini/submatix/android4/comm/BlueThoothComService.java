@@ -1626,9 +1626,10 @@ public class BlueThoothComService extends Service
         // ~29:GH:GL:LS:DY:DS
         // GH = Gradient HIGH
         // GL = Gradient LOW
-        // LS = Last Stop 0=>6m 1=>3m
+        // LS = Last Stop 0=>3m 1=>6m
         // DY = Dynamische gradienten 0->off 1->on
         // DS = Deepstops 0=> enabled, 1=>disabled
+        // kdoString = String.format( "~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_DEKO, highG, lowG, ( ( lastStop == 1 ) ? 0 : 1 ), dynGr, deepSt );
         kdoString = String.format( "~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_DEKO, highG, lowG, lastStop, dynGr, deepSt );
         if( BuildConfig.DEBUG ) Log.d( TAG, "writeDecoPrefs: sending <OLDER-FIRMWARE <" + kdoString + ">>" );
         break;
