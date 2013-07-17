@@ -827,9 +827,12 @@ public class BlueThoothComService extends Service
             {
               // Watchdog für Schreiben aktivieren
               writeWatchDog = ProjectConst.WATCHDOG_FOR_WRITEOPS;
+              // den String für den Wachhund zwischenspeichern
+              sendStr = writeList.remove( 0 );
               // also den String Eintrag in den Outstream...
-              mmOutStream.write( ( writeList.remove( 0 ) ).getBytes() );
+              mmOutStream.write( sendStr.getBytes() );
               // kommt das an, den Watchog wieder AUS
+              sendStr = null;
               writeWatchDog = -1;
               // zwischen den Kommandos etwas warten, der SPX braucht etwas bis er wieder zuhört...
               Thread.sleep( 500 );
@@ -890,7 +893,7 @@ public class BlueThoothComService extends Service
   private final Timer          timerThread                 = new Timer();
   private long                 timerCounter                = 0;
   private int                  writeWatchDog               = -1;
-  // private boolean isRunning = false;
+  private String               sendStr                     = null;                                      // Zwischenspeicher für zu sendendes Kommando (für watchdog)
   ArrayList<Handler>           mClientHandler              = new ArrayList<Handler>();                  // Messagehandler für Clienten
   int                          mValue                      = 0;                                         // Holds last value set by a client.
   private final IBinder        mBinder                     = new LocalBinder();
@@ -1423,7 +1426,14 @@ public class BlueThoothComService extends Service
         if( writeWatchDog == 0 )
         {
           // ein Wachhund ist abgelaufen, benachrichtige den User!
-          msg = new BtServiceMessage( ProjectConst.MESSAGE_COMMTIMEOUT );
+          if( sendStr != null )
+          {
+            msg = new BtServiceMessage( ProjectConst.MESSAGE_COMMTIMEOUT, sendStr );
+          }
+          else
+          {
+            msg = new BtServiceMessage( ProjectConst.MESSAGE_COMMTIMEOUT );
+          }
           sendMessageToApp( msg );
           writeWatchDog = -1;
         }
