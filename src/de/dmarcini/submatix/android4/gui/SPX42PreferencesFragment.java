@@ -1,5 +1,8 @@
 package de.dmarcini.submatix.android4.gui;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
@@ -38,6 +41,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   private static final String    TAG                          = SPX42PreferencesFragment.class.getSimpleName();
   private static final int       maxEvents                    = 12;
   private Activity               runningActivity              = null;
+  private static final Pattern   fieldPatternKdo              = Pattern.compile( "~\\d+" );
   // Schlüsselwerte für Presets
   private static final String    setpointAuto                 = "keySetpointAutosetpointDepth";
   private static final String    setpointHigh                 = "keySetpointHighsetpointValue";
@@ -275,10 +279,16 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
         msgReciveIndividuals( smsg );
         break;
       // ################################################################
-      // Indioviduelle Einstellungen schreiben Bestätigung
+      // Individuelle Einstellungen schreiben Bestätigung
       // ################################################################
       case ProjectConst.MESSAGE_INDIVID_ACK:
         msgReciveIndividualsAck( smsg );
+        break;
+      // ################################################################
+      // ein Timeout beim Schreiben eines Kommandos trat auf!
+      // ################################################################
+      case ProjectConst.MESSAGE_COMMTIMEOUT:
+        msgReciveWriteTmeout( smsg );
         break;
       // ################################################################
       // Sonst....
@@ -1019,7 +1029,67 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   @Override
   public void msgReciveWriteTmeout( BtServiceMessage msg )
   {
-    // TODO Automatisch generierter Methodenstub
+    int kdo = 0;
+    String toSendMsg = null;
+    //
+    // ich versuche rauszubekommen, welches Kommando das war
+    //
+    if( ( msg.getContainer() != null ) && ( msg.getContainer() instanceof String ) )
+    {
+      toSendMsg = ( String )msg.getContainer();
+      Matcher m = fieldPatternKdo.matcher( toSendMsg );
+      if( m.find() )
+      {
+        // das Erste will ich haben!
+        String erg = m.group();
+        erg = erg.replace( "~", "" );
+        try
+        {
+          // wenn ich das umwandeln in INT kann....
+          kdo = Integer.parseInt( erg, 16 );
+        }
+        catch( NumberFormatException ex )
+        {
+          Log.e( TAG, "msgReciveWriteTmeout: NumberFormatException: <" + ex.getLocalizedMessage() + ">" );
+        }
+      }
+    }
+    //
+    // so, nun gucken, von wem das kam
+    //
+    switch ( kdo )
+    {
+    //
+    // artig die richtige Meldung absetzen
+    //
+      case ProjectConst.SPX_SET_SETUP_SETPOINT:
+        if( BuildConfig.DEBUG ) Log.d( TAG, "SPX O2 setpoint was not correct send!" );
+        showConnectionToastAlert( getResources().getString( R.string.toast_comm_set_autosetpoint_alert ) );
+        break;
+      case ProjectConst.SPX_SET_SETUP_DEKO:
+        if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Deco settings was not correct send!" );
+        showConnectionToastAlert( getResources().getString( R.string.toast_comm_set_deco_alert ) );
+        break;
+      case ProjectConst.SPX_SET_SETUP_DISPLAYSETTINGS:
+        if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Display settings was not correct send!" );
+        showConnectionToastAlert( getResources().getString( R.string.toast_comm_set_display_alert ) );
+        break;
+      case ProjectConst.SPX_SET_SETUP_INDIVIDUAL:
+        if( BuildConfig.DEBUG ) Log.d( TAG, "SPX individual settings was not correct send!" );
+        showConnectionToastAlert( getResources().getString( R.string.toast_comm_set_individuals_alert ) );
+        break;
+      case ProjectConst.SPX_GET_SETUP_UNITS:
+        if( BuildConfig.DEBUG ) Log.d( TAG, "SPX unit settings was not correct send!" );
+        showConnectionToastAlert( getResources().getString( R.string.toast_comm_set_units_alert ) );
+        break;
+      default:
+        Log.e( TAG, "SPX Write timeout" + ( ( toSendMsg == null ) ? "(NULL Message)" : toSendMsg ) + "!" );
+        showConnectionToastAlert( getResources().getString( R.string.toast_comm_set_autosetpoint_alert ) );
+    }
+    //
+    // wieder mitarbeiten
+    //
+    ignorePrefChange = false;
   }
 
   @Override
@@ -2009,6 +2079,57 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     catch( Exception ex )
     {
       Log.e( TAG, "showConnectionToast: ups, there was an exception: (" + ex.getLocalizedMessage() + ")" );
+    }
+  }
+
+  /**
+   * 
+   * Zeige einen Toast mit Alarmfarben
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 17.07.2013
+   * @param msg
+   */
+  private void showConnectionToastAlert( String msg )
+  {
+    View toastLayout;
+    TextView toastMessageTextView;
+    //
+    // Ich mache einen eigenen Toast über die ganze Breite mit eigenem style
+    //
+    try
+    {
+      //
+      // einen alten Toast entfernen
+      //
+      if( theToast != null )
+      {
+        theToast.cancel();
+        theToast = null;
+      }
+      theToast = new Toast( getActivity().getApplicationContext() );
+      LayoutInflater inflater = getActivity().getLayoutInflater();
+      toastLayout = inflater.inflate( R.layout.comm_toast_layout, ( ViewGroup )getActivity().findViewById( R.id.commToastLayout ) );
+      toastMessageTextView = ( TextView )toastLayout.findViewById( R.id.toastTextView );
+      toastMessageTextView.setText( msg );
+      toastLayout.setBackgroundColor( getResources().getColor( R.color.connectToastAlert_backgroundColor ) );
+      toastMessageTextView.setTextAppearance( getActivity().getApplicationContext(), R.style.commToastAlert );
+      // der Toast ist unten, kleiner Abstand zum Boden, ganze Breite
+      theToast.setGravity( Gravity.FILL_HORIZONTAL | Gravity.BOTTOM, 0, 15 );
+      theToast.setDuration( Toast.LENGTH_LONG );
+      theToast.setView( toastLayout );
+      theToast.show();
+    }
+    catch( NullPointerException ex )
+    {
+      Log.e( TAG, "showConnectionToastAlert: ups, there was not an pointer... Show none TOAST! (" + ex.getLocalizedMessage() + ")" );
+    }
+    catch( Exception ex )
+    {
+      Log.e( TAG, "showConnectionToastAlert: ups, there was an exception: (" + ex.getLocalizedMessage() + ")" );
     }
   }
 }
