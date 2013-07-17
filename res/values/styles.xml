@@ -64,4 +64,9 @@
       <item name="android:textColor">@color/connectToastDark.textColor</item>
     </style>
     
+    <style name="commToastAlert" parent="commToastCommon">
+      <item name="android:background">@color/connectToastAlert.backgroundColor</item>
+      <item name="android:textColor">@color/connectToastAlert.textColor</item>
+    </style>
+    
 </resources>

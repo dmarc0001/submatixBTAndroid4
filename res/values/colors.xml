@@ -20,4 +20,6 @@
   <color name="connectFragment.disconnectText">#C41823</color>
   <color name="connectFragment.connectingText">#DBA444</color>
   <color name="connectFragment.connectText">#1B9617</color>
+  <color name="connectToastAlert.backgroundColor">#C584D1</color>
+  <color name="connectToastAlert.textColor">#FC1100</color>
 </resources>

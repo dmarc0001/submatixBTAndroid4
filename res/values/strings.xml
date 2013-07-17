@@ -25,14 +25,19 @@
     <string name="toast_dummy">communicate</string>
     <string name="toast_comm_set_autosetpoint">send O2 setpoint</string>
     <string name="toast_comm_set_autosetpoint_ok">send O2 setpoint: OK</string>
+    <string name="toast_comm_set_autosetpoint_alert">send O2 setpoint: ERROR</string>
     <string name="toast_comm_set_deco">send deco settings</string>
     <string name="toast_comm_set_deco_ok">send deco settings: OK</string>
+    <string name="toast_comm_set_deco_alert">send deco settings: ERROR</string>
     <string name="toast_comm_set_display">send display settings</string>
     <string name="toast_comm_set_display_ok">send display settings: OK</string>
+    <string name="toast_comm_set_display_alert">send display settings: ERROR</string>
     <string name="toast_comm_set_individuals">send individual settings</string>
     <string name="toast_comm_set_individuals_ok">send individual settings: OK</string>
+    <string name="toast_comm_set_individuals_alert">send individual settings: ERROR</string>
     <string name="toast_comm_set_units">send unit settings</string>
     <string name="toast_comm_set_units_ok">send unit settings: OK</string>
+    <string name="toast_comm_set_units_alert">send unit settings: ERROR</string>
     
     <!-- Dialogboxen  -->
     <string name="dialog_sure_exit">are you sure?</string>

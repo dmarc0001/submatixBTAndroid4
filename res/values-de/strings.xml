@@ -25,14 +25,19 @@
     <string name="toast_dummy">kommuniziere</string>
     <string name="toast_comm_set_autosetpoint">Sende O2 Partialdruck soll</string>
     <string name="toast_comm_set_autosetpoint_ok">Sende O2 Partialdruck soll: OK</string>
+    <string name="toast_comm_set_autosetpoint_alert">Sende O2 Partialdruck: FEHLER</string>
     <string name="toast_comm_set_deco">Sende Deko-Einstellungen</string>
     <string name="toast_comm_set_deco_ok">Sende Deko-Einstellungen: OK</string>
+    <string name="toast_comm_set_deco_alert">Sende Deko-Einstellungen: FEHLER</string>
     <string name="toast_comm_set_display">Sende Display Einstellungen</string>
     <string name="toast_comm_set_display_ok">Sende Display Einstellungen: OK</string>
+    <string name="toast_comm_set_display_alert">Sende Display Einstellungen: FEHLER</string>
     <string name="toast_comm_set_individuals">Sende Individualeinstellungen</string>
     <string name="toast_comm_set_individuals_ok">Sende Individualeinstellungen: OK</string>
+    <string name="toast_comm_set_individuals_alert">Sende Individualeinstellungen: FEHLER</string>
     <string name="toast_comm_set_units">Sende Einheiteneinstellungen</string>
     <string name="toast_comm_set_units_ok">Sende Einheiteneinstellungen: OK</string>
+    <string name="toast_comm_set_units_alert">Sende Einheiteneinstellungen: FEHLER</string>
     
     <!-- Dialogboxen  -->
     <string name="dialog_sure_exit">"Sind Sie sicher?"</string>
