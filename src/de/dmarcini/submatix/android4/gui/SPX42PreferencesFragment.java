@@ -209,22 +209,10 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
         msgConnectError( smsg );
         break;
       // ################################################################
-      // Seriennummer des Computers wurde gelesen
-      // ################################################################
-      case ProjectConst.MESSAGE_SERIAL_READ:
-        msgRecivedSerial( smsg );
-        break;
-      // ################################################################
       // SPX sendet "ALIVE" und Ackuspannung
       // ################################################################
       case ProjectConst.MESSAGE_SPXALIVE:
         msgRecivedAlive( smsg );
-        break;
-      // ################################################################
-      // SPX sendet Herstellerkennung
-      // ################################################################
-      case ProjectConst.MESSAGE_MANUFACTURER_READ:
-        msgReciveManufacturer( smsg );
         break;
       // ################################################################
       // SPX sendet Firmwareversion
@@ -243,12 +231,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       // ################################################################
       case ProjectConst.MESSAGE_SETPOINT_ACK:
         msgReciveAutosetpointAck( smsg );
-        break;
-      // ################################################################
-      // SPX Lizenz lesen
-      // ################################################################
-      case ProjectConst.MESSAGE_LICENSE_STATE_READ:
-        msgReciveLicenseState( smsg );
         break;
       // ################################################################
       // Deko einstellungen empfangen
@@ -302,7 +284,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       // Sonst....
       // ################################################################
       default:
-        Log.w( TAG, "unhandled message with id <" + smsg.getId() + "> recived!" );
+        if( BuildConfig.DEBUG ) Log.i( TAG, "unhandled message with id <" + smsg.getId() + "> recived!" );
     }
   }
 
@@ -372,7 +354,17 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     return;
   }
 
-  @Override
+  /**
+   * 
+   * Empfange Nachricht über (Auto)setpoint
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 17.07.2013
+   * @param msg
+   */
   public void msgReciveAutosetpoint( BtServiceMessage msg )
   {
     ListPreference lP = null;
@@ -438,7 +430,17 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     lP.setValueIndex( sP );
   }
 
-  @Override
+  /**
+   * 
+   * Empfange Bestätigung für Setzen des (Auto)setpoint
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 17.07.2013
+   * @param msg
+   */
   public void msgReciveAutosetpointAck( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Autosetpoint successful set (preferences)" );
@@ -453,10 +455,17 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     dismissDial();
   }
 
-  /*
-   * Kommando DEC liefert zurück: ~34:LL:HH:D:Y:C LL=GF-Low, HH=GF-High, D=Deepstops (0/1) Y=Dynamische Gradienten (0/1) C=Last Decostop (0=3 Meter/1=6 Meter)
+  /**
+   * 
+   * Empfange Nachricht über Deko-Einstellungen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 17.07.2013
+   * @param msg
    */
-  @Override
   public void msgReciveDeco( BtServiceMessage msg )
   {
     String[] decoParam;
@@ -565,7 +574,17 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     ignorePrefChange = false;
   }
 
-  @Override
+  /**
+   * 
+   * Empfange Bestätigung über Setzen der Deco-Einstellungen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 17.07.2013
+   * @param msg
+   */
   public void msgReciveDecoAck( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX DECO propertys successful set (preferences)" );
@@ -573,7 +592,17 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     ignorePrefChange = false;
   }
 
-  @Override
+  /**
+   * 
+   * Empfange Nachricht über Einstellungen zum Display
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 17.07.2013
+   * @param msg
+   */
   public void msgReciveDisplay( BtServiceMessage msg )
   {
     String[] displayParm;
@@ -652,19 +681,22 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     ignorePrefChange = false;
   }
 
-  @Override
+  /**
+   * 
+   * Empfange Bestätigung Setzen der Displayeinstellungen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 17.07.2013
+   * @param msg
+   */
   public void msgReciveDisplayAck( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX display settings ACK recived" );
     showConnectionToast( getResources().getString( R.string.toast_comm_set_display_ok ), false );
     ignorePrefChange = false;
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void msgRecivedSerial( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
   }
 
   @Override
@@ -673,14 +705,34 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // TODO Automatisch generierter Methodenstub
   }
 
-  @Override
+  /**
+   * 
+   * Empfange Nachricht über die Firmwareversion des SPX42
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 17.07.2013
+   * @param msg
+   */
   public void msgReciveFirmwareversion( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Firmware <" + ( String )msg.getContainer() + "> recived" );
     currFirmwareVersion = ( String )msg.getContainer();
   }
 
-  @Override
+  /**
+   * 
+   * Empfange Nachricht über individuelle Einstellungen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 17.07.2013
+   * @param msg
+   */
   public void msgReciveIndividuals( BtServiceMessage msg )
   {
     String[] individualParm;
@@ -801,7 +853,17 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     ignorePrefChange = false;
   }
 
-  @Override
+  /**
+   * 
+   * Empfange Bestätigung über Setzen der individuellen Einstellungen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 17.07.2013
+   * @param msg
+   */
   public void msgReciveIndividualsAck( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX INDIVIDUALS settings ACK recived" );
@@ -809,19 +871,17 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     ignorePrefChange = false;
   }
 
-  @Override
-  public void msgReciveLicenseState( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void msgReciveManufacturer( BtServiceMessage msg )
-  {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Manufacturer <" + ( String )msg.getContainer() + "> recived" );
-  }
-
-  @Override
+  /**
+   * 
+   * Empfange Nachrichten mit den Einstellungen der Masseinheiten
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 17.07.2013
+   * @param msg
+   */
   public void msgReciveUnits( BtServiceMessage msg )
   {
     // Kommando SPX_GET_SETUP_UNITS
@@ -938,12 +998,28 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     ignorePrefChange = false;
   }
 
-  @Override
+  /**
+   * 
+   * Empfange Nachricht über Setzen der Masseinheiten
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 17.07.2013
+   * @param msg
+   */
   public void msgReciveUnitsAck( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX units settings ACK recived" );
     showConnectionToast( getResources().getString( R.string.toast_comm_set_units_ok ), false );
     ignorePrefChange = false;
+  }
+
+  @Override
+  public void msgReciveWriteTmeout( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
   }
 
   @Override

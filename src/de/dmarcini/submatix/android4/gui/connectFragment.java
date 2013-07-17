@@ -222,40 +222,16 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
         msgConnectError( smsg );
         break;
       // ################################################################
-      // Seriennummer des ccomputers wurde gelesen
-      // ################################################################
-      case ProjectConst.MESSAGE_SERIAL_READ:
-        msgRecivedSerial( smsg );
-        break;
-      // ################################################################
       // SPX sendet "ALIVE" und Ackuspannung
       // ################################################################
       case ProjectConst.MESSAGE_SPXALIVE:
         msgRecivedAlive( smsg );
         break;
       // ################################################################
-      // SPX sendet Herstellerkennung
-      // ################################################################
-      case ProjectConst.MESSAGE_MANUFACTURER_READ:
-        msgReciveManufacturer( smsg );
-        break;
-      // ################################################################
-      // SPX Lizenz lesen
-      // ################################################################
-      case ProjectConst.MESSAGE_LICENSE_STATE_READ:
-        msgReciveLicenseState( smsg );
-        break;
-      // ################################################################
-      // SPX sendet Firmwareversion
-      // ################################################################
-      case ProjectConst.MESSAGE_FWVERSION_READ:
-        msgReciveFirmwareversion( smsg );
-        break;
-      // ################################################################
       // Sonst....
       // ################################################################
       default:
-        Log.w( TAG, "unhadled message message with id <" + smsg.getId() + "> recived!" );
+        if( BuildConfig.DEBUG ) Log.i( TAG, "unhadled message message with id <" + smsg.getId() + "> recived!" );
     }
   }
 
@@ -325,51 +301,9 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   }
 
   @Override
-  public void msgReciveAutosetpoint( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void msgReciveAutosetpointAck( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
   public void msgRecivedAlive( BtServiceMessage msg )
   {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void msgReciveDeco( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void msgReciveDecoAck( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void msgReciveDisplay( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void msgReciveDisplayAck( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void msgRecivedSerial( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
+    //
   }
 
   @Override
@@ -379,45 +313,9 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   }
 
   @Override
-  public void msgReciveFirmwareversion( BtServiceMessage msg )
+  public void msgReciveWriteTmeout( BtServiceMessage msg )
   {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void msgReciveIndividuals( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void msgReciveIndividualsAck( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void msgReciveLicenseState( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void msgReciveManufacturer( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void msgReciveUnits( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void msgReciveUnitsAck( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
+    //
   }
 
   @Override

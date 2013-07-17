@@ -582,82 +582,16 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         msgReciveManufacturer( smsg );
         break;
       // ################################################################
-      // SPX sendet Firmwareversion
-      // ################################################################
-      case ProjectConst.MESSAGE_FWVERSION_READ:
-        msgReciveFirmwareversion( smsg );
-        break;
-      // ################################################################
-      // SPX sendet Setpoint
-      // ################################################################
-      case ProjectConst.MESSAGE_SETPOINT_READ:
-        msgReciveAutosetpoint( smsg );
-        break;
-      // ################################################################
-      // SPX Setpoint setzen bestätigt
-      // ################################################################
-      case ProjectConst.MESSAGE_SETPOINT_ACK:
-        msgReciveAutosetpointAck( smsg );
-        break;
-      // ################################################################
       // SPX Lizenz lesen
       // ################################################################
       case ProjectConst.MESSAGE_LICENSE_STATE_READ:
         msgReciveLicenseState( smsg );
         break;
       // ################################################################
-      // Deko einstellungen empfangen
-      // ################################################################
-      case ProjectConst.MESSAGE_DECO_READ:
-        msgReciveDeco( smsg );
-        break;
-      // ################################################################
-      // Deko setzen erfolgreich
-      // ################################################################
-      case ProjectConst.MESSAGE_DECO_ACK:
-        msgReciveDecoAck( smsg );
-        break;
-      // ################################################################
-      // Display Einstellungen empfangen
-      // ################################################################
-      case ProjectConst.MESSAGE_DISPLAY_READ:
-        msgReciveDisplay( smsg );
-        break;
-      // ################################################################
-      // Deko setzen erfolgreich
-      // ################################################################
-      case ProjectConst.MESSAGE_DISPLAY_ACK:
-        msgReciveDisplayAck( smsg );
-        break;
-      // ################################################################
-      // Units vom SPX emnpfangen
-      // ################################################################
-      case ProjectConst.MESSAGE_UNITS_READ:
-        msgReciveUnits( smsg );
-        break;
-      // ################################################################
-      // UNITS setzen erfolgreich
-      // ################################################################
-      case ProjectConst.MESSAGE_UNITS_ACK:
-        msgReciveUnitsAck( smsg );
-        break;
-      // ################################################################
-      // Individuelle Einstellungen lesen
-      // ################################################################
-      case ProjectConst.MESSAGE_INDIVID_READ:
-        msgReciveIndividuals( smsg );
-        break;
-      // ################################################################
-      // Indioviduelle Einstellungen schreiben Bestätigung
-      // ################################################################
-      case ProjectConst.MESSAGE_INDIVID_ACK:
-        msgReciveIndividualsAck( smsg );
-        break;
-      // ################################################################
       // Sonst....
       // ################################################################
       default:
-        Log.w( TAG, "unknown message with id <" + smsg.getId() + "> recived!" );
+        if( BuildConfig.DEBUG ) Log.i( TAG, "unknown message with id <" + smsg.getId() + "> recived!" );
     }
   }
 
@@ -750,49 +684,22 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   }
 
   @Override
-  public void msgReciveAutosetpoint( BtServiceMessage msg )
-  {
-    String[] setP = ( String[] )msg.getContainer();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Autosetpoint <" + setP[0] + ">, partialpressure: <" + setP[1] + "> recived" );
-  }
-
-  @Override
-  public void msgReciveAutosetpointAck( BtServiceMessage msg )
-  {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Autosetpoint was succsesful set" );
-  }
-
-  @Override
   public void msgRecivedAlive( BtServiceMessage msg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Alive recived" );
+    // TODO Automatisch generierter Methodenstub
   }
 
-  @Override
-  public void msgReciveDeco( BtServiceMessage msg )
-  {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX deco settings recived" );
-  }
-
-  @Override
-  public void msgReciveDecoAck( BtServiceMessage msg )
-  {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX set deco ACK recived" );
-  }
-
-  @Override
-  public void msgReciveDisplay( BtServiceMessage msg )
-  {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX display settings recived" );
-  }
-
-  @Override
-  public void msgReciveDisplayAck( BtServiceMessage msg )
-  {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX display settings ACK recived" );
-  }
-
-  @Override
+  /**
+   * 
+   * Nachricht mit der Seriennummer des SPX empfangen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 17.07.2013
+   * @param msg
+   */
   public void msgRecivedSerial( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "serial <" + ( String )msg.getContainer() + "> recived" );
@@ -805,25 +712,17 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     // if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
   }
 
-  @Override
-  public void msgReciveFirmwareversion( BtServiceMessage msg )
-  {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Firmwareversion <" + ( String )msg.getContainer() + "> recived" );
-  }
-
-  @Override
-  public void msgReciveIndividuals( BtServiceMessage msg )
-  {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX INDIVIDUALS settings recived" );
-  }
-
-  @Override
-  public void msgReciveIndividualsAck( BtServiceMessage msg )
-  {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX INDIVIDUALS settings ACK recived" );
-  }
-
-  @Override
+  /**
+   * 
+   * Nachricht mit dem Lizenzstatus des SPX empfangen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 17.07.2013
+   * @param msg
+   */
   public void msgReciveLicenseState( BtServiceMessage msg )
   {
     // LS : License State 0=Nitrox,1=Normoxic Trimix,2=Full Trimix
@@ -862,7 +761,17 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     }
   }
 
-  @Override
+  /**
+   * 
+   * Nachricht über den Hersteller des Gerätes empfangen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 17.07.2013
+   * @param msg
+   */
   public void msgReciveManufacturer( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Manufacturer <" + ( String )msg.getContainer() + "> recived" );
@@ -870,15 +779,9 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   }
 
   @Override
-  public void msgReciveUnits( BtServiceMessage msg )
+  public void msgReciveWriteTmeout( BtServiceMessage msg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX device units settings recived" );
-  }
-
-  @Override
-  public void msgReciveUnitsAck( BtServiceMessage msg )
-  {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX device units settings ACK recived" );
+    // TODO Automatisch generierter Methodenstub
   }
 
   @Override
@@ -1344,27 +1247,6 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
 
   /**
    * 
-   * schreibe die Einstellungen für Masseinheiten in den SPX42
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 14.07.2013
-   * @param isTempMetric
-   * @param isDepthMetric
-   * @param isFreshwater
-   */
-  public void writeUnitPrefs( int isTempMetric, int isDepthMetric, int isFreshwater )
-  {
-    if( mService != null )
-    {
-      mService.writeUnitPrefs( isTempMetric, isDepthMetric, isFreshwater );
-    }
-  }
-
-  /**
-   * 
    * schreibe INDIVIDUAL Einstellungen in den SPX42
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
@@ -1383,6 +1265,27 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     if( mService != null )
     {
       mService.writeIndividualPrefs( sensorsOff, pscrOff, sensorsCount, soundOn, logInterval );
+    }
+  }
+
+  /**
+   * 
+   * schreibe die Einstellungen für Masseinheiten in den SPX42
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 14.07.2013
+   * @param isTempMetric
+   * @param isDepthMetric
+   * @param isFreshwater
+   */
+  public void writeUnitPrefs( int isTempMetric, int isDepthMetric, int isFreshwater )
+  {
+    if( mService != null )
+    {
+      mService.writeUnitPrefs( isTempMetric, isDepthMetric, isFreshwater );
     }
   }
 }
