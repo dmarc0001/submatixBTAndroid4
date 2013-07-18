@@ -759,16 +759,16 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 18.07.2013
-   * @param gasSet
+   * @param gasParms
    */
-  public void setValue( final int[] gasSet )
+  public void setValue( final SPX42GasParms gasParms )
   {
-    o2Current = gasSet[0];
-    heCurrent = gasSet[1];
-    n2Current = gasSet[2];
-    d1Current = ( gasSet[3] > 0 ) ? true : false;
-    d2Current = ( gasSet[4] > 0 ) ? true : false;
-    bailoutCurrent = ( gasSet[5] > 0 ) ? true : false;
+    o2Current = gasParms.o2;
+    heCurrent = gasParms.he;
+    n2Current = gasParms.n2;
+    d1Current = gasParms.d1;
+    d2Current = gasParms.d2;
+    bailoutCurrent = gasParms.bo;
   }
 
   /**
