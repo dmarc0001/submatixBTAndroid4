@@ -185,7 +185,8 @@
     
     <!-- Detailseite Gasliste -->
     <string name="gaslist_headline">Gaslist SPX42</string>
-    <string name="conf_gaslist_summary" formatted="false">current gas %02d is %s D1:[%s] D2:[%s] B:[%s]</string>
+    <string name="conf_gaslist_summary_first" formatted="false">current gas %02d is %s</string>
+        
     <string name="conf_gaslist_noname">not init yet</string>
     
     <!-- ### Kategorie Gas  ## -->
