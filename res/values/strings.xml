@@ -194,7 +194,8 @@
     <string name="conf_gaslist_noname">not init yet</string>
     
     <!-- ### Kategorie Gas  ## -->
-    <string name="conf_gaslist_gas_key_template">keyGaslistGas%02d</string>
+    <string name="conf_gaslist_gas_key_template" formatted="false">keyGaslistGas%02d</string>
+    <string name="conf_gaslist_gas_key">"keyGaslistGas"</string>
     <string name="conf_gaslist_gas01_header">gas #01</string>
     <string name="conf_gaslist_gas02_header">gas #02</string>
     <string name="conf_gaslist_gas03_header">gas #03</string>
