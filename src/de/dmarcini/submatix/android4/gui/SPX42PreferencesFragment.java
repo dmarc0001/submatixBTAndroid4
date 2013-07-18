@@ -331,7 +331,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     Intent intent = new Intent( getActivity(), areaListActivity.class );
     intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
     startActivity( intent );
-    return;
   }
 
   /**
@@ -345,7 +344,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    *         Stand: 17.07.2013
    * @param msg
    */
-  public void msgReciveAutosetpoint( BtServiceMessage msg )
+  private void msgReciveAutosetpoint( BtServiceMessage msg )
   {
     ListPreference lP = null;
     // Preference pref = null;
@@ -421,7 +420,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    *         Stand: 17.07.2013
    * @param msg
    */
-  public void msgReciveAutosetpointAck( BtServiceMessage msg )
+  private void msgReciveAutosetpointAck( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Autosetpoint successful set (preferences)" );
     theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_autosetpoint_ok ), false );
@@ -446,7 +445,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    *         Stand: 17.07.2013
    * @param msg
    */
-  public void msgReciveDeco( BtServiceMessage msg )
+  private void msgReciveDeco( BtServiceMessage msg )
   {
     String[] decoParam;
     int[] presetCandidate =
@@ -565,7 +564,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    *         Stand: 17.07.2013
    * @param msg
    */
-  public void msgReciveDecoAck( BtServiceMessage msg )
+  private void msgReciveDecoAck( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX DECO propertys successful set (preferences)" );
     theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_deco_ok ), false );
@@ -583,7 +582,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    *         Stand: 17.07.2013
    * @param msg
    */
-  public void msgReciveDisplay( BtServiceMessage msg )
+  private void msgReciveDisplay( BtServiceMessage msg )
   {
     String[] displayParm;
     int lumin = 0;
@@ -672,7 +671,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    *         Stand: 17.07.2013
    * @param msg
    */
-  public void msgReciveDisplayAck( BtServiceMessage msg )
+  private void msgReciveDisplayAck( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX display settings ACK recived" );
     theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_display_ok ), false );
@@ -694,7 +693,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    *         Stand: 17.07.2013
    * @param msg
    */
-  public void msgReciveFirmwareversion( BtServiceMessage msg )
+  private void msgReciveFirmwareversion( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Firmware <" + ( String )msg.getContainer() + "> recived" );
     currFirmwareVersion = ( String )msg.getContainer();
@@ -711,7 +710,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    *         Stand: 17.07.2013
    * @param msg
    */
-  public void msgReciveIndividuals( BtServiceMessage msg )
+  private void msgReciveIndividuals( BtServiceMessage msg )
   {
     String[] individualParm;
     int sensorsOff = 0, pscrOff = 0, sensorsCount = 3, soundOn = 1, logInterval = 2;
@@ -842,7 +841,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    *         Stand: 17.07.2013
    * @param msg
    */
-  public void msgReciveIndividualsAck( BtServiceMessage msg )
+  private void msgReciveIndividualsAck( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX INDIVIDUALS settings ACK recived" );
     theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_individuals_ok ), false );
@@ -860,7 +859,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    *         Stand: 17.07.2013
    * @param msg
    */
-  public void msgReciveUnits( BtServiceMessage msg )
+  private void msgReciveUnits( BtServiceMessage msg )
   {
     // Kommando SPX_GET_SETUP_UNITS
     // ~37:UD:UL:UW
@@ -987,7 +986,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    *         Stand: 17.07.2013
    * @param msg
    */
-  public void msgReciveUnitsAck( BtServiceMessage msg )
+  private void msgReciveUnitsAck( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX units settings ACK recived" );
     theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_units_ok ), false );
