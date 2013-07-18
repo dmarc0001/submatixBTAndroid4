@@ -172,6 +172,7 @@ public final class ProjectConst
   public static final int    MESSAGE_INDIVID_READ       = ActionEvent.RESERVED_ID_MAX + 22;
   public static final int    MESSAGE_INDIVID_ACK        = ActionEvent.RESERVED_ID_MAX + 23;
   public static final int    MESSAGE_GAS_READ           = ActionEvent.RESERVED_ID_MAX + 24;
+  public static final int    MESSAGE_GAS_ACK            = ActionEvent.RESERVED_ID_MAX + 25;
   
   //
 //  public static final int    MESSAGE_STATE_CHANGE       = ActionEvent.RESERVED_ID_MAX + 2;
