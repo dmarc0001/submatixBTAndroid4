@@ -749,4 +749,25 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
     this.noAction = false;
     Log.d( TAG, "setPickerWoEvent()...OK" );
   }
+
+  /**
+   * 
+   * Setze den Wert für diese Preference
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 18.07.2013
+   * @param gasSet
+   */
+  public void setValue( int[] gasSet )
+  {
+    o2Current = gasSet[0];
+    heCurrent = gasSet[1];
+    n2Current = gasSet[2];
+    d1Current = ( gasSet[3] > 0 ) ? true : false;
+    d2Current = ( gasSet[4] > 0 ) ? true : false;
+    bailoutCurrent = ( gasSet[5] > 0 ) ? true : false;
+  }
 }
