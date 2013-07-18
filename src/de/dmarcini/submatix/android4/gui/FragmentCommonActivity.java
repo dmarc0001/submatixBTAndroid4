@@ -38,6 +38,7 @@ import de.dmarcini.submatix.android4.comm.BlueThoothComService.LocalBinder;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.content.ContentSwitcher;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
+import de.dmarcini.submatix.android4.utils.SPX42GasParms;
 
 /**
  * Der gemeinsame Code der List- und Detailactivity
@@ -1304,6 +1305,26 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     if( mService != null )
     {
       mService.writeUnitPrefs( isTempMetric, isDepthMetric, isFreshwater );
+    }
+  }
+
+  /**
+   * 
+   * schreibe ein Gas setup in den SPX42
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 18.07.2013
+   * @param gasNr
+   * @param gasParms
+   */
+  public void writeGasSetup( int gasNr, SPX42GasParms gasParms )
+  {
+    if( mService != null )
+    {
+      mService.writeGasSetup( gasNr, gasParms );
     }
   }
 }
