@@ -28,6 +28,7 @@ import de.dmarcini.submatix.android4.utils.CommToast;
 import de.dmarcini.submatix.android4.utils.GasPickerPreference;
 import de.dmarcini.submatix.android4.utils.GasUtilitys;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
+import de.dmarcini.submatix.android4.utils.SPX42GasParms;
 
 /**
  * Editor für die Gaslisten
@@ -181,10 +182,9 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   private void msgReciveGasSetup( BtServiceMessage msg )
   {
     String[] gasParm;
-    int[] gasSet =
-    { 0, 0, 0, 0, 0, 0 };
     int gasNr = 0, dil = 0, cg = 0;
     String gasKey;
+    SPX42GasParms gasParms = new SPX42GasParms();
     //
     // GET_SETUP_GASLIST
     // ~39:NR:ST:HE:BA:AA:CG
@@ -208,12 +208,12 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
       // "O2:HE:N2:D1:D2:BA"
       gasNr = Integer.parseInt( gasParm[0], 16 ); // Gasnr
       dil = Integer.parseInt( gasParm[4], 16 ); // diluent
-      gasSet[2] = Integer.parseInt( gasParm[1], 16 ); // n2
-      gasSet[1] = Integer.parseInt( gasParm[2], 16 ); // he
-      gasSet[0] = 100 - gasSet[1] - gasSet[2]; // O2
-      gasSet[3] = ( dil == 1 ) ? 1 : 0; // Diluent 1
-      gasSet[4] = ( dil == 2 ) ? 1 : 0; // diluent 2?
-      gasSet[5] = Integer.parseInt( gasParm[3], 16 ); // bailout?
+      gasParms.n2 = Integer.parseInt( gasParm[1], 16 ); // n2
+      gasParms.he = Integer.parseInt( gasParm[2], 16 ); // he
+      gasParms.o2 = 100 - gasParms.he - gasParms.n2; // O2
+      gasParms.d1 = ( dil == 1 ) ? true : false; // Diluent 1
+      gasParms.d2 = ( dil == 2 ) ? true : false; // diluent 2?
+      gasParms.bo = ( ( Integer.parseInt( gasParm[3], 16 ) > 0 ) ? true : false ); // bailout?
       cg = Integer.parseInt( gasParm[5], 16 ); // current gas
     }
     catch( IndexOutOfBoundsException ex )
@@ -227,7 +227,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
       return;
     }
     if( BuildConfig.DEBUG )
-      Log.d( TAG, String.format( "msgReciveGasSetup: gas: %d, n2:%02d%%, he:%02d%%, bailout:%d, dil: %d, currentGas: %d", gasNr, gasSet[2], gasSet[1], gasSet[5], dil, cg ) );
+      Log.d( TAG, String.format( "msgReciveGasSetup: gas: %d, n2:%02d%%, he:%02d%%, bailout:%b, dil: %d, currentGas: %d", gasNr, gasParms.n2, gasParms.he, gasParms.bo, dil, cg ) );
     // Jetz in die Preference und damit in die GUI meisseln
     gasKey = String.format( gasKeyTemplate, gasNr );
     if( getPreferenceScreen().findPreference( gasKey ) instanceof GasPickerPreference )
@@ -242,12 +242,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
       //
       // jetzt die Werte für Gas übernehmen
       //
-      if( BuildConfig.DEBUG )
-      {
-        Log.d( TAG, String.format( "msgReciveGasSetup: set gas preset for gas %d O2:%02d, HE:%02d, N2:%02d, D1:%02d, D2:%02d, BA:%02d", gasNr, gasSet[0], gasSet[1], gasSet[2],
-                gasSet[3], gasSet[4], gasSet[5] ) );
-      }
-      gpp.setValue( gasSet );
+      gpp.setValue( gasParms );
       setGasSummary( gasNr, gpp );
       ignorePrefChange = false;
     }
@@ -349,7 +344,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   public void onSharedPreferenceChanged( SharedPreferences sharedPreferences, String key )
   {
     GasPickerPreference gP = null;
-    String gasProperty, gasName;
+    String gasProperty, gasName, gasExt;
     String[] fields;
     int o2, he;
     boolean d1 = false, d2 = false, bo = false;
@@ -400,7 +395,14 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
           d2 = Boolean.parseBoolean( fields[4] );
           bo = Boolean.parseBoolean( fields[5] );
         }
-        gasName = GasUtilitys.getNameForGas( o2, he ) + ( d1 ? " " + diluent1String : "" ) + ( d2 ? " " + diluent2String : "" ) + ( bo ? " " + bailoutString : "" );
+        //
+        // baue den String für das Summary zusammen
+        //
+        gasExt = noDiluent;
+        if( d1 ) gasExt = diluent1String;
+        if( d2 ) gasExt = diluent2String;
+        if( bo ) gasExt += bailoutString;
+        gasName = GasUtilitys.getNameForGas( o2, he ) + gasExt;
       }
       catch( NumberFormatException ex )
       {
@@ -469,61 +471,24 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
    * @param gasNr
    * @param gpp
    *          GasPickerPreference Referenz
+   * @param gasParms
    */
   private void setGasSummary( int gasNr, GasPickerPreference gpp )
   {
-    int o2, he;
-    boolean d1 = false, d2 = false, bo = false;
     String gasName, gasExt;
-    SharedPreferences sharedPreferences;
-    String key;
+    SPX42GasParms gasParms;
     //
+    // hole mal die Gaseinstellungen
     //
-    // erst mal auf alle Fälle den String laden und aufarbeiten
+    gasParms = gpp.getValue();
     //
-    key = String.format( gasKeyTemplate, gasNr );
-    sharedPreferences = getPreferenceManager().getSharedPreferences();
-    String gasProperty = sharedPreferences.getString( key, getResources().getString( R.string.conf_gaslist_default ) );
-    String[] fields = gasProperty.split( ":" );
-    if( fields.length < 6 )
-    {
-      Log.e( TAG, "setAllSummarys: for Key <" + key + "> the preference value was not correct (" + gasProperty + ") ! Abort!" );
-      return;
-    }
+    // baue den String für das Summary zusammen
     //
-    // konvertiere die Parameter nach Int zur weiteren Verwendung
-    //
-    try
-    {
-      o2 = Integer.parseInt( fields[0] );
-      he = Integer.parseInt( fields[1] );
-      d1 = Boolean.parseBoolean( fields[3] );
-      d2 = Boolean.parseBoolean( fields[4] );
-      bo = Boolean.parseBoolean( fields[5] );
-      //
-      // baue den String für das Summary zusammen
-      //
-      gasExt = noDiluent;
-      if( d1 ) gasExt = diluent1String;
-      if( d2 ) gasExt = diluent2String;
-      if( bo ) gasExt += bailoutString;
-      gasName = GasUtilitys.getNameForGas( o2, he ) + gasExt;
-    }
-    catch( IndexOutOfBoundsException ex )
-    {
-      Log.e( TAG, String.format( "setGasSummary: for key <%s> raised an IndexOutOfBoundsException (%s)", key, ex.getLocalizedMessage() ) );
-      return;
-    }
-    catch( NumberFormatException ex )
-    {
-      Log.e( TAG, String.format( "setGasSummary: for key <%s> raised an NumberFormatException (%s)", key, ex.getLocalizedMessage() ) );
-      return;
-    }
-    catch( Exception ex )
-    {
-      Log.e( TAG, String.format( "setGasSummary: for key <%s> raised an Exception (%s)", key, ex.getLocalizedMessage() ) );
-      return;
-    }
+    gasExt = noDiluent;
+    if( gasParms.d1 ) gasExt = diluent1String;
+    if( gasParms.d2 ) gasExt = diluent2String;
+    if( gasParms.bo ) gasExt += bailoutString;
+    gasName = GasUtilitys.getNameForGas( gasParms.o2, gasParms.he ) + gasExt;
     // schreib schön!
     gpp.setSummary( String.format( getResources().getString( R.string.conf_gaslist_summary_first ), gasNr, gasName ) );
   }
