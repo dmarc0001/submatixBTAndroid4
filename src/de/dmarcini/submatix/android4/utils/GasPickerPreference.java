@@ -112,12 +112,13 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
   private CheckBox            d1Checkbox         = null;
   private CheckBox            d2Checkbox         = null;
   private CheckBox            bailoutCheckbox    = null;
-  private int                 o2Current          = 0;
-  private int                 heCurrent          = 0;
-  private int                 n2Current          = 0;
-  private boolean             d1Current          = false;
-  private boolean             d2Current          = false;
-  private boolean             bailoutCurrent     = false;
+  private SPX42GasParms       gasParms           = null;
+  // private int gasParms.o2 = 0;
+  // private int gasParms.he = 0;
+  // private int gasParms.n2 = 0;
+  // private boolean gasParms.d1 = false;
+  // private boolean gasParms.d2 = false;
+  // private boolean gasParms.bo = false;
   private TextView            o2TextView         = null;
   private TextView            heTextView         = null;
   private String              gasTitle           = null;
@@ -136,6 +137,7 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
   {
     super( context, attrs );
     Log.d( TAG, "GasPickerPreference(Context,AttributeSet)..." );
+    gasParms = new SPX42GasParms();
     setPositiveButtonText( R.string.conf_gaslist_button_positive );
     setNegativeButtonText( R.string.conf_gaslist_button_negative );
     setDialogIcon( null );
@@ -153,6 +155,7 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
   {
     super( context, attrs, defStyle );
     Log.d( TAG, "GasPickerPreference(Context,AttributeSet,int)..." );
+    gasParms = new SPX42GasParms();
     setPositiveButtonText( R.string.conf_gaslist_button_positive );
     setNegativeButtonText( R.string.conf_gaslist_button_negative );
     setDialogIcon( null );
@@ -180,16 +183,16 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
       Log.d( TAG, "makeValuesFromString: successful split default value!" );
       try
       {
-        o2Current = Integer.parseInt( fields[0] );
-        heCurrent = Integer.parseInt( fields[1] );
-        n2Current = Integer.parseInt( fields[2] );
+        gasParms.o2 = Integer.parseInt( fields[0] );
+        gasParms.he = Integer.parseInt( fields[1] );
+        gasParms.n2 = Integer.parseInt( fields[2] );
         Log.d( TAG, "makeValuesFromString: successful set Values" );
         if( fields.length == 6 )
         {
           Log.d( TAG, "makeValuesFromString: found diluent and bailout markers..." );
-          d1Current = Boolean.parseBoolean( fields[3] );
-          d2Current = Boolean.parseBoolean( fields[4] );
-          bailoutCurrent = Boolean.parseBoolean( fields[5] );
+          gasParms.d1 = Boolean.parseBoolean( fields[3] );
+          gasParms.d2 = Boolean.parseBoolean( fields[4] );
+          gasParms.bo = Boolean.parseBoolean( fields[5] );
         }
         return( true );
       }
@@ -287,13 +290,13 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
     // Checkboxen für Gasdefinition benennen
     //
     d1Checkbox = ( CheckBox )v.findViewById( R.id.diluent1CheckBox );
-    d1Checkbox.setChecked( d1Current );
+    d1Checkbox.setChecked( gasParms.d1 );
     d1Checkbox.setOnCheckedChangeListener( this );
     d2Checkbox = ( CheckBox )v.findViewById( R.id.diluent2CheckBox );
-    d2Checkbox.setChecked( d2Current );
+    d2Checkbox.setChecked( gasParms.d2 );
     d2Checkbox.setOnCheckedChangeListener( this );
     bailoutCheckbox = ( CheckBox )v.findViewById( R.id.bailoutCheckBox );
-    bailoutCheckbox.setChecked( bailoutCurrent );
+    bailoutCheckbox.setChecked( gasParms.bo );
     bailoutCheckbox.setOnCheckedChangeListener( this );
     //
     // Labels für Picker suchen
@@ -303,11 +306,11 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
     //
     // setzte initial die Farben der picker
     //
-    setO2PickerColor( o2Current );
-    setHePickerColor( heCurrent );
+    setO2PickerColor( gasParms.o2 );
+    setHePickerColor( gasParms.he );
     noAction = true;
-    onSetO2Value( o2Current );
-    setGasNameToTitle( o2Current, heCurrent );
+    onSetO2Value( gasParms.o2 );
+    setGasNameToTitle( gasParms.o2, gasParms.he );
     Log.d( TAG, "onBindDialogView()...OK" );
   }
 
@@ -321,7 +324,7 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
       {
         case R.id.diluent1CheckBox:
           Log.d( TAG, "onCheckedChanged: diluent 1 <" + isChecked + ">" );
-          d1Current = isChecked;
+          gasParms.d1 = isChecked;
           if( isChecked && d2Checkbox.isChecked() )
           {
             d2Checkbox.setChecked( false );
@@ -330,7 +333,7 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
         //
         case R.id.diluent2CheckBox:
           Log.d( TAG, "onCheckedChanged: diluent 2 <" + isChecked + ">" );
-          d2Current = isChecked;
+          gasParms.d2 = isChecked;
           if( isChecked && d1Checkbox.isChecked() )
           {
             d1Checkbox.setChecked( false );
@@ -339,7 +342,7 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
         //
         case R.id.bailoutCheckBox:
           Log.d( TAG, "onCheckedChanged: bailout <" + isChecked + ">" );
-          bailoutCurrent = isChecked;
+          gasParms.bo = isChecked;
           break;
         //
         default:
@@ -413,12 +416,12 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
     makeValuesFromString( myState.value );
     try
     {
-      o2Picker.setValue( o2Current );
-      hePicker.setValue( heCurrent );
-      n2Picker.setValue( n2Current );
-      d1Checkbox.setChecked( d1Current );
-      d2Checkbox.setChecked( d2Current );
-      bailoutCheckbox.setChecked( bailoutCurrent );
+      o2Picker.setValue( gasParms.o2 );
+      hePicker.setValue( gasParms.he );
+      n2Picker.setValue( gasParms.n2 );
+      d1Checkbox.setChecked( gasParms.d1 );
+      d2Checkbox.setChecked( gasParms.d2 );
+      bailoutCheckbox.setChecked( gasParms.bo );
     }
     catch( NullPointerException ex )
     {
@@ -442,8 +445,7 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
     // Create instance of custom BaseSavedState
     final SavedState myState = new SavedState( superState );
     // Set the state's value with the class member that holds current setting value
-    myState.value = String.format( "%d:%d:%d:%b:%b:%b", o2Picker.getValue(), hePicker.getValue(), n2Picker.getValue(), d1Checkbox.isChecked(), d2Checkbox.isChecked(),
-            bailoutCheckbox.isChecked() );
+    myState.value = String.format( "%d:%d:%d:%b:%b:%b", gasParms.o2, gasParms.he, gasParms.n2, gasParms.d1, gasParms.d2, gasParms.bo );
     return myState;
   }
 
@@ -462,30 +464,30 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
     // ist der neue Heliumwert 0
     if( newVal == 0 )
     {
-      heCurrent = 0;
-      o2Current = 100 - n2Current;
+      gasParms.he = 0;
+      gasParms.o2 = 100 - gasParms.n2;
     }
     // wenn der Wert gestiegen ist
-    else if( newVal > heCurrent )
+    else if( newVal > gasParms.he )
     {
       // wenn noch Stickstoff zum verringern vorhanden ist
-      if( n2Current > ( newVal - heCurrent ) )
+      if( gasParms.n2 > ( newVal - gasParms.he ) )
       {
-        heCurrent = newVal;
-        n2Current = 100 - heCurrent - o2Current;
+        gasParms.he = newVal;
+        gasParms.n2 = 100 - gasParms.he - gasParms.o2;
       }
       else
       {
-        n2Current = 0;
-        heCurrent = 100 - o2Current;
+        gasParms.n2 = 0;
+        gasParms.he = 100 - gasParms.o2;
       }
     }
     // wenn der Wert gesunken ist (weniger Helium)
     else
     {
       // ich ersetzte das Helium mit Stickstoff
-      heCurrent = newVal;
-      n2Current = 100 - o2Current - heCurrent;
+      gasParms.he = newVal;
+      gasParms.n2 = 100 - gasParms.o2 - gasParms.he;
     }
     setPickerWoEvent();
   }
@@ -534,24 +536,24 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
     // wenn das bei 100 angekommen ist
     if( newVal >= 100 )
     {
-      heCurrent = 0;
-      n2Current = 0;
-      o2Current = 100;
+      gasParms.he = 0;
+      gasParms.n2 = 0;
+      gasParms.o2 = 100;
     }
     // wenn es mehr O2 geworden ist
-    else if( newVal > o2Current )
+    else if( newVal > gasParms.o2 )
     {
       // wenn noch Stickstoff zum entfernen vorhanden ist
-      if( n2Current >= ( newVal - o2Current ) )
+      if( gasParms.n2 >= ( newVal - gasParms.o2 ) )
       {
-        o2Current = newVal;
-        n2Current = 100 - o2Current - heCurrent;
+        gasParms.o2 = newVal;
+        gasParms.n2 = 100 - gasParms.o2 - gasParms.he;
       }
       else
       {
-        o2Current = newVal;
-        n2Current = 0;
-        heCurrent = 100 - o2Current;
+        gasParms.o2 = newVal;
+        gasParms.n2 = 0;
+        gasParms.he = 100 - gasParms.o2;
       }
     }
     else
@@ -559,13 +561,13 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
       // es ist also weniger O2 geworden
       if( newVal <= 1 )
       {
-        o2Current = 1;
+        gasParms.o2 = 1;
       }
       else
       {
-        o2Current = newVal;
+        gasParms.o2 = newVal;
       }
-      n2Current = 100 - o2Current - heCurrent;
+      gasParms.n2 = 100 - gasParms.o2 - gasParms.he;
     }
     // setze die Werte in der Anzeige
     setPickerWoEvent();
@@ -583,21 +585,21 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
       case R.id.o2NumberPicker:
         Log.d( TAG, "onValueChange: O2 oldVal: <" + oldVal + ">, newVal: <" + newVal + ">" );
         onSetO2Value( newVal );
-        setO2PickerColor( o2Current );
-        setHePickerColor( heCurrent );
+        setO2PickerColor( gasParms.o2 );
+        setHePickerColor( gasParms.he );
         break;
       //
       case R.id.heNumberPicker:
         Log.d( TAG, "onValueChange: HE oldVal: <" + oldVal + ">, newVal: <" + newVal + ">" );
         onSetHeValue( newVal );
-        setHePickerColor( heCurrent );
-        setO2PickerColor( o2Current );
+        setHePickerColor( gasParms.he );
+        setO2PickerColor( gasParms.o2 );
         break;
       //
       case R.id.n2NumberPicker:
         Log.d( TAG, "onValueChange: N2 oldVal: <" + oldVal + ">, newVal: <" + newVal + ">" );
         // eh, das stellen wir nicht um!
-        n2Current = oldVal;
+        gasParms.n2 = oldVal;
         setPickerWoEvent();
         break;
       //
@@ -605,7 +607,7 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
         Log.e( TAG, "onValueChange: unknown event source! call programmer!" );
         return;
     }
-    setGasNameToTitle( o2Current, heCurrent );
+    setGasNameToTitle( gasParms.o2, gasParms.he );
   }
 
   /**
@@ -743,9 +745,9 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
   {
     Log.d( TAG, "setPickerWoEvent()..." );
     this.noAction = true;
-    o2Picker.setValue( o2Current );
-    hePicker.setValue( heCurrent );
-    n2Picker.setValue( n2Current );
+    o2Picker.setValue( gasParms.o2 );
+    hePicker.setValue( gasParms.he );
+    n2Picker.setValue( gasParms.n2 );
     this.noAction = false;
     Log.d( TAG, "setPickerWoEvent()...OK" );
   }
@@ -763,12 +765,12 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    */
   public void setValue( final SPX42GasParms gasParms )
   {
-    o2Current = gasParms.o2;
-    heCurrent = gasParms.he;
-    n2Current = gasParms.n2;
-    d1Current = gasParms.d1;
-    d2Current = gasParms.d2;
-    bailoutCurrent = gasParms.bo;
+    gasParms.o2 = gasParms.o2;
+    gasParms.he = gasParms.he;
+    gasParms.n2 = gasParms.n2;
+    gasParms.d1 = gasParms.d1;
+    gasParms.d2 = gasParms.d2;
+    gasParms.bo = gasParms.bo;
   }
 
   /**
@@ -800,14 +802,6 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    */
   public SPX42GasParms getValue()
   {
-    SPX42GasParms gasParms = new SPX42GasParms();
-    //
-    gasParms.o2 = o2Current;
-    gasParms.he = heCurrent;
-    gasParms.n2 = n2Current;
-    gasParms.d1 = d1Current;
-    gasParms.d2 = d2Current;
-    gasParms.bo = bailoutCurrent;
     return( gasParms );
   }
 }
