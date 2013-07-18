@@ -23,6 +23,7 @@
     <string name="toast_bt_enabled">"Bluethooth aktiviert!"</string>
     <string name="toast_cant_bt_connect">Kann nicht mit BT Gerät verbinden: </string>
     <string name="toast_dummy">kommuniziere</string>
+    <string name="toast_comm_timeout">Kommunikation Zeit abgelaufen!</string>
     <string name="toast_comm_set_autosetpoint">Sende O2 Partialdruck soll</string>
     <string name="toast_comm_set_autosetpoint_ok">Sende O2 Partialdruck soll: OK</string>
     <string name="toast_comm_set_autosetpoint_alert">Sende O2 Partialdruck: FEHLER</string>
@@ -38,19 +39,22 @@
     <string name="toast_comm_set_units">Sende Einheiteneinstellungen</string>
     <string name="toast_comm_set_units_ok">Sende Einheiteneinstellungen: OK</string>
     <string name="toast_comm_set_units_alert">Sende Einheiteneinstellungen: FEHLER</string>
+    <string name="toast_comm_set_gas">Sende Gaseinstellung</string>
+    <string name="toast_comm_set_gas_ok">Sende Gaseinstellung: OK</string>
+    <string name="toast_comm_set_gas_alert">Sende Gaseinstellung: FEHLER</string>
     
     <!-- Dialogboxen  -->
     <string name="dialog_sure_exit">"Sind Sie sicher?"</string>
     <string name="dialog_exit_button">"Beenden"</string>
     <!-- string name="dialog_ok_button">OK</string -->
     <string name="dialog_cancel_button">"Abbrechen"</string>
-    <string name="dialog_please_wait_title">Bitte warten...</string>
-    <string name="dialog_please_wait_read_config">Lese Konfiguration vom SPX...</string>
+    <string name="dialog_please_wait_title" formatted="false">Bitte warten...</string>
+    <string name="dialog_please_wait_read_config" formatted="false">Lese Konfiguration vom SPX...</string>
     
     <!-- BT Discover Box -->
-    <string name="progress_wait_for_discover_title">Suche BT Geräte...</string>
-    <string name="progress_wait_for_discover_message_start">noch kein Gerät gefunden...</string>
-    <string name="progress_wait_for_discover_message_continue">letztes Gerät: %s...</string>
+    <string name="progress_wait_for_discover_title" formatted="false">Suche BT Geräte...</string>
+    <string name="progress_wait_for_discover_message_start" formatted="false">noch kein Gerät gefunden...</string>
+    <string name="progress_wait_for_discover_message_continue" formatted="false">letztes Gerät: %s...</string>
     
     <!--  DUMMY Detailseite  -->
     <string name="dummy_headline">"Dummyseite"</string>
