@@ -21,10 +21,11 @@ package de.dmarcini.submatix.android4.utils;
  */
 public class SPX42GasParms
 {
-  public int     o2 = 21;
-  public int     n2 = 78;
-  public int     he = 0;
-  public boolean d1 = false;
-  public boolean d2 = false;
-  public boolean bo = false;
+  public int     o2     = 21;
+  public int     n2     = 78;
+  public int     he     = 0;
+  public boolean d1     = false;
+  public boolean d2     = false;
+  public boolean bo     = false;
+  public boolean isCurr = false;
 }
