@@ -27,12 +27,12 @@ import de.dmarcini.submatix.android4.gui.FragmentProgressDialog;
  */
 public class CommToast
 {
-  private static final String           TAG      = CommToast.class.getSimpleName();
-  private Activity                      act      = null;
-  private static Toast                  theToast = null;
-  private static FragmentProgressDialog pd       = null;
-  private View                          toastLayout;
-  private TextView                      toastMessageTextView;
+  private static final String    TAG      = CommToast.class.getSimpleName();
+  private Activity               act      = null;
+  private Toast                  theToast = null;
+  private FragmentProgressDialog pd       = null;
+  private View                   toastLayout;
+  private TextView               toastMessageTextView;
 
   //
   /**
@@ -49,6 +49,8 @@ public class CommToast
   public CommToast( Activity act )
   {
     this.act = act;
+    theToast = null;
+    pd = null;
   }
 
   /**
