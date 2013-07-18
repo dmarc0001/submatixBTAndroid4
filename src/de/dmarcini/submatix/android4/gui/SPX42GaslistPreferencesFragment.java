@@ -9,11 +9,15 @@
  */
 package de.dmarcini.submatix.android4.gui;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -43,7 +47,9 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
 {
   private static final String          TAG              = SPX42GaslistPreferencesFragment.class.getSimpleName();
   private static final int             maxEvents        = 8;
+  private static final Pattern         fieldPatternKdo  = Pattern.compile( "~\\d+" );
   private String                       gasKeyTemplate   = null;
+  private String                       gasKeyStub       = null;
   private Activity                     runningActivity  = null;
   private boolean                      ignorePrefChange = false;
   private final FragmentProgressDialog pd               = null;
@@ -104,6 +110,12 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
       // ################################################################
       case ProjectConst.MESSAGE_GAS_READ:
         msgReciveGasSetup( smsg );
+        break;
+      // ################################################################
+      // das Schreiben eines Gassetups bestätigt
+      // ################################################################
+      case ProjectConst.MESSAGE_GAS_ACK:
+        msgReciveGasSetupAck( smsg );
         break;
       // ################################################################
       // Sonst....
@@ -252,10 +264,72 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     }
   }
 
+  /**
+   * 
+   * Wenn eine Bestätigung für ein Gassetzuip kommt
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 18.07.2013
+   * @param smsg
+   */
+  private void msgReciveGasSetupAck( BtServiceMessage smsg )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX INDIVIDUALS settings ACK recived" );
+    theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_gas_ok ), false );
+    ignorePrefChange = false;
+  }
+
   @Override
   public void msgReciveWriteTmeout( BtServiceMessage msg )
   {
-    // TODO Automatisch generierter Methodenstub
+    int kdo = 0;
+    String toSendMsg = null;
+    //
+    // ich versuche rauszubekommen, welches Kommando das war
+    //
+    if( ( msg.getContainer() != null ) && ( msg.getContainer() instanceof String ) )
+    {
+      toSendMsg = ( String )msg.getContainer();
+      Matcher m = fieldPatternKdo.matcher( toSendMsg );
+      if( m.find() )
+      {
+        // das Erste will ich haben!
+        String erg = m.group();
+        erg = erg.replace( "~", "" );
+        try
+        {
+          // wenn ich das umwandeln in INT kann....
+          kdo = Integer.parseInt( erg, 16 );
+        }
+        catch( NumberFormatException ex )
+        {
+          Log.e( TAG, "msgReciveWriteTmeout: NumberFormatException: <" + ex.getLocalizedMessage() + ">" );
+        }
+      }
+    }
+    //
+    // so, nun gucken, von wem das kam
+    //
+    switch ( kdo )
+    {
+    //
+    // artig die richtige Meldung absetzen
+    //
+      case ProjectConst.SPX_SET_SETUP_GASLIST:
+        if( BuildConfig.DEBUG ) Log.d( TAG, "SPX gas setup was not correct set!" );
+        theToast.showConnectionToastAlert( getResources().getString( R.string.toast_comm_set_gas_alert ) );
+        break;
+      default:
+        Log.e( TAG, "SPX Write timeout" + ( ( toSendMsg == null ) ? "(NULL Message)" : toSendMsg ) + "!" );
+        theToast.showConnectionToastAlert( getResources().getString( R.string.toast_comm_timeout ) );
+    }
+    //
+    // wieder mitarbeiten
+    //
+    ignorePrefChange = false;
   }
 
   @Override
@@ -269,15 +343,18 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   @Override
   public void onCreate( Bundle savedInstanceState )
   {
+    Resources res;
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate()..." );
     theToast = new CommToast( getActivity() );
     Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_gaslist_preference + ">..." );
-    gasKeyTemplate = getResources().getString( R.string.conf_gaslist_gas_key_template );
-    diluent1String = getResources().getString( R.string.conf_gaslist_summary_diluent1 );
-    diluent2String = getResources().getString( R.string.conf_gaslist_summary_diluent2 );
-    noDiluent = getResources().getString( R.string.conf_gaslist_summary_no_diluent );
-    bailoutString = getResources().getString( R.string.conf_gaslist_summary_bailout );
+    res = getResources();
+    gasKeyTemplate = res.getString( R.string.conf_gaslist_gas_key_template );
+    gasKeyStub = res.getString( R.string.conf_gaslist_gas_key );
+    diluent1String = res.getString( R.string.conf_gaslist_summary_diluent1 );
+    diluent2String = res.getString( R.string.conf_gaslist_summary_diluent2 );
+    noDiluent = res.getString( R.string.conf_gaslist_summary_no_diluent );
+    bailoutString = res.getString( R.string.conf_gaslist_summary_bailout );
     addPreferencesFromResource( R.xml.config_spx42_gaslist_preference );
     //
     // initiiere die notwendigen summarys
@@ -343,10 +420,12 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   @Override
   public void onSharedPreferenceChanged( SharedPreferences sharedPreferences, String key )
   {
-    GasPickerPreference gP = null;
+    GasPickerPreference gpp = null;
     String gasProperty, gasName, gasExt;
+    SPX42GasParms gasParms;
     String[] fields;
     int o2, he;
+    int gasNr;
     boolean d1 = false, d2 = false, bo = false;
     //
     Log.v( TAG, "onSharedPreferenceChanged()...." );
@@ -361,68 +440,30 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     //
     if( getPreferenceScreen().findPreference( key ) instanceof GasPickerPreference )
     {
-      gP = ( GasPickerPreference )getPreferenceScreen().findPreference( key );
-      if( gP == null )
+      gpp = ( GasPickerPreference )getPreferenceScreen().findPreference( key );
+      if( gpp == null )
       {
-        Log.e( TAG, "onSharedPreferenceChanged: Key <" + key + "> was not found an GradientPickerPreference! Abort!" );
+        Log.e( TAG, "onSharedPreferenceChanged: Key <" + key + "> was not found an GasPickerPreference! Abort!" );
         return;
       }
-      if( !sharedPreferences.contains( key ) )
-      {
-        Log.e( TAG, "onSharedPreferenceChanged: for Key <" + key + "> was not found an preference value! Abort!" );
-        return;
-      }
-      //
-      // erst mal auf alle Fälle den String laden und aufarbeiten
-      //
-      gasProperty = sharedPreferences.getString( key, getResources().getString( R.string.conf_gaslist_default ) );
-      fields = gasProperty.split( ":" );
-      if( fields.length < 3 )
-      {
-        Log.e( TAG, "onSharedPreferenceChanged: for Key <" + key + "> the preference value was not correct (" + gasProperty + ") ! Abort!" );
-        return;
-      }
-      //
-      // konvertiere die Parameter nach Int zur weiteren Verwendung
-      //
       try
       {
-        o2 = Integer.parseInt( fields[0] );
-        he = Integer.parseInt( fields[1] );
-        if( fields.length >= 6 )
-        {
-          d1 = Boolean.parseBoolean( fields[3] );
-          d2 = Boolean.parseBoolean( fields[4] );
-          bo = Boolean.parseBoolean( fields[5] );
-        }
-        //
-        // baue den String für das Summary zusammen
-        //
-        gasExt = noDiluent;
-        if( d1 ) gasExt = diluent1String;
-        if( d2 ) gasExt = diluent2String;
-        if( bo ) gasExt += bailoutString;
-        gasName = GasUtilitys.getNameForGas( o2, he ) + gasExt;
+        gasNr = Integer.parseInt( key.replaceAll( gasKeyStub, "" ) );
       }
       catch( NumberFormatException ex )
       {
-        Log.e( TAG, String.format( "onSharedPreferenceChanged: for key <%s> raised an NumberFormatException (%s)", key, ex.getLocalizedMessage() ) );
+        Log.e( TAG, "can't inspect gasnumber (" + ex.getLocalizedMessage() + ")" );
         return;
       }
-      catch( Exception ex )
-      {
-        Log.e( TAG, String.format( "onSharedPreferenceChanged: for key <%s> raised an Exception (%s)", key, ex.getLocalizedMessage() ) );
-        return;
-      }
-      for( int idx = 1; idx < 9; idx++ )
-      {
-        if( key.equals( String.format( gasKeyTemplate, idx ) ) )
-        {
-          // frag mal die resource ab
-          gP.setSummary( String.format( getResources().getString( R.string.conf_gaslist_summary_first ), idx, gasName ) );
-          break;
-        }
-      }
+      theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_gas ), true );
+      //
+      // hole mal die Gaseinstellungen
+      //
+      gasParms = gpp.getValue();
+      setGasSummary( gasNr, gpp );
+      FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
+      ignorePrefChange = true;
+      fActivity.writeGasSetup( gasNr, gasParms );
     }
     Log.v( TAG, "onSharedPreferenceChanged()....OK" );
   }
@@ -461,6 +502,30 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
 
   /**
    * 
+   * Setze alle summarys
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 01.01.2013
+   */
+  @SuppressLint( "DefaultLocale" )
+  private void setAllSummarys()
+  {
+    //
+    // alle Gase generisch durch (8 Gase sind im SPX42)
+    //
+    for( int idx = 0; idx < 8; idx++ )
+    {
+      String key = String.format( gasKeyTemplate, idx );
+      GasPickerPreference gP = ( GasPickerPreference )getPreferenceScreen().findPreference( key );
+      setGasSummary( idx, gP );
+    }
+  }
+
+  /**
+   * 
    * setze eine Gas-summary (Beschreibung in der Preference)
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
@@ -491,29 +556,5 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     gasName = GasUtilitys.getNameForGas( gasParms.o2, gasParms.he ) + gasExt;
     // schreib schön!
     gpp.setSummary( String.format( getResources().getString( R.string.conf_gaslist_summary_first ), gasNr, gasName ) );
-  }
-
-  /**
-   * 
-   * Setze alle summarys
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 01.01.2013
-   */
-  @SuppressLint( "DefaultLocale" )
-  private void setAllSummarys()
-  {
-    //
-    // alle Gase generisch durch (8 Gase sind im SPX42)
-    //
-    for( int idx = 0; idx < 8; idx++ )
-    {
-      String key = String.format( gasKeyTemplate, idx );
-      GasPickerPreference gP = ( GasPickerPreference )getPreferenceScreen().findPreference( key );
-      setGasSummary( idx, gP );
-    }
   }
 }
