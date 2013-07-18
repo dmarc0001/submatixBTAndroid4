@@ -770,4 +770,20 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
     d2Current = ( gasSet[4] > 0 ) ? true : false;
     bailoutCurrent = ( gasSet[5] > 0 ) ? true : false;
   }
+
+  /**
+   * 
+   * Setze Wert für diese Preference als String
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 18.07.2013
+   * @param theValueStr
+   */
+  public void setValue( String theValueStr )
+  {
+    makeValuesFromString( theValueStr );
+  }
 }
