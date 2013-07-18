@@ -786,4 +786,28 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
   {
     makeValuesFromString( theValueStr );
   }
+
+  /**
+   * 
+   * Gib die Gasparameter als Objekt zurück
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 18.07.2013
+   * @return SPX42GasParms
+   */
+  public SPX42GasParms getValue()
+  {
+    SPX42GasParms gasParms = new SPX42GasParms();
+    //
+    gasParms.o2 = o2Current;
+    gasParms.he = heCurrent;
+    gasParms.n2 = n2Current;
+    gasParms.d1 = d1Current;
+    gasParms.d2 = d2Current;
+    gasParms.bo = bailoutCurrent;
+    return( gasParms );
+  }
 }
