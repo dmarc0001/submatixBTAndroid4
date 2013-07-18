@@ -511,22 +511,20 @@ public class BlueThoothComService extends Service
             if( BuildConfig.DEBUG ) Log.d( TAGREADER, "no individual license...!" );
           }
           break;
-        // case ProjectConst.SPX_GET_SETUP_GASLIST:
-        // // Kommando GET_SETUP_GASLIST
-        // // ~39:NR:ST:HE:BA:AA:CG
-        // // NR: Numer des Gases
-        // // ST Stickstoff in Prozent (hex)
-        // // HELIUM
-        // // Bailout
-        // // AA Diluent 1 oder 2 oder keins
-        // // CG curent Gas
-        // if( aListener != null )
-        // {
-        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_GAS_READ, new String( readMessage ), System.currentTimeMillis() / 100, 0 );
-        // aListener.actionPerformed( ex );
-        // }
-        // if( log ) LOGGER.fine( "GET_SETUP_GASLIST recived <" + readMessage + ">" );
-        // break;
+        case ProjectConst.SPX_GET_SETUP_GASLIST:
+          // Kommando GET_SETUP_GASLIST
+          // ~39:NR:ST:HE:BA:AA:CG
+          // NR: Numer des Gases
+          // ST Stickstoff in Prozent (hex)
+          // HELIUM
+          // Bailout
+          // AA Diluent 1 oder 2 oder keins
+          // CG curent Gas
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_GAS_READ, new String[]
+          { fields[1], fields[2], fields[3], fields[4], fields[5], fields[6] } );
+          sendMessageToApp( msg );
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "Gas setup recived!" );
+          break;
         // case ProjectConst.SPX_SET_SETUP_GASLIST:
         // // Besaetigung fuer Gas setzen bekommen
         // if( aListener != null )
@@ -980,6 +978,24 @@ public class BlueThoothComService extends Service
     {
       this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_APPLICATION_ID ) );
     }
+  }
+
+  /**
+   * 
+   * Erfrage beim SPX die Gaslisten
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 18.07.2013 TODO
+   */
+  public void askForGasFromSPX()
+  {
+    String kdoString;
+    kdoString = String.format( "%s~%x~%x%s", ProjectConst.STX, ProjectConst.SPX_GET_SETUP_GASLIST, ProjectConst.SPX_ALIVE, ProjectConst.ETX );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "askForGasFromSPX: sending <" + kdoString + ">" );
+    this.writeSPXMsgToDevice( kdoString );
   }
 
   /**
@@ -1681,6 +1697,29 @@ public class BlueThoothComService extends Service
 
   /**
    * 
+   * Schreibe individual Einstellungen in den SPX42
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 14.07.2013
+   * @param sensorsOff
+   * @param pscrOff
+   * @param sensorsCount
+   * @param soundOn
+   * @param logInterval
+   */
+  public void writeIndividualPrefs( int sensorsOff, int pscrOff, int sensorsCount, int soundOn, int logInterval )
+  {
+    String kdoString;
+    kdoString = String.format( "~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_INDIVIDUAL, sensorsOff, pscrOff, sensorsCount, soundOn, logInterval );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "writeIndividualPrefs: sending <" + kdoString + ">" );
+    this.writeSPXMsgToDevice( kdoString );
+  }
+
+  /**
+   * 
    * Screibe Kommando zum SPX, füge protokoll Start/Ende an
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
@@ -1732,29 +1771,6 @@ public class BlueThoothComService extends Service
     String kdoString;
     kdoString = String.format( "~%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_UNITS, isTempMetric, isDepthMetric, isFreshwater );
     if( BuildConfig.DEBUG ) Log.d( TAG, "writeUnitPrefs: sending <" + kdoString + ">" );
-    this.writeSPXMsgToDevice( kdoString );
-  }
-
-  /**
-   * 
-   * Schreibe individual Einstellungen in den SPX42
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 14.07.2013
-   * @param sensorsOff
-   * @param pscrOff
-   * @param sensorsCount
-   * @param soundOn
-   * @param logInterval
-   */
-  public void writeIndividualPrefs( int sensorsOff, int pscrOff, int sensorsCount, int soundOn, int logInterval )
-  {
-    String kdoString;
-    kdoString = String.format( "~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_INDIVIDUAL, sensorsOff, pscrOff, sensorsCount, soundOn, logInterval );
-    if( BuildConfig.DEBUG ) Log.d( TAG, "writeIndividualPrefs: sending <" + kdoString + ">" );
     this.writeSPXMsgToDevice( kdoString );
   }
 }
