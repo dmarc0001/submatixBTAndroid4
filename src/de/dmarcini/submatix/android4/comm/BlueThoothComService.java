@@ -24,6 +24,7 @@ import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.gui.areaListActivity;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
+import de.dmarcini.submatix.android4.utils.SPX42GasParms;
 
 // @formatter:off
 public class BlueThoothComService extends Service
@@ -525,15 +526,12 @@ public class BlueThoothComService extends Service
           sendMessageToApp( msg );
           if( BuildConfig.DEBUG ) Log.d( TAGREADER, "Gas setup recived!" );
           break;
-        // case ProjectConst.SPX_SET_SETUP_GASLIST:
-        // // Besaetigung fuer Gas setzen bekommen
-        // if( aListener != null )
-        // {
-        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_GAS_WRITTEN, new String( readMessage ), System.currentTimeMillis() / 100, 0 );
-        // aListener.actionPerformed( ex );
-        // }
-        // if( log ) LOGGER.fine( "SET_SETUP_GASLIST recived <" + readMessage + ">" );
-        // break;
+        case ProjectConst.SPX_SET_SETUP_GASLIST:
+          // Besaetigung fuer Gas setzen bekommen
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_GAS_ACK );
+          sendMessageToApp( msg );
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "MESSAGE_GAS_ACK recived " );
+          break;
         // case ProjectConst.SPX_GET_LOG_INDEX:
         // // Ein Logbuch Verzeichniseintrag gefunden
         // if( aListener != null )
@@ -1692,6 +1690,70 @@ public class BlueThoothComService extends Service
     String kdoString;
     kdoString = String.format( "~%x:%x:%x", ProjectConst.SPX_SET_SETUP_DISPLAYSETTINGS, lumin, orient );
     if( BuildConfig.DEBUG ) Log.d( TAG, "writeDisplayPrefs: sending <" + kdoString + ">" );
+    this.writeSPXMsgToDevice( kdoString );
+  }
+
+  /**
+   * 
+   * Schreibe ein Gas in den SPX
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 18.07.2013
+   * @param gasNr
+   * @param gasParms
+   */
+  public void writeGasSetup( int gasNr, SPX42GasParms gasParms )
+  {
+    String kdoString;
+    int diluent;
+    //
+    if( gasParms.d1 )
+    {
+      diluent = 1;
+    }
+    else if( gasParms.d2 )
+    {
+      diluent = 2;
+    }
+    else
+    {
+      diluent = 0;
+    }
+    switch ( firmware )
+    {
+      case ProjectConst.FW_2_6_7_7V:
+        // Kommando SPX_SET_SETUP_GASLIST
+        // ~40:NR:HE:N2:BO:DI:CU
+        // NR -> Gas Nummer
+        // HE -> Heliumanteil
+        // N2 -> Stickstoffanteil
+        // BO -> Bailoutgas? (3?)
+        // DI -> Diluent ( 0, 1 oder 2 )
+        // CU Current Gas (0 oder 1)
+        kdoString = String.format( "~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_GASLIST, gasNr, gasParms.he, gasParms.n2, ( gasParms.bo ? 1 : 0 ), diluent,
+                ( gasParms.isCurr ? 1 : 0 ) );
+        if( BuildConfig.DEBUG ) Log.d( TAG, "writeDecoPrefs: sending <OLDER-FIRMWARE <" + kdoString + ">>" );
+        break;
+      default:
+      case ProjectConst.FW_2_7V:
+      case ProjectConst.FW_2_7H:
+        // Kommando SPX_SET_SETUP_GASLIST
+        // ~40:NR:N2:HE:BO:DI:CU
+        // NR: Nummer des Gases 0..7
+        // N2: Sticksoff in %
+        // HE: Heluim in %
+        // BO: Bailout (Werte 0,1 und 3 gefunden, 0 kein BO, 3 BO Wert 1 unbekannt?)
+        // DI: Diluent 1 oder 2
+        // CU: Current Gas
+        kdoString = String.format( "~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_GASLIST, gasNr, gasParms.n2, gasParms.he, ( gasParms.bo ? 1 : 0 ), diluent,
+                ( gasParms.isCurr ? 1 : 0 ) );
+        if( BuildConfig.DEBUG ) Log.d( TAG, "writeDecoPrefs: sending <NEWER-FIRMWARE <" + kdoString + ">>" );
+        break;
+    }
+    //
     this.writeSPXMsgToDevice( kdoString );
   }
 
