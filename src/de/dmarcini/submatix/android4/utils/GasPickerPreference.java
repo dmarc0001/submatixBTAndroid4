@@ -761,7 +761,7 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    *         Stand: 18.07.2013
    * @param gasSet
    */
-  public void setValue( int[] gasSet )
+  public void setValue( final int[] gasSet )
   {
     o2Current = gasSet[0];
     heCurrent = gasSet[1];
@@ -782,7 +782,7 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    *         Stand: 18.07.2013
    * @param theValueStr
    */
-  public void setValue( String theValueStr )
+  public void setValue( final String theValueStr )
   {
     makeValuesFromString( theValueStr );
   }
