@@ -317,7 +317,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   @Override
   public void msgConnected( BtServiceMessage msg )
   {
-    // TODO Automatisch generierter Methodenstub
     Log.v( TAG, "msgConnected()...ask for SPX config..." );
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for SPX config..." );
@@ -350,9 +349,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
 
   @Override
   public void msgConnecting( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   @Override
   public void msgDisconnected( BtServiceMessage msg )
@@ -711,9 +708,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
 
   @Override
   public void msgRecivedTick( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   /**
    * 
