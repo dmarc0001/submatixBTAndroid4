@@ -244,6 +244,24 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
 
   /**
    * 
+   * frage den SPX nach den Gaseinstellungen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 18.07.2013
+   */
+  public void askForGasFromSPX()
+  {
+    if( mService != null )
+    {
+      mService.askForGasFromSPX();
+    }
+  }
+
+  /**
+   * 
    * Frag nach der Lizenz des SPX
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
