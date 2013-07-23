@@ -765,12 +765,12 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    */
   public void setValue( final SPX42GasParms gasParms )
   {
-    gasParms.o2 = gasParms.o2;
-    gasParms.he = gasParms.he;
-    gasParms.n2 = gasParms.n2;
-    gasParms.d1 = gasParms.d1;
-    gasParms.d2 = gasParms.d2;
-    gasParms.bo = gasParms.bo;
+    this.gasParms.o2 = gasParms.o2;
+    this.gasParms.he = gasParms.he;
+    this.gasParms.n2 = gasParms.n2;
+    this.gasParms.d1 = gasParms.d1;
+    this.gasParms.d2 = gasParms.d2;
+    this.gasParms.bo = gasParms.bo;
   }
 
   /**
