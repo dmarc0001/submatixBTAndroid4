@@ -10,6 +10,8 @@
 package de.dmarcini.submatix.android4.gui;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,6 +31,7 @@ import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.utils.CommToast;
 import de.dmarcini.submatix.android4.utils.GasPickerPreference;
+import de.dmarcini.submatix.android4.utils.GasUpdateEntity;
 import de.dmarcini.submatix.android4.utils.GasUtilitys;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 import de.dmarcini.submatix.android4.utils.SPX42GasParms;
@@ -190,11 +193,10 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   {
     String[] gasParm;
     int gasNr = 0, dil = 0, cg = 0;
-    String gasKey;
     SPX42GasParms gasParms = new SPX42GasParms();
     //
     // GET_SETUP_GASLIST
-    // ~39:NR:ST:HE:BA:AA:CG
+    // NR:ST:HE:BA:AA:CG
     // NR: Numer des Gases
     // ST Stickstoff in Prozent (hex)
     // HELIUM
@@ -212,7 +214,6 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     }
     try
     {
-      // "O2:HE:N2:D1:D2:BA"
       gasNr = Integer.parseInt( gasParm[0], 16 ); // Gasnr
       dil = Integer.parseInt( gasParm[4], 16 ); // diluent
       gasParms.n2 = Integer.parseInt( gasParm[1], 16 ); // n2
@@ -236,15 +237,9 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     if( BuildConfig.DEBUG )
       Log.d( TAG, String.format( "msgReciveGasSetup: gas: %d, n2:%02d%%, he:%02d%%, bailout:%b, dil: %d, currentGas: %d", gasNr, gasParms.n2, gasParms.he, gasParms.bo, dil, cg ) );
     // Jetz in die Preference und damit in die GUI meisseln
-    gasKey = String.format( gasKeyTemplate, gasNr );
-    if( getPreferenceScreen().findPreference( gasKey ) instanceof GasPickerPreference )
+    try
     {
-      GasPickerPreference gpp = ( GasPickerPreference )getPreferenceScreen().findPreference( gasKey );
-      if( gpp == null )
-      {
-        Log.e( TAG, "msgReciveGasSetup: Key <" + gasKey + "> was not found an GasPickerPreference! abort!" );
-        return;
-      }
+      GasPickerPreference gpp = gasPrefs.get( gasNr );
       ignorePrefChange = true;
       //
       // jetzt die Werte für Gas übernehmen
@@ -253,9 +248,10 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
       setGasSummary( gasNr, gasParms );
       ignorePrefChange = false;
     }
-    else
+    catch( IndexOutOfBoundsException ex )
     {
-      Log.e( TAG, "msgReciveGasSetup: can't set gas setup value to preference..." );
+      Log.e( TAG, "msgReciveGasSetup: gas <" + gasNr + "> was not found an GasPickerPreference! <" + ex.getLocalizedMessage() + ">" );
+      return;
     }
   }
 
@@ -272,7 +268,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
    */
   private void msgReciveGasSetupAck( BtServiceMessage smsg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX INDIVIDUALS settings ACK recived" );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX SET GAS settings ACK recived" );
     theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_gas_ok ), false );
     ignorePrefChange = false;
   }
@@ -354,7 +350,14 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     //
     // initiiere die notwendigen summarys
     //
-    setAllSummarys();
+    gasPrefs.clear();
+    for( int idx = 0; idx < 8; idx++ )
+    {
+      String key = String.format( gasKeyTemplate, idx );
+      GasPickerPreference gP = ( GasPickerPreference )getPreferenceScreen().findPreference( key );
+      gasPrefs.add( gP );
+    }
+    // setAllSummarys();
     Log.v( TAG, "onCreate: add Resouce...OK" );
   }
 
@@ -417,9 +420,10 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   {
     GasPickerPreference gpp = null;
     SPX42GasParms gasParms;
+    Vector<GasUpdateEntity> gasUpdates;
     int gasNr;
     //
-    Log.v( TAG, "onSharedPreferenceChanged()...." );
+    Log.v( TAG, "onSharedPreferenceChanged...." );
     if( BuildConfig.DEBUG ) Log.d( TAG, "onSharedPreferenceChanged: key = <" + key + ">" );
     if( ignorePrefChange )
     {
@@ -453,12 +457,31 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     //
     // hole mal die Gaseinstellungen
     //
+    // gucke mal, ob die Diluents stimmen
+    Vector<Integer> changeSets = checkDiluentSets( gasNr );
     gasParms = gpp.getValue();
+    // das aktuelle Gas anzeigen
     setGasSummary( gasNr, gasParms );
+    // Den Vector für die Gasupdates anlegen
+    gasUpdates = new Vector<GasUpdateEntity>();
+    // das aktuelle Gas schon mal eintragen
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onSharedPreferenceChanged: gas to update to list: <" + gasNr + ">" );
+    gasUpdates.add( new GasUpdateEntity( gasNr, gasParms ) );
+    Iterator<Integer> it = changeSets.iterator();
+    // für alle zu ändernden Gase Parameter festlegen und in einen Vector schreiben
+    while( it.hasNext() )
+    {
+      gasNr = it.next();
+      gpp = gasPrefs.get( gasNr );
+      gasParms = gpp.getValue();
+      setGasSummary( gasNr, gasParms );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "onSharedPreferenceChanged: gas to update to list: <" + gasNr + ">" );
+      gasUpdates.add( new GasUpdateEntity( gasNr, gasParms ) );
+    }
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     ignorePrefChange = true;
-    fActivity.writeGasSetup( gasNr, gasParms );
-    Log.v( TAG, "onSharedPreferenceChanged()....OK" );
+    fActivity.writeGasSetup( gasUpdates );
+    Log.v( TAG, "onSharedPreferenceChanged....OK" );
   }
 
   @Override
@@ -466,14 +489,12 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   {
     super.onViewCreated( view, savedInstanceState );
     Log.v( TAG, "onViewCreated..." );
-    gasPrefs.clear();
     //
     // alle Gase generisch durch (8 Gase sind im SPX42)
     //
     for( int idx = 0; idx < 8; idx++ )
     {
-      String key = String.format( gasKeyTemplate, idx );
-      GasPickerPreference gP = ( GasPickerPreference )getPreferenceScreen().findPreference( key );
+      GasPickerPreference gP = gasPrefs.get( idx );
       gasPrefs.add( gP );
       if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "The Preference <%s> is number %d", gP.getTitle(), idx ) );
       if( idx % 2 > 0 )
@@ -488,6 +509,10 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
           // helles Thema
           gP.setLayoutResource( R.layout.preference_light );
         }
+      }
+      else
+      {
+        gP.setLayoutResource( R.layout.preference );
       }
     }
   }
@@ -565,6 +590,91 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     if( gasParms.bo ) gasExt += bailoutString;
     gasName = GasUtilitys.getNameForGas( gasParms.o2, gasParms.he ) + gasExt;
     // schreib schön!
-    gpp.setSummary( String.format( getResources().getString( R.string.conf_gaslist_summary_first ), gasNr, gasName ) );
+    gpp.setSummary( String.format( getResources().getString( R.string.conf_gaslist_summary_first ), gasNr + 1, gasName ) );
+    if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "setGasSummary: gas number <%02d> has now summary <%s>", gasNr, gasName ) );
+  }
+
+  /**
+   * 
+   * Diluent setzen in einer Preference. Immer nur einmal D1 und einmal D2 möglich!
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 23.07.2013
+   * @param idx
+   * @return
+   */
+  private Vector<Integer> checkDiluentSets( int gasNr )
+  {
+    SPX42GasParms gasParms;
+    Boolean prefD1, prefD2;
+    // Boolean wasD1, wasD2;
+    Boolean wasChanged;
+    GasPickerPreference gpp;
+    Vector<Integer> toChange = new Vector<Integer>();
+    //
+    // Werte vom aktuellen Gas merken und Vorbereitungen
+    //
+    gpp = gasPrefs.get( gasNr );
+    gasParms = gpp.getValue();
+    prefD1 = gasParms.d1;
+    prefD2 = gasParms.d2;
+    //
+    // Alle Gase durchackern
+    //
+    for( int idx = 0; idx < 8; idx++ )
+    {
+      wasChanged = false;
+      try
+      {
+        // mein gas brauch ich nicht beackern
+        if( idx == gasNr ) continue;
+        // Preferenzen lesen
+        gpp = gasPrefs.get( idx );
+        gasParms = gpp.getValue();
+        // Diluent 1 checken
+        if( gasParms.d1 )
+        {
+          // wenn beide true sind, ist was schief
+          if( prefD1 && gasParms.d1 )
+          {
+            // ups, das muss korrigiert werden!
+            if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "checkDiluentSets: gas number <%d> was diluent 1 changed, write to Preference", idx ) );
+            wasChanged = true;
+            gasParms.d1 = false;
+          }
+        }
+        // Diluent 2 checken
+        if( gasParms.d2 )
+        {
+          // wenn beide true sind, ist was schief
+          if( prefD2 && gasParms.d2 )
+          {
+            // ups, das muss korrigiert werden!
+            if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "checkDiluentSets: gas number <%d> was diluent 2 changed, write to Preference", idx ) );
+            wasChanged = true;
+            gasParms.d2 = false;
+          }
+        }
+        //
+        // wenn was verändert wurde, Values setzen
+        //
+        if( wasChanged )
+        {
+          gpp.setValue( gasParms );
+          setGasSummary( idx );
+          toChange.add( idx );
+        }
+        // setGasSummary( idx );
+      }
+      catch( IndexOutOfBoundsException ex )
+      {
+        Log.e( TAG, "setDiluent: no gasPreference for index! <" + ex.getLocalizedMessage() + ">" );
+        return( null );
+      }
+    }
+    return( toChange );
   }
 }
