@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Vector;
 import java.util.regex.Pattern;
 
 import android.app.Notification;
@@ -23,6 +25,7 @@ import android.util.Log;
 import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.gui.areaListActivity;
+import de.dmarcini.submatix.android4.utils.GasUpdateEntity;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 import de.dmarcini.submatix.android4.utils.SPX42GasParms;
 
@@ -1755,6 +1758,83 @@ public class BlueThoothComService extends Service
     }
     //
     this.writeSPXMsgToDevice( kdoString );
+  }
+
+  /**
+   * 
+   * Schreibe eine Anzahl von Gasen in den SPX
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 23.07.2013
+   * @param gasUpdates
+   */
+  public void writeGasSetup( Vector<GasUpdateEntity> gasUpdates )
+  {
+    String kdoString = "";
+    SPX42GasParms gasParms;
+    int diluent, gasNr;
+    //
+    if( gasUpdates.isEmpty() ) return;
+    //
+    // einen iterator für die Durchforstung des Vectors erzeugen
+    //
+    Iterator<GasUpdateEntity> it = gasUpdates.iterator();
+    // und nun durchforste mal bitte
+    while( it.hasNext() )
+    {
+      GasUpdateEntity ent = it.next();
+      gasParms = ent.getGasParms();
+      gasNr = ent.getGasNr();
+      //
+      if( gasParms.d1 )
+      {
+        diluent = 1;
+      }
+      else if( gasParms.d2 )
+      {
+        diluent = 2;
+      }
+      else
+      {
+        diluent = 0;
+      }
+      switch ( firmware )
+      {
+        case ProjectConst.FW_2_6_7_7V:
+          // Kommando SPX_SET_SETUP_GASLIST
+          // ~40:NR:HE:N2:BO:DI:CU
+          // NR -> Gas Nummer
+          // HE -> Heliumanteil
+          // N2 -> Stickstoffanteil
+          // BO -> Bailoutgas? (3?)
+          // DI -> Diluent ( 0, 1 oder 2 )
+          // CU Current Gas (0 oder 1)
+          kdoString = String.format( "~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_GASLIST, gasNr, gasParms.he, gasParms.n2, ( gasParms.bo ? 1 : 0 ), diluent,
+                  ( gasParms.isCurr ? 1 : 0 ) );
+          if( BuildConfig.DEBUG ) Log.d( TAG, "writeDecoPrefs: sending <OLDER-FIRMWARE <" + kdoString + ">>" );
+          this.writeSPXMsgToDevice( kdoString );
+          break;
+        default:
+        case ProjectConst.FW_2_7V:
+        case ProjectConst.FW_2_7H:
+          // Kommando SPX_SET_SETUP_GASLIST
+          // ~40:NR:N2:HE:BO:DI:CU
+          // NR: Nummer des Gases 0..7
+          // N2: Sticksoff in %
+          // HE: Heluim in %
+          // BO: Bailout (Werte 0,1 und 3 gefunden, 0 kein BO, 3 BO Wert 1 unbekannt?)
+          // DI: Diluent 1 oder 2
+          // CU: Current Gas
+          kdoString += String.format( "~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_GASLIST, gasNr, gasParms.n2, gasParms.he, ( gasParms.bo ? 1 : 0 ), diluent,
+                  ( gasParms.isCurr ? 1 : 0 ) );
+          if( BuildConfig.DEBUG ) Log.d( TAG, "writeDecoPrefs: sending <NEWER-FIRMWARE <" + kdoString + ">>" );
+          this.writeSPXMsgToDevice( kdoString );
+          break;
+      }
+    }
   }
 
   /**
