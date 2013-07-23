@@ -9,6 +9,7 @@
  */
 package de.dmarcini.submatix.android4.gui;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,9 +20,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceScreen;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,16 +44,16 @@ import de.dmarcini.submatix.android4.utils.SPX42GasParms;
  */
 public class SPX42GaslistPreferencesFragment extends PreferenceFragment implements IBtServiceListener, OnSharedPreferenceChangeListener
 {
-  private static final String          TAG              = SPX42GaslistPreferencesFragment.class.getSimpleName();
-  private static final int             maxEvents        = 8;
-  private static final Pattern         fieldPatternKdo  = Pattern.compile( "~\\d+" );
-  private String                       gasKeyTemplate   = null;
-  private String                       gasKeyStub       = null;
-  private Activity                     runningActivity  = null;
-  private boolean                      ignorePrefChange = false;
-  private final FragmentProgressDialog pd               = null;
-  private CommToast                    theToast         = null;
-  private String                       diluent1String, diluent2String, noDiluent, bailoutString;
+  private static final String                  TAG              = SPX42GaslistPreferencesFragment.class.getSimpleName();
+  private static final int                     maxEvents        = 8;
+  private static final Pattern                 fieldPatternKdo  = Pattern.compile( "~\\d+" );
+  private String                               gasKeyTemplate   = null;
+  private String                               gasKeyStub       = null;
+  private Activity                             runningActivity  = null;
+  private boolean                              ignorePrefChange = false;
+  private CommToast                            theToast         = null;
+  private String                               diluent1String, diluent2String, noDiluent, bailoutString;
+  private final ArrayList<GasPickerPreference> gasPrefs         = new ArrayList<GasPickerPreference>();
 
   @Override
   public void handleMessages( int what, BtServiceMessage smsg )
@@ -150,15 +149,11 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
 
   @Override
   public void msgConnectError( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   @Override
   public void msgConnecting( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   @Override
   public void msgDisconnected( BtServiceMessage msg )
@@ -255,7 +250,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
       // jetzt die Werte für Gas übernehmen
       //
       gpp.setValue( gasParms );
-      setGasSummary( gasNr, gpp );
+      setGasSummary( gasNr, gasParms );
       ignorePrefChange = false;
     }
     else
@@ -421,12 +416,8 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   public void onSharedPreferenceChanged( SharedPreferences sharedPreferences, String key )
   {
     GasPickerPreference gpp = null;
-    String gasProperty, gasName, gasExt;
     SPX42GasParms gasParms;
-    String[] fields;
-    int o2, he;
     int gasNr;
-    boolean d1 = false, d2 = false, bo = false;
     //
     Log.v( TAG, "onSharedPreferenceChanged()...." );
     if( BuildConfig.DEBUG ) Log.d( TAG, "onSharedPreferenceChanged: key = <" + key + ">" );
@@ -438,33 +429,35 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     //
     // Wenn das von der GasPickergeschichte kommt
     //
-    if( getPreferenceScreen().findPreference( key ) instanceof GasPickerPreference )
+    try
     {
-      gpp = ( GasPickerPreference )getPreferenceScreen().findPreference( key );
-      if( gpp == null )
-      {
-        Log.e( TAG, "onSharedPreferenceChanged: Key <" + key + "> was not found an GasPickerPreference! Abort!" );
-        return;
-      }
-      try
-      {
-        gasNr = Integer.parseInt( key.replaceAll( gasKeyStub, "" ) );
-      }
-      catch( NumberFormatException ex )
-      {
-        Log.e( TAG, "can't inspect gasnumber (" + ex.getLocalizedMessage() + ")" );
-        return;
-      }
-      theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_gas ), true );
-      //
-      // hole mal die Gaseinstellungen
-      //
-      gasParms = gpp.getValue();
-      setGasSummary( gasNr, gpp );
-      FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
-      ignorePrefChange = true;
-      fActivity.writeGasSetup( gasNr, gasParms );
+      gasNr = Integer.parseInt( key.replaceAll( gasKeyStub, "" ) );
+      gpp = gasPrefs.get( gasNr );
     }
+    catch( NumberFormatException ex )
+    {
+      Log.e( TAG, "can't inspect gasnumber (" + ex.getLocalizedMessage() + ")" );
+      return;
+    }
+    catch( IndexOutOfBoundsException ex )
+    {
+      Log.e( TAG, "gas preference not in List (" + ex.getLocalizedMessage() + ")" );
+      return;
+    }
+    if( gpp == null )
+    {
+      Log.e( TAG, "onSharedPreferenceChanged: Key <" + key + "> was not found an GasPickerPreference! Abort!" );
+      return;
+    }
+    theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_gas ), true );
+    //
+    // hole mal die Gaseinstellungen
+    //
+    gasParms = gpp.getValue();
+    setGasSummary( gasNr, gasParms );
+    FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
+    ignorePrefChange = true;
+    fActivity.writeGasSetup( gasNr, gasParms );
     Log.v( TAG, "onSharedPreferenceChanged()....OK" );
   }
 
@@ -473,29 +466,28 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   {
     super.onViewCreated( view, savedInstanceState );
     Log.v( TAG, "onViewCreated..." );
-    PreferenceScreen ps = getPreferenceScreen();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "this preferencescreen has <" + ps.getPreferenceCount() + "> preferenes." );
-    for( int prefIdx = 0; prefIdx < ps.getPreferenceCount(); prefIdx++ )
+    gasPrefs.clear();
+    //
+    // alle Gase generisch durch (8 Gase sind im SPX42)
+    //
+    for( int idx = 0; idx < 8; idx++ )
     {
-      Preference pref = ps.getPreference( prefIdx );
-      if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "The Preference <%s> is number %d", pref.getTitle(), prefIdx ) );
-      // jede ungerade Zeile färben
-      if( prefIdx % 2 > 0 )
+      String key = String.format( gasKeyTemplate, idx );
+      GasPickerPreference gP = ( GasPickerPreference )getPreferenceScreen().findPreference( key );
+      gasPrefs.add( gP );
+      if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "The Preference <%s> is number %d", gP.getTitle(), idx ) );
+      if( idx % 2 > 0 )
       {
         if( FragmentCommonActivity.getAppStyle() == R.style.AppDarkTheme )
         {
           // dunkles Thema
-          pref.setLayoutResource( R.layout.preference_dark );
+          gP.setLayoutResource( R.layout.preference_dark );
         }
         else
         {
           // helles Thema
-          pref.setLayoutResource( R.layout.preference_light );
+          gP.setLayoutResource( R.layout.preference_light );
         }
-      }
-      else
-      {
-        pref.setLayoutResource( R.layout.preference );
       }
     }
   }
@@ -518,9 +510,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     //
     for( int idx = 0; idx < 8; idx++ )
     {
-      String key = String.format( gasKeyTemplate, idx );
-      GasPickerPreference gP = ( GasPickerPreference )getPreferenceScreen().findPreference( key );
-      setGasSummary( idx, gP );
+      setGasSummary( idx );
     }
   }
 
@@ -538,14 +528,34 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
    *          GasPickerPreference Referenz
    * @param gasParms
    */
-  private void setGasSummary( int gasNr, GasPickerPreference gpp )
+  private void setGasSummary( int gasNr )
   {
-    String gasName, gasExt;
     SPX42GasParms gasParms;
     //
     // hole mal die Gaseinstellungen
     //
-    gasParms = gpp.getValue();
+    gasParms = gasPrefs.get( gasNr ).getValue();
+    setGasSummary( gasNr, gasParms );
+  }
+
+  /**
+   * 
+   * setze eine Gas-summary (Beschreibung in der Preference
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 23.07.2013
+   * @param gasNr
+   * @param gpp
+   * @param gasParms
+   */
+  private void setGasSummary( int gasNr, SPX42GasParms gasParms )
+  {
+    String gasName, gasExt;
+    GasPickerPreference gpp;
+    gpp = gasPrefs.get( gasNr );
     //
     // baue den String für das Summary zusammen
     //
