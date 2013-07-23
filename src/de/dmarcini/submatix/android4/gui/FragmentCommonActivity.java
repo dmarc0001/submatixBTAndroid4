@@ -10,6 +10,7 @@ package de.dmarcini.submatix.android4.gui;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -37,8 +38,8 @@ import de.dmarcini.submatix.android4.comm.BlueThoothComService;
 import de.dmarcini.submatix.android4.comm.BlueThoothComService.LocalBinder;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.content.ContentSwitcher;
+import de.dmarcini.submatix.android4.utils.GasUpdateEntity;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
-import de.dmarcini.submatix.android4.utils.SPX42GasParms;
 
 /**
  * Der gemeinsame Code der List- und Detailactivity
@@ -1317,14 +1318,13 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 18.07.2013
-   * @param gasNr
-   * @param gasParms
+   * @param gasUpdates
    */
-  public void writeGasSetup( int gasNr, SPX42GasParms gasParms )
+  public void writeGasSetup( Vector<GasUpdateEntity> gasUpdates )
   {
     if( mService != null )
     {
-      mService.writeGasSetup( gasNr, gasParms );
+      mService.writeGasSetup( gasUpdates );
     }
   }
 }
