@@ -228,6 +228,14 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
         msgRecivedAlive( smsg );
         break;
       // ################################################################
+      // ignoriere...
+      // ################################################################
+      case ProjectConst.MESSAGE_SERIAL_READ:
+      case ProjectConst.MESSAGE_MANUFACTURER_READ:
+      case ProjectConst.MESSAGE_FWVERSION_READ:
+      case ProjectConst.MESSAGE_LICENSE_STATE_READ:
+        break;
+      // ################################################################
       // Sonst....
       // ################################################################
       default:
@@ -297,7 +305,14 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   @Override
   public void msgDisconnected( BtServiceMessage msg )
   {
+    int index;
     setToggleButtonTextAndStat( ProjectConst.CONN_STATE_NONE );
+    index = devSpinner.getSelectedItemPosition();
+    btArrayAdapter = ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter();
+    btArrayAdapter.setDevicesOffline();
+    // Update erzwingen
+    devSpinner.setAdapter( btArrayAdapter );
+    devSpinner.setSelection( index, true );
   }
 
   @Override
