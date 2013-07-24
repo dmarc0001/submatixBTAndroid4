@@ -47,16 +47,18 @@ import de.dmarcini.submatix.android4.utils.SPX42GasParms;
  */
 public class SPX42GaslistPreferencesFragment extends PreferenceFragment implements IBtServiceListener, OnSharedPreferenceChangeListener
 {
-  private static final String                  TAG              = SPX42GaslistPreferencesFragment.class.getSimpleName();
-  private static final int                     maxEvents        = 8;
-  private static final Pattern                 fieldPatternKdo  = Pattern.compile( "~\\d+" );
-  private String                               gasKeyTemplate   = null;
-  private String                               gasKeyStub       = null;
-  private Activity                             runningActivity  = null;
-  private boolean                              ignorePrefChange = false;
-  private CommToast                            theToast         = null;
+  private static final String                  TAG               = SPX42GaslistPreferencesFragment.class.getSimpleName();
+  private static final int                     maxEvents         = 8;
+  private static final Pattern                 fieldPatternKdo   = Pattern.compile( "~\\d+" );
+  private String                               gasKeyTemplate    = null;
+  private String                               gasKeyStub        = null;
+  private Activity                             runningActivity   = null;
+  private boolean                              ignorePrefChange  = false;
+  private CommToast                            theToast          = null;
   private String                               diluent1String, diluent2String, noDiluent, bailoutString;
-  private final ArrayList<GasPickerPreference> gasPrefs         = new ArrayList<GasPickerPreference>();
+  private int                                  waitForGasNumber  = 0;
+  private int                                  waitForGasOkCount = 0;
+  private final ArrayList<GasPickerPreference> gasPrefs          = new ArrayList<GasPickerPreference>();
 
   @Override
   public void handleMessages( int what, BtServiceMessage smsg )
@@ -147,6 +149,8 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     catch( InterruptedException ex )
     {}
     fActivity.askForGasFromSPX();
+    waitForGasOkCount = 0;
+    waitForGasNumber = 0;
     ignorePrefChange = false;
   }
 
@@ -268,8 +272,21 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
    */
   private void msgReciveGasSetupAck( BtServiceMessage smsg )
   {
+    int gasNr;
+    //
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX SET GAS settings ACK recived" );
-    theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_gas_ok ), false );
+    if( waitForGasOkCount > 1 )
+    {
+      // zähle die zu erwartenden ACK herunter...
+      waitForGasOkCount--;
+      gasNr = waitForGasNumber - waitForGasOkCount;
+      theToast.showConnectionToast( String.format( getResources().getString( R.string.toast_comm_set_gas_count ), gasNr, waitForGasNumber ), false );
+    }
+    else
+    {
+      // alle zu erwartenden ACK angekommen, BIN FERTIG!
+      theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_gas_ok ), false );
+    }
     ignorePrefChange = false;
   }
 
@@ -409,6 +426,8 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     //
     getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener( this );
     ignorePrefChange = true;
+    waitForGasOkCount = 0;
+    waitForGasNumber = 0;
     // Service Listener setzen
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     if( BuildConfig.DEBUG ) Log.d( TAG, "onResume(): set service listener for preferences fragment..." );
@@ -480,6 +499,8 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     }
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     ignorePrefChange = true;
+    // wie viele ACK muss ich abwarten?
+    waitForGasOkCount = waitForGasNumber = gasUpdates.size();
     fActivity.writeGasSetup( gasUpdates );
     Log.v( TAG, "onSharedPreferenceChanged....OK" );
   }

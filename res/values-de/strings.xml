@@ -41,6 +41,7 @@
     <string name="toast_comm_set_units_alert">Sende Einheiteneinstellungen: FEHLER</string>
     <string name="toast_comm_set_gas">Sende Gaseinstellung</string>
     <string name="toast_comm_set_gas_ok">Sende Gaseinstellung: OK</string>
+    <string name="toast_comm_set_gas_count" formatted="false">Sende Gas #%02d von #%02d</string>
     <string name="toast_comm_set_gas_alert">Sende Gaseinstellung: FEHLER</string>
     
     <!-- Dialogboxen  -->
