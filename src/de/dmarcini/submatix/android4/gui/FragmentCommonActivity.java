@@ -107,7 +107,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
     {
       if( !( msg.obj instanceof BtServiceMessage ) )
       {
-        Log.e(TAG,"Recived Message is NOT type of BtServiceMessage!");
+        Log.e(TAG,"Handler::handleMessage: Recived Message is NOT type of BtServiceMessage!");
         return;
       }
       BtServiceMessage smsg = (BtServiceMessage)msg.obj;
@@ -134,7 +134,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
    */
   public void addServiceListener( IBtServiceListener listener )
   {
-    Log.v( TAG, "setServiceListener()..." );
+    Log.v( TAG, "setServiceListener..." );
     if( !serviceListener.contains( listener ) )
     {
       serviceListener.add( listener );
@@ -184,10 +184,10 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
    */
   private void askEnableBT()
   {
-    Log.v( TAG, "askEnableBT()..." );
+    Log.v( TAG, "askEnableBT..." );
     Intent enableIntent = new Intent( BluetoothAdapter.ACTION_REQUEST_ENABLE );
     startActivityForResult( enableIntent, ProjectConst.REQUEST_ENABLE_BT );
-    Log.v( TAG, "askEnableBT()...OK" );
+    Log.v( TAG, "askEnableBT...OK" );
   }
 
   /**

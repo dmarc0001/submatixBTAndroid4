@@ -76,7 +76,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
                                                             BluetoothDevice device = intent.getParcelableExtra( BluetoothDevice.EXTRA_DEVICE );
                                                             if( progressDialog != null )
                                                             {
-                                                              Log.v( TAG, "device add to progressDialog..." );
+                                                              if( BuildConfig.DEBUG ) Log.i( TAG, "device add to progressDialog..." );
                                                               // den Gerätenamen in den String aus der Resource (lokalisiert) einbauen und in die waitbox setzen
                                                               String dispStr = ( ( device.getName() == null ) ? device.getAddress() : device.getName() );
                                                               progressDialog.setMessage( String.format(
@@ -135,7 +135,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
    */
   private void fillNewAdapterWithPairedDevices()
   {
-    Log.v( TAG, "fill an ArrayAdapter with paired devices..." );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "fillNewAdapterWithPairedDevices: fill an ArrayAdapter with paired devices..." );
     if( FragmentCommonActivity.mBtAdapter == null ) return;
     //
     // die Liste leeren
@@ -148,7 +148,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     //
     // Sind dort einige vorhanden, dann ab in den adapter...
     //
-    Log.v( TAG, "fill List with devices..." );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "fillNewAdapterWithPairedDevices: fill List with devices..." );
     if( pairedDevices.size() > 0 )
     {
       // Alle gepaarten Geräte durch
@@ -172,7 +172,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     }
     else
     {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "paired Device: " + runningActivity.getString( R.string.no_device ) );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "fillNewAdapterWithPairedDevices: paired Device: " + runningActivity.getString( R.string.no_device ) );
       String[] entr = new String[BluetoothDeviceArrayAdapter.BT_DEVAR_COUNT];
       entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = runningActivity.getString( R.string.no_device );
       entr[BluetoothDeviceArrayAdapter.BT_DEVAR_MAC] = "";
@@ -231,7 +231,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
       // Sonst....
       // ################################################################
       default:
-        if( BuildConfig.DEBUG ) Log.i( TAG, "unhadled message message with id <" + smsg.getId() + "> recived!" );
+        if( BuildConfig.DEBUG ) Log.i( TAG, "handleMessages: unhadled message message with id <" + smsg.getId() + "> recived!" );
     }
   }
 
@@ -252,7 +252,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   {
     View rootView;
     //
-    Log.v( TAG, "makeConnectionView()..." );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "makeConnectionView..." );
     //
     // View aus Resource laden
     //
@@ -266,7 +266,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     connectTextView = ( TextView )rootView.findViewById( R.id.connectStatusText );
     if( discoverButton == null || devSpinner == null || connButton == null )
     {
-      throw new NullPointerException( "can init GUI (not found an Element)" );
+      throw new NullPointerException( "makeConnectionView: can't init GUI (not found an Element)" );
     }
     return( rootView );
   }
@@ -274,9 +274,9 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   @Override
   public void msgConnected( BtServiceMessage msg )
   {
-    Log.v( TAG, "msgConnected()..." );
-    setToggleButtonTextAndStat( ProjectConst.CONN_STATE_CONNECTED );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected..." );
     setSpinnerToConnectedDevice();
+    setToggleButtonTextAndStat( ProjectConst.CONN_STATE_CONNECTED );
   }
 
   @Override
@@ -323,7 +323,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   {
     super.onActivityCreated( bundle );
     runningActivity = getActivity();
-    Log.w( TAG, "ACTIVITY ATTACH" );
+    if( BuildConfig.DEBUG ) Log.i( TAG, "onActivityCreated: ACTIVITY ATTACH" );
     try
     {
       discoverButton = ( Button )runningActivity.findViewById( R.id.connectDiscoverButton );
@@ -332,7 +332,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
       connectTextView = ( TextView )runningActivity.findViewById( R.id.connectStatusText );
       if( FragmentCommonActivity.mBtAdapter != null && FragmentCommonActivity.mBtAdapter.isEnabled() )
       {
-        if( BuildConfig.DEBUG ) Log.d( TAG, "set connectFragment eventhandler..." );
+        if( BuildConfig.DEBUG ) Log.d( TAG, "onActivityCreated: set connectFragment eventhandler..." );
         devSpinner.setOnItemSelectedListener( this );
         discoverButton.setOnClickListener( this );
         connButton.setOnClickListener( this );
@@ -346,12 +346,12 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
       }
       else
       {
-        if( BuildConfig.DEBUG ) Log.d( TAG, "NOT set onClick eventhandler..." );
+        if( BuildConfig.DEBUG ) Log.d( TAG, "onActivityCreated: NOT set onClick eventhandler..." );
       }
     }
     catch( NullPointerException ex )
     {
-      Log.e( TAG, "gui objects not allocated!" );
+      Log.e( TAG, "onActivityCreated: gui objects not allocated!" );
     }
   }
 
@@ -360,14 +360,14 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   {
     super.onAttach( activity );
     runningActivity = activity;
-    Log.w( TAG, "ATTACH" );
+    if( BuildConfig.DEBUG ) Log.i( TAG, "onAttach: ATTACH" );
   }
 
   @Override
   public void onClick( View cView )
   {
     int connState = ( ( FragmentCommonActivity )runningActivity ).getConnectionStatus();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "ON CLICK!" );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onClick: ON CLICK!" );
     // btArrayAdapter = ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter();
     //
     if( cView instanceof ImageButton )
@@ -375,13 +375,13 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
       ImageButton tb = ( ImageButton )cView;
       if( devSpinner.getSelectedItemPosition() == -1 )
       {
-        Log.v( TAG, "not devices selected yet..." );
+        Log.w( TAG, "onClick: not devices selected yet..." );
         setToggleButtonTextAndStat( connState );
         return;
       }
       if( btArrayAdapter.isEmpty() || btArrayAdapter.getAlias( 0 ).startsWith( runningActivity.getString( R.string.no_device ).substring( 0, 5 ) ) )
       {
-        Log.v( TAG, "not devices in Adapter yet..." );
+        Log.w( TAG, "onClick: not devices in Adapter yet..." );
         setToggleButtonTextAndStat( connState );
         return;
       }
@@ -389,7 +389,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
       {
         case ProjectConst.CONN_STATE_NONE:
         default:
-          Log.v( TAG, "switch connect to ON" );
+          if( BuildConfig.DEBUG ) Log.d( TAG, "onClick: switch connect to ON" );
           //
           // wenn da noch einer werkelt, anhalten und kompostieren
           //
@@ -398,10 +398,10 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
           ( ( FragmentCommonActivity )runningActivity ).doConnectBtDevice( device );
           break;
         case ProjectConst.CONN_STATE_CONNECTING:
-          Log.v( TAG, "cancel connecting.." );
+          Log.i( TAG, "cancel connecting.." );
           ( ( FragmentCommonActivity )runningActivity ).doDisconnectBtDevice();
         case ProjectConst.CONN_STATE_CONNECTED:
-          Log.v( TAG, "switch connect to OFF" );
+          if( BuildConfig.DEBUG ) Log.d( TAG, "onClick: switch connect to OFF" );
           //
           // wenn da noch einer werkelt, anhalten und kompostieren
           //
@@ -412,14 +412,14 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     //
     else if( cView instanceof Button )
     {
-      Log.v( TAG, "start discovering for BT Devices..." );
+      Log.i( TAG, "onClick: start discovering for BT Devices..." );
       // ist da nur die Kennzeichnung für LEER?
       if( btArrayAdapter.isEmpty() || btArrayAdapter.getAlias( 0 ).startsWith( runningActivity.getString( R.string.no_device ).substring( 0, 5 ) ) )
       {
-        Log.v( TAG, "not devices in Adapter yet..." );
+        Log.w( TAG, "onClick: not devices in Adapter yet..." );
         btArrayAdapter.clear();
       }
-      Log.v( TAG, "start discovering for BT Devices...OK" );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "onClick: start discovering for BT Devices...OK" );
       startDiscoverBt();
       return;
     }
@@ -432,7 +432,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   public void onCreate( Bundle savedInstanceState )
   {
     super.onCreate( savedInstanceState );
-    Log.v( TAG, "onCreate()..." );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onCreate..." );
     // Funktionen der Activity nutzen
   }
 
@@ -443,13 +443,13 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
   {
     View rootView;
-    Log.v( TAG, "onCreateView()..." );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onCreateView..." );
     //
     // wenn kein Container vorhanden ist, dann gibts auch keinen View
     //
     if( container == null )
     {
-      Log.v( TAG, "onCreateView() container is NULL ..." );
+      Log.e( TAG, "onCreateView: container is NULL ..." );
       return( null );
     }
     //
@@ -457,7 +457,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     //
     if( runningActivity instanceof areaDetailActivity )
     {
-      Log.v( TAG, "onCreateView() running from areaDetailActivity ..." );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "onCreateView: running from areaDetailActivity ..." );
       return( null );
     }
     //
@@ -482,24 +482,24 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   @Override
   public void onItemSelected( AdapterView<?> arg0, View arg1, int arg2, long arg3 )
   {
-    Log.v( TAG, "ITEM Selected!" );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onItemSelected: ITEM Selected!" );
   }
 
   @Override
   public void onNothingSelected( AdapterView<?> arg0 )
   {
-    Log.v( TAG, "ITEM NOT Selected!" );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onItemSelected: ITEM NOT Selected!" );
   }
 
   @Override
   public void onPause()
   {
     super.onPause();
-    Log.v( TAG, "onPause()..." );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onPause..." );
     //
     // die abgeleiteten Objekte führen das auch aus
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onPause(): clear service listener for preferences fragment..." );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
     ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
   }
 
@@ -510,7 +510,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   public synchronized void onResume()
   {
     super.onResume();
-    Log.v( TAG, "onResume()..." );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onResume..." );
     ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
     // wenn zu diesem Zeitpunkt das Array noch nicht gefüllt ist, dann mach das nun
     if( 0 == btArrayAdapter.getCount() )
@@ -536,13 +536,13 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   {
     if( progressDialog != null )
     {
-      Log.v( TAG, "dialog dismiss...." );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "setItemsEnabledwhileDiscover: dialog dismiss...." );
       progressDialog.dismiss();
       progressDialog = null;
     }
     if( !enabled )
     {
-      Log.v( TAG, "dialog show...." );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "setItemsEnabledwhileDiscover: dialog show...." );
       progressDialog = new ProgressDialog( runningActivity );
       progressDialog.setTitle( R.string.progress_wait_for_discover_title );
       progressDialog.setIndeterminate( true );
@@ -566,7 +566,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   {
     String deviceAddr = null;
     int deviceIndex = -1;
-    Log.v( TAG, "setSpinnerToConnectedDevice()..." );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "setSpinnerToConnectedDevice..." );
     try
     {
       // wenn zu diesem Zeitpunkt das Array noch nicht gefüllt ist, dann mach das nun
@@ -575,25 +575,24 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
         fillNewAdapterWithPairedDevices();
       }
       // ArrayAdapter erfragen
-      // BluetoothDeviceArrayAdapter adapter = ( ( BluetoothDeviceArrayAdapter )( devSpinner.getAdapter() ) );
       // mit welchem Gerät bin ich verbunden?
       deviceAddr = ( ( FragmentCommonActivity )runningActivity ).getConnectedDevice();
-      Log.v( TAG, "setSpinnerToConnectedDevice() connected Device: <" + deviceAddr + ">" );
+      Log.v( TAG, "setSpinnerToConnectedDevice connected Device: <" + deviceAddr + ">" );
       // welcher index gehört zu dem Gerät?
       deviceIndex = btArrayAdapter.getIndexForMac( deviceAddr );
-      Log.v( TAG, "setSpinnerToConnectedDevice() index in Adapter: <" + deviceIndex + ">" );
+      Log.v( TAG, "setSpinnerToConnectedDevice index in Adapter: <" + deviceIndex + ">" );
       // Online Markieren
       btArrayAdapter.setDeviceIsOnline( deviceIndex );
       // Update erzwingen
       devSpinner.setAdapter( btArrayAdapter );
       // Selektieren
-      devSpinner.setSelection( deviceIndex, false );
-      Log.v( TAG, "setSpinnerToConnectedDevice() set Spinner to index <" + deviceIndex + ">" );
+      devSpinner.setSelection( deviceIndex, true );
+      Log.v( TAG, "setSpinnerToConnectedDevice set Spinner to index <" + deviceIndex + ">" );
     }
     catch( Exception ex )
     {
-      Log.e( TAG, "setSpinnerToConnectedDevice(), ex: <" + ex.getLocalizedMessage() + ">" );
-      Log.w( TAG, "setSpinnerToConnectedDevice() exception: Spinner to 0" );
+      Log.e( TAG, "setSpinnerToConnectedDevice: <" + ex.getLocalizedMessage() + ">" );
+      Log.w( TAG, "setSpinnerToConnectedDevice exception: Spinner to 0" );
       devSpinner.setSelection( 0, false );
     }
   }
@@ -640,8 +639,8 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
           connButton.setImageResource( R.drawable.bluetooth_icon_color );
           connButton.setAlpha( 1.0F );
           connButton.setEnabled( true );
-          discoverButton.setEnabled( true );
-          devSpinner.setEnabled( true );
+          discoverButton.setEnabled( false );
+          devSpinner.setEnabled( false );
           connectTextView.setText( R.string.connect_connected_device );
           connectTextView.setTextColor( res.getColor( R.color.connectFragment_connectText ) );
           break;
@@ -649,7 +648,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     }
     catch( NullPointerException ex )
     {
-      Log.e( TAG, "Nullpointer while setToggleButtonTextAndStat() : " + ex.getLocalizedMessage() );
+      Log.e( TAG, "setToggleButtonTextAndStat: Nullpointer while setToggleButtonTextAndStat() : " + ex.getLocalizedMessage() );
     }
   }
 
@@ -666,7 +665,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   private void startDiscoverBt()
   {
     // If we're already discovering, stop it
-    Log.v( TAG, "start discovering..." );
+    Log.i( TAG, "startDiscoverBt: start discovering..." );
     setItemsEnabledwhileDiscover( false );
     if( FragmentCommonActivity.mBtAdapter == null ) return;
     if( FragmentCommonActivity.mBtAdapter.isDiscovering() )
