@@ -168,7 +168,6 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
     View cView = convertView;
     ViewHolder holder = null;
     LayoutInflater mInflater = ( ( Activity )getContext() ).getLayoutInflater();
-    // LayoutInflater mInflater = ( LayoutInflater )getContext().getSystemService( Activity.LAYOUT_INFLATER_SERVICE );
     if( cView != null && ( cView.getTag() instanceof ViewHolder ) )
     {
       holder = ( ViewHolder )cView.getTag();
@@ -390,12 +389,52 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
     return( false );
   }
 
+  /**
+   * 
+   * Setze das Gerät von "position" online
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 24.07.2013
+   * @param position
+   */
   public void setDeviceIsOnline( int position )
   {
     if( position < getCount() )
     {
-      String[] fields = getItem( position );
-      fields[BT_DEVAR_ISONLINE] = "true";
+      for( int i = 0; i < getCount(); i++ )
+      {
+        String[] fields = getItem( i );
+        if( position == i )
+        {
+          fields[BT_DEVAR_ISONLINE] = "true";
+        }
+        else
+        {
+          fields[BT_DEVAR_ISONLINE] = "false";
+        }
+      }
+    }
+  }
+
+  /**
+   * 
+   * Alle Geräte offline setzen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 24.07.2013
+   */
+  public void setDevicesOffline()
+  {
+    for( int i = 0; i < getCount(); i++ )
+    {
+      String[] fields = getItem( i );
+      fields[BT_DEVAR_ISONLINE] = "false";
     }
   }
 
