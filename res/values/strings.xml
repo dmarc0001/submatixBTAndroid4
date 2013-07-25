@@ -47,10 +47,11 @@
     <!-- Dialogboxen  -->
     <string name="dialog_sure_exit">are you sure?</string>
     <string name="dialog_exit_button">EXIT</string>
-    <!-- string name="dialog_ok_button">OK</string -->
     <string name="dialog_cancel_button">Cancel</string>
     <string name="dialog_please_wait_title" formatted="false">please wait...</string>
     <string name="dialog_please_wait_read_config" formatted="false">read SPX config...</string>
+    <string name="dialog_alias_edit_title">Edit alias for Device</string>
+    
     
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title" formatted="false">Searching BT Devices..</string>
