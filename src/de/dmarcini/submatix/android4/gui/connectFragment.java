@@ -1,5 +1,6 @@
 package de.dmarcini.submatix.android4.gui;
 
+import java.io.File;
 import java.util.Set;
 
 import android.app.Activity;
@@ -12,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,6 +31,7 @@ import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.utils.BluetoothDeviceArrayAdapter;
+import de.dmarcini.submatix.android4.utils.LogDataSQLHelper;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 
 /**
@@ -49,6 +52,8 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   private Spinner                     devSpinner      = null;
   private ImageButton                 connButton      = null;
   private TextView                    connectTextView = null;
+  private LogDataSQLHelper            sqlHelper       = null;
+  private SQLiteDatabase              dBase           = null;
   protected ProgressDialog            progressDialog  = null;
   // private FragmentCommonActivity myActivity = null;
   private boolean                     runDiscovering  = false;
@@ -516,6 +521,11 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     //
     if( BuildConfig.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
     ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
+    if( dBase != null )
+    {
+      dBase.close();
+      dBase = null;
+    }
   }
 
   /**
@@ -534,6 +544,10 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     }
     // setze den verbindungsstatus visuell
     setToggleButtonTextAndStat( ( ( FragmentCommonActivity )runningActivity ).getConnectionStatus() );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onResume: create SQLite helper..." );
+    sqlHelper = new LogDataSQLHelper( getActivity().getApplicationContext(), FragmentCommonActivity.databaseDir.getAbsolutePath() + File.separator + ProjectConst.DATABASE_NAME );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onResume: open Database..." );
+    dBase = sqlHelper.getWritableDatabase();
   }
 
   /**
