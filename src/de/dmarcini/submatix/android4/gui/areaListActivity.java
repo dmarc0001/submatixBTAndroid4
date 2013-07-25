@@ -6,6 +6,9 @@
  */
 package de.dmarcini.submatix.android4.gui;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -14,6 +17,7 @@ import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.content.ContentSwitcher;
 import de.dmarcini.submatix.android4.content.ContentSwitcher.ProgItem;
+import de.dmarcini.submatix.android4.utils.ExtSdCardFinder;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 
 /**
@@ -91,6 +95,18 @@ public class areaListActivity extends FragmentCommonActivity
     {
       Log.w( TAG, "onCreate: pref version not found == make first time preferences..." );
       setDefaultPreferences();
+    }
+    //
+    // Verzeichnis für Datenbanken etc
+    //
+    databaseDir = new File( sPref.getString( "keyProgDataDirectory", getdatabeseDir().getAbsolutePath() ) );
+    if( databaseDir != null )
+    {
+      if( !databaseDir.exists() )
+      {
+        Log.i( TAG, "onCreate: create database root dir..." );
+        databaseDir.mkdirs();
+      }
     }
     //
     // guck mal. ob das ein grosses Display ist,
@@ -176,13 +192,56 @@ public class areaListActivity extends FragmentCommonActivity
     {
       editor.putString( String.format( gasKeyTemplate, i ), gasListDefault );
     }
+    //
+    // external Storage eintragen
+    //
+    databaseDir = getdatabeseDir();
+    editor.putString( "keyProgDataDirectory", databaseDir.getAbsolutePath() );
+    //
+    // alles in die Propertys
+    //
     if( editor.commit() )
     {
       if( BuildConfig.DEBUG ) Log.d( TAG, "setDefaultPreferences: wrote preferences to storeage." );
     }
     else
     {
-      Log.e( TAG, "setDefaultPreferences: CAN'T wrote preferences to storeage." );
+      Log.e( TAG, "setDefaultPreferences: CAN'T wrote preferences to storage." );
     }
+  }
+
+  /**
+   * 
+   * das Database Directory finden
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 25.07.2013
+   * @return
+   */
+  private File getdatabeseDir()
+  {
+    File extSdCard;
+    File dataBaseRoot;
+    //
+    try
+    {
+      extSdCard = ExtSdCardFinder.findExternStorage();
+    }
+    catch( FileNotFoundException ex )
+    {
+      // war wohl nix
+      Log.e( TAG, "datastore Directory is: NOT FOUND" );
+      return( null );
+    }
+    if( extSdCard.exists() && extSdCard.isDirectory() && extSdCard.canWrite() )
+    {
+      Log.i( TAG, "datastore Directory is: <" + extSdCard + ">" );
+      dataBaseRoot = new File( extSdCard + File.separator + ProjectConst.APPROOTDIR );
+      return( dataBaseRoot );
+    }
+    return( null );
   }
 }
