@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Set;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -464,6 +465,8 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
           Log.w( TAG, "onClick: not devices in Adapter yet..." );
           return;
         }
+        DialogFragment dialog = new EditAliasDialogFragment( "DEVICE", "A L I A S" );
+        dialog.show( getFragmentManager(), "NoticeDialogFragment" );
       }
     }
   }
