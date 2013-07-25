@@ -64,11 +64,11 @@ public final class ProjectConst
   public static final int SPX_LICENSE_NORMOXICTX        =  1;
   public static final int SPX_LICENSE_FULLTX            =  2;
   
+  // ANDROID:Verzeichnis für Datenbanken
+  public static final String APPROOTDIR                 = "SUBMATIXDatabase";
   // Verzeichnis für Datenbanken
   public static final String DEFAULTDATADIR             = "database";
   public static final String DEFAULTEXPORTDIR           = "export";
-  public static final String CONFIGFILENAME             = "spxLogProgram.conf";
-  public static final String DEFAULTLOGFILE             = "spxLogProgram.log";
   
   // Messages für SPX 42
   public static final String STX                        = new String( new byte[] { 0x02 } );
