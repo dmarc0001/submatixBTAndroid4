@@ -959,6 +959,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     else if( dialog instanceof EditAliasDialogFragment )
     {
       Log.i( TAG, "User will edit alias..." );
+      EditAliasDialogFragment editDialog = ( EditAliasDialogFragment )dialog;
+      mHandler.obtainMessage( ProjectConst.MESSAGE_DEVALIAS_SET, new BtServiceMessage( ProjectConst.MESSAGE_DEVALIAS_SET, new String[]
+      { editDialog.getDeviceName(), editDialog.getAliasName() } ) ).sendToTarget();
     }
   }
 
