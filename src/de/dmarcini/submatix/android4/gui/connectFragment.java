@@ -52,7 +52,6 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   private Spinner                     devSpinner      = null;
   private ImageButton                 connButton      = null;
   private TextView                    connectTextView = null;
-  private LogDataSQLHelper            sqlHelper       = null;
   private SQLiteDatabase              dBase           = null;
   protected ProgressDialog            progressDialog  = null;
   // private FragmentCommonActivity myActivity = null;
@@ -381,6 +380,14 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     super.onAttach( activity );
     runningActivity = activity;
     if( BuildConfig.DEBUG ) Log.i( TAG, "onAttach: ATTACH" );
+    //
+    // die Datenbank öffnen
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onAttach: create SQLite helper..." );
+    LogDataSQLHelper sqlHelper = new LogDataSQLHelper( getActivity().getApplicationContext(), FragmentCommonActivity.databaseDir.getAbsolutePath() + File.separator
+            + ProjectConst.DATABASE_NAME );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onAttach: open Database..." );
+    dBase = sqlHelper.getWritableDatabase();
   }
 
   @Override
@@ -497,6 +504,15 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
       FragmentCommonActivity.mBtAdapter.cancelDiscovery();
     }
     ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
+    //
+    // Datenbank wieder schliessen
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "onDestroy: close Database..." );
+    if( dBase != null )
+    {
+      dBase.close();
+      dBase = null;
+    }
   }
 
   @Override
@@ -521,11 +537,6 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     //
     if( BuildConfig.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
     ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
-    if( dBase != null )
-    {
-      dBase.close();
-      dBase = null;
-    }
   }
 
   /**
@@ -544,10 +555,6 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     }
     // setze den verbindungsstatus visuell
     setToggleButtonTextAndStat( ( ( FragmentCommonActivity )runningActivity ).getConnectionStatus() );
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onResume: create SQLite helper..." );
-    sqlHelper = new LogDataSQLHelper( getActivity().getApplicationContext(), FragmentCommonActivity.databaseDir.getAbsolutePath() + File.separator + ProjectConst.DATABASE_NAME );
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onResume: open Database..." );
-    dBase = sqlHelper.getWritableDatabase();
   }
 
   /**
