@@ -52,7 +52,7 @@
         android:textColor="@color/connectFragment.disconnectText" />
 
     <Button
-        android:id="@+id/aliasEditButton"
+        android:id="@+id/connectAliasEditButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="end"

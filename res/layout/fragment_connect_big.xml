@@ -131,7 +131,7 @@
             android:contentDescription="@string/spacer_string"/>
 
         <Button
-            android:id="@+id/aliasEditButton"
+            android:id="@+id/connectAliasEditButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/default_left_right_margin"
