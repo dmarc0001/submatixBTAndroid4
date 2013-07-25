@@ -8,16 +8,19 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.utils.NoticeDialogListener;
 
-public class AreYouSureDialogFragment extends DialogFragment
+public class EditAliasDialogFragment extends DialogFragment
 {
-  private static final String  TAG       = AreYouSureDialogFragment.class.getSimpleName();
-  private String               msg       = null;
-  private Dialog               alDial    = null;
+  private static final String  TAG        = EditAliasDialogFragment.class.getSimpleName();
+  private String               msg        = null;
+  private String               deviceName = null;
+  private String               aliasName  = null;
+  private Dialog               alDial     = null;
   // Use this instance of the interface to deliver action events
-  private NoticeDialogListener mListener = null;
+  private NoticeDialogListener mListener  = null;
 
   /**
    * 
@@ -30,7 +33,7 @@ public class AreYouSureDialogFragment extends DialogFragment
    *         Stand: 02.11.2012
    */
   @SuppressWarnings( "unused" )
-  private AreYouSureDialogFragment()
+  private EditAliasDialogFragment()
   {}
 
   /**
@@ -44,10 +47,12 @@ public class AreYouSureDialogFragment extends DialogFragment
    *         Stand: 02.11.2012
    * @param msg
    */
-  public AreYouSureDialogFragment( String msg )
+  public EditAliasDialogFragment( String msg, String device, String alias )
   {
     super();
     this.msg = msg;
+    this.aliasName = alias;
+    this.deviceName = device;
   }
 
   @Override
@@ -55,13 +60,18 @@ public class AreYouSureDialogFragment extends DialogFragment
   {
     // Benutze die Builderklasse zum erstellen des Dialogs
     AlertDialog.Builder builder = new AlertDialog.Builder( getActivity() );
-    builder.setMessage( msg );
+    // Get the layout inflater
+    LayoutInflater inflater = getActivity().getLayoutInflater();
+    // Inflate and set the layout for the dialog
+    // Pass null as the parent view because its going in the dialog layout
+    builder.setView( inflater.inflate( R.layout.alias_edit_dialog_fragment, null ) );
+    // Buttons erzeugen
     builder.setPositiveButton( R.string.dialog_exit_button, new DialogInterface.OnClickListener() {
       @Override
       public void onClick( DialogInterface dialog, int id )
       {
         // Gib in der App bescheid, ich will es so!
-        mListener.onDialogPositiveClick( AreYouSureDialogFragment.this );
+        mListener.onDialogPositiveClick( EditAliasDialogFragment.this );
       }
     } );
     builder.setNegativeButton( R.string.dialog_cancel_button, new DialogInterface.OnClickListener() {
@@ -69,7 +79,7 @@ public class AreYouSureDialogFragment extends DialogFragment
       public void onClick( DialogInterface dialog, int id )
       {
         // Abbruch!
-        mListener.onDialogNegativeClick( AreYouSureDialogFragment.this );
+        mListener.onDialogNegativeClick( EditAliasDialogFragment.this );
       }
     } );
     // Create the AlertDialog object and return it
