@@ -116,13 +116,43 @@
         
     </TableRow>
     
+    
+    <TableRow
+        android:id="@+id/contentRow4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="45dp" >
+
+        <ImageView
+            android:id="@+id/spaceImageView07"
+            android:layout_weight="0.2"
+            android:layout_height="match_parent" 
+            android:contentDescription="@string/spacer_string"/>
+
+        <Button
+            android:id="@+id/aliasEditButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/default_left_right_margin"
+            android:layout_weight="0.6"
+            android:text="@string/connect_editalias_button_title" />
+        
+        <ImageView
+            android:id="@+id/spaceImageView08"
+            android:layout_weight="0.2"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/spacer_string" />
+    </TableRow>
+    
+    
     <TableRow
         android:id="@+id/spacerRowBottom"
         android:layout_width="wrap_content"
         android:layout_height="55dp" >
 
        <ImageView
-           android:id="@+id/spaceImageView07"
+           android:id="@+id/spaceImageView09"
            android:layout_width="30dp"
            android:layout_height="55dp"
            android:layout_weight="1.0"
