@@ -7,6 +7,7 @@
  */
 package de.dmarcini.submatix.android4.gui;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -51,6 +52,7 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
   private static final String                 TAG             = FragmentCommonActivity.class.getSimpleName();
   private static final String                 SERVICENAME     = BlueThoothComService.class.getCanonicalName();
   private static final String                 PACKAGENAME     = "de.dmarcini.submatix.android4";
+  protected static File                       databaseDir     = null;
   protected static boolean                    mTwoPane        = false;
   protected static boolean                    isIndividual    = false;
   protected static int                        mixLicense      = ProjectConst.SPX_LICENSE_NOT_SET;             // License State 0=Nitrox,1=Normoxic Trimix,2=Full Trimix
