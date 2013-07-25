@@ -56,7 +56,6 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   private TextView                    connectTextView = null;
   private SQLiteDatabase              dBase           = null;
   protected ProgressDialog            progressDialog  = null;
-  // private FragmentCommonActivity myActivity = null;
   private boolean                     runDiscovering  = false;
   private Activity                    runningActivity = null;
   //
@@ -232,6 +231,12 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
       // ################################################################
       case ProjectConst.MESSAGE_SPXALIVE:
         msgRecivedAlive( smsg );
+        break;
+      // ################################################################
+      // Alias editiert
+      // ################################################################
+      case ProjectConst.MESSAGE_DEVALIAS_SET:
+        Log.e( TAG, "############### EDITALIAS #########################" );
         break;
       // ################################################################
       // ignoriere...
@@ -465,8 +470,12 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
           Log.w( TAG, "onClick: not devices in Adapter yet..." );
           return;
         }
-        DialogFragment dialog = new EditAliasDialogFragment( "DEVICE", "A L I A S" );
-        dialog.show( getFragmentManager(), "NoticeDialogFragment" );
+        //
+        // erzeuge den Dialog zum Bearbeiten des Alias
+        //
+        DialogFragment dialog = new EditAliasDialogFragment( btArrayAdapter.getDevName( devSpinner.getSelectedItemPosition() ), btArrayAdapter.getAlias( devSpinner
+                .getSelectedItemPosition() ) );
+        dialog.show( getFragmentManager(), "EditAliasDialogFragment" );
       }
     }
   }
