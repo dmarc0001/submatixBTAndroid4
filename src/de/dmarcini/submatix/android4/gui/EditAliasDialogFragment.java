@@ -126,4 +126,36 @@ public class EditAliasDialogFragment extends DialogFragment
     super.show( manager, tag );
     Log.v( TAG, "show(manager,tag)..." );
   }
+
+  /**
+   * 
+   * gib den Gerätenamen zurück
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 25.07.2013
+   * @return
+   */
+  public String getDeviceName()
+  {
+    return( deviceName );
+  }
+
+  /**
+   * 
+   * Gib den (editierten) Aliasnamen zurück
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 25.07.2013
+   * @return
+   */
+  public String getAliasName()
+  {
+    return( aliasName );
+  }
 }
