@@ -9,13 +9,14 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.utils.NoticeDialogListener;
 
 public class EditAliasDialogFragment extends DialogFragment
 {
   private static final String  TAG        = EditAliasDialogFragment.class.getSimpleName();
-  private String               msg        = null;
   private String               deviceName = null;
   private String               aliasName  = null;
   private Dialog               alDial     = null;
@@ -47,10 +48,9 @@ public class EditAliasDialogFragment extends DialogFragment
    *         Stand: 02.11.2012
    * @param msg
    */
-  public EditAliasDialogFragment( String msg, String device, String alias )
+  public EditAliasDialogFragment( String device, String alias )
   {
     super();
-    this.msg = msg;
     this.aliasName = alias;
     this.deviceName = device;
   }
@@ -58,15 +58,29 @@ public class EditAliasDialogFragment extends DialogFragment
   @Override
   public Dialog onCreateDialog( Bundle savedInstanceState )
   {
+    View rootView;
+    TextView tv;
+    //
     // Benutze die Builderklasse zum erstellen des Dialogs
     AlertDialog.Builder builder = new AlertDialog.Builder( getActivity() );
     // Get the layout inflater
     LayoutInflater inflater = getActivity().getLayoutInflater();
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    builder.setView( inflater.inflate( R.layout.alias_edit_dialog_fragment, null ) );
+    rootView = inflater.inflate( R.layout.alias_edit_dialog_fragment, null );
+    //
+    // die Texte einfügen, natürlich
+    //
+    tv = ( TextView )rootView.findViewById( R.id.aliasEditDialogDeviceTextView );
+    tv.setText( deviceName );
+    tv = ( TextView )rootView.findViewById( R.id.aliasEditDialogAliasEditTextView );
+    tv.setText( aliasName );
+    //
+    // jetzt dem Builder das View übergeben
+    //
+    builder.setView( rootView );
     // Buttons erzeugen
-    builder.setPositiveButton( R.string.dialog_exit_button, new DialogInterface.OnClickListener() {
+    builder.setPositiveButton( R.string.dialog_save_button, new DialogInterface.OnClickListener() {
       @Override
       public void onClick( DialogInterface dialog, int id )
       {
