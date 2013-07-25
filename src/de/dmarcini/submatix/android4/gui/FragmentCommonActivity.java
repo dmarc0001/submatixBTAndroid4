@@ -40,6 +40,7 @@ import de.dmarcini.submatix.android4.comm.BlueThoothComService.LocalBinder;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.content.ContentSwitcher;
 import de.dmarcini.submatix.android4.utils.GasUpdateEntity;
+import de.dmarcini.submatix.android4.utils.NoticeDialogListener;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 
 /**
@@ -47,7 +48,7 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
  * 
  * @author dmarc
  */
-public class FragmentCommonActivity extends Activity implements AreYouSureDialogFragment.NoticeDialogListener, IBtServiceListener
+public class FragmentCommonActivity extends Activity implements NoticeDialogListener, IBtServiceListener
 {
   private static final String                 TAG             = FragmentCommonActivity.class.getSimpleName();
   private static final String                 SERVICENAME     = BlueThoothComService.class.getCanonicalName();
@@ -954,6 +955,10 @@ public class FragmentCommonActivity extends Activity implements AreYouSureDialog
         }
         finish();
       }
+    }
+    else if( dialog instanceof EditAliasDialogFragment )
+    {
+      Log.i( TAG, "User will edit alias..." );
     }
   }
 
