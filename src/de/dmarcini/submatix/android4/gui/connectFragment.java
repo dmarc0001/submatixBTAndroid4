@@ -49,6 +49,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   public static final String          TAG             = connectFragment.class.getSimpleName();
   private BluetoothDeviceArrayAdapter btArrayAdapter  = null;
   private Button                      discoverButton  = null;
+  private Button                      aliasEditButton = null;
   private Spinner                     devSpinner      = null;
   private ImageButton                 connButton      = null;
   private TextView                    connectTextView = null;
@@ -276,6 +277,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     devSpinner = ( Spinner )rootView.findViewById( R.id.connectBlueToothDeviceSpinner );
     connButton = ( ImageButton )rootView.findViewById( R.id.connectButton );
     connectTextView = ( TextView )rootView.findViewById( R.id.connectStatusText );
+    aliasEditButton = ( Button )rootView.findViewById( R.id.connectAliasEditButton );
     if( discoverButton == null || devSpinner == null || connButton == null )
     {
       throw new NullPointerException( "makeConnectionView: can't init GUI (not found an Element)" );
@@ -348,12 +350,14 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
       discoverButton = ( Button )runningActivity.findViewById( R.id.connectDiscoverButton );
       devSpinner = ( Spinner )runningActivity.findViewById( R.id.connectBlueToothDeviceSpinner );
       connButton = ( ImageButton )runningActivity.findViewById( R.id.connectButton );
+      aliasEditButton = ( Button )runningActivity.findViewById( R.id.connectAliasEditButton );
       connectTextView = ( TextView )runningActivity.findViewById( R.id.connectStatusText );
       if( FragmentCommonActivity.mBtAdapter != null && FragmentCommonActivity.mBtAdapter.isEnabled() )
       {
         if( BuildConfig.DEBUG ) Log.d( TAG, "onActivityCreated: set connectFragment eventhandler..." );
         devSpinner.setOnItemSelectedListener( this );
         discoverButton.setOnClickListener( this );
+        aliasEditButton.setOnClickListener( this );
         connButton.setOnClickListener( this );
         //
         // den eigenen ArrayAdapter machen
@@ -439,16 +443,28 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     //
     else if( cView instanceof Button )
     {
-      Log.i( TAG, "onClick: start discovering for BT Devices..." );
-      // ist da nur die Kennzeichnung für LEER?
-      if( btArrayAdapter.isEmpty() || btArrayAdapter.getAlias( 0 ).startsWith( runningActivity.getString( R.string.no_device ).substring( 0, 5 ) ) )
+      if( ( Button )cView == discoverButton )
       {
-        Log.w( TAG, "onClick: not devices in Adapter yet..." );
-        btArrayAdapter.clear();
+        Log.i( TAG, "onClick: start discovering for BT Devices..." );
+        // ist da nur die Kennzeichnung für LEER?
+        if( btArrayAdapter.isEmpty() || btArrayAdapter.getAlias( 0 ).startsWith( runningActivity.getString( R.string.no_device ).substring( 0, 5 ) ) )
+        {
+          Log.w( TAG, "onClick: not devices in Adapter yet..." );
+          btArrayAdapter.clear();
+        }
+        if( BuildConfig.DEBUG ) Log.d( TAG, "onClick: start discovering for BT Devices...OK" );
+        startDiscoverBt();
+        return;
       }
-      if( BuildConfig.DEBUG ) Log.d( TAG, "onClick: start discovering for BT Devices...OK" );
-      startDiscoverBt();
-      return;
+      else if( ( Button )cView == aliasEditButton )
+      {
+        Log.i( TAG, "onClick: start edit current alias..." );
+        if( btArrayAdapter.isEmpty() || btArrayAdapter.getAlias( 0 ).startsWith( runningActivity.getString( R.string.no_device ).substring( 0, 5 ) ) )
+        {
+          Log.w( TAG, "onClick: not devices in Adapter yet..." );
+          return;
+        }
+      }
     }
   }
 
@@ -658,6 +674,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
           connButton.setAlpha( 1.0F );
           connButton.setEnabled( true );
           discoverButton.setEnabled( true );
+          aliasEditButton.setEnabled( true );
           devSpinner.setEnabled( true );
           connectTextView.setText( R.string.connect_disconnect_device );
           connectTextView.setTextColor( res.getColor( R.color.connectFragment_disconnectText ) );
@@ -667,6 +684,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
           connButton.setAlpha( 0.5F );
           connButton.setEnabled( true );
           discoverButton.setEnabled( false );
+          aliasEditButton.setEnabled( false );
           devSpinner.setEnabled( false );
           connectTextView.setText( R.string.connect_connecting_device );
           connectTextView.setTextColor( res.getColor( R.color.connectFragment_connectingText ) );
@@ -676,6 +694,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
           connButton.setAlpha( 1.0F );
           connButton.setEnabled( true );
           discoverButton.setEnabled( false );
+          aliasEditButton.setEnabled( false );
           devSpinner.setEnabled( false );
           connectTextView.setText( R.string.connect_connected_device );
           connectTextView.setTextColor( res.getColor( R.color.connectFragment_connectText ) );
