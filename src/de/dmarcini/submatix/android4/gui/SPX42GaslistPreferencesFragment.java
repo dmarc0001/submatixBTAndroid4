@@ -611,7 +611,9 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     if( gasParms.bo ) gasExt += bailoutString;
     gasName = GasUtilitys.getNameForGas( gasParms.o2, gasParms.he ) + gasExt;
     // schreib schön!
-    gpp.setSummary( String.format( getResources().getString( R.string.conf_gaslist_summary_first ), gasNr + 1, gasName ) );
+    if( BuildConfig.DEBUG )
+      Log.d( TAG, String.format( "setGasSummary: gas number <%02d> has O2 <%02d%%>, MOD: %f ", gasNr, gasParms.o2, GasUtilitys.getMODForGasMetric( gasParms.o2 ) ) );
+    gpp.setSummary( String.format( getResources().getString( R.string.conf_gaslist_summary_first ), gasNr + 1, gasName, Math.round( GasUtilitys.getMODForGasMetric( gasParms.o2 ) ) ) );
     if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "setGasSummary: gas number <%02d> has now summary <%s>", gasNr, gasName ) );
   }
 
