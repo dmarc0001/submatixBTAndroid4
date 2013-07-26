@@ -961,7 +961,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       Log.i( TAG, "User will edit alias..." );
       EditAliasDialogFragment editDialog = ( EditAliasDialogFragment )dialog;
       mHandler.obtainMessage( ProjectConst.MESSAGE_DEVALIAS_SET, new BtServiceMessage( ProjectConst.MESSAGE_DEVALIAS_SET, new String[]
-      { editDialog.getDeviceName(), editDialog.getAliasName() } ) ).sendToTarget();
+      { editDialog.getDeviceName(), editDialog.getAliasName(), editDialog.getMac() } ) ).sendToTarget();
     }
   }
 
