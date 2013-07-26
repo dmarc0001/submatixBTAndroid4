@@ -192,7 +192,7 @@
     
     <!-- Detailseite Gasliste -->
     <string name="gaslist_headline">Gaslist SPX42</string>
-    <string name="conf_gaslist_summary_first" formatted="false">current gas %02d is %s</string>
+    <string name="conf_gaslist_summary_first" formatted="false">current gas %02d is %s, MOD is %dm (clearwater)</string>
     <string name="conf_gaslist_summary_diluent1"> - DIL1</string>
     <string name="conf_gaslist_summary_diluent2"> - DIL2</string>
     <string name="conf_gaslist_summary_no_diluent">       </string>
