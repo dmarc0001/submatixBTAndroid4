@@ -340,6 +340,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
           devSpinner.setAdapter( btArrayAdapter );
           // Selektieren
           devSpinner.setSelection( dIndex, true );
+          btArrayAdapter = ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter();
         }
         else
         {
