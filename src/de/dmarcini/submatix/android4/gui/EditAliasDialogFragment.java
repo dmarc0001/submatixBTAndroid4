@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.utils.NoticeDialogListener;
@@ -17,9 +18,10 @@ import de.dmarcini.submatix.android4.utils.NoticeDialogListener;
 public class EditAliasDialogFragment extends DialogFragment
 {
   private static final String  TAG        = EditAliasDialogFragment.class.getSimpleName();
+  private View                 rootView;
   private String               deviceName = null;
   private String               aliasName  = null;
-  private Dialog               alDial     = null;
+  private String               macAddr    = null;
   // Use this instance of the interface to deliver action events
   private NoticeDialogListener mListener  = null;
 
@@ -48,18 +50,17 @@ public class EditAliasDialogFragment extends DialogFragment
    *         Stand: 02.11.2012
    * @param msg
    */
-  public EditAliasDialogFragment( String device, String alias )
+  public EditAliasDialogFragment( String device, String alias, String mac )
   {
     super();
     this.aliasName = alias;
     this.deviceName = device;
+    this.macAddr = mac;
   }
 
   @Override
   public Dialog onCreateDialog( Bundle savedInstanceState )
   {
-    View rootView;
-    TextView tv;
     //
     // Benutze die Builderklasse zum erstellen des Dialogs
     AlertDialog.Builder builder = new AlertDialog.Builder( getActivity() );
@@ -71,10 +72,12 @@ public class EditAliasDialogFragment extends DialogFragment
     //
     // die Texte einfügen, natürlich
     //
-    tv = ( TextView )rootView.findViewById( R.id.aliasEditDialogDeviceTextView );
+    TextView tv = ( TextView )rootView.findViewById( R.id.aliasEditDialogDeviceTextView );
     tv.setText( deviceName );
-    tv = ( TextView )rootView.findViewById( R.id.aliasEditDialogAliasEditTextView );
-    tv.setText( aliasName );
+    // das wird ein editierbarer Text!
+    EditText ed = ( EditText )rootView.findViewById( R.id.aliasEditDialogAliasEditTextView );
+    ed.setText( aliasName, TextView.BufferType.EDITABLE );
+    ed.selectAll();
     //
     // jetzt dem Builder das View übergeben
     //
@@ -84,7 +87,10 @@ public class EditAliasDialogFragment extends DialogFragment
       @Override
       public void onClick( DialogInterface dialog, int id )
       {
+        EditText ed;
         // Gib in der App bescheid, ich will es so!
+        ed = ( EditText )rootView.findViewById( R.id.aliasEditDialogAliasEditTextView );
+        aliasName = ed.getText().toString();
         mListener.onDialogPositiveClick( EditAliasDialogFragment.this );
       }
     } );
@@ -97,8 +103,7 @@ public class EditAliasDialogFragment extends DialogFragment
       }
     } );
     // Create the AlertDialog object and return it
-    alDial = builder.create();
-    return( alDial );
+    return( builder.create() );
   }
 
   // Überschreibe onAttach für meine Zwecke mit dem Listener
@@ -157,5 +162,21 @@ public class EditAliasDialogFragment extends DialogFragment
   public String getAliasName()
   {
     return( aliasName );
+  }
+
+  /**
+   * 
+   * Gib die MAC-Adresse des editierten Eintrages zurück
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 26.07.2013
+   * @return
+   */
+  public String getMac()
+  {
+    return( macAddr );
   }
 }
