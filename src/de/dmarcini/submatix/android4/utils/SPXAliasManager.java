@@ -1,6 +1,8 @@
 package de.dmarcini.submatix.android4.utils;
 
+import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import de.dmarcini.submatix.android4.BuildConfig;
@@ -54,10 +56,10 @@ public class SPXAliasManager
    * 
    *         Stand: 26.07.2013
    * @param mac
-   * @param defautAlias
+   * @param defaultAlias
    * @return
    */
-  public String getAliasForMac( String mac, String defautAlias )
+  public String getAliasForMac( String mac, String defaultAlias )
   {
     String sql, alias;
     Cursor cu;
@@ -73,8 +75,69 @@ public class SPXAliasManager
       // Cursor schliessen
       //
       cu.close();
+      if( BuildConfig.DEBUG ) Log.i( TAG, "getAliasForMac: found <" + alias + ">" );
       return( alias );
     }
-    return( defautAlias );
+    if( BuildConfig.DEBUG ) Log.i( TAG, "getAliasForMac: not found, use default <" + defaultAlias + ">" );
+    return( defaultAlias );
+  }
+
+  /**
+   * 
+   * Erzeuge oder update einen Alias für ein Gerät
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 26.07.2013
+   * @param mac
+   * @param devName
+   * @param alias
+   * @param serial
+   *          Kann null sein, wenn nicht bekannt, wird dann ignoriert
+   * @return
+   */
+  public boolean setAliasForMac( String mac, String devName, String alias, String serial )
+  {
+    String sql;
+    Cursor cu;
+    ContentValues values;
+    //
+    if( BuildConfig.DEBUG ) Log.i( TAG, "setAliasForMac..." );
+    sql = String.format( "select %s from %s where %s like '%s';", ProjectConst.A_ALIAS, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_MAC, mac );
+    cu = dBase.rawQuery( sql, null );
+    //
+    try
+    {
+      if( cu.moveToFirst() )
+      {
+        //
+        // ja, der alias existiert, updaten!
+        //
+        cu.close();
+        // Vorbereiten eines ContentValues Objektes
+        values = new ContentValues();
+        values.put( ProjectConst.A_ALIAS, alias );
+        values.put( ProjectConst.A_DEVNAME, devName );
+        if( serial != null ) values.put( ProjectConst.A_SERIAL, serial );
+        // Ausführen mit on-the-fly whereklausel
+        return( 0 > dBase.update( ProjectConst.A_TABLE_ALIASES, values, String.format( "%s like '%s'", ProjectConst.A_MAC, mac ), null ) );
+      }
+      //
+      // nein, das existiert noch nicht
+      //
+      values = new ContentValues();
+      values.put( ProjectConst.A_MAC, mac );
+      values.put( ProjectConst.A_DEVNAME, devName );
+      values.put( ProjectConst.A_ALIAS, alias );
+      if( serial != null ) values.put( ProjectConst.A_SERIAL, serial );
+      return( -1 < dBase.insertOrThrow( ProjectConst.A_TABLE_ALIASES, null, values ) );
+    }
+    catch( SQLException ex )
+    {
+      Log.e( TAG, "Error while setAliasForMac: <" + ex.getLocalizedMessage() + ">" );
+      return( false );
+    }
   }
 }

@@ -62,7 +62,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
     sql += ProjectConst.A_DEVNAME + " text not null, \n";
     sql += ProjectConst.A_ALIAS + " text not null, \n";
     sql += ProjectConst.A_MAC + " text not null, \n";
-    sql += ProjectConst.A_SERIAL + " text not null \n";
+    sql += ProjectConst.A_SERIAL + " text\n";
     sql += ");";
     try
     {
@@ -146,7 +146,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
     String sql = null;
     Log.i( TAG, "dropTables..." );
     // Aliase
-    sql = "drop table " + ProjectConst.A_DBALIAS + ";";
+    sql = "drop table " + ProjectConst.A_TABLE_ALIASES + ";";
     if( BuildConfig.DEBUG ) Log.d( TAG, "SQL: <" + sql + ">" );
     try
     {
