@@ -19,9 +19,9 @@ import de.dmarcini.submatix.android4.BuildConfig;
  * 
  * Die Klasse nimmt die Arbeit des �ffnens, erzeugens und updaten der Datenbanken ab.
  */
-public class LogDataSQLHelper extends SQLiteOpenHelper
+public class DataSQLHelper extends SQLiteOpenHelper
 {
-  private static final String TAG    = LogDataSQLHelper.class.getSimpleName();
+  private static final String TAG    = DataSQLHelper.class.getSimpleName();
   // Tabellenpfad und -Name
   private String              dbName = null;
   private Context             cx     = null;
@@ -36,10 +36,10 @@ public class LogDataSQLHelper extends SQLiteOpenHelper
    * @param dbn
    *          (Database Name)
    */
-  public LogDataSQLHelper( Context context, String dbn )
+  public DataSQLHelper( Context context, String dbn )
   {
     super( context, ProjectConst.DATABASE_NAME, null, ProjectConst.DATABASE_VERSION );
-    if( BuildConfig.DEBUG ) Log.d( TAG, "LogDataSQLHelper..." );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "DataSQLHelper..." );
     cx = context;
     dbName = dbn;
   }
@@ -56,11 +56,13 @@ public class LogDataSQLHelper extends SQLiteOpenHelper
     String sql;
     Log.i( TAG, "createTables..." );
     // Alias Tabelle
-    if( BuildConfig.DEBUG ) Log.d( TAG, "create table " + ProjectConst.A_DBALIAS + "..." );
-    sql = "create table  " + ProjectConst.A_DBALIAS + " ";
+    if( BuildConfig.DEBUG ) Log.d( TAG, "create table " + ProjectConst.A_TABLE_ALIASES + "..." );
+    sql = "create table  " + ProjectConst.A_TABLE_ALIASES + " ";
     sql += "(";
     sql += ProjectConst.A_DEVNAME + " text not null, \n";
-    sql += ProjectConst.A_ALIAS + " text not null \n";
+    sql += ProjectConst.A_ALIAS + " text not null, \n";
+    sql += ProjectConst.A_MAC + " text not null, \n";
+    sql += ProjectConst.A_SERIAL + " text not null \n";
     sql += ");";
     try
     {
