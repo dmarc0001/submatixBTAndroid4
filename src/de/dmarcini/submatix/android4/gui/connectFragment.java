@@ -14,7 +14,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,8 +31,9 @@ import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.utils.BluetoothDeviceArrayAdapter;
-import de.dmarcini.submatix.android4.utils.LogDataSQLHelper;
+import de.dmarcini.submatix.android4.utils.DataSQLHelper;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
+import de.dmarcini.submatix.android4.utils.SPXAliasManager;
 
 /**
  * 
@@ -54,7 +54,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
   private Spinner                     devSpinner      = null;
   private ImageButton                 connButton      = null;
   private TextView                    connectTextView = null;
-  private SQLiteDatabase              dBase           = null;
+  private SPXAliasManager             aliasManager    = null;
   protected ProgressDialog            progressDialog  = null;
   private boolean                     runDiscovering  = false;
   private Activity                    runningActivity = null;
@@ -162,16 +162,23 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
         // Ist es ein Gerät vom gewünschten Typ?
         if( ( device.getBluetoothClass().getDeviceClass() == ProjectConst.SPX_BTDEVICE_CLASS ) && ( device.getName() != null ) )
         {
-          String[] entr = new String[BluetoothDeviceArrayAdapter.BT_DEVAR_COUNT];
-          // TODO: ALIAS TESTEN und eintragen!
-          if( BuildConfig.DEBUG ) Log.d( TAG, "paired Device: " + device.getName() );
-          entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = device.getName();
-          entr[BluetoothDeviceArrayAdapter.BT_DEVAR_MAC] = device.getAddress();
-          entr[BluetoothDeviceArrayAdapter.BT_DEVAR_NAME] = device.getName();
-          entr[BluetoothDeviceArrayAdapter.BT_DEVAR_DBID] = "0";
-          entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISPAIRED] = "true";
-          entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISONLINE] = "false";
-          ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).add( entr );
+          try
+          {
+            String[] entr = new String[BluetoothDeviceArrayAdapter.BT_DEVAR_COUNT];
+            if( BuildConfig.DEBUG ) Log.d( TAG, "paired Device: " + device.getName() );
+            entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = aliasManager.getAliasForMac( device.getAddress(), device.getName() );
+            entr[BluetoothDeviceArrayAdapter.BT_DEVAR_MAC] = device.getAddress();
+            entr[BluetoothDeviceArrayAdapter.BT_DEVAR_NAME] = device.getName();
+            entr[BluetoothDeviceArrayAdapter.BT_DEVAR_DBID] = "0";
+            entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISPAIRED] = "true";
+            entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISONLINE] = "false";
+            ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).add( entr );
+          }
+          catch( NullPointerException ex )
+          {
+            Log.e( TAG, "Nullpointer (alias manager not initialized? <" + ex.getLocalizedMessage() + ">" );
+            continue;
+          }
         }
       }
     }
@@ -236,7 +243,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
       // Alias editiert
       // ################################################################
       case ProjectConst.MESSAGE_DEVALIAS_SET:
-        Log.e( TAG, "############### EDITALIAS #########################" );
+        msgReciveDeviceAliasSet( smsg );
         break;
       // ################################################################
       // ignoriere...
@@ -289,6 +296,47 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
       throw new NullPointerException( "makeConnectionView: can't init GUI (not found an Element)" );
     }
     return( rootView );
+  }
+
+  /**
+   * 
+   * Empfange Nachricht, dass der Device Alias geändert werden soll
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 26.07.2013
+   * @param msg
+   */
+  private void msgReciveDeviceAliasSet( BtServiceMessage msg )
+  {
+    int dIndex;
+    if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveDeviceAliasSet..." );
+    // ist das das Stringarray?
+    if( msg.getContainer() instanceof String[] )
+    {
+      if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveDeviceAliasSet: is String[]..." );
+      // genau 3 Paraqmeter (devicename,alias,mac)
+      String[] parm = ( String[] )msg.getContainer();
+      if( parm.length == 3 )
+      {
+        if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveDeviceAliasSet: is 3 params" );
+        dIndex = btArrayAdapter.getIndexForMac( parm[2] );
+        // hat er's gefunden?
+        if( dIndex == -1 )
+        {
+          Log.e( TAG, "msgReciveDeviceAliasSet: can't find device mac addr in devoce array adapter!" );
+          return;
+        }
+        if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveDeviceAliasSet: Set alias to <" + parm[1] + ">" );
+        btArrayAdapter.setDevAlias( dIndex, parm[1] );
+        // Update erzwingen
+        devSpinner.setAdapter( btArrayAdapter );
+        // Selektieren
+        devSpinner.setSelection( dIndex, true );
+      }
+    }
   }
 
   @Override
@@ -394,10 +442,10 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     // die Datenbank öffnen
     //
     if( BuildConfig.DEBUG ) Log.d( TAG, "onAttach: create SQLite helper..." );
-    LogDataSQLHelper sqlHelper = new LogDataSQLHelper( getActivity().getApplicationContext(), FragmentCommonActivity.databaseDir.getAbsolutePath() + File.separator
+    DataSQLHelper sqlHelper = new DataSQLHelper( getActivity().getApplicationContext(), FragmentCommonActivity.databaseDir.getAbsolutePath() + File.separator
             + ProjectConst.DATABASE_NAME );
     if( BuildConfig.DEBUG ) Log.d( TAG, "onAttach: open Database..." );
-    dBase = sqlHelper.getWritableDatabase();
+    aliasManager = new SPXAliasManager( sqlHelper.getWritableDatabase() );
   }
 
   @Override
@@ -473,8 +521,8 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
         //
         // erzeuge den Dialog zum Bearbeiten des Alias
         //
-        DialogFragment dialog = new EditAliasDialogFragment( btArrayAdapter.getDevName( devSpinner.getSelectedItemPosition() ), btArrayAdapter.getAlias( devSpinner
-                .getSelectedItemPosition() ) );
+        int pos = devSpinner.getSelectedItemPosition();
+        DialogFragment dialog = new EditAliasDialogFragment( btArrayAdapter.getDevName( pos ), btArrayAdapter.getAlias( pos ), btArrayAdapter.getMAC( pos ) );
         dialog.show( getFragmentManager(), "EditAliasDialogFragment" );
       }
     }
@@ -536,10 +584,10 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     // Datenbank wieder schliessen
     //
     if( BuildConfig.DEBUG ) Log.d( TAG, "onDestroy: close Database..." );
-    if( dBase != null )
+    if( aliasManager != null )
     {
-      dBase.close();
-      dBase = null;
+      aliasManager.close();
+      aliasManager = null;
     }
   }
 
