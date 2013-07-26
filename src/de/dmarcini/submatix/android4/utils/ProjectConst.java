@@ -223,11 +223,12 @@ public final class ProjectConst
   public static final String V_VERSION                  = "version";
   //
   // Tabelle für Alias und PIN des Gerätes
-  public static final String A_DBALIAS                  = "aliases";
+  public static final String A_TABLE_ALIASES            = "aliases";
   public static final String A_DEVNAME                  = "devname";
   public static final String A_ALIAS                    = "alias";
-  public static final String A_PIN                      = "pin";
-  public static final String A_TYP                      = "typ";
+  public static final String A_MAC                      = "mac";
+  public static final String A_SERIAL                   = "serial";
+  
   //
   // Tabelle für die Kopfdaten des Tauchgangs
   // Tabelle dive_logs
