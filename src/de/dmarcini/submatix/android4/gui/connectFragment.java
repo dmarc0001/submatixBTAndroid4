@@ -326,15 +326,25 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
         // hat er's gefunden?
         if( dIndex == -1 )
         {
-          Log.e( TAG, "msgReciveDeviceAliasSet: can't find device mac addr in devoce array adapter!" );
+          Log.e( TAG, "msgReciveDeviceAliasSet: can't find device mac addr in device array adapter!" );
           return;
         }
         if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveDeviceAliasSet: Set alias to <" + parm[1] + ">" );
-        btArrayAdapter.setDevAlias( dIndex, parm[1] );
-        // Update erzwingen
-        devSpinner.setAdapter( btArrayAdapter );
-        // Selektieren
-        devSpinner.setSelection( dIndex, true );
+        //
+        // in der Datenbank verramschen. Seriennummer ist nicht bekannt (bin offline)
+        //
+        if( aliasManager.setAliasForMac( parm[2], parm[0], parm[1], null ) )
+        {
+          btArrayAdapter.setDevAlias( dIndex, parm[1] );
+          // Update erzwingen
+          devSpinner.setAdapter( btArrayAdapter );
+          // Selektieren
+          devSpinner.setSelection( dIndex, true );
+        }
+        else
+        {
+          Log.w( TAG, "can't set alias in database!" );
+        }
       }
     }
   }
