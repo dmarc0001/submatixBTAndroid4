@@ -259,6 +259,10 @@
     <string name="notify_service_running">Submatix BT service running</string>
     <string name="notify_service_ticker">SUBMATIX BT Service</string>
     
+    <!-- IN-PROGRESS-Frame -->
+    <string name="in_progress_header">page in progress</string>
+    <string name="in_progress_msg" formatted="false">this page is under progress...</string>
+    
     <!-- sonstig  -->
     <string name="no_device">- no device -</string>
     <string name="array_with_pic_adapter_dummy">PROGRAMITEM</string>

@@ -102,6 +102,18 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
             Log.v( TAG, "onCreate: begin replace view...OK" );
             break;
           //
+          case R.string.progitem_logging:
+          case R.string.progitem_loggraph:
+          case R.string.progitem_export:
+            Log.i( TAG, "the called page is in progress..." );
+            currFragment = ( new InProgressFragment() );
+            setContentView( R.layout.fragment_in_progress );
+            getActionBar().setTitle( R.string.in_progress_header );
+            getActionBar().setLogo( mItem.resIdOffline );
+            Log.v( TAG, "onCreate: beginTransaction..." );
+            getFragmentManager().beginTransaction().replace( R.id.inProgressOuterLayout, currFragment ).commit();
+            Log.v( TAG, "onCreate: add transaction...OK" );
+            break;
           default:
             Log.w( TAG, "onCreate: Not programitem found for <" + showId + ">" );
           case R.string.progitem_connect:

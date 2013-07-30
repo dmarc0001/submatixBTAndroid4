@@ -259,10 +259,14 @@
     <string name="notify_service_running">Submatix BT Service läuft</string>
     <string name="notify_service_ticker">SUBMATIX BT Service</string>
     
+    <!-- IN-PROGRESS-Frame -->
+    <string name="in_progress_header">Seite in Arbeit</string>
+    <string name="in_progress_msg"  formatted="false">Diese Seite ist in Bearbeitung...</string>
     
     <!-- sonstig  -->
     <string name="no_device">"- Kein Gerät -"</string>
     <string name="array_with_pic_adapter_dummy">"PROGRAMITEM"</string>
+    
 
     
     
