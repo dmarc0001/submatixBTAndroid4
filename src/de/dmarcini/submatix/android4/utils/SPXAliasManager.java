@@ -22,9 +22,14 @@ public class SPXAliasManager
    * 
    *         Stand: 26.07.2013
    * @param db
+   * @throws NoDatabaseException
    */
-  public SPXAliasManager( SQLiteDatabase db )
+  public SPXAliasManager( SQLiteDatabase db ) throws NoDatabaseException
   {
+    if( db == null || !db.isOpen() )
+    {
+      throw new NoDatabaseException( "no database or dadabase is not open!" );
+    }
     dBase = db;
   }
 
