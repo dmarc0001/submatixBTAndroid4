@@ -109,7 +109,7 @@ public class areaDetailActivity extends FragmentCommonActivity implements OnItem
             // erzeuge die Connect fragmentActivity, auch wenn nix passendes gefunden
             //
             Log.v( TAG, "onCreate: create connect fragmentActivity..." );
-            currFragment = ( new connectFragment() );
+            currFragment = ( new SPX42ConnectFragment() );
             setContentView( R.layout.fragment_connect );
             getActionBar().setTitle( R.string.connect_headline );
             getActionBar().setLogo( mItem.resIdOffline );
