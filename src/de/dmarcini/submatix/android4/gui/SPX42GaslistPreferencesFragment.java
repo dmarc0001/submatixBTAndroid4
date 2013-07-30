@@ -166,7 +166,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   public void msgDisconnected( BtServiceMessage msg )
   {
     Log.v( TAG, "msgDisconnected" );
-    Intent intent = new Intent( getActivity(), areaListActivity.class );
+    Intent intent = new Intent( getActivity(), AreaListActivity.class );
     intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
     startActivity( intent );
   }
@@ -395,7 +395,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     {
       case android.R.id.home:
         Log.v( TAG, "onOptionsItemSelected: HOME" );
-        Intent intent = new Intent( getActivity(), areaListActivity.class );
+        Intent intent = new Intent( getActivity(), AreaListActivity.class );
         intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
         startActivity( intent );
         return true;

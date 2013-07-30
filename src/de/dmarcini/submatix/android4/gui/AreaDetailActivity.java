@@ -21,9 +21,9 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
  * 
  * @author dmarc
  */
-public class areaDetailActivity extends FragmentCommonActivity implements OnItemSelectedListener
+public class AreaDetailActivity extends FragmentCommonActivity implements OnItemSelectedListener
 {
-  private static final String TAG          = areaDetailActivity.class.getSimpleName();
+  private static final String TAG          = AreaDetailActivity.class.getSimpleName();
   private static Fragment     currFragment = null;
 
   //
@@ -123,7 +123,7 @@ public class areaDetailActivity extends FragmentCommonActivity implements OnItem
     {
       // Dann ist was faul, und ich zeig DUMMY
       Log.w( TAG, "onCreate: Not showId found, show DUMMY !" );
-      currFragment = new areaDetailFragment();
+      currFragment = new AreaDetailFragment();
       setContentView( R.layout.activity_area_detail );
       getActionBar().setTitle( R.string.dummy_headline );
       Log.v( TAG, "onCreate: beginTransaction..." );

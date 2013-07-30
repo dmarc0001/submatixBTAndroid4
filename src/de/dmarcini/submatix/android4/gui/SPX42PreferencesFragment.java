@@ -314,7 +314,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   public void msgConnectError( BtServiceMessage msg )
   {
     // zum Menü zurück
-    Intent intent = new Intent( getActivity(), areaListActivity.class );
+    Intent intent = new Intent( getActivity(), AreaListActivity.class );
     intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
     startActivity( intent );
     return;
@@ -328,7 +328,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   public void msgDisconnected( BtServiceMessage msg )
   {
     // zum Menü zurück
-    Intent intent = new Intent( getActivity(), areaListActivity.class );
+    Intent intent = new Intent( getActivity(), AreaListActivity.class );
     intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
     startActivity( intent );
   }
@@ -1104,7 +1104,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     {
       case android.R.id.home:
         Log.v( TAG, "onOptionsItemSelected: HOME" );
-        Intent intent = new Intent( getActivity(), areaListActivity.class );
+        Intent intent = new Intent( getActivity(), AreaListActivity.class );
         intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
         startActivity( intent );
         return true;

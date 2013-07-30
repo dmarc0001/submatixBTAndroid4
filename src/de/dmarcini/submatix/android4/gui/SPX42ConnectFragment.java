@@ -617,11 +617,11 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       return( null );
     }
     //
-    // wenn die laufende Activity eine areaDetailActivity ist, dann gibts das View schon
+    // wenn die laufende Activity eine AreaDetailActivity ist, dann gibts das View schon
     //
-    if( runningActivity instanceof areaDetailActivity )
+    if( runningActivity instanceof AreaDetailActivity )
     {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "onCreateView: running from areaDetailActivity ..." );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
       return( null );
     }
     //

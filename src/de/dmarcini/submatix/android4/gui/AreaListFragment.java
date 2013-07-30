@@ -16,11 +16,11 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
 
 /**
  * A list fragment representing a list of areas. This fragment also supports tablet devices by allowing list items to be given an 'activated' state upon selection. This helps
- * indicate which item is currently being viewed in a {@link areaDetailFragment}.
+ * indicate which item is currently being viewed in a {@link AreaDetailFragment}.
  */
-public class areaListFragment extends ListFragment
+public class AreaListFragment extends ListFragment
 {
-  private static final String TAG                      = areaListFragment.class.getSimpleName();
+  private static final String TAG                      = AreaListFragment.class.getSimpleName();
   private static final String STATE_ACTIVATED_POSITION = "activated_position";
   private int                 mActivatedPosition       = ListView.INVALID_POSITION;
   private boolean             whishedTheme             = true;
@@ -30,7 +30,7 @@ public class areaListFragment extends ListFragment
    * 
    * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 04.11.2012
    */
-  public areaListFragment()
+  public AreaListFragment()
   {}
 
   /**
@@ -134,7 +134,7 @@ public class areaListFragment extends ListFragment
     //
     // delegiere die Bearbeitung an die aktive Activity
     //
-    ( ( areaListActivity )getActivity() ).onListItemClick( listView, view, position, id );
+    ( ( AreaListActivity )getActivity() ).onListItemClick( listView, view, position, id );
     setActivatedPosition( position );
   }
 

@@ -76,7 +76,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     {
       case android.R.id.home:
         Log.v( TAG, "onOptionsItemSelected: HOME" );
-        Intent intent = new Intent( getActivity(), areaListActivity.class );
+        Intent intent = new Intent( getActivity(), AreaListActivity.class );
         intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
         startActivity( intent );
         return true;
@@ -185,7 +185,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
       //
       Bundle arguments = new Bundle();
       arguments.putInt( ProjectConst.ARG_ITEM_ID, R.string.progitem_progpref );
-      Intent parentActivityIntent = new Intent( getActivity(), areaListActivity.class );
+      Intent parentActivityIntent = new Intent( getActivity(), AreaListActivity.class );
       parentActivityIntent.putExtras( arguments );
       parentActivityIntent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
       startActivity( parentActivityIntent );
@@ -195,7 +195,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     {
       Bundle arguments = new Bundle();
       arguments.putInt( ProjectConst.ARG_ITEM_ID, R.string.progitem_progpref );
-      Intent parentActivityIntent = new Intent( getActivity(), areaDetailActivity.class );
+      Intent parentActivityIntent = new Intent( getActivity(), AreaDetailActivity.class );
       parentActivityIntent.putExtras( arguments );
       parentActivityIntent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
       startActivity( parentActivityIntent );

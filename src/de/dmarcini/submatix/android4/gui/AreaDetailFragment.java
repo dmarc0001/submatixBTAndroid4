@@ -13,12 +13,12 @@ import android.view.ViewGroup;
 import de.dmarcini.submatix.android4.R;
 
 /**
- * A fragment representing a single area detail screen. This fragment is either contained in a {@link areaListActivity} in two-pane mode (on tablets) or a
- * {@link areaDetailActivity} on handsets.
+ * A fragment representing a single area detail screen. This fragment is either contained in a {@link AreaListActivity} in two-pane mode (on tablets) or a
+ * {@link AreaDetailActivity} on handsets.
  */
-public class areaDetailFragment extends Fragment
+public class AreaDetailFragment extends Fragment
 {
-  private static final String TAG         = areaDetailFragment.class.getSimpleName();
+  private static final String TAG         = AreaDetailFragment.class.getSimpleName();
   private View                rootView    = null;
   /**
    * The fragment argument representing the item ID that this fragment represents.
@@ -28,7 +28,7 @@ public class areaDetailFragment extends Fragment
   /**
    * Mandatory empty constructor for the fragment manager to instantiate the fragment (e.g. upon screen orientation changes).
    */
-  public areaDetailFragment()
+  public AreaDetailFragment()
   {}
 
   @Override

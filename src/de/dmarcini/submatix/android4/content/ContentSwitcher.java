@@ -10,7 +10,7 @@ import de.dmarcini.submatix.android4.R;
 
 /**
  * 
- * Objekt zum Erzeugen der Liteinträge in der areaListActivity
+ * Objekt zum Erzeugen der Liteinträge in der AreaListActivity
  * 
  * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.content
  * 

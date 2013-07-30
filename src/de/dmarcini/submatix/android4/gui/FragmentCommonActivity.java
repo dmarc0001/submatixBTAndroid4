@@ -514,14 +514,14 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   @Override
   public void handleMessages( int what, BtServiceMessage smsg )
   {
-    areaListFragment frag;
+    AreaListFragment frag;
     //
     // versuche mal das Fragment mit der Liste zu finden
     //
-    frag = ( areaListFragment )getFragmentManager().findFragmentById( R.id.area_list );
+    frag = ( AreaListFragment )getFragmentManager().findFragmentById( R.id.area_list );
     if( frag == null )
     {
-      frag = ( areaListFragment )getFragmentManager().findFragmentById( R.id.item_list );
+      frag = ( AreaListFragment )getFragmentManager().findFragmentById( R.id.item_list );
     }
     // was war denn los? Welche Nachricht kam rein?
     switch ( what )
@@ -1044,7 +1044,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     if( mTwoPane )
     {
       //
-      // zweischirmbetrieb, die Activity bleibt die areaListActivity
+      // zweischirmbetrieb, die Activity bleibt die AreaListActivity
       //
       Log.i( TAG, "onListItemClick: towPane mode!" );
       //
@@ -1150,7 +1150,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       // da wird jeder Eintrag als einzelne activity ausgeführt
       //
       Log.i( TAG, "onListItemClick: onePane modus! Call intent DetailActivity fur itenid<" + mItem.nId + ">" );
-      Intent detailIntent = new Intent( this, areaDetailActivity.class );
+      Intent detailIntent = new Intent( this, AreaDetailActivity.class );
       detailIntent.putExtras( arguments );
       // die neue Activity starten
       startActivity( detailIntent );
@@ -1166,7 +1166,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
         if( BuildConfig.DEBUG ) Log.d( TAG, "onOptionsItemSelected: navigate UP!" );
         // This is called when the Home (Up) button is pressed
         // in the Action Bar.
-        Intent parentActivityIntent = new Intent( this, areaListActivity.class );
+        Intent parentActivityIntent = new Intent( this, AreaListActivity.class );
         parentActivityIntent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
         startActivity( parentActivityIntent );
         finish();

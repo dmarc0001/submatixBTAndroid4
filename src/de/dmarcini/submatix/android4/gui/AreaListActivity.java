@@ -25,9 +25,9 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
  * 
  * @author dmarc
  */
-public class areaListActivity extends FragmentCommonActivity
+public class AreaListActivity extends FragmentCommonActivity
 {
-  private static final String TAG         = areaListActivity.class.getSimpleName();
+  private static final String TAG         = AreaListActivity.class.getSimpleName();
   private static final String FIRSTTIME   = "keyFirstTimeInitiated";
   private static final String PREFVERSION = "keyPreferencesVersion";
 
@@ -122,7 +122,7 @@ public class areaListActivity extends FragmentCommonActivity
       mTwoPane = true;
       // Im twoPane Modus soll der aktivierte Eintrag immer gekennzeichnet sein!
       Log.v( TAG, "onCreate: set \"activate on item click\"..." );
-      ( ( areaListFragment )getFragmentManager().findFragmentById( R.id.area_list ) ).setActivateOnItemClick( true );
+      ( ( AreaListFragment )getFragmentManager().findFragmentById( R.id.area_list ) ).setActivateOnItemClick( true );
     }
     else
     {
