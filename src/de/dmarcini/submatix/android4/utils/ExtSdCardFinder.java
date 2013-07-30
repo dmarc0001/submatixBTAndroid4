@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import android.os.Environment;
 import android.util.Log;
+import de.dmarcini.submatix.android4.BuildConfig;
 
 public class ExtSdCardFinder
 {
@@ -20,7 +21,7 @@ public class ExtSdCardFinder
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 25.07.2013
-   * @return
+   * @return den Kartenpfad oder null
    * @throws FileNotFoundException
    */
   public static File findSdCard() throws FileNotFoundException
@@ -30,28 +31,37 @@ public class ExtSdCardFinder
     // scanne das proc-System nach Anzeichen für eine SD-Card
     // nach Artikel c't 23/12, S. 172
     //
-    Scanner scanner = new Scanner( new File( "/proc/mounts" ) );
-    while( scanner.hasNext() )
+    if( BuildConfig.DEBUG ) Log.d( TAG, "findSdCard: scan /proc/mounts..." );
+    try
     {
-      // hole eine Zeile
-      String strZeile = scanner.nextLine();
-      // ist der Eintrag "vold"
-      if( strZeile.startsWith( "/dev/block/vold/" ) )
+      Scanner scanner = new Scanner( new File( "/proc/mounts" ) );
+      while( scanner.hasNext() )
       {
-        // Teile das Ergebnis
-        String[] strSplit = strZeile.split( " " );
-        // ist in der Zeile das Dateisystem vfat?
-        if( strSplit[2].contains( "vfat" ) )
+        // hole eine Zeile
+        String strZeile = scanner.nextLine();
+        // ist der Eintrag "vold"
+        if( strZeile.startsWith( "/dev/block/vold/" ) )
         {
-          // ist das gemountete Verzeichnis da und beschreibbar?
-          extSdCard = new File( strSplit[1] );
-          if( extSdCard.exists() && extSdCard.isDirectory() && extSdCard.canWrite() )
+          // Teile das Ergebnis
+          String[] strSplit = strZeile.split( " " );
+          // ist in der Zeile das Dateisystem vfat?
+          if( ( strSplit.length > 1 ) && strSplit[2].contains( "vfat" ) )
           {
-            Log.i( TAG, "1st extern medium is on path <" + extSdCard.getAbsolutePath() + ">" );
-            return( extSdCard );
+            // ist das gemountete Verzeichnis da und beschreibbar?
+            extSdCard = new File( strSplit[1] );
+            if( extSdCard.exists() && extSdCard.isDirectory() && extSdCard.canWrite() )
+            {
+              Log.i( TAG, "1st extern medium is on path <" + extSdCard.getAbsolutePath() + ">" );
+              return( extSdCard );
+            }
           }
         }
       }
+    }
+    catch( FileNotFoundException ex )
+    {
+      Log.e( TAG, "findSdCard: can't create Scanner for /proc/mounts..." );
+      return( null );
     }
     //
     // finde ich nicht.....
