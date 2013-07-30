@@ -24,7 +24,7 @@
         
         <!-- Die List/Main activity -->
         <activity
-            android:name=".gui.areaListActivity"
+            android:name=".gui.AreaListActivity"
             android:label="@string/app_name"
             android:screenOrientation="sensorLandscape" android:launchMode="singleTop">            
             <intent-filter>
@@ -35,7 +35,7 @@
         
         <!-- die Detailacivity, bei schmalen screens -->
         <activity
-            android:name=".gui.areaDetailActivity"
+            android:name=".gui.AreaDetailActivity"
             android:label="@string/title_area_detail"
             android:screenOrientation="sensorLandscape" android:launchMode="singleTop">
             <meta-data
