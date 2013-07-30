@@ -52,6 +52,9 @@
     <string name="dialog_please_wait_read_config" formatted="false">read SPX config...</string>
     <string name="dialog_alias_edit_title">Edit alias for Device</string>
     <string name="dialog_save_button">Save</string>
+    <string name="dialog_sqlite_error_header">Database ERROR</string>
+    <string name="dialog_sqlite_nodatabase_error">no database found or\ndatabase can not open/create!\nprogram must abort!</string>
+    
     
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title" formatted="false">Searching BT Devices..</string>

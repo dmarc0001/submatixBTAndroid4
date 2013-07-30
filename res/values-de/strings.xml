@@ -52,6 +52,9 @@
     <string name="dialog_please_wait_read_config" formatted="false">Lese Konfiguration vom SPX...</string>
     <string name="dialog_alias_edit_title">Bearbeite Alias für Gerät</string>
     <string name="dialog_save_button">Sichern</string>
+    <string name="dialog_sqlite_error_header">Datenbsank FEHLER</string>
+    <string name="dialog_sqlite_nodatabase_error">Keine Datenbank gefunden oder\nDatenbank kann nicht erzeugt/geöffnet werden.\nProgramm muss beendet werden!</string>
+    
     
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title" formatted="false">Suche BT Geräte...</string>
