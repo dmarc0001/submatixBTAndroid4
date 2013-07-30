@@ -42,6 +42,7 @@ import de.dmarcini.submatix.android4.content.ContentSwitcher;
 import de.dmarcini.submatix.android4.utils.GasUpdateEntity;
 import de.dmarcini.submatix.android4.utils.NoticeDialogListener;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
+import de.dmarcini.submatix.android4.utils.UserAlertDialogFragment;
 
 /**
  * Der gemeinsame Code der List- und Detailactivity
@@ -857,6 +858,10 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   {
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate..." );
+    if( getIntent().getBooleanExtra( "EXIT", false ) )
+    {
+      finish();
+    }
     serviceListener.clear();
     serviceListener.add( this );
     // den defaultadapter lesen
@@ -918,6 +923,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * @author Dirk Marciniak 28.12.2012
    * @param dialog
    */
+  @SuppressWarnings( "javadoc" )
   @Override
   public void onDialogNegativeClick( DialogFragment dialog )
   {
@@ -931,6 +937,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * @author Dirk Marciniak 28.12.2012
    * @param dialog
    */
+  @SuppressWarnings( "javadoc" )
   @Override
   public void onDialogPositiveClick( DialogFragment dialog )
   {
@@ -962,6 +969,23 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       EditAliasDialogFragment editDialog = ( EditAliasDialogFragment )dialog;
       mHandler.obtainMessage( ProjectConst.MESSAGE_DEVALIAS_SET, new BtServiceMessage( ProjectConst.MESSAGE_DEVALIAS_SET, new String[]
       { editDialog.getDeviceName(), editDialog.getAliasName(), editDialog.getMac() } ) ).sendToTarget();
+    }
+    else if( dialog instanceof UserAlertDialogFragment )
+    {
+      Log.e( TAG, "will close app..." );
+      Toast.makeText( this, R.string.toast_exit, Toast.LENGTH_SHORT ).show();
+      if( BluetoothAdapter.getDefaultAdapter() != null )
+      {
+        // TODO: Preferences -> Programmeinstellungen soll das automatisch passieren?
+        BluetoothAdapter.getDefaultAdapter().disable();
+      }
+      // nach stackoverflow
+      Intent intent = new Intent( Intent.ACTION_MAIN );
+      intent.addCategory( Intent.CATEGORY_HOME );
+      intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
+      intent.putExtra( "EXIT", true );
+      startActivity( intent );
+      finish();
     }
   }
 
@@ -1073,10 +1097,10 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
             // keine passende ID gefunden oder
             // der Benutzer wählt den Verbindungseintrag
             //
-            connectFragment connFragment = ( connectFragment )getFragmentManager().findFragmentById( R.id.connectLinearLayout );
+            SPX42ConnectFragment connFragment = ( SPX42ConnectFragment )getFragmentManager().findFragmentById( R.id.connectLinearLayout );
             if( connFragment == null )
             {
-              connFragment = new connectFragment();
+              connFragment = new SPX42ConnectFragment();
             }
             getActionBar().setTitle( R.string.connect_headline );
             connFragment.setArguments( arguments );
@@ -1107,10 +1131,10 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
             // keine passende ID gefunden oder
             // der Benutzer wählt den Verbindungseintrag
             //
-            connectFragment connFragment = ( connectFragment )getFragmentManager().findFragmentById( R.id.connectLinearLayout );
+            SPX42ConnectFragment connFragment = ( SPX42ConnectFragment )getFragmentManager().findFragmentById( R.id.connectLinearLayout );
             if( connFragment == null )
             {
-              connFragment = new connectFragment();
+              connFragment = new SPX42ConnectFragment();
             }
             getActionBar().setTitle( R.string.connect_headline );
             connFragment.setArguments( arguments );
@@ -1244,6 +1268,11 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 13.07.2013
+   * @param logG
+   * @param highG
+   * @param deepSt
+   * @param dynGr
+   * @param lastStop
    */
   public void writeDecoPrefs( int logG, int highG, int deepSt, int dynGr, int lastStop )
   {
