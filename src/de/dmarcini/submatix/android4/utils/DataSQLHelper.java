@@ -7,6 +7,7 @@ import java.io.File;
 
 import android.content.Context;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -227,13 +228,27 @@ public class DataSQLHelper extends SQLiteOpenHelper
     {
       dbObj = SQLiteDatabase.openDatabase( dbName, null, flags );
     }
-    catch( SQLiteException e )
+    catch( SQLiteCantOpenDatabaseException ex )
     {
-      // Geht nicht, probier mal mit erzeugen
-      dbObj = SQLiteDatabase.openDatabase( dbName, null, SQLiteDatabase.OPEN_READWRITE + SQLiteDatabase.CREATE_IF_NECESSARY );
-      // wennes hier eine exception git, bitte sehr....
-      dbObj.setVersion( ProjectConst.DATABASE_VERSION );
-      onCreate( dbObj );
+      Log.w( TAG, "can't open Database, try create one... <" + ex.getLocalizedMessage() + ">" );
+      try
+      {
+        // Geht nicht, probier mal mit erzeugen
+        dbObj = SQLiteDatabase.openDatabase( dbName, null, SQLiteDatabase.OPEN_READWRITE + SQLiteDatabase.CREATE_IF_NECESSARY );
+        // wennes hier eine exception git, bitte sehr....
+        dbObj.setVersion( ProjectConst.DATABASE_VERSION );
+        onCreate( dbObj );
+      }
+      catch( SQLiteException ex1 )
+      {
+        Log.e( TAG, "can't open Database. Got an exception: <" + ex.getLocalizedMessage() + ">" );
+        return( null );
+      }
+    }
+    catch( SQLiteException ex )
+    {
+      Log.e( TAG, "can't open Database. Got an exception: <" + ex.getLocalizedMessage() + ">" );
+      return( null );
     }
     return( dbObj );
   }
