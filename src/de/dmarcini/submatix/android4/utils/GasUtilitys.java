@@ -70,7 +70,7 @@ public class GasUtilitys
    * 
    *         Stand: 26.07.2013
    * @param o2
-   * @return
+   * @return Maximum Oxigen Depth
    */
   public static double getMODForGasMetric( final int o2 )
   {
@@ -101,7 +101,7 @@ public class GasUtilitys
    * @param he
    * @param ppo2Setpoint
    * @param depth
-   * @return
+   * @return Equralent Air Depth
    */
   public static double getEADForDilMetric( final int o2, final int he, final double ppo2Setpoint, final double depth )
   {
