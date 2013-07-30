@@ -34,8 +34,10 @@ import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.utils.BluetoothDeviceArrayAdapter;
 import de.dmarcini.submatix.android4.utils.DataSQLHelper;
+import de.dmarcini.submatix.android4.utils.NoDatabaseException;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 import de.dmarcini.submatix.android4.utils.SPXAliasManager;
+import de.dmarcini.submatix.android4.utils.UserAlertDialogFragment;
 
 /**
  * 
@@ -47,9 +49,9 @@ import de.dmarcini.submatix.android4.utils.SPXAliasManager;
  * 
  *         Stand: 04.11.2012
  */
-public class connectFragment extends Fragment implements IBtServiceListener, OnItemSelectedListener, OnClickListener
+public class SPX42ConnectFragment extends Fragment implements IBtServiceListener, OnItemSelectedListener, OnClickListener
 {
-  public static final String          TAG                       = connectFragment.class.getSimpleName();
+  public static final String          TAG                       = SPX42ConnectFragment.class.getSimpleName();
   private static final String         LAST_CONNECTED_DEVICE_KEY = "keyLastConnectedDevice";
   private String                      lastConnectedDeviceMac    = null;
   private BluetoothDeviceArrayAdapter btArrayAdapter            = null;
@@ -457,7 +459,7 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
       connectTextView = ( TextView )runningActivity.findViewById( R.id.connectStatusText );
       if( FragmentCommonActivity.mBtAdapter != null && FragmentCommonActivity.mBtAdapter.isEnabled() )
       {
-        if( BuildConfig.DEBUG ) Log.d( TAG, "onActivityCreated: set connectFragment eventhandler..." );
+        if( BuildConfig.DEBUG ) Log.d( TAG, "onActivityCreated: set SPX42ConnectFragment eventhandler..." );
         devSpinner.setOnItemSelectedListener( this );
         discoverButton.setOnClickListener( this );
         aliasEditButton.setOnClickListener( this );
@@ -494,7 +496,17 @@ public class connectFragment extends Fragment implements IBtServiceListener, OnI
     DataSQLHelper sqlHelper = new DataSQLHelper( getActivity().getApplicationContext(), FragmentCommonActivity.databaseDir.getAbsolutePath() + File.separator
             + ProjectConst.DATABASE_NAME );
     if( BuildConfig.DEBUG ) Log.d( TAG, "onAttach: open Database..." );
-    aliasManager = new SPXAliasManager( sqlHelper.getWritableDatabase() );
+    try
+    {
+      aliasManager = new SPXAliasManager( sqlHelper.getWritableDatabase() );
+    }
+    catch( NoDatabaseException ex )
+    {
+      Log.e( TAG, "NoDatabaseException: <" + ex.getLocalizedMessage() + ">" );
+      UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_sqlite_error_header ), runningActivity.getResources()
+              .getString( R.string.dialog_sqlite_nodatabase_error ) );
+      uad.show( getFragmentManager(), "UserAlertDialogFragment" );
+    }
     lastConnectedDeviceMac = null;
   }
 
