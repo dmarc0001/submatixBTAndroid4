@@ -15,8 +15,10 @@ import java.util.Date;
  */
 public class BuildVersion
 {
-  private final long buildNumber = 2270L;
-  private final long buildDate = 1375295872386L;
+  private static final long buildNumber = 2347L;
+  private static final long buildDate = 1375305640216L;
+  private static final String buildNumberString = String.format( "%d", buildNumber );
+  private static final String buildDateString   = new Date( buildDate ).toString();
 
   /**
    * Gib die Buildnummer zurück
@@ -24,9 +26,14 @@ public class BuildVersion
    * @author Dirk Marciniak 31.07.2012
    * @return long
    */
-  public long getBuild()
+  public static long getBuild()
   {
     return( buildNumber );
+  }
+
+  public static String getBuildAsString()
+  {
+    return( buildNumberString );
   }
 
   /**
@@ -35,10 +42,9 @@ public class BuildVersion
    * @author Dirk Marciniak 31.07.2012
    * @return String
    */
-  public String getBuildDate()
+  public static String getBuildDate()
   {
-    Date date = new Date( buildDate );
-    return( date.toString() );
+    return( buildDateString );
   }
 
   /**
@@ -53,7 +59,7 @@ public class BuildVersion
    * @param fmt
    * @return Datum als String
    */
-  public String getLocaleDate( String fmt )
+  public static String getLocaleDate( String fmt )
   {
     Date date = new Date( buildDate );
     SimpleDateFormat sdf = new SimpleDateFormat( fmt );
@@ -71,7 +77,7 @@ public class BuildVersion
    *         Stand: 31.07.2012
    * @return Versionsstring
    */
-  public String getVersion()
+  public static String getVersion()
   {
     return( ProjectConst.MANUFACTVERS );
   }
