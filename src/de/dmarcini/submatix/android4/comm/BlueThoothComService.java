@@ -436,9 +436,9 @@ public class BlueThoothComService extends Service
           break;
         case ProjectConst.SPX_SET_SETUP_DISPLAYSETTINGS:
           // Quittung für Setzen der Displayeinstellungen
-          msg = new BtServiceMessage( ProjectConst.MESSAGE_DECO_ACK );
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_DISPLAY_ACK );
           sendMessageToApp( msg );
-          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "MESSAGE_DECO_ACK recived " );
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "MESSAGE_DISPLAY_ACK recived " );
           break;
         case ProjectConst.SPX_SET_SETUP_UNITS:
           // Quittung für das Setzen der Masseinheiten
