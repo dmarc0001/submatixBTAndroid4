@@ -14,7 +14,8 @@
     <string name="progitem_logging">Logfiles read</string>
     <string name="progitem_loggraph">Visualize logs</string>
     <string name="progitem_export">Export logs</string>
-    <string name="progitem_progpref">Program Prefs</string>
+    <string name="progitem_progpref">Program prefs</string>
+    <string name="progitem_about">About program</string>
     <string name="progitem_exit">EXIT</string>
 
     <!-- Toasts -->

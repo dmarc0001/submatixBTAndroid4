@@ -1090,6 +1090,16 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, glFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
             break;
           //
+          case R.string.progitem_logging:
+          case R.string.progitem_loggraph:
+          case R.string.progitem_export:
+          case R.string.progitem_about:
+            Log.i( TAG, "the called page is in progress..." );
+            InProgressFragment ipf = new InProgressFragment();
+            ipf.setArguments( arguments );
+            getActionBar().setTitle( R.string.in_progress_header );
+            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, ipf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+            break;
           default:
             Log.w( TAG, "Not programitem found for <" + mItem.nId + ">" );
           case R.string.progitem_connect:
@@ -1129,6 +1139,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
           case R.string.progitem_logging:
           case R.string.progitem_loggraph:
           case R.string.progitem_export:
+          case R.string.progitem_about:
             Log.i( TAG, "the called page is in progress..." );
             InProgressFragment ipf = new InProgressFragment();
             ipf.setArguments( arguments );
