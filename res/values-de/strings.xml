@@ -6,6 +6,10 @@
     <string name="app_description">"Diese App verbindet sich mit dem SUBMATIX SPX42 und liest Logdaten bzw. konfiguriert den Tauchcomputer"</string>
     <string name="dummy_filler">"SUBMATIX BT Config"</string>
     <string name="app_bt_service">"BluethootService"</string>
+    <string name="app_locale_timeformat_date">dd.MM.yyyy</string>
+    <string name="app_version_prefix">Version</string>
+    <string name="app_build_prefix">Build</string>
+    <string name="app_build_date_prefix">Build Datum</string>
     
     <!-- Liste der Programmaktivitäten -->
     <string name="progitem_connect">"Verbindung"</string>
@@ -263,6 +267,9 @@
     <!-- IN-PROGRESS-Frame -->
     <string name="in_progress_header">Seite in Arbeit</string>
     <string name="in_progress_msg"  formatted="false">Diese Seite ist in Bearbeitung...</string>
+
+    <!-- About Frame  -->
+    <string name="about_headline">Über SubmatixBTLogger</string>
     
     <!-- sonstig  -->
     <string name="no_device">"- Kein Gerät -"</string>

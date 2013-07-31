@@ -1090,10 +1090,16 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, glFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
             break;
           //
+          case R.string.progitem_about:
+            Log.v( TAG, "onListItemClick: startAboutFragment..." );
+            ProgramAboutFragment aboutFragment = new ProgramAboutFragment();
+            getActionBar().setTitle( R.string.about_headline );
+            aboutFragment.setArguments( arguments );
+            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, aboutFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+            break;
           case R.string.progitem_logging:
           case R.string.progitem_loggraph:
           case R.string.progitem_export:
-          case R.string.progitem_about:
             Log.i( TAG, "the called page is in progress..." );
             InProgressFragment ipf = new InProgressFragment();
             ipf.setArguments( arguments );
@@ -1136,10 +1142,17 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, ppFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
             break;
           //
+          case R.string.progitem_about:
+            Log.v( TAG, "onListItemClick: startAboutFragment..." );
+            ProgramAboutFragment aboutFragment = new ProgramAboutFragment();
+            getActionBar().setTitle( R.string.about_headline );
+            aboutFragment.setArguments( arguments );
+            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, aboutFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+            break;
+          //
           case R.string.progitem_logging:
           case R.string.progitem_loggraph:
           case R.string.progitem_export:
-          case R.string.progitem_about:
             Log.i( TAG, "the called page is in progress..." );
             InProgressFragment ipf = new InProgressFragment();
             ipf.setArguments( arguments );

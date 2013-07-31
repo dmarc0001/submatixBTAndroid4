@@ -22,4 +22,5 @@
   <color name="connectFragment.connectText">#1B9617</color>
   <color name="connectToastAlert.backgroundColor">#C584D1</color>
   <color name="connectToastAlert.textColor">#FC1100</color>
+  <color name="aboutHeadlineColor">#6720B3</color>
 </resources>

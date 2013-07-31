@@ -59,7 +59,7 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
         {
           case R.string.progitem_config:
             //
-            // SPX42 Configuration starten
+            // SPX42 Konfiguration starten
             //
             Log.v( TAG, "onCreate: create config PreferenceActivity..." );
             getActionBar().setTitle( R.string.conf_headline );
@@ -102,10 +102,20 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
             Log.v( TAG, "onCreate: begin replace view...OK" );
             break;
           //
+          case R.string.progitem_about:
+            Log.v( TAG, "onCreate: create ProgramAboutActivity..." );
+            currFragment = ( new ProgramAboutFragment() );
+            setContentView( R.layout.fragment_about );
+            getActionBar().setTitle( R.string.about_headline );
+            getActionBar().setLogo( mItem.resIdOffline );
+            Log.v( TAG, "onCreate: beginTransaction..." );
+            getFragmentManager().beginTransaction().replace( R.id.aboutOuterLayout, currFragment ).commit();
+            Log.v( TAG, "onCreate: add transaction...OK" );
+            break;
+          //
           case R.string.progitem_logging:
           case R.string.progitem_loggraph:
           case R.string.progitem_export:
-          case R.string.progitem_about:
             Log.i( TAG, "the called page is in progress..." );
             currFragment = ( new InProgressFragment() );
             setContentView( R.layout.fragment_in_progress );
