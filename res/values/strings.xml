@@ -6,10 +6,14 @@
     <string name="app_description">this app connects with SUBMATIX SPX42 an read logs or read \/write configuration of this device</string>
     <string name="dummy_filler">SUBMATIX BT Config</string>
     <string name="app_bt_service">BluethootService</string>
-    <string name="app_locale_timeformat_date">yyyy/MM/dd</string>
+    <string name="app_locale_timeformat_date">yyyy/MM/dd hh:mm:ss a</string>
     <string name="app_version_prefix">Version</string>
     <string name="app_build_prefix">Build</string>
     <string name="app_build_date_prefix">Build date</string>
+    <string name="app_programmer_name">programm by: Dirk Marciniak</string>
+    
+    <!-- About Frame  -->
+    <string name="about_headline">About SubmatixBTLogger</string>
     
     <!-- Liste der Programmaktivitäten -->
     <string name="progitem_connect">Connection</string>
@@ -266,9 +270,6 @@
     <!-- IN-PROGRESS-Frame -->
     <string name="in_progress_header">page in progress</string>
     <string name="in_progress_msg" formatted="false">this page is under progress...</string>
-    
-    <!-- About Frame  -->
-    <string name="about_headline">About SubmatixBTLogger</string>
     
     <!-- sonstig  -->
     <string name="no_device">- no device -</string>

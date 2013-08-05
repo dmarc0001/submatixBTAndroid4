@@ -14,11 +14,12 @@ import de.dmarcini.submatix.android4.utils.BuildVersion;
 
 public class ProgramAboutFragment extends Fragment
 {
-  public static final String TAG                    = ProgramAboutFragment.class.getSimpleName();
-  private Activity           runningActivity        = null;
-  private TextView           aboutVersionTextView   = null;
-  private TextView           aboutBuildTextView     = null;
-  private TextView           aboutBuildDateTextView = null;
+  public static final String TAG                     = ProgramAboutFragment.class.getSimpleName();
+  private Activity           runningActivity         = null;
+  private TextView           aboutVersionTextView    = null;
+  private TextView           aboutProgrammerTextView = null;
+  private TextView           aboutBuildTextView      = null;
+  private TextView           aboutBuildDateTextView  = null;
 
   @Override
   public void onActivityCreated( Bundle bundle )
@@ -29,9 +30,11 @@ public class ProgramAboutFragment extends Fragment
     try
     {
       aboutVersionTextView = ( TextView )runningActivity.findViewById( R.id.aboutVersionTextView );
+      aboutProgrammerTextView = ( TextView )runningActivity.findViewById( R.id.aboutProgrammerTextView );
       aboutBuildTextView = ( TextView )runningActivity.findViewById( R.id.aboutBuildTextView );
       aboutBuildDateTextView = ( TextView )runningActivity.findViewById( R.id.aboutBuildDateTextView );
       aboutVersionTextView.setText( String.format( "%s: %s", runningActivity.getResources().getString( R.string.app_version_prefix ), BuildVersion.getVersion() ) );
+      aboutProgrammerTextView.setText( runningActivity.getResources().getString( R.string.app_programmer_name ) );
       aboutBuildTextView.setText( String.format( "%s: %s", runningActivity.getResources().getString( R.string.app_build_prefix ), BuildVersion.getBuildAsString() ) );
       aboutBuildDateTextView.setText( String.format( "%s: %s", runningActivity.getResources().getString( R.string.app_build_date_prefix ),
               BuildVersion.getLocaleDate( runningActivity.getResources().getString( R.string.app_locale_timeformat_date ) ) ) );
