@@ -114,9 +114,19 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
             break;
           //
           case R.string.progitem_logging:
+            Log.v( TAG, "onCreate: start SPX42ReadLogFragment..." );
+            currFragment = ( new SPX42ReadLogFragment() );
+            setContentView( R.layout.fragment_read_log );
+            getActionBar().setTitle( R.string.logread_headline );
+            getActionBar().setLogo( mItem.resIdOffline );
+            Log.v( TAG, "onCreate: beginTransaction..." );
+            getFragmentManager().beginTransaction().replace( R.id.readLogOuterLayout, currFragment ).commit();
+            Log.v( TAG, "onCreate: add transaction...OK" );
+            break;
+          //
           case R.string.progitem_loggraph:
           case R.string.progitem_export:
-            Log.i( TAG, "the called page is in progress..." );
+            Log.i( TAG, "onCreate: the called page is in progress..." );
             currFragment = ( new InProgressFragment() );
             setContentView( R.layout.fragment_in_progress );
             getActionBar().setTitle( R.string.in_progress_header );

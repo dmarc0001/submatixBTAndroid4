@@ -7,9 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import de.dmarcini.submatix.android4.BuildConfig;
 
-public class SPXAliasManager
+public class SPX42AliasManager
 {
-  private static final String TAG   = SPXAliasManager.class.getSimpleName();
+  private static final String TAG   = SPX42AliasManager.class.getSimpleName();
   private SQLiteDatabase      dBase = null;
 
   /**
@@ -24,7 +24,7 @@ public class SPXAliasManager
    * @param db
    * @throws NoDatabaseException
    */
-  public SPXAliasManager( SQLiteDatabase db ) throws NoDatabaseException
+  public SPX42AliasManager( SQLiteDatabase db ) throws NoDatabaseException
   {
     if( db == null || !db.isOpen() )
     {

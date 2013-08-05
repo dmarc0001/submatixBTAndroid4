@@ -1151,6 +1151,13 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
             break;
           //
           case R.string.progitem_logging:
+            Log.v( TAG, "onListItemClick: start SPX42ReadLogFragment..." );
+            SPX42ReadLogFragment readLogFragment = new SPX42ReadLogFragment();
+            getActionBar().setTitle( R.string.logread_headline );
+            readLogFragment.setArguments( arguments );
+            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, readLogFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+            break;
+          //
           case R.string.progitem_loggraph:
           case R.string.progitem_export:
             Log.i( TAG, "the called page is in progress..." );

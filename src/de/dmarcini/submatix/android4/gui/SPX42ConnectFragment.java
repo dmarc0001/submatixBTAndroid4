@@ -36,7 +36,7 @@ import de.dmarcini.submatix.android4.utils.BluetoothDeviceArrayAdapter;
 import de.dmarcini.submatix.android4.utils.DataSQLHelper;
 import de.dmarcini.submatix.android4.utils.NoDatabaseException;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
-import de.dmarcini.submatix.android4.utils.SPXAliasManager;
+import de.dmarcini.submatix.android4.utils.SPX42AliasManager;
 import de.dmarcini.submatix.android4.utils.UserAlertDialogFragment;
 
 /**
@@ -60,7 +60,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   private Spinner                     devSpinner                = null;
   private ImageButton                 connButton                = null;
   private TextView                    connectTextView           = null;
-  private SPXAliasManager             aliasManager              = null;
+  private SPX42AliasManager             aliasManager              = null;
   protected ProgressDialog            progressDialog            = null;
   private boolean                     runDiscovering            = false;
   private Activity                    runningActivity           = null;
@@ -498,7 +498,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     if( BuildConfig.DEBUG ) Log.d( TAG, "onAttach: open Database..." );
     try
     {
-      aliasManager = new SPXAliasManager( sqlHelper.getWritableDatabase() );
+      aliasManager = new SPX42AliasManager( sqlHelper.getWritableDatabase() );
     }
     catch( NoDatabaseException ex )
     {
