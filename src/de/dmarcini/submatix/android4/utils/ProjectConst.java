@@ -158,25 +158,25 @@ public final class ProjectConst
   public static final int    MESSAGE_CONNECTERROR       = ActionEvent.RESERVED_ID_MAX + 6;
   public static final int    MESSAGE_SERIAL_READ        = ActionEvent.RESERVED_ID_MAX + 7;
   public static final int    MESSAGE_MANUFACTURER_READ  = ActionEvent.RESERVED_ID_MAX + 8;
-  public static final int    MESSAGE_DIRENTRY_END       = ActionEvent.RESERVED_ID_MAX + 9;
-  public static final int    MESSAGE_SPXALIVE           = ActionEvent.RESERVED_ID_MAX + 10;
-  public static final int    MESSAGE_COMMTIMEOUT        = ActionEvent.RESERVED_ID_MAX + 11;
-  public static final int    MESSAGE_FWVERSION_READ     = ActionEvent.RESERVED_ID_MAX + 12;
-  public static final int    MESSAGE_SETPOINT_READ      = ActionEvent.RESERVED_ID_MAX + 13;
-  public static final int    MESSAGE_SETPOINT_ACK       = ActionEvent.RESERVED_ID_MAX + 14;
-  public static final int    MESSAGE_LICENSE_STATE_READ = ActionEvent.RESERVED_ID_MAX + 15;
-  public static final int    MESSAGE_DECO_READ          = ActionEvent.RESERVED_ID_MAX + 16;
-  public static final int    MESSAGE_DECO_ACK           = ActionEvent.RESERVED_ID_MAX + 17;
-  public static final int    MESSAGE_DISPLAY_READ       = ActionEvent.RESERVED_ID_MAX + 18;
-  public static final int    MESSAGE_DISPLAY_ACK        = ActionEvent.RESERVED_ID_MAX + 19;
-  public static final int    MESSAGE_UNITS_READ         = ActionEvent.RESERVED_ID_MAX + 20;
-  public static final int    MESSAGE_UNITS_ACK          = ActionEvent.RESERVED_ID_MAX + 21;
-  public static final int    MESSAGE_INDIVID_READ       = ActionEvent.RESERVED_ID_MAX + 22;
-  public static final int    MESSAGE_INDIVID_ACK        = ActionEvent.RESERVED_ID_MAX + 23;
-  public static final int    MESSAGE_GAS_READ           = ActionEvent.RESERVED_ID_MAX + 24;
-  public static final int    MESSAGE_GAS_ACK            = ActionEvent.RESERVED_ID_MAX + 25;
-  //
-  public static final int    MESSAGE_DEVALIAS_SET       = ActionEvent.RESERVED_ID_MAX + 26;
+  public static final int    MESSAGE_SPXALIVE           = ActionEvent.RESERVED_ID_MAX + 9;
+  public static final int    MESSAGE_COMMTIMEOUT        = ActionEvent.RESERVED_ID_MAX + 10;
+  public static final int    MESSAGE_FWVERSION_READ     = ActionEvent.RESERVED_ID_MAX + 11;
+  public static final int    MESSAGE_SETPOINT_READ      = ActionEvent.RESERVED_ID_MAX + 12;
+  public static final int    MESSAGE_SETPOINT_ACK       = ActionEvent.RESERVED_ID_MAX + 13;
+  public static final int    MESSAGE_LICENSE_STATE_READ = ActionEvent.RESERVED_ID_MAX + 14;
+  public static final int    MESSAGE_DECO_READ          = ActionEvent.RESERVED_ID_MAX + 15;
+  public static final int    MESSAGE_DECO_ACK           = ActionEvent.RESERVED_ID_MAX + 16;
+  public static final int    MESSAGE_DISPLAY_READ       = ActionEvent.RESERVED_ID_MAX + 17;
+  public static final int    MESSAGE_DISPLAY_ACK        = ActionEvent.RESERVED_ID_MAX + 18;
+  public static final int    MESSAGE_UNITS_READ         = ActionEvent.RESERVED_ID_MAX + 19;
+  public static final int    MESSAGE_UNITS_ACK          = ActionEvent.RESERVED_ID_MAX + 20;
+  public static final int    MESSAGE_INDIVID_READ       = ActionEvent.RESERVED_ID_MAX + 21;
+  public static final int    MESSAGE_INDIVID_ACK        = ActionEvent.RESERVED_ID_MAX + 22;
+  public static final int    MESSAGE_GAS_READ           = ActionEvent.RESERVED_ID_MAX + 23;
+  public static final int    MESSAGE_GAS_ACK            = ActionEvent.RESERVED_ID_MAX + 24;
+  public static final int    MESSAGE_DEVALIAS_SET       = ActionEvent.RESERVED_ID_MAX + 25;
+  public static final int    MESSAGE_DIRENTRY_READ      = ActionEvent.RESERVED_ID_MAX + 26;
+  public static final int    MESSAGE_DIRENTRY_END       = ActionEvent.RESERVED_ID_MAX + 27;
   
   //
 //  public static final int    MESSAGE_STATE_CHANGE       = ActionEvent.RESERVED_ID_MAX + 2;
@@ -185,7 +185,6 @@ public final class ProjectConst
 //  public static final int    MESSAGE_DEVICE_NAME        = ActionEvent.RESERVED_ID_MAX + 5;
 //  public static final int    MESSAGE_TOAST              = ActionEvent.RESERVED_ID_MAX + 6;
 //  public static final int    MESSAGE_KDO45_READ         = ActionEvent.RESERVED_ID_MAX + 13;
-//  public static final int    MESSAGE_DIRENTRY_READ      = ActionEvent.RESERVED_ID_MAX + 15;
 //  public static final int    MESSAGE_LOGENTRY_START     = ActionEvent.RESERVED_ID_MAX + 17;
 //  public static final int    MESSAGE_LOGENTRY_LINE      = ActionEvent.RESERVED_ID_MAX + 18;
 //  public static final int    MESSAGE_LOGENTRY_STOP      = ActionEvent.RESERVED_ID_MAX + 19;
@@ -194,9 +193,6 @@ public final class ProjectConst
 //  public static final int    MESSAGE_DB_FAIL            = ActionEvent.RESERVED_ID_MAX + 22;
 //  public static final int    MESSAGE_DB_WRITE_WAIT      = ActionEvent.RESERVED_ID_MAX + 23;
 //  public static final int    MESSAGE_DB_DELETE_WAIT     = ActionEvent.RESERVED_ID_MAX + 24;
-//  public static final int    MESSAGE_GAS_WRITTEN        = ActionEvent.RESERVED_ID_MAX + 25;
-//  public static final int    MESSAGE_BTRECOVEROK        = ActionEvent.RESERVED_ID_MAX + 32;
-//  public static final int    MESSAGE_BTRECOVERERR       = ActionEvent.RESERVED_ID_MAX + 33;
 //  public static final int    MESSAGE_BTWAITFOR          = ActionEvent.RESERVED_ID_MAX + 34;
 //  public static final int    MESSAGE_BTNODEVCONN        = ActionEvent.RESERVED_ID_MAX + 35;
 //  public static final int    MESSAGE_BTAUTHREQEST       = ActionEvent.RESERVED_ID_MAX + 36;
