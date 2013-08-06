@@ -271,6 +271,10 @@
     <string name="in_progress_header">page in progress</string>
     <string name="in_progress_msg" formatted="false">this page is under progress...</string>
     
+    <!-- Fragment SPXReadLogFragment  -->
+    <string name="logread_headline">read logs from SPX</string>
+    <string name="logread_no_data_filler">no data read</string>
+    
     <!-- sonstig  -->
     <string name="no_device">- no device -</string>
     <string name="array_with_pic_adapter_dummy">PROGRAMITEM</string>

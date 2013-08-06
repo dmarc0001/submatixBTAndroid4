@@ -273,6 +273,10 @@
     <string name="in_progress_header">Seite in Arbeit</string>
     <string name="in_progress_msg"  formatted="false">Diese Seite ist in Bearbeitung...</string>
 
+    <!-- Fragment SPXReadLogFragment  -->
+    <string name="logread_headline">Lese Protokolle vom SPX</string>
+    <string name="logread_no_data_filler">no data read</string>
+    
     <!-- sonstig  -->
     <string name="no_device">"- Kein Gerät -"</string>
     <string name="array_with_pic_adapter_dummy">"PROGRAMITEM"</string>
