@@ -63,6 +63,7 @@ public class CommToast
    * 
    *         Stand: 18.07.2013
    */
+  @SuppressWarnings( "unused" )
   private CommToast()
   {}
 

@@ -540,7 +540,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
         msgConnecting( smsg );
         break;
       // ################################################################
-      // Computer wurde getrennt
+      // Computer wurde verbunden
       // ################################################################
       case ProjectConst.MESSAGE_CONNECTED:
         // die Menüs anpassen
@@ -1404,6 +1404,24 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     if( mService != null )
     {
       mService.writeGasSetup( gasUpdates );
+    }
+  }
+
+  /**
+   * 
+   * frage den SPX nach dem Logverzeichnis
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 06.08.2013
+   */
+  public void askForLogDirectoryFromSPX()
+  {
+    if( mService != null )
+    {
+      mService.askForLogDirectoryFromSPX();
     }
   }
 }
