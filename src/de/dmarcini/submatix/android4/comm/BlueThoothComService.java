@@ -531,19 +531,31 @@ public class BlueThoothComService extends Service
           break;
         case ProjectConst.SPX_SET_SETUP_GASLIST:
           // Besaetigung fuer Gas setzen bekommen
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "MESSAGE_GAS_ACK recived " );
           msg = new BtServiceMessage( ProjectConst.MESSAGE_GAS_ACK );
           sendMessageToApp( msg );
-          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "MESSAGE_GAS_ACK recived " );
           break;
-        // case ProjectConst.SPX_GET_LOG_INDEX:
-        // // Ein Logbuch Verzeichniseintrag gefunden
-        // if( aListener != null )
-        // {
-        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_DIRENTRY_READ, new String( readMessage ), System.currentTimeMillis() / 100, 0 );
-        // aListener.actionPerformed( ex );
-        // }
-        // if( log ) LOGGER.fine( "SPX_GET_LOG_INDEX recived!" );
-        // break;
+        case ProjectConst.SPX_GET_LOG_INDEX:
+          // Ein Logbuch Verzeichniseintrag gefunden
+          // ~41:21:9_4_10_20_44_55.txt:22
+          // ~41:NR:FN:MAX
+          // NR: Nummer des Eintrages
+          // FN: Filename
+          // MAX: letzter Eintrag
+          if( BuildConfig.DEBUG ) Log.d( TAGREADER, "MESSAGE_GET_LOG_INDEX recived " );
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_DIRENTRY_READ, new String[]
+          { fields[1], fields[2], fields[3] } );
+          sendMessageToApp( msg );
+          //
+          // war das der lezte Eintrag?
+          //
+          if( fields[1].equals( fields[3] ) )
+          {
+            if( BuildConfig.DEBUG ) Log.d( TAGREADER, "END OF DIRINDEX recived " );
+            msg = new BtServiceMessage( ProjectConst.MESSAGE_DIRENTRY_END );
+            sendMessageToApp( msg );
+          }
+          break;
         // case ProjectConst.SPX_GET_LOG_NUMBER_SE:
         // if( 0 == fields[1].indexOf( "1" ) )
         // {
@@ -1100,6 +1112,22 @@ public class BlueThoothComService extends Service
       Log.d( TAG, "askForSPXAlive..." );
     }
     this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_ALIVE ) );
+  }
+
+  /**
+   * 
+   * Rufe vom SPX das Logverzeichnis auf
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 06.08.2013
+   */
+  public void askForLogDirectoryFromSPX()
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "askForLogDirectoryFromSPX..." );
+    this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_GET_LOG_INDEX ) );
   }
 
   /**
