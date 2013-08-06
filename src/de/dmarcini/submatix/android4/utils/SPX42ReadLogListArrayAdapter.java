@@ -14,18 +14,10 @@ import de.dmarcini.submatix.android4.R;
 
 public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
 {
+  @SuppressWarnings( "unused" )
   private static final String TAG     = SPX42ReadLogListArrayAdapter.class.getSimpleName();
+  @SuppressWarnings( "unused" )
   private int                 themeId = R.style.AppDarkTheme;
-
-  /* private view holder class */
-  private class ViewHolder
-  {
-    public ImageView imageView;
-    @SuppressWarnings( "unused" )
-    public TextView  numberAndNameTextView;
-    @SuppressWarnings( "unused" )
-    public TextView  fileDetailsTextView;
-  }
 
   public SPX42ReadLogListArrayAdapter( Context context, int textViewResourceId, int themeId )
   {
@@ -46,17 +38,10 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
   }
 
   @Override
-  public void add( ReadLogItemObj items )
-  {
-    super.add( items );
-  }
-
-  @Override
   public View getView( int position, View convertView, ViewGroup parent )
   {
     View cView = convertView;
     ReadLogItemObj rlio;
-    ViewHolder holder = null;
     LayoutInflater mInflater;
     //
     mInflater = ( ( Activity )getContext() ).getLayoutInflater();
@@ -71,7 +56,8 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
     //
     // verorte die Objekte
     //
-    ImageView iv = ( ImageView )cView.findViewById( R.id.readLogListIconView );
+    ImageView ivSaved = ( ImageView )cView.findViewById( R.id.readLogListIconView );
+    ImageView ivMarked = ( ImageView )cView.findViewById( R.id.readLogMarkedIconView );
     TextView tvName = ( TextView )cView.findViewById( R.id.readLogNameListTextView );
     TextView tvDetail = ( TextView )cView.findViewById( R.id.readLogDetailsTextView );
     try
@@ -81,11 +67,19 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
       //
       if( rlio.isSaved )
       {
-        iv.setImageResource( R.drawable.saved_log );
+        ivSaved.setImageResource( R.drawable.saved_log );
       }
       else
       {
-        iv.setImageResource( R.drawable.unsaved_log );
+        ivSaved.setImageResource( R.drawable.unsaved_log );
+      }
+      if( rlio.isMarked )
+      {
+        ivMarked.setImageResource( R.drawable.star_full_yellow );
+      }
+      else
+      {
+        ivMarked.setImageResource( R.drawable.star_empty_yellow );
       }
       //
       // Beschriftung setzen
@@ -98,5 +92,119 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
       // MACHWAS
     }
     return( cView );
+  }
+
+  /**
+   * 
+   * Ist der Logeintrag als gesichert markiert
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 06.08.2013
+   * @param position
+   * @return ist der Eintrag als gesichert markiert
+   */
+  public boolean isSaved( int position )
+  {
+    if( position > getCount() ) return( false );
+    return( getItem( position ).isSaved );
+  }
+
+  /**
+   * 
+   * markiere einen Eintrag als gesichert in der Datenbank
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 06.08.2013
+   * @param position
+   * @param isSaved
+   */
+  public void setSaved( int position, boolean isSaved )
+  {
+    if( position > getCount() ) return;
+    getItem( position ).isSaved = isSaved;
+    if( !isSaved )
+    {
+      getItem( position ).dbId = -1;
+    }
+  }
+
+  /**
+   * 
+   * Markiere einen Eintrag als gesichert mit Datenbank-ID
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 06.08.2013
+   * @param position
+   * @param isSaved
+   * @param dbId
+   */
+  public void setSaved( int position, boolean isSaved, int dbId )
+  {
+    if( position > getCount() ) return;
+    getItem( position ).isSaved = isSaved;
+    getItem( position ).dbId = dbId;
+  }
+
+  /**
+   * 
+   * Gib den Namen des Eintrages zurück
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 06.08.2013
+   * @param position
+   * @return Name des Eintrages
+   */
+  public String getName( int position )
+  {
+    if( position > getCount() ) return( null );
+    return( getItem( position ).itemName );
+  }
+
+  /**
+   * 
+   * Gib die nummer des Eintrages auf dem SPX zurück
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 06.08.2013
+   * @param position
+   * @return die NMummer des Eintrages
+   */
+  public int getNumberOnSPX( int position )
+  {
+    if( position > getCount() ) return( -1 );
+    return( getItem( position ).numberOnSPX );
+  }
+
+  /**
+   * 
+   * Gib den Dateinamen auf dem SPX zurück
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 06.08.2013
+   * @param position
+   * @return Dateiname auf dem SPX
+   */
+  public String getNameOnSPX( int position )
+  {
+    if( position > getCount() ) return( null );
+    return( getItem( position ).itemNameOnSPX );
   }
 }
