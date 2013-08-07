@@ -85,38 +85,4 @@ public class ReadLogItemObj
   @SuppressWarnings( "unused" )
   private ReadLogItemObj()
   {}
-
-  /**
-   * 
-   * Setze merkiert oder nicht
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 06.08.2013
-   * @param position
-   * @param marked
-   */
-  public void setMarked( int position, boolean marked )
-  {
-    this.isMarked = marked;
-  }
-
-  /**
-   * 
-   * Gib zurück, ob markiert oder nicht
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 06.08.2013
-   * @param position
-   * @return
-   */
-  public boolean getMarked( int position )
-  {
-    return( this.isMarked );
-  }
 }
