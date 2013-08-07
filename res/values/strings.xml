@@ -52,6 +52,7 @@
     <string name="toast_comm_set_gas_count" formatted="false">send gas #%02d from #%02d</string>
     <string name="toast_comm_set_gas_ok">send gas setup: OK</string>
     <string name="toast_comm_set_gas_alert">send gas setup: ERROR</string>
+    <string name="toast_read_logdir_no_selected_entrys">Not entrys selected yet!</string>
     
     <!-- Dialogboxen  -->
     <string name="dialog_sure_exit">are you sure?</string>
@@ -273,7 +274,7 @@
     
     <!-- Fragment SPXReadLogFragment  -->
     <string name="logread_headline">read logs from SPX</string>
-    <string name="logread_no_data_filler">no data read</string>
+    <string name="logread_doit_button">Read!</string>
     
     <!-- sonstig  -->
     <string name="no_device">- no device -</string>
