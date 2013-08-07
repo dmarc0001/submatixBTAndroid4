@@ -1,6 +1,7 @@
 package de.dmarcini.submatix.android4.utils;
 
 import java.util.List;
+import java.util.Vector;
 
 import android.app.Activity;
 import android.content.Context;
@@ -206,5 +207,69 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
   {
     if( position > getCount() ) return( null );
     return( getItem( position ).itemNameOnSPX );
+  }
+
+  /**
+   * 
+   * Setze markiert oder nicht
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 06.08.2013
+   * @param position
+   * @param marked
+   */
+  public void setMarked( int position, boolean marked )
+  {
+    if( position > getCount() ) return;
+    getItem( position ).isMarked = marked;
+  }
+
+  /**
+   * 
+   * Gib zurück, ob markiert oder nicht
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 06.08.2013
+   * @param position
+   * @return
+   */
+  public boolean getMarked( int position )
+  {
+    if( position > getCount() ) return( false );
+    return( getItem( position ).isMarked );
+  }
+
+  /**
+   * 
+   * gib die Nummern der markierten Einträge zurück
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 07.08.2013
+   * @return
+   */
+  public int[] getMarkedItems()
+  {
+    int[] items;
+    Vector<Integer> lst = new Vector<Integer>();
+    //
+    for( int i = 0; i < getCount(); i++ )
+    {
+      if( getItem( i ).isMarked ) lst.add( i );
+    }
+    items = new int[lst.size()];
+    for( int i = 0; i < lst.size(); i++ )
+    {
+      items[i] = lst.elementAt( i );
+    }
+    return( items );
   }
 }
