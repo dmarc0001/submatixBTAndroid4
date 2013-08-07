@@ -75,63 +75,50 @@ public class DataSQLHelper extends SQLiteOpenHelper
       Toast.makeText( cx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT ).show();
       return;
     }
-    // // Main-Tabelle
-    // if( BuildConfig.DEBUG ) Log.d( TAG, "create table " + ProjectConst.D_TABLE_DIVELOGS + "..." );
-    // sql = "create table  " + ProjectConst.D_TABLE_DIVELOGS + " ";
-    // sql += "(";
-    // sql += ProjectConst.D_DIVEID + " integer primary key autoincrement, \n";
-    // sql += ProjectConst.D_DEVICEID + " text not null, \n";
-    // sql += ProjectConst.D_STARTTIME + " text not null, \n";
-    // sql += ProjectConst.D_HADSEND + " interger, \n";
-    // sql += ProjectConst.D_FILENAME + " text not null, \n";
-    // sql += ProjectConst.D_FIRSTTEMP + " real, \n";
-    // sql += ProjectConst.D_LOWTEMP + " real, \n";
-    // sql += ProjectConst.D_MAXDEPTH + " integer, \n";
-    // sql += ProjectConst.D_SAMPLES + " integer \n";
-    // sql += ");";
-    // try
-    // {
-    // db.execSQL( sql );
-    // }
-    // catch( SQLException ex )
-    // {
-    // Log.e( TAG, ex.getLocalizedMessage() );
-    // Toast.makeText( cx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT ).show();
-    // return;
-    // }
-    // // Erzeuge index
-    // if( BuildConfig.DEBUG ) Log.d( TAG, "create INDEX  on Table " + ProjectConst.D_TABLE_DIVELOGS + "..." );
-    // sql = "create INDEX  idx_" + ProjectConst.D_TABLE_DIVELOGS + "_" + ProjectConst.D_STARTTIME;
-    // sql += " ON " + ProjectConst.D_TABLE_DIVELOGS + "(" + ProjectConst.D_STARTTIME + " ASC);";
-    // try
-    // {
-    // db.execSQL( sql );
-    // }
-    // catch( SQLException ex )
-    // {
-    // Log.e( TAG, ex.getLocalizedMessage() );
-    // Toast.makeText( cx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT ).show();
-    // return;
-    // }
-    // // Tabelle für Gaslisten beim Tauchgang
-    // if( BuildConfig.DEBUG ) Log.d( TAG, "create table " + ProjectConst.G_TABLE_GASLISTS + "..." );
-    // sql = "create table  " + ProjectConst.G_TABLE_GASLISTS + " ";
-    // sql += "(";
-    // sql += ProjectConst.G_DIVEID + " integer not null, \n";
-    // sql += ProjectConst.G_O2 + " integer, \n";
-    // sql += ProjectConst.G_N2 + " integer, \n";
-    // sql += ProjectConst.G_HE + " integer \n";
-    // sql += ");";
-    // try
-    // {
-    // db.execSQL( sql );
-    // }
-    // catch( SQLException ex )
-    // {
-    // Log.e( TAG, ex.getLocalizedMessage() );
-    // Toast.makeText( cx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT ).show();
-    // return;
-    // }
+    // Main-Tabelle
+    if( BuildConfig.DEBUG ) Log.d( TAG, "create table " + ProjectConst.H_TABLE_DIVELOGS + "..." );
+    sql = "create table  " + ProjectConst.H_TABLE_DIVELOGS + " ";
+    sql += "(";
+    sql += ProjectConst.H_DIVEID + " integer primary key autoincrement, \n";
+    sql += ProjectConst.H_DIVENUMBERONSPX + " text not null, \n";
+    sql += ProjectConst.H_DEVICESERIAL + " text not null, \n";
+    sql += ProjectConst.H_STARTTIME + " text not null, \n";
+    sql += ProjectConst.H_HADSEND + " interger, \n";
+    sql += ProjectConst.H_FILEONSPX + " text not null, \n";
+    sql += ProjectConst.H_FIRSTTEMP + " real, \n";
+    sql += ProjectConst.H_LOWTEMP + " real, \n";
+    sql += ProjectConst.H_MAXDEPTH + " integer, \n";
+    sql += ProjectConst.H_SAMPLES + " integer, \n";
+    sql += ProjectConst.H_DIVELENGTH + " integer, \n";
+    sql += ProjectConst.H_UNITS + " text not null, \n";
+    sql += ProjectConst.H_NOTES + " text, \n";
+    sql += ProjectConst.H_GEO_LON + " text, \n";
+    sql += ProjectConst.H_GEO_LAT + " text \n";
+    sql += ");";
+    try
+    {
+      db.execSQL( sql );
+    }
+    catch( SQLException ex )
+    {
+      Log.e( TAG, ex.getLocalizedMessage() );
+      Toast.makeText( cx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT ).show();
+      return;
+    }
+    // Erzeuge index
+    if( BuildConfig.DEBUG ) Log.d( TAG, "create INDEX  on Table " + ProjectConst.H_TABLE_DIVELOGS + "..." );
+    sql = "create INDEX  idx_" + ProjectConst.H_TABLE_DIVELOGS + "_" + ProjectConst.H_STARTTIME;
+    sql += " ON " + ProjectConst.H_TABLE_DIVELOGS + "(" + ProjectConst.H_STARTTIME + " ASC);";
+    try
+    {
+      db.execSQL( sql );
+    }
+    catch( SQLException ex )
+    {
+      Log.e( TAG, ex.getLocalizedMessage() );
+      Toast.makeText( cx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT ).show();
+      return;
+    }
     Log.i( TAG, "createTables...OK" );
   }
 
@@ -160,34 +147,20 @@ public class DataSQLHelper extends SQLiteOpenHelper
       Toast.makeText( cx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT ).show();
       return;
     }
-    // // Maindaten
-    // sql = "drop table " + ProjectConst.D_TABLE_DIVELOGS + ";";
-    // if( BuildConfig.DEBUG ) Log.d( TAG, "SQL: <" + sql + ">" );
-    // try
-    // {
-    // db.execSQL( sql );
-    // if( BuildConfig.DEBUG ) Log.d( TAG, "SQL: <" + sql + ">.... OK" );
-    // }
-    // catch( SQLException ex )
-    // {
-    // Log.e( TAG, ex.getLocalizedMessage() );
-    // Toast.makeText( cx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT ).show();
-    // return;
-    // }
-    // // Gaslisten
-    // sql = "drop table " + ProjectConst.G_TABLE_GASLISTS + ";";
-    // if( BuildConfig.DEBUG ) Log.d( TAG, "SQL: <" + sql + ">" );
-    // try
-    // {
-    // db.execSQL( sql );
-    // Log.d( TAG, "SQL: <" + sql + ">.... OK" );
-    // }
-    // catch( SQLException ex )
-    // {
-    // Log.e( TAG, ex.getLocalizedMessage() );
-    // Toast.makeText( cx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT ).show();
-    // return;
-    // }
+    // Maindaten
+    sql = "drop table " + ProjectConst.H_TABLE_DIVELOGS + ";";
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SQL: <" + sql + ">" );
+    try
+    {
+      db.execSQL( sql );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "SQL: <" + sql + ">.... OK" );
+    }
+    catch( SQLException ex )
+    {
+      Log.e( TAG, ex.getLocalizedMessage() );
+      Toast.makeText( cx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT ).show();
+      return;
+    }
     Log.i( TAG, "dropTables...OK" );
   }
 
@@ -338,10 +311,78 @@ public class DataSQLHelper extends SQLiteOpenHelper
       db.close();
       db = getOpenDatabase( true );
     }
-    dropTables( db );
-    createTables( db );
-    db.setVersion( newVersion );
-    db.close();
-    Log.i( TAG, "onUpgrade...OK" );
+    if( oldVersion == 1 && newVersion == 2 )
+    {
+      createMainTable( db );
+    }
+    else
+    {
+      dropTables( db );
+      createTables( db );
+      db.setVersion( newVersion );
+      db.close();
+      Log.i( TAG, "onUpgrade...OK" );
+    }
+  }
+
+  /**
+   * 
+   * Tauchlog Tabelle erstellen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 07.08.2013
+   * @param db
+   */
+  private void createMainTable( SQLiteDatabase db )
+  {
+    String sql;
+    // Main-Tabelle
+    if( BuildConfig.DEBUG ) Log.d( TAG, "create table " + ProjectConst.H_TABLE_DIVELOGS + "..." );
+    sql = "create table  " + ProjectConst.H_TABLE_DIVELOGS + " ";
+    sql += "(";
+    sql += ProjectConst.H_DIVEID + " integer primary key autoincrement, \n";
+    sql += ProjectConst.H_DIVENUMBERONSPX + " text not null, \n";
+    sql += ProjectConst.H_DEVICESERIAL + " text not null, \n";
+    sql += ProjectConst.H_STARTTIME + " text not null, \n";
+    sql += ProjectConst.H_HADSEND + " interger, \n";
+    sql += ProjectConst.H_FILEONSPX + " text not null, \n";
+    sql += ProjectConst.H_FIRSTTEMP + " real, \n";
+    sql += ProjectConst.H_LOWTEMP + " real, \n";
+    sql += ProjectConst.H_MAXDEPTH + " integer, \n";
+    sql += ProjectConst.H_SAMPLES + " integer, \n";
+    sql += ProjectConst.H_DIVELENGTH + " integer, \n";
+    sql += ProjectConst.H_UNITS + " text not null, \n";
+    sql += ProjectConst.H_NOTES + " text, \n";
+    sql += ProjectConst.H_GEO_LON + " text, \n";
+    sql += ProjectConst.H_GEO_LAT + " text \n";
+    sql += ");";
+    try
+    {
+      db.execSQL( sql );
+    }
+    catch( SQLException ex )
+    {
+      Log.e( TAG, ex.getLocalizedMessage() );
+      Toast.makeText( cx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT ).show();
+      return;
+    }
+    // Erzeuge index
+    if( BuildConfig.DEBUG ) Log.d( TAG, "create INDEX  on Table " + ProjectConst.H_TABLE_DIVELOGS + "..." );
+    sql = "create INDEX  idx_" + ProjectConst.H_TABLE_DIVELOGS + "_" + ProjectConst.H_STARTTIME;
+    sql += " ON " + ProjectConst.H_TABLE_DIVELOGS + "(" + ProjectConst.H_STARTTIME + " ASC);";
+    try
+    {
+      db.execSQL( sql );
+    }
+    catch( SQLException ex )
+    {
+      Log.e( TAG, ex.getLocalizedMessage() );
+      Toast.makeText( cx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT ).show();
+      return;
+    }
+    Log.i( TAG, "createMainTable...OK" );
   }
 }
