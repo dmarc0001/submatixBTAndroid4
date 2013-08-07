@@ -23,12 +23,9 @@ public final class ProjectConst
   public static final String MANUFACTVERS               = "0.3-BETA";
   public static final String GENYEAR                    = "2013";
   public static final String GENMONTH                   = "08";
-  public static final String GENDAY                     = "01";
+  public static final String GENDAY                     = "08";
   public static final boolean CHECK_PHYSICAL_BT         = false; 
 
-  // Datenbankversion
-  public static int          DB_VERSION                 = 1;
-  
   // ANDROID: Preferences Version
   public static int          PREF_VERSION               = 1;
 
@@ -70,7 +67,7 @@ public final class ProjectConst
   public static final String DEFAULTDATADIR             = "database";
   public static final String DEFAULTEXPORTDIR           = "export";
   public static final String DATABASE_NAME              = "submatixDatabase.db";
-  public static final int DATABASE_VERSION              = 1;
+  public static final int DATABASE_VERSION              = 2;
   
   // Messages für SPX 42
   public static final String STX                        = new String( new byte[] { 0x02 } );
@@ -233,7 +230,7 @@ public final class ProjectConst
   public static final String H_DIVEID                   = "dive_id";
   public static final String H_DIVENUMBERONSPX          = "dive_number";
   public static final String H_FILEONSPX                = "filename";
-  public static final String H_DEVICEID                 = "device_id";
+  public static final String H_DEVICESERIAL             = "device_serial";
   public static final String H_STARTTIME                = "starttime";
   public static final String H_HADSEND                  = "had_send";
   public static final String H_FIRSTTEMP                = "airtemp";
@@ -243,42 +240,45 @@ public final class ProjectConst
   public static final String H_DIVELENGTH               = "length";
   public static final String H_UNITS                    = "units";
   public static final String H_NOTES                    = "notes";
-  //
-  // Tabelle für die relevanten Daten des Tauchganges
-  // Tabelle logdata
-  public static final String D_TABLE_DIVEDETAIL         = "logdata";
-  public static final String D_DBID                     = "id";
-  public static final String D_DIVEID                   = "dive_id";
-  public static final String D_DEPTH                    = "depth";
-  public static final String D_TEMPERATURE              = "temperature";
-  public static final String D_PPO                      = "ppo";
-  public static final String D_PPO_1                    = "ppo1";
-  public static final String D_PPO_2                    = "ppo2";
-  public static final String D_PPO_3                    = "ppo3";
-  public static final String D_SETPOINT                 = "setpoint";
-  public static final String D_N2                       = "n2";
-  public static final String D_HE                       = "he";
-  public static final String D_NULLTIME                 = "nulltime";
-  public static final String D_DELTATIME                = "deltatime";
-  public static final String D_PRESURE                  = "presure";
-  public static final String D_ACKU                     = "acku";
-  //
-  // Tabelle für Gas-Presets
-  // Tabelle presets
-  public static final String P_TABLE_PRESETS            = "presets";
-  public static final String P_DBID                     = "id";
-  public static final String P_SETNAME                  = "setname";
-  //
-  // Tablelle preset_details
-  public static final String PD_TABLE_PRESETDETAIL      = "presets_details";
-  public static final String PD_DBID                    = "id";
-  public static final String PD_SETID                   = "setid";
-  public static final String PD_GASNR                   = "gasnr";
-  public static final String PD_O2                      = "o2";
-  public static final String PD_HE                      = "he";
-  public static final String PD_DILUENT1                = "dil1";
-  public static final String PD_DILUENT2                = "dil2";
-  public static final String PD_BAILOUT                 = "bailout";
+  public static final String H_GEO_LON                  = "longitude";
+  public static final String H_GEO_LAT                  = "latitude";
+  
+//  //
+//  // Tabelle für die relevanten Daten des Tauchganges
+//  // Tabelle logdata
+//  public static final String D_TABLE_DIVEDETAIL         = "logdata";
+//  public static final String D_DBID                     = "id";
+//  public static final String D_DIVEID                   = "dive_id";
+//  public static final String D_DEPTH                    = "depth";
+//  public static final String D_TEMPERATURE              = "temperature";
+//  public static final String D_PPO                      = "ppo";
+//  public static final String D_PPO_1                    = "ppo1";
+//  public static final String D_PPO_2                    = "ppo2";
+//  public static final String D_PPO_3                    = "ppo3";
+//  public static final String D_SETPOINT                 = "setpoint";
+//  public static final String D_N2                       = "n2";
+//  public static final String D_HE                       = "he";
+//  public static final String D_NULLTIME                 = "nulltime";
+//  public static final String D_DELTATIME                = "deltatime";
+//  public static final String D_PRESURE                  = "presure";
+//  public static final String D_ACKU                     = "acku";
+//  //
+//  // Tabelle für Gas-Presets
+//  // Tabelle presets
+//  public static final String P_TABLE_PRESETS            = "presets";
+//  public static final String P_DBID                     = "id";
+//  public static final String P_SETNAME                  = "setname";
+//  //
+//  // Tablelle preset_details
+//  public static final String PD_TABLE_PRESETDETAIL      = "presets_details";
+//  public static final String PD_DBID                    = "id";
+//  public static final String PD_SETID                   = "setid";
+//  public static final String PD_GASNR                   = "gasnr";
+//  public static final String PD_O2                      = "o2";
+//  public static final String PD_HE                      = "he";
+//  public static final String PD_DILUENT1                = "dil1";
+//  public static final String PD_DILUENT2                = "dil2";
+//  public static final String PD_BAILOUT                 = "bailout";
   
   //
   // Default Farben für die Graphen in der Loganzeige
