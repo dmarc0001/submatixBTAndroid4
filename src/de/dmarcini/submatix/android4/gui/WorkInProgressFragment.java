@@ -11,9 +11,9 @@ import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
 
-public class InProgressFragment extends Fragment implements IBtServiceListener
+public class WorkInProgressFragment extends Fragment implements IBtServiceListener
 {
-  public static final String TAG             = InProgressFragment.class.getSimpleName();
+  public static final String TAG             = WorkInProgressFragment.class.getSimpleName();
   private Activity           runningActivity = null;
 
   @Override

@@ -1101,7 +1101,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
           case R.string.progitem_loggraph:
           case R.string.progitem_export:
             Log.i( TAG, "the called page is in progress..." );
-            InProgressFragment ipf = new InProgressFragment();
+            WorkInProgressFragment ipf = new WorkInProgressFragment();
             ipf.setArguments( arguments );
             getActionBar().setTitle( R.string.in_progress_header );
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, ipf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
@@ -1161,7 +1161,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
           case R.string.progitem_loggraph:
           case R.string.progitem_export:
             Log.i( TAG, "the called page is in progress..." );
-            InProgressFragment ipf = new InProgressFragment();
+            WorkInProgressFragment ipf = new WorkInProgressFragment();
             ipf.setArguments( arguments );
             getActionBar().setTitle( R.string.in_progress_header );
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, ipf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();

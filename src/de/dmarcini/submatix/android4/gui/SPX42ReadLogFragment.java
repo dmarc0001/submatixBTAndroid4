@@ -297,7 +297,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
         }
         else
         {
-          // er will sichern
+          // er will einlesen
         }
       }
     }

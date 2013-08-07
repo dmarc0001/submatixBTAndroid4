@@ -127,7 +127,7 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
           case R.string.progitem_loggraph:
           case R.string.progitem_export:
             Log.i( TAG, "onCreate: the called page is in progress..." );
-            currFragment = ( new InProgressFragment() );
+            currFragment = ( new WorkInProgressFragment() );
             setContentView( R.layout.fragment_in_progress );
             getActionBar().setTitle( R.string.in_progress_header );
             getActionBar().setLogo( mItem.resIdOffline );
