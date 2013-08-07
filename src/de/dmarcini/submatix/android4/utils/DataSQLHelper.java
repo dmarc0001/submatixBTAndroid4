@@ -314,6 +314,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
     if( oldVersion == 1 && newVersion == 2 )
     {
       createMainTable( db );
+      db.setVersion( newVersion );
     }
     else
     {
