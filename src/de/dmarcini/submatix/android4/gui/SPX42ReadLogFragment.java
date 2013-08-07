@@ -13,11 +13,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
@@ -29,48 +33,17 @@ import de.dmarcini.submatix.android4.utils.SPX42LogManager;
 import de.dmarcini.submatix.android4.utils.SPX42ReadLogListArrayAdapter;
 import de.dmarcini.submatix.android4.utils.UserAlertDialogFragment;
 
-public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener, OnItemClickListener
+public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener, OnItemClickListener, OnClickListener
 {
   private static final String          TAG                 = SPX42ReadLogFragment.class.getSimpleName();
   private Activity                     runningActivity     = null;
   private ListView                     mainListView        = null;
+  private Button                       readDirButton       = null;
   private SPX42LogManager              logManager          = null;
   private SPX42ReadLogListArrayAdapter logListAdapter      = null;
   private static final Pattern         fieldPatternDp      = Pattern.compile( ":" );
   private static final Pattern         fieldPatternUnderln = Pattern.compile( "[_.]" );
   private static String                timeFormatterString = "yyyy-MM-dd - hh:mm:ss";
-
-  @Override
-  public void handleMessages( int what, BtServiceMessage msg )
-  {
-    switch ( what )
-    {
-    //
-    // ################################################################
-    // Computer wurde verbunden
-    // ################################################################
-      case ProjectConst.MESSAGE_CONNECTED:
-        msgConnected( msg );
-        break;
-      // ################################################################
-      // Verzeichniseintrag gefunden
-      // ################################################################
-      case ProjectConst.MESSAGE_DIRENTRY_READ:
-        computeDirentry( msg );
-        break;
-      // ################################################################
-      // Verzeichnis zuende
-      // ################################################################
-      case ProjectConst.MESSAGE_DIRENTRY_END:
-        Log.i( TAG, "end of logdir recived" );
-        break;
-      // ################################################################
-      // DEFAULT
-      // ################################################################
-      default:
-        if( BuildConfig.DEBUG ) Log.i( TAG, "unknown messsage with id <" + what + "> recived!" );
-    }
-  }
 
   /**
    * 
@@ -156,6 +129,39 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   }
 
   @Override
+  public void handleMessages( int what, BtServiceMessage msg )
+  {
+    switch ( what )
+    {
+    //
+    // ################################################################
+    // Computer wurde verbunden
+    // ################################################################
+      case ProjectConst.MESSAGE_CONNECTED:
+        msgConnected( msg );
+        break;
+      // ################################################################
+      // Verzeichniseintrag gefunden
+      // ################################################################
+      case ProjectConst.MESSAGE_DIRENTRY_READ:
+        computeDirentry( msg );
+        break;
+      // ################################################################
+      // Verzeichnis zuende
+      // ################################################################
+      case ProjectConst.MESSAGE_DIRENTRY_END:
+        Log.i( TAG, "end of logdir recived" );
+        setEventsEnabled( true );
+        break;
+      // ################################################################
+      // DEFAULT
+      // ################################################################
+      default:
+        if( BuildConfig.DEBUG ) Log.i( TAG, "unknown messsage with id <" + what + "> recived!" );
+    }
+  }
+
+  @Override
   public void msgConnected( BtServiceMessage msg )
   {
     // mainListView = ( ListView )runningActivity.findViewById( R.id.readLogLinesListView );
@@ -211,7 +217,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     if( BuildConfig.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
     try
     {
-      mainListView = ( ListView )runningActivity.findViewById( R.id.readLogLinesListView );
+      mainListView = ( ListView )runningActivity.findViewById( R.id.readLogDirListView );
       logListAdapter = new SPX42ReadLogListArrayAdapter( runningActivity, R.layout.read_log_array_adapter_view, FragmentCommonActivity.getAppStyle() );
       //
       // FOR DEBUG:
@@ -259,6 +265,44 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     }
   }
 
+  /**
+   * Für den Klick auf den LESEN-Button
+   */
+  @Override
+  public void onClick( View view )
+  {
+    int[] items;
+    if( BuildConfig.DEBUG ) Log.d( TAG, "Click..." );
+    if( ( view instanceof Button ) && view.equals( readDirButton ) )
+    {
+      if( BuildConfig.DEBUG ) Log.d( TAG, "Click on READ DIR BUTTON..." );
+      items = logListAdapter.getMarkedItems();
+      // wenn nix markiert ist, wech
+      if( items.length == 0 )
+      {
+        Toast.makeText( runningActivity, R.string.toast_read_logdir_no_selected_entrys, Toast.LENGTH_SHORT ).show();
+        return;
+      }
+      //
+      // so, ab hier wird dann feste gelesen!
+      //
+      for( int idx = 0; idx < items.length; idx++ )
+      {
+        // welchen Eintrag wollte der geneigte User denn lesen?
+        int position = items[idx];
+        ReadLogItemObj dirItem = logListAdapter.getItem( position );
+        if( dirItem.isSaved )
+        {
+          // will er ein Update machen?
+        }
+        else
+        {
+          // er will sichern
+        }
+      }
+    }
+  }
+
   @Override
   public void onCreate( Bundle savedInstanceState )
   {
@@ -299,9 +343,34 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     //
     // Objekte lokalisieren
     //
-    mainListView = ( ListView )runningActivity.findViewById( R.id.readLogLinesListView );
+    mainListView = ( ListView )runningActivity.findViewById( R.id.readLogDirListView );
     mainListView.setChoiceMode( AbsListView.CHOICE_MODE_MULTIPLE );
+    readDirButton = ( Button )runningActivity.findViewById( R.id.readLogDirButton );
     return( rootView );
+  }
+
+  /**
+   * Für das Klicken auf einen Directory Eintrag
+   */
+  @Override
+  public void onItemClick( AdapterView<?> parent, View clickedView, int position, long id )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "Click on ListView! Pos: <" + position + ">" );
+    // invertiere die Markierung im Adapter
+    logListAdapter.setMarked( position, !logListAdapter.getMarked( position ) );
+    // mache die Markierung auch im View (das wird ja sonst nicht automatisch aktualisiert)
+    ImageView ivMarked = ( ImageView )clickedView.findViewById( R.id.readLogMarkedIconView );
+    if( ivMarked != null )
+    {
+      if( logListAdapter.getMarked( position ) )
+      {
+        ivMarked.setImageResource( R.drawable.star_full_yellow );
+      }
+      else
+      {
+        ivMarked.setImageResource( R.drawable.star_empty_yellow );
+      }
+    }
   }
 
   @Override
@@ -327,11 +396,24 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     // Listener aktivieren
     ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
     mainListView.setOnItemClickListener( this );
+    readDirButton = ( Button )runningActivity.findViewById( R.id.readLogDirButton );
+    readDirButton.setOnClickListener( this );
+    setEventsEnabled( false );
   }
 
-  @Override
-  public void onItemClick( AdapterView<?> parent, View clickedView, int position, long id )
+  /**
+   * 
+   * Wenn das lesen des Verzeichnisses zuende ist, Funktionen freigeben
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 07.08.2013
+   */
+  private void setEventsEnabled( boolean enabled )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "Click on ListView! Pos: <" + position + ">" );
+    readDirButton.setEnabled( enabled );
+    mainListView.setEnabled( enabled );
   }
 }
