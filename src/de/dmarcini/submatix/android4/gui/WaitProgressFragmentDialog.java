@@ -1,5 +1,5 @@
 /**
- * Ein Dialog zum WARTERN
+ * Ein Dialog zum WARTEN
  * 
  * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
  * 
@@ -26,12 +26,12 @@ import de.dmarcini.submatix.android4.R;
  * 
  *         Stand: 13.06.2013
  */
-public class FragmentProgressDialog extends DialogFragment
+public class WaitProgressFragmentDialog extends DialogFragment
 {
   private TextView msgView  = null;
   private String   vMessage = "none";
 
-  public FragmentProgressDialog( String msg )
+  public WaitProgressFragmentDialog( String msg )
   {
     this.vMessage = msg;
   }

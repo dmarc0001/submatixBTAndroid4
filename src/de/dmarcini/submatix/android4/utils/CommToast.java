@@ -13,7 +13,7 @@ import android.widget.Toast;
 import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.gui.FragmentCommonActivity;
-import de.dmarcini.submatix.android4.gui.FragmentProgressDialog;
+import de.dmarcini.submatix.android4.gui.WaitProgressFragmentDialog;
 
 /**
  * 
@@ -30,7 +30,7 @@ public class CommToast
   private static final String    TAG      = CommToast.class.getSimpleName();
   private Activity               act      = null;
   private Toast                  theToast = null;
-  private FragmentProgressDialog pd       = null;
+  private WaitProgressFragmentDialog pd       = null;
   private View                   toastLayout;
   private TextView               toastMessageTextView;
 
@@ -216,7 +216,7 @@ public class CommToast
     {
       pd.dismiss();
     }
-    pd = new FragmentProgressDialog( msg );
+    pd = new WaitProgressFragmentDialog( msg );
     pd.setCancelable( true );
     pd.setMax( maxevents );
     pd.setProgress( 4 );
