@@ -174,6 +174,9 @@ public final class ProjectConst
   public static final int    MESSAGE_DEVALIAS_SET       = ActionEvent.RESERVED_ID_MAX + 25;
   public static final int    MESSAGE_DIRENTRY_READ      = ActionEvent.RESERVED_ID_MAX + 26;
   public static final int    MESSAGE_DIRENTRY_END       = ActionEvent.RESERVED_ID_MAX + 27;
+  public static final int    MESSAGE_LOGENTRY_START     = ActionEvent.RESERVED_ID_MAX + 28;
+  public static final int    MESSAGE_LOGENTRY_LINE      = ActionEvent.RESERVED_ID_MAX + 29;
+  public static final int    MESSAGE_LOGENTRY_STOP      = ActionEvent.RESERVED_ID_MAX + 30;
   
   //
 //  public static final int    MESSAGE_STATE_CHANGE       = ActionEvent.RESERVED_ID_MAX + 2;
@@ -182,9 +185,6 @@ public final class ProjectConst
 //  public static final int    MESSAGE_DEVICE_NAME        = ActionEvent.RESERVED_ID_MAX + 5;
 //  public static final int    MESSAGE_TOAST              = ActionEvent.RESERVED_ID_MAX + 6;
 //  public static final int    MESSAGE_KDO45_READ         = ActionEvent.RESERVED_ID_MAX + 13;
-//  public static final int    MESSAGE_LOGENTRY_START     = ActionEvent.RESERVED_ID_MAX + 17;
-//  public static final int    MESSAGE_LOGENTRY_LINE      = ActionEvent.RESERVED_ID_MAX + 18;
-//  public static final int    MESSAGE_LOGENTRY_STOP      = ActionEvent.RESERVED_ID_MAX + 19;
 //  public static final int    MESSAGE_LOGDIRFROMCACHE    = ActionEvent.RESERVED_ID_MAX + 20;
 //  public static final int    MESSAGE_DB_SUCCESS         = ActionEvent.RESERVED_ID_MAX + 21;
 //  public static final int    MESSAGE_DB_FAIL            = ActionEvent.RESERVED_ID_MAX + 22;

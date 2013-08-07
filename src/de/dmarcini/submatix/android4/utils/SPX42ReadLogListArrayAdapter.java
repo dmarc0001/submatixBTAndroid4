@@ -237,7 +237,7 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * 
    *         Stand: 06.08.2013
    * @param position
-   * @return
+   * @return markiert oder nicht
    */
   public boolean getMarked( int position )
   {
@@ -254,22 +254,16 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 07.08.2013
-   * @return
+   * @return Vector mit Nummern
    */
-  public int[] getMarkedItems()
+  public Vector<Integer> getMarkedItems()
   {
-    int[] items;
     Vector<Integer> lst = new Vector<Integer>();
     //
     for( int i = 0; i < getCount(); i++ )
     {
       if( getItem( i ).isMarked ) lst.add( i );
     }
-    items = new int[lst.size()];
-    for( int i = 0; i < lst.size(); i++ )
-    {
-      items[i] = lst.elementAt( i );
-    }
-    return( items );
+    return( lst );
   }
 }

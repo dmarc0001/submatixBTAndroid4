@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import de.dmarcini.submatix.android4.R;
 
@@ -28,8 +29,13 @@ import de.dmarcini.submatix.android4.R;
  */
 public class WaitProgressFragmentDialog extends DialogFragment
 {
-  private TextView msgView  = null;
-  private String   vMessage = "none";
+  private TextView    msgView    = null;
+  private TextView    subMsgView = null;
+  private ProgressBar pBar       = null;
+  private String      vMessage   = "none";
+  private String      subMessage;
+  private int         maxEvents  = 10;
+  private int         progress   = 0;
 
   public WaitProgressFragmentDialog( String msg )
   {
@@ -40,31 +46,46 @@ public class WaitProgressFragmentDialog extends DialogFragment
   @Override
   public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
   {
-    View v = inflater.inflate( R.layout.fragment_dialog_please_wait, container, false );
-    msgView = ( TextView )v.findViewById( R.id.dialogMessageString );
+    View rootView = inflater.inflate( R.layout.fragment_dialog_please_wait, container, false );
+    msgView = ( TextView )rootView.findViewById( R.id.dialogMessageString );
+    subMsgView = ( TextView )rootView.findViewById( R.id.dialogSubMessageTextView );
+    pBar = ( ProgressBar )rootView.findViewById( R.id.dialogProgressBar );
     if( ( vMessage != null ) && ( !vMessage.isEmpty() ) )
     {
       msgView.setText( vMessage );
     }
+    if( subMessage != null )
+    {
+      subMsgView.setVisibility( View.VISIBLE );
+      subMsgView.setText( subMessage );
+    }
+    pBar.setMax( maxEvents );
+    pBar.setProgress( progress );
     // gleich neu zeichnen!
-    v.invalidate();
-    return v;
+    rootView.invalidate();
+    return rootView;
   }
 
   public void setMax( int maxevents )
   {
-    // TODO Automatisch generierter Methodenstub
+    maxEvents = maxevents;
+    if( pBar != null )
+    {
+      pBar.setMax( maxevents );
+    }
   }
 
-  public void setProgress( int i )
+  public void setProgress( int progress )
   {
-    // TODO Automatisch generierter Methodenstub
+    this.progress = progress;
+    if( pBar != null )
+    {
+      pBar.setProgress( progress );
+    }
   }
 
   public void setTitle( String title )
-  {
-    // super.setTitle( title );
-  }
+  {}
 
   public void setMessage( String msg )
   {
@@ -72,6 +93,30 @@ public class WaitProgressFragmentDialog extends DialogFragment
     if( msgView != null )
     {
       msgView.setText( msg );
+    }
+  }
+
+  /**
+   * 
+   * Submessage setzen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 07.08.2013
+   * @param msg
+   */
+  public void setSubMessage( String msg )
+  {
+    subMessage = msg;
+    if( subMsgView != null )
+    {
+      if( subMsgView.getVisibility() != View.VISIBLE )
+      {
+        subMsgView.setVisibility( View.VISIBLE );
+      }
+      subMsgView.setText( subMessage );
     }
   }
 }

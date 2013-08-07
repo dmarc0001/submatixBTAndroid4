@@ -293,11 +293,42 @@ public class BlueThoothComService extends Service
      */
     private void execLogentryCmd( int start, int end, StringBuffer mInStrBuffer )
     {
-      if( BuildConfig.DEBUG )
+      String readMessage;
+      int lstart, lend;
+      String[] fields;
+      //
+      if( BuildConfig.DEBUG ) Log.d( TAGREADER, "execLogentryCmd..." );
+      lstart = mInStrBuffer.indexOf( ProjectConst.STX );
+      lend = mInStrBuffer.indexOf( ProjectConst.ETX );
+      if( lstart > -1 && lend > lstart )
       {
-        Log.d( TAGREADER, "execLogentryCmd..." );
-        // TODO: hier Code unterbringen
+        // ups, hier ist ein "normales" Kommando verpackt
+        if( BuildConfig.DEBUG ) Log.d( TAGREADER, "oops, normalCmd found.... change to execNormalCmd..." );
+        isLogentryMode = false;
+        execNormalCmd( lstart, lend, mInStrBuffer );
+        return;
       }
+      // muss der anfang weg?
+      if( start > 0 )
+      {
+        // das davor kann dann weg...
+        mInStrBuffer = mInStrBuffer.delete( 0, start );
+        readMessage = mInStrBuffer.toString();
+        // Indizies korrigieren
+        end = mInStrBuffer.indexOf( ProjectConst.FILLER, start + ProjectConst.FILLER.length() );
+        start = 0;
+      }
+      // lese das Ding ohne den Schmandzius der Füller
+      readMessage = mInStrBuffer.substring( ProjectConst.FILLER.length(), end );
+      // lösche das schon mal raus...
+      mInStrBuffer = mInStrBuffer.delete( 0, end );
+      readMessage = readMessage.replaceAll( ProjectConst.FILLERCHAR, "" );
+      // Splitte das auf in Felder
+      fields = fieldPatternTab.split( readMessage );
+      // Sende an Activity
+      if( BuildConfig.DEBUG ) Log.d( TAGREADER, "Logline Recived <" + readMessage.substring( 10 ).replaceAll( "\t", " " ) + "...>" );
+      BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_LOGENTRY_LINE, fields );
+      sendMessageToApp( msg );
     }
 
     /**
@@ -556,32 +587,26 @@ public class BlueThoothComService extends Service
             sendMessageToApp( msg );
           }
           break;
-        // case ProjectConst.SPX_GET_LOG_NUMBER_SE:
-        // if( 0 == fields[1].indexOf( "1" ) )
-        // {
-        // // Übertragung Logfile gestartet
-        // if( aListener != null )
-        // {
-        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_LOGENTRY_START, new String( fields[2] ), System.currentTimeMillis() / 100, 0 );
-        // aListener.actionPerformed( ex );
-        // }
-        // if( log ) LOGGER.fine( "Logfile transmission started..." );
-        // isLogentryMode = true;
-        // }
-        // else if( 0 == fields[1].indexOf( "0" ) )
-        // {
-        // {
-        // // Übertragung beendet
-        // if( aListener != null )
-        // {
-        // ActionEvent ex = new ActionEvent( this, ProjectConst.MESSAGE_LOGENTRY_STOP, new String( fields[2] ), System.currentTimeMillis() / 100, 0 );
-        // aListener.actionPerformed( ex );
-        // }
-        // if( log ) LOGGER.fine( "Logfile transmission finished." );
-        // isLogentryMode = false;
-        // }
-        // }
-        // break;
+        case ProjectConst.SPX_GET_LOG_NUMBER_SE:
+          if( 0 == fields[1].indexOf( "1" ) )
+          {
+            // Übertragung Logfile gestartet
+            if( BuildConfig.DEBUG ) Log.d( TAGREADER, "start of logfile recived " );
+            msg = new BtServiceMessage( ProjectConst.MESSAGE_LOGENTRY_START, new String( fields[2] ) );
+            sendMessageToApp( msg );
+            isLogentryMode = true;
+          }
+          else if( 0 == fields[1].indexOf( "0" ) )
+          {
+            {
+              // Übertragung beendet
+              if( BuildConfig.DEBUG ) Log.d( TAGREADER, "stop of logfile recived " );
+              msg = new BtServiceMessage( ProjectConst.MESSAGE_LOGENTRY_STOP, new String( fields[2] ) );
+              sendMessageToApp( msg );
+              isLogentryMode = false;
+            }
+          }
+          break;
         case ProjectConst.SPX_GET_DEVICE_OFF:
           // SPX meldet, er geht aus dem Sync-Mode
           msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
@@ -897,6 +922,7 @@ public class BlueThoothComService extends Service
   private static final long    msToEndService              = 6000L;
   // private static final Pattern fieldPattern0x09 = Pattern.compile( ProjectConst.LOGSELECTOR );
   private static final Pattern fieldPatternDp              = Pattern.compile( ":" );
+  private static final Pattern fieldPatternTab             = Pattern.compile( "\t" );
   private long                 tickToCounter               = 0L;
   private long                 timeToStopService           = 0L;
   private NotificationManager  nm;
@@ -1941,6 +1967,25 @@ public class BlueThoothComService extends Service
     String kdoString;
     kdoString = String.format( "~%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_UNITS, isTempMetric, isDepthMetric, isFreshwater );
     if( BuildConfig.DEBUG ) Log.d( TAG, "writeUnitPrefs: sending <" + kdoString + ">" );
+    this.writeSPXMsgToDevice( kdoString );
+  }
+
+  /**
+   * 
+   * Frage nach den schmutzigen Details des Logs
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 07.08.2013
+   * @param numberOnSPX
+   */
+  public void askForLogDetail( int numberOnSPX )
+  {
+    String kdoString;
+    kdoString = String.format( "~%x:%x", ProjectConst.SPX_GET_LOG_NUMBER, numberOnSPX );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "askForLogDetail: sending <" + kdoString + ">" );
     this.writeSPXMsgToDevice( kdoString );
   }
 }

@@ -277,6 +277,8 @@
     <!-- Fragment SPXReadLogFragment  -->
     <string name="logread_headline">Lese Protokolle vom SPX</string>
     <string name="logread_doit_button">Lese!</string>
+    <string name="logread_please_wait_dialog_header" formatted="false">Lese Log #%02d</string>
+    <string name="logread_please_wait_dialog_count_items" formatted="false">Zeile %03d gelesen</string>
     
     <!-- sonstig  -->
     <string name="no_device">"- Kein Gerät -"</string>

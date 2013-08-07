@@ -121,6 +121,7 @@ public class CommToast
    * 
    *         Stand: 15.07.2013
    * @param msg
+   * @param isLong
    */
   public void showConnectionToast( String msg, Boolean isLong )
   {

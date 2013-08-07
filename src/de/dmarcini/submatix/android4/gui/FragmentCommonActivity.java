@@ -1424,4 +1424,23 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       mService.askForLogDirectoryFromSPX();
     }
   }
+
+  /**
+   * 
+   * Frage den SPX nach den schmutzigen Details eines Logs
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 07.08.2013
+   * @param numberOnSPX
+   */
+  public void askForLogDetail( int numberOnSPX )
+  {
+    if( mService != null )
+    {
+      mService.askForLogDetail( numberOnSPX );
+    }
+  }
 }

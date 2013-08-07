@@ -1,6 +1,7 @@
 package de.dmarcini.submatix.android4.gui;
 
 import java.io.File;
+import java.util.Vector;
 import java.util.regex.Pattern;
 
 import org.joda.time.DateTime;
@@ -9,6 +10,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,6 +43,9 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   private Button                       readDirButton       = null;
   private SPX42LogManager              logManager          = null;
   private SPX42ReadLogListArrayAdapter logListAdapter      = null;
+  private WaitProgressFragmentDialog   pd                  = null;
+  private int                          logLineCount        = 0;
+  private Vector<Integer>              items               = null;
   private static final Pattern         fieldPatternDp      = Pattern.compile( ":" );
   private static final Pattern         fieldPatternUnderln = Pattern.compile( "[_.]" );
   private static String                timeFormatterString = "yyyy-MM-dd - hh:mm:ss";
@@ -128,6 +133,29 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     // return( String.format( "%d;%s;%s;%d;%d", number, fileName, tm.toString( fmt ), max, tm.getMillis() ) );
   }
 
+  /**
+   * 
+   * Bearbeite ein array mit Loginfos
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 07.08.2013
+   * @param msg
+   */
+  private void computeLogLine( BtServiceMessage msg )
+  {
+    if( msg.getContainer() instanceof String[] )
+    {
+      logLineCount++;
+      if( pd != null )
+      {
+        pd.setSubMessage( String.format( runningActivity.getResources().getString( R.string.logread_please_wait_dialog_count_items ), logLineCount ) );
+      }
+    }
+  }
+
   @Override
   public void handleMessages( int what, BtServiceMessage msg )
   {
@@ -152,6 +180,60 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
       case ProjectConst.MESSAGE_DIRENTRY_END:
         Log.i( TAG, "end of logdir recived" );
         setEventsEnabled( true );
+        break;
+      // ################################################################
+      // Logfile START
+      // ################################################################
+      case ProjectConst.MESSAGE_LOGENTRY_START:
+        if( msg.getContainer() instanceof String )
+        {
+          logLineCount = 0;
+          String num = ( String )msg.getContainer();
+          Log.i( TAG, "start logentry number <" + num + "> on SPX" );
+          if( pd != null )
+          {
+            // versuche den Titel zu ändern
+            int number = 0;
+            try
+            {
+              number = Integer.parseInt( num.trim(), 16 );
+            }
+            catch( NumberFormatException ex )
+            {
+              Log.w( TAG, "Can't read number of log: <" + ex.getLocalizedMessage() + ">" );
+            }
+            pd.setMessage( String.format( runningActivity.getResources().getString( R.string.logread_please_wait_dialog_header ), number ) );
+          }
+        }
+        break;
+      // ################################################################
+      // Logfile LINE
+      // ################################################################
+      case ProjectConst.MESSAGE_LOGENTRY_LINE:
+        computeLogLine( msg );
+        break;
+      // ################################################################
+      // Logfile END
+      // ################################################################
+      case ProjectConst.MESSAGE_LOGENTRY_STOP:
+        if( msg.getContainer() instanceof String )
+        {
+          Log.i( TAG, "stop logentry number <" + ( String )msg.getContainer() + "> on SPX" );
+          if( items != null && !items.isEmpty() )
+          {
+            int position = items.remove( 0 );
+            ReadLogItemObj dirItem = logListAdapter.getItem( position );
+            ( ( FragmentCommonActivity )runningActivity ).askForLogDetail( dirItem.numberOnSPX );
+          }
+          else
+          {
+            if( pd != null )
+            {
+              pd.dismiss();
+              pd = null;
+            }
+          }
+        }
         break;
       // ################################################################
       // DEFAULT
@@ -271,35 +353,28 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   @Override
   public void onClick( View view )
   {
-    int[] items;
     if( BuildConfig.DEBUG ) Log.d( TAG, "Click..." );
     if( ( view instanceof Button ) && view.equals( readDirButton ) )
     {
       if( BuildConfig.DEBUG ) Log.d( TAG, "Click on READ DIR BUTTON..." );
       items = logListAdapter.getMarkedItems();
       // wenn nix markiert ist, wech
-      if( items.length == 0 )
+      if( items.size() == 0 )
       {
         Toast.makeText( runningActivity, R.string.toast_read_logdir_no_selected_entrys, Toast.LENGTH_SHORT ).show();
         return;
       }
+      openWaitDial( items.size(), String.format( runningActivity.getResources().getString( R.string.logread_please_wait_dialog_header ), 1 ) );
+      if( pd != null )
+      {
+        pd.setSubMessage( String.format( runningActivity.getResources().getString( R.string.logread_please_wait_dialog_count_items ), 0 ) );
+      }
       //
       // so, ab hier wird dann feste gelesen!
       //
-      for( int idx = 0; idx < items.length; idx++ )
-      {
-        // welchen Eintrag wollte der geneigte User denn lesen?
-        int position = items[idx];
-        ReadLogItemObj dirItem = logListAdapter.getItem( position );
-        if( dirItem.isSaved )
-        {
-          // will er ein Update machen?
-        }
-        else
-        {
-          // er will einlesen
-        }
-      }
+      int position = items.remove( 0 );
+      ReadLogItemObj dirItem = logListAdapter.getItem( position );
+      ( ( FragmentCommonActivity )runningActivity ).askForLogDetail( dirItem.numberOnSPX );
     }
   }
 
@@ -399,6 +474,42 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     readDirButton = ( Button )runningActivity.findViewById( R.id.readLogDirButton );
     readDirButton.setOnClickListener( this );
     setEventsEnabled( false );
+  }
+
+  /**
+   * 
+   * Öffne einen wartedialog
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 07.08.2013
+   * @param maxevents
+   * @param msg
+   */
+  public void openWaitDial( int maxevents, String msg )
+  {
+    if( BuildConfig.DEBUG ) Log.d( TAG, "openWaitDial()..." );
+    //
+    // wenn ein Dialog da ist, erst mal aus den Fragmenten entfernen
+    //
+    FragmentTransaction ft = runningActivity.getFragmentManager().beginTransaction();
+    Fragment prev = runningActivity.getFragmentManager().findFragmentByTag( "dialog" );
+    if( prev != null )
+    {
+      ft.remove( prev );
+    }
+    if( pd != null )
+    {
+      pd.dismiss();
+    }
+    pd = new WaitProgressFragmentDialog( msg );
+    pd.setCancelable( true );
+    pd.setMax( maxevents );
+    pd.setProgress( 0 );
+    ft.addToBackStack( null );
+    pd.show( ft, "dialog" );
   }
 
   /**
