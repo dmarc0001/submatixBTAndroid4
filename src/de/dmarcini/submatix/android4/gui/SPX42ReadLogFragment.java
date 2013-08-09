@@ -123,9 +123,9 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     DateTime tm = new DateTime( year, month, day, hour, minute, second );
     DateTimeFormatter fmt = DateTimeFormat.forPattern( timeFormatterString );
     //
-    // TODO: jetzt ist der Zeitpunkt, die Datenbank zu befragen, ob das Logteilchen schon gesichert ist
+    // Jetzt ist der Zeitpunkt, die Datenbank zu befragen, ob das Logteilchen schon gesichert ist
     //
-    isSaved = false;
+    isSaved = logManager.isLogInDatabase( FragmentCommonActivity.serialNumber, fileName );
     //
     // jetzt eintagen in die Anzeige
     //

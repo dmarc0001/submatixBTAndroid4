@@ -11,7 +11,7 @@ import de.dmarcini.submatix.android4.exceptions.NoDatabaseException;
 public class SPX42AliasManager
 {
   private static final String TAG   = SPX42AliasManager.class.getSimpleName();
-  private SQLiteDatabase      dBase = null;
+  protected SQLiteDatabase    dBase = null;
 
   /**
    * 

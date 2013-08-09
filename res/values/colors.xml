@@ -6,6 +6,8 @@
   <color name="connectFragmentDark.spinnerText">#408FFF</color>
   <color name="connectToastDark.backgroundColor">#C6D6F7</color>
   <color name="connectToastDark.textColor">#057AFF</color>  
+  <color name="logReadDark.notSavedColor">#F5F576</color>
+  <color name="logReadDark.savedColor">#9DFF85</color>
   
   <!-- Light Thema -->
   <color name="preferenceCategoryLight.textColor">#0554FF</color>
@@ -14,6 +16,8 @@
   <color name="connectFragmentLight.spinnerText">#0600B3</color>
   <color name="connectToastLight.backgroundColor">#CAF7FC</color>
   <color name="connectToastLight.textColor">#009E1D</color>  
+  <color name="logReadLight.notSavedColor">#85853D</color>
+  <color name="logReadLight.savedColor">#187501</color>
   
   
   <!-- uni colors -->
