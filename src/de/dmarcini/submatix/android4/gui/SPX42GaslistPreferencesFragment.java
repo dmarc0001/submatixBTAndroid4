@@ -137,7 +137,8 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for SPX config..." );
     // Dialog schliesen, wenn geöffnet
     theToast.dismissDial();
-    theToast.openWaitDial( maxEvents, getActivity().getResources().getString( R.string.dialog_please_wait_read_config ) );
+    theToast.openWaitDial( maxEvents, getActivity().getResources().getString( R.string.dialog_please_wait_title ),
+            getActivity().getResources().getString( R.string.dialog_please_wait_read_config ) );
     try
     {
       Thread.yield();

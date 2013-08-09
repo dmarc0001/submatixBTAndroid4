@@ -29,17 +29,19 @@ import de.dmarcini.submatix.android4.R;
  */
 public class WaitProgressFragmentDialog extends DialogFragment
 {
-  private TextView    msgView    = null;
-  private TextView    subMsgView = null;
-  private ProgressBar pBar       = null;
-  private String      vMessage   = "none";
-  private String      subMessage;
-  private int         maxEvents  = 10;
-  private int         progress   = 0;
+  private TextView    msgView      = null;
+  private TextView    subMsgView   = null;
+  private ProgressBar pBar         = null;
+  private String      vMessage     = "none";
+  private String      subMessage   = null;
+  private String      messageTitle = null;
+  private int         maxEvents    = 10;
+  private int         progress     = 0;
 
-  public WaitProgressFragmentDialog( String msg )
+  public WaitProgressFragmentDialog( final String title, final String msg )
   {
     this.vMessage = msg;
+    this.messageTitle = title;
   }
 
   //
@@ -50,6 +52,10 @@ public class WaitProgressFragmentDialog extends DialogFragment
     msgView = ( TextView )rootView.findViewById( R.id.dialogMessageString );
     subMsgView = ( TextView )rootView.findViewById( R.id.dialogSubMessageTextView );
     pBar = ( ProgressBar )rootView.findViewById( R.id.dialogProgressBar );
+    if( ( messageTitle != null ) && ( !messageTitle.isEmpty() ) )
+    {
+      getDialog().setTitle( messageTitle );
+    }
     if( ( vMessage != null ) && ( !vMessage.isEmpty() ) )
     {
       msgView.setText( vMessage );
@@ -85,7 +91,13 @@ public class WaitProgressFragmentDialog extends DialogFragment
   }
 
   public void setTitle( String title )
-  {}
+  {
+    this.messageTitle = title;
+    if( getDialog() != null )
+    {
+      getDialog().setTitle( title );
+    }
+  }
 
   public void setMessage( String msg )
   {

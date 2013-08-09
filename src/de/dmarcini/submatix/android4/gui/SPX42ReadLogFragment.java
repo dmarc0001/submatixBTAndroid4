@@ -23,10 +23,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Toast;
 import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
+import de.dmarcini.submatix.android4.utils.CommToast;
 import de.dmarcini.submatix.android4.utils.DataSQLHelper;
 import de.dmarcini.submatix.android4.utils.NoDatabaseException;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
@@ -46,6 +46,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   private WaitProgressFragmentDialog   pd                  = null;
   private int                          logLineCount        = 0;
   private Vector<Integer>              items               = null;
+  private CommToast                    theToast            = null;
   private static final Pattern         fieldPatternDp      = Pattern.compile( ":" );
   private static final Pattern         fieldPatternUnderln = Pattern.compile( "[_.]" );
   private static String                timeFormatterString = "yyyy-MM-dd - hh:mm:ss";
@@ -71,6 +72,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     String fileName;
     int number, max;
     int day, month, year, hour, minute, second;
+    boolean isSaved = false;
     //
     if( !( msg.getContainer() instanceof String[] ) )
     {
@@ -123,14 +125,14 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     //
     // TODO: jetzt ist der Zeitpunkt, die Datenbank zu befragen, ob das Logteilchen schon gesichert ist
     //
+    isSaved = false;
     //
     // jetzt eintagen in die Anzeige
     //
-    ReadLogItemObj rlio = new ReadLogItemObj( false, fileName, "DETAIL", -1, number );
-    rlio.itemDetail = "DETAIL <" + number + "> " + tm.toString( fmt );
+    ReadLogItemObj rlio = new ReadLogItemObj( isSaved, String.format( "#%03d: %s", number, tm.toString( fmt ) ), fileName, runningActivity.getResources().getString(
+            R.string.logread_not_saved_yet_msg ), -1, number );
     // Eintrag an den Anfang stellen
     logListAdapter.insert( rlio, 0 );
-    // return( String.format( "%d;%s;%s;%d;%d", number, fileName, tm.toString( fmt ), max, tm.getMillis() ) );
   }
 
   /**
@@ -246,7 +248,6 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   @Override
   public void msgConnected( BtServiceMessage msg )
   {
-    // mainListView = ( ListView )runningActivity.findViewById( R.id.readLogLinesListView );
     //
     // den Adapter leeren
     //
@@ -361,7 +362,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
       // wenn nix markiert ist, wech
       if( items.size() == 0 )
       {
-        Toast.makeText( runningActivity, R.string.toast_read_logdir_no_selected_entrys, Toast.LENGTH_SHORT ).show();
+        theToast.showConnectionToast( runningActivity.getResources().getString( R.string.toast_read_logdir_no_selected_entrys ), false );
         return;
       }
       openWaitDial( items.size(), String.format( runningActivity.getResources().getString( R.string.logread_please_wait_dialog_header ), 1 ) );
@@ -384,6 +385,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     // Layout View
     super.onCreate( savedInstanceState );
     if( BuildConfig.DEBUG ) Log.v( TAG, "onCreate..." );
+    theToast = new CommToast( getActivity() );
   }
 
   @Override
@@ -406,6 +408,12 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     if( runningActivity instanceof AreaDetailActivity )
     {
       if( BuildConfig.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
+      //
+      // Objekte lokalisieren, Verbindungsseite ist von onePane Mode
+      //
+      mainListView = ( ListView )runningActivity.findViewById( R.id.readLogDirListView );
+      mainListView.setChoiceMode( AbsListView.CHOICE_MODE_MULTIPLE );
+      readDirButton = ( Button )runningActivity.findViewById( R.id.readLogDirButton );
       return( null );
     }
     //
@@ -418,9 +426,9 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     //
     // Objekte lokalisieren
     //
-    mainListView = ( ListView )runningActivity.findViewById( R.id.readLogDirListView );
+    mainListView = ( ListView )rootView.findViewById( R.id.readLogDirListView );
     mainListView.setChoiceMode( AbsListView.CHOICE_MODE_MULTIPLE );
-    readDirButton = ( Button )runningActivity.findViewById( R.id.readLogDirButton );
+    readDirButton = ( Button )rootView.findViewById( R.id.readLogDirButton );
     return( rootView );
   }
 
@@ -504,7 +512,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     {
       pd.dismiss();
     }
-    pd = new WaitProgressFragmentDialog( msg );
+    pd = new WaitProgressFragmentDialog( runningActivity.getResources().getString( R.string.logread_please_patient ), msg );
     pd.setCancelable( true );
     pd.setMax( maxevents );
     pd.setProgress( 0 );

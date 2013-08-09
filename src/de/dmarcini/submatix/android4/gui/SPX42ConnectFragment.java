@@ -60,7 +60,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   private Spinner                     devSpinner                = null;
   private ImageButton                 connButton                = null;
   private TextView                    connectTextView           = null;
-  private SPX42AliasManager             aliasManager              = null;
+  private SPX42AliasManager           aliasManager              = null;
   protected ProgressDialog            progressDialog            = null;
   private boolean                     runDiscovering            = false;
   private Activity                    runningActivity           = null;
@@ -205,6 +205,11 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISONLINE] = "false";
       btArrayAdapter.add( entr );
     }
+    setSpinnerToLastConnected();
+  }
+
+  private void setSpinnerToLastConnected()
+  {
     //
     // guck mal, ob da was gespeichert war...
     //
@@ -799,6 +804,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
           devSpinner.setEnabled( true );
           connectTextView.setText( R.string.connect_disconnect_device );
           connectTextView.setTextColor( res.getColor( R.color.connectFragment_disconnectText ) );
+          setSpinnerToLastConnected();
           break;
         case ProjectConst.CONN_STATE_CONNECTING:
           connButton.setImageResource( R.drawable.bluetooth_icon_connecting );

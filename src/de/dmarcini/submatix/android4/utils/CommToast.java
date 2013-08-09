@@ -199,9 +199,10 @@ public class CommToast
    * 
    *         Stand: 18.07.2013
    * @param maxevents
+   * @param title
    * @param msg
    */
-  public void openWaitDial( int maxevents, String msg )
+  public void openWaitDial( int maxevents, String title, String msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "openWaitDial()..." );
     //
@@ -217,7 +218,8 @@ public class CommToast
     {
       pd.dismiss();
     }
-    pd = new WaitProgressFragmentDialog( msg );
+    pd = new WaitProgressFragmentDialog( title, msg );
+    ;
     pd.setCancelable( true );
     pd.setMax( maxevents );
     pd.setProgress( 4 );
