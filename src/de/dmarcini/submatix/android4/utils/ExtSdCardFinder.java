@@ -78,7 +78,7 @@ public class ExtSdCardFinder
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 25.07.2013
-   * @return
+   * @return Pfad der externen SD-Karte (oder null)
    * @throws FileNotFoundException
    */
   public static File findExternStorage() throws FileNotFoundException

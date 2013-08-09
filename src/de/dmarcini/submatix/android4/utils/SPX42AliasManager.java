@@ -6,6 +6,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import de.dmarcini.submatix.android4.BuildConfig;
+import de.dmarcini.submatix.android4.exceptions.NoDatabaseException;
 
 public class SPX42AliasManager
 {
@@ -62,7 +63,7 @@ public class SPX42AliasManager
    *         Stand: 26.07.2013
    * @param mac
    * @param defaultAlias
-   * @return
+   * @return Den Alias des Gerätes zurück
    */
   public String getAliasForMac( String mac, String defaultAlias )
   {
@@ -101,7 +102,7 @@ public class SPX42AliasManager
    * @param alias
    * @param serial
    *          Kann null sein, wenn nicht bekannt, wird dann ignoriert
-   * @return
+   * @return War das Setzen des Alias für Gerät erfolgreich?
    */
   public boolean setAliasForMac( String mac, String devName, String alias, String serial )
   {

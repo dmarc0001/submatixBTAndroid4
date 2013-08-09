@@ -48,7 +48,9 @@ public class EditAliasDialogFragment extends DialogFragment
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 02.11.2012
-   * @param msg
+   * @param device
+   * @param alias
+   * @param mac
    */
   public EditAliasDialogFragment( String device, String alias, String mac )
   {
@@ -141,7 +143,7 @@ public class EditAliasDialogFragment extends DialogFragment
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 25.07.2013
-   * @return
+   * @return Gerätename
    */
   public String getDeviceName()
   {
@@ -157,7 +159,7 @@ public class EditAliasDialogFragment extends DialogFragment
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 25.07.2013
-   * @return
+   * @return Alias des Gerätes
    */
   public String getAliasName()
   {
@@ -173,7 +175,7 @@ public class EditAliasDialogFragment extends DialogFragment
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 26.07.2013
-   * @return
+   * @return MAC Adresse des Gerätes
    */
   public String getMac()
   {

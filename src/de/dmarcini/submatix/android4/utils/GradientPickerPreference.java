@@ -413,7 +413,7 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
    *         Stand: 14.07.2013
    * @param parm
    *          int[2]
-   * @return
+   * @return War das Setzen erfolgreich?
    */
   public boolean setValue( final int[] parm )
   {

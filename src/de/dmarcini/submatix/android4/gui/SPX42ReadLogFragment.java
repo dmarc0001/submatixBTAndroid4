@@ -26,9 +26,9 @@ import android.widget.ListView;
 import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
+import de.dmarcini.submatix.android4.exceptions.NoDatabaseException;
 import de.dmarcini.submatix.android4.utils.CommToast;
 import de.dmarcini.submatix.android4.utils.DataSQLHelper;
-import de.dmarcini.submatix.android4.utils.NoDatabaseException;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 import de.dmarcini.submatix.android4.utils.ReadLogItemObj;
 import de.dmarcini.submatix.android4.utils.SPX42LogManager;
@@ -47,7 +47,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   private int                          logLineCount        = 0;
   private Vector<Integer>              items               = null;
   private CommToast                    theToast            = null;
-  private static final Pattern         fieldPatternDp      = Pattern.compile( ":" );
+  // private static final Pattern fieldPatternDp = Pattern.compile( ":" );
   private static final Pattern         fieldPatternUnderln = Pattern.compile( "[_.]" );
   private static String                timeFormatterString = "yyyy-MM-dd - hh:mm:ss";
 

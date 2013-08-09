@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.utils;
+package de.dmarcini.submatix.android4.exceptions;
 
 public class NotImplementedFunctionException extends Exception
 {
