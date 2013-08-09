@@ -15,8 +15,8 @@ import java.util.Date;
  */
 public class BuildVersion
 {
-  private static final long buildNumber = 2479L;
-  private static final long buildDate = 1375908719087L;
+  private static final long buildNumber = 2515L;
+  private static final long buildDate = 1376069451087L;
   private static final String buildNumberString = String.format( "%d", buildNumber );
   private static final String buildDateString   = new Date( buildDate ).toString();
 
