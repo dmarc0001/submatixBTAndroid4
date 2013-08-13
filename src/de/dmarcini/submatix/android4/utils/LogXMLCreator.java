@@ -32,7 +32,7 @@ public class LogXMLCreator
   private DocumentBuilder     builder     = null;
   private Document            logXmlFile  = null;
   private final Element       rootNode;
-  private final int           countSets;
+  private int                 countSets;
 
   public LogXMLCreator( SPX42DiveHeadData _diveHeader ) throws XMLFileCreatorException
   {
@@ -90,47 +90,53 @@ public class LogXMLCreator
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 13.08.2013
-   * @param _entry
+   * @param fields
    */
-  public void appendLogLine( final SPX42LogEntryObj _entry )
+  public void appendLogLine( final String[] fields )
   {
     Element genNode;
     Element presNode, depthNode, tempNode, ackuNode, ppo2Node, setpointNode, nitroNode, heliumNode, zeroTimeNode, nextStepNode;
     //
-    diveHeader.checkLowestTemp( _entry.temp );
-    diveHeader.checkMaxDepth( _entry.depth );
+    try
+    {
+      diveHeader.checkLowestTemp( Double.parseDouble( fields[2].trim() ) );
+      diveHeader.checkMaxDepth( Double.parseDouble( fields[1].trim() ) );
+    }
+    catch( NumberFormatException ex )
+    {}
     // Wurzel dieser Ebene
     genNode = logXmlFile.createElement( "logEntry" );
     presNode = logXmlFile.createElement( "presure" );
-    presNode.appendChild( logXmlFile.createTextNode( String.format( "%d", _entry.presure ) ) );
+    presNode.appendChild( logXmlFile.createTextNode( fields[0].trim() ) );
     genNode.appendChild( presNode );
     depthNode = logXmlFile.createElement( "depth" );
-    depthNode.appendChild( logXmlFile.createTextNode( String.format( "%.1f", _entry.depth ) ) );
+    depthNode.appendChild( logXmlFile.createTextNode( fields[1].trim() ) );
     genNode.appendChild( depthNode );
     tempNode = logXmlFile.createElement( "temp" );
-    tempNode.appendChild( logXmlFile.createTextNode( String.format( "%.1f", _entry.temp ) ) );
+    tempNode.appendChild( logXmlFile.createTextNode( fields[2].trim() ) );
     genNode.appendChild( tempNode );
     ackuNode = logXmlFile.createElement( "acku" );
-    ackuNode.appendChild( logXmlFile.createTextNode( String.format( "%.1f", _entry.acku ) ) );
+    ackuNode.appendChild( logXmlFile.createTextNode( fields[3].trim() ) );
     genNode.appendChild( ackuNode );
     ppo2Node = logXmlFile.createElement( "ppo2" );
-    ppo2Node.appendChild( logXmlFile.createTextNode( String.format( "%.1f", _entry.ppo2 ) ) );
+    ppo2Node.appendChild( logXmlFile.createTextNode( fields[5].trim() ) );
     genNode.appendChild( ppo2Node );
     setpointNode = logXmlFile.createElement( "setpoint" );
-    setpointNode.appendChild( logXmlFile.createTextNode( String.format( "%.1f", _entry.setpoint ) ) );
+    setpointNode.appendChild( logXmlFile.createTextNode( fields[6].trim() ) );
     genNode.appendChild( setpointNode );
     nitroNode = logXmlFile.createElement( "n2" );
-    nitroNode.appendChild( logXmlFile.createTextNode( String.format( "%.1f", _entry.n2 ) ) );
+    nitroNode.appendChild( logXmlFile.createTextNode( fields[16].trim() ) );
     genNode.appendChild( nitroNode );
     heliumNode = logXmlFile.createElement( "he" );
-    heliumNode.appendChild( logXmlFile.createTextNode( String.format( "%.1f", _entry.he ) ) );
+    heliumNode.appendChild( logXmlFile.createTextNode( fields[17].trim() ) );
     genNode.appendChild( heliumNode );
     zeroTimeNode = logXmlFile.createElement( "zerotime" );
-    zeroTimeNode.appendChild( logXmlFile.createTextNode( String.format( "%d", _entry.zerotime ) ) );
+    zeroTimeNode.appendChild( logXmlFile.createTextNode( fields[20].trim() ) );
     genNode.appendChild( zeroTimeNode );
     nextStepNode = logXmlFile.createElement( "step" );
-    nextStepNode.appendChild( logXmlFile.createTextNode( String.format( "%.1f", _entry.time ) ) );
+    nextStepNode.appendChild( logXmlFile.createTextNode( fields[24].trim() ) );
     genNode.appendChild( nextStepNode );
+    countSets++;
   }
 
   /**
@@ -142,7 +148,7 @@ public class LogXMLCreator
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 13.08.2013
-   * @return
+   * @return alles klar oder nicht?
    * @throws XMLFileCreatorException
    */
   public boolean closeLog() throws XMLFileCreatorException
