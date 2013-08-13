@@ -34,7 +34,6 @@ import de.dmarcini.submatix.android4.utils.LogXMLCreator;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 import de.dmarcini.submatix.android4.utils.ReadLogItemObj;
 import de.dmarcini.submatix.android4.utils.SPX42DiveHeadData;
-import de.dmarcini.submatix.android4.utils.SPX42LogEntryObj;
 import de.dmarcini.submatix.android4.utils.SPX42LogManager;
 import de.dmarcini.submatix.android4.utils.SPX42ReadLogListArrayAdapter;
 import de.dmarcini.submatix.android4.utils.UserAlertDialogFragment;
@@ -161,8 +160,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     if( msg.getContainer() instanceof String[] )
     {
       logLineCount++;
-      SPX42LogEntryObj entry = new SPX42LogEntryObj();
-      // TODO: noch Einträge codieren
+      xmlCreator.appendLogLine( ( String[] )msg.getContainer() );
       if( pd != null )
       {
         pd.setSubMessage( String.format( runningActivity.getResources().getString( R.string.logread_please_wait_dialog_count_items ), logLineCount ) );
@@ -589,6 +587,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
       try
       {
         xmlCreator.closeLog();
+        logManager.saveDive( diveHeader );
       }
       catch( XMLFileCreatorException ex )
       {
