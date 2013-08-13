@@ -106,7 +106,7 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
     }
     catch( NullPointerException ex )
     {
-      // MACHWAS
+      // TODO: MACHWAS
     }
     return( cView );
   }
