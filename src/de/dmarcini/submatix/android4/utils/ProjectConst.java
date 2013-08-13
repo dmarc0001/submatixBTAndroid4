@@ -20,10 +20,10 @@ public final class ProjectConst
   public static final String MANUFACTNAME               = "Dirk Marciniak";
   public static final String MANUFACTMAIL               = "dirk_marciniak@arcor.de";
   public static final String MANUFACTHOME               = "http://www.submatix.com";
-  public static final String MANUFACTVERS               = "0.3-BETA";
+  public static final String MANUFACTVERS               = "0.4-BETA";
   public static final String GENYEAR                    = "2013";
   public static final String GENMONTH                   = "08";
-  public static final String GENDAY                     = "08";
+  public static final String GENDAY                     = "13";
   public static final boolean CHECK_PHYSICAL_BT         = false; 
 
   // ANDROID: Preferences Version
@@ -67,7 +67,7 @@ public final class ProjectConst
   public static final String DEFAULTDATADIR             = "database";
   public static final String DEFAULTEXPORTDIR           = "export";
   public static final String DATABASE_NAME              = "submatixDatabase.db";
-  public static final int DATABASE_VERSION              = 2;
+  public static final int DATABASE_VERSION              = 3;
   
   // Messages für SPX 42
   public static final String STX                        = new String( new byte[] { 0x02 } );
@@ -75,6 +75,7 @@ public final class ProjectConst
   public static final String FILLER                     = new String( new byte[] { 0x0d, 0x0a } );
   public static final String FILLERCHAR                 = "[\\n\\r]";                                               // Zeichen zum entfernen
   public static final String LOGSELECTOR                = new String ( new byte[] { 0x09 } );
+  
   // Kommandos für den SPX
   public static final int SPX_MANUFACTURERS             = 0x01;
   public static final int SPX_FACTORY_NUMBER            = 0x02;
@@ -228,6 +229,7 @@ public final class ProjectConst
   // speichert "Kopfdaten" der Logs
   public static final String H_TABLE_DIVELOGS           = "dive_logs";
   public static final String H_DIVEID                   = "dive_id";
+  public static final String H_FILEONMOBILE             = "xml_file";
   public static final String H_DIVENUMBERONSPX          = "dive_number";
   public static final String H_FILEONSPX                = "filename";
   public static final String H_DEVICESERIAL             = "device_serial";
@@ -280,6 +282,10 @@ public final class ProjectConst
 //  public static final String PD_DILUENT2                = "dil2";
 //  public static final String PD_BAILOUT                 = "bailout";
   
+  //
+  // ANDROID: XML-Dateiversion
+  //
+  public static final String XML_FILEVERSION            = "V 1.0";  
   //
   // Default Farben für die Graphen in der Loganzeige
   //

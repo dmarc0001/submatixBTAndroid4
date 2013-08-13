@@ -27,10 +27,14 @@ import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.exceptions.NoDatabaseException;
+import de.dmarcini.submatix.android4.exceptions.XMLFileCreatorException;
 import de.dmarcini.submatix.android4.utils.CommToast;
 import de.dmarcini.submatix.android4.utils.DataSQLHelper;
+import de.dmarcini.submatix.android4.utils.LogXMLCreator;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 import de.dmarcini.submatix.android4.utils.ReadLogItemObj;
+import de.dmarcini.submatix.android4.utils.SPX42DiveHeadData;
+import de.dmarcini.submatix.android4.utils.SPX42LogEntryObj;
 import de.dmarcini.submatix.android4.utils.SPX42LogManager;
 import de.dmarcini.submatix.android4.utils.SPX42ReadLogListArrayAdapter;
 import de.dmarcini.submatix.android4.utils.UserAlertDialogFragment;
@@ -44,7 +48,13 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   private SPX42LogManager              logManager          = null;
   private SPX42ReadLogListArrayAdapter logListAdapter      = null;
   private WaitProgressFragmentDialog   pd                  = null;
+  // aktuelles Log START
   private int                          logLineCount        = 0;
+  private int                          logNumberOnSPX      = -1;
+  private int                          currPositionOnItems = -1;
+  private SPX42DiveHeadData            diveHeader          = null;
+  private LogXMLCreator                xmlCreator          = null;
+  // aktuelles Log END
   private Vector<Integer>              items               = null;
   private CommToast                    theToast            = null;
   // private static final Pattern fieldPatternDp = Pattern.compile( ":" );
@@ -151,6 +161,8 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     if( msg.getContainer() instanceof String[] )
     {
       logLineCount++;
+      SPX42LogEntryObj entry = new SPX42LogEntryObj();
+      // TODO: noch Einträge codieren
       if( pd != null )
       {
         pd.setSubMessage( String.format( runningActivity.getResources().getString( R.string.logread_please_wait_dialog_count_items ), logLineCount ) );
@@ -191,20 +203,23 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
         {
           logLineCount = 0;
           String num = ( String )msg.getContainer();
-          Log.i( TAG, "start logentry number <" + num + "> on SPX" );
+          Log.i( TAG, "start logentry logNumberOnSPX <" + num + "> on SPX" );
           if( pd != null )
           {
+            //
             // versuche den Titel zu ändern
-            int number = 0;
+            // und vermerke die aktuelle Nummer des Eintrages
+            //
             try
             {
-              number = Integer.parseInt( num.trim(), 16 );
+              logNumberOnSPX = Integer.parseInt( num.trim(), 16 );
+              startLogWriting();
+              pd.setMessage( String.format( runningActivity.getResources().getString( R.string.logread_please_wait_dialog_header ), logNumberOnSPX ) );
             }
             catch( NumberFormatException ex )
             {
-              Log.w( TAG, "Can't read number of log: <" + ex.getLocalizedMessage() + ">" );
+              Log.w( TAG, "Can't read logNumberOnSPX of log: <" + ex.getLocalizedMessage() + ">" );
             }
-            pd.setMessage( String.format( runningActivity.getResources().getString( R.string.logread_please_wait_dialog_header ), number ) );
           }
         }
         break;
@@ -220,11 +235,15 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
       case ProjectConst.MESSAGE_LOGENTRY_STOP:
         if( msg.getContainer() instanceof String )
         {
-          Log.i( TAG, "stop logentry number <" + ( String )msg.getContainer() + "> on SPX" );
+          Log.i( TAG, "stop logentry logNumberOnSPX <" + ( String )msg.getContainer() + "> on SPX" );
           if( items != null && !items.isEmpty() )
           {
-            int position = items.remove( 0 );
-            ReadLogItemObj dirItem = logListAdapter.getItem( position );
+            //
+            // XML-Datei schliessen
+            //
+            stopLogWriting();
+            currPositionOnItems = items.remove( 0 );
+            ReadLogItemObj dirItem = logListAdapter.getItem( currPositionOnItems );
             ( ( FragmentCommonActivity )runningActivity ).askForLogDetail( dirItem.numberOnSPX );
           }
           else
@@ -373,8 +392,8 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
       //
       // so, ab hier wird dann feste gelesen!
       //
-      int position = items.remove( 0 );
-      ReadLogItemObj dirItem = logListAdapter.getItem( position );
+      currPositionOnItems = items.remove( 0 );
+      ReadLogItemObj dirItem = logListAdapter.getItem( currPositionOnItems );
       ( ( FragmentCommonActivity )runningActivity ).askForLogDetail( dirItem.numberOnSPX );
     }
   }
@@ -534,5 +553,58 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   {
     readDirButton.setEnabled( enabled );
     mainListView.setEnabled( enabled );
+  }
+
+  private void startLogWriting()
+  {
+    if( logNumberOnSPX == -1 ) return;
+    if( currPositionOnItems == -1 ) return;
+    //
+    // erst mal ein neues Headerobjekt erzeugen
+    //
+    diveHeader = new SPX42DiveHeadData();
+    //
+    // erzeuge eine XML-Datei
+    //
+    diveHeader.xmlFile = new File( String.format( "%s%s%s-%04d-%s.xml", FragmentCommonActivity.databaseDir.getAbsolutePath(), File.separator, FragmentCommonActivity.serialNumber,
+            logNumberOnSPX, FragmentCommonActivity.mBtAdapter.getAddress() ) );
+    //
+    // und einen neuen XML-Dateicreator
+    //
+    try
+    {
+      xmlCreator = new LogXMLCreator( diveHeader );
+    }
+    catch( XMLFileCreatorException ex )
+    {
+      // TODO Automatisch generierter Erfassungsblock
+      ex.printStackTrace();
+    }
+  }
+
+  private void stopLogWriting()
+  {
+    if( xmlCreator != null )
+    {
+      try
+      {
+        xmlCreator.closeLog();
+      }
+      catch( XMLFileCreatorException ex )
+      {
+        // TODO Automatisch generierter Erfassungsblock
+        ex.printStackTrace();
+      }
+    }
+    //
+    // TODO: Daten in DB verankern
+    //
+    //
+    // aufräumen
+    //
+    logNumberOnSPX = -1;
+    currPositionOnItems = -1;
+    diveHeader = null;
+    xmlCreator = null;
   }
 }

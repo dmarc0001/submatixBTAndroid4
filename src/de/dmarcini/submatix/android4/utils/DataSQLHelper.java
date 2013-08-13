@@ -80,6 +80,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
     sql = "create table  " + ProjectConst.H_TABLE_DIVELOGS + " ";
     sql += "(";
     sql += ProjectConst.H_DIVEID + " integer primary key autoincrement, \n";
+    sql += ProjectConst.H_FILEONMOBILE + " text not null, \n";
     sql += ProjectConst.H_DIVENUMBERONSPX + " text not null, \n";
     sql += ProjectConst.H_DEVICESERIAL + " text not null, \n";
     sql += ProjectConst.H_STARTTIME + " text not null, \n";
