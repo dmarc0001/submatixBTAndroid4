@@ -14,7 +14,7 @@
         android:layout_marginLeft="@dimen/icon_margin_left_big"
         android:layout_marginTop="@dimen/icon_margin_top_big"
         android:contentDescription="@string/array_with_pic_adapter_dummy"
-        android:src="@drawable/star_empty_yellow" />
+        android:src="@drawable/circle_empty_yellow" />
     
     <!-- android:layout_alignParentLeft="true" -->
     <ImageView
