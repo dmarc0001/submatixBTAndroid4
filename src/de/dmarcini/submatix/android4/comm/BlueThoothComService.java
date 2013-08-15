@@ -972,6 +972,27 @@ public class BlueThoothComService extends Service
 
   /**
    * 
+   * Frage nach den Masseinheiten
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 15.08.2013
+   */
+  public void aksForUnitsFromSPX42()
+  {
+    String kdoString;
+    kdoString = String.format( "%s~%x%s", ProjectConst.STX, ProjectConst.SPX_GET_SETUP_UNITS, ProjectConst.ETX );
+    if( BuildConfig.DEBUG )
+    {
+      Log.d( TAG, "aksForUnitsFromSPX42()...send <" + kdoString + ">" );
+    }
+    this.writeToDevice( kdoString );
+  }
+
+  /**
+   * 
    * Frage nach der Konfiguration der DECO-Parameter
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
