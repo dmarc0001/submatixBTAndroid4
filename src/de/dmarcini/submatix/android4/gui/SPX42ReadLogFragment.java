@@ -11,7 +11,10 @@ import org.joda.time.format.DateTimeFormatter;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.SwitchPreference;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +62,8 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   // private static final Pattern fieldPatternDp = Pattern.compile( ":" );
   private static final Pattern         fieldPatternUnderln = Pattern.compile( "[_.]" );
   private static String                timeFormatterString = "yyyy-MM-dd - hh:mm:ss";
+  private boolean                      isUnitImperial      = false;
+  private final int                    themeId             = R.style.AppDarkTheme;
 
   /**
    * 
@@ -79,9 +84,12 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     // 2 => Max Nummer
     String[] fields;
     String fileName;
+    int dbId = -1;
+    String detailText;
     int number, max;
     int day, month, year, hour, minute, second;
     boolean isSaved = false;
+    Resources res = runningActivity.getResources();
     //
     if( !( msg.getContainer() instanceof String[] ) )
     {
@@ -135,18 +143,27 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     // Jetzt ist der Zeitpunkt, die Datenbank zu befragen, ob das Logteilchen schon gesichert ist
     //
     isSaved = logManager.isLogInDatabase( FragmentCommonActivity.serialNumber, fileName );
+    if( isSaved )
+    {
+      SPX42DiveHeadData diveHead = logManager.getDiveHeader( FragmentCommonActivity.serialNumber, fileName );
+      detailText = String.format( res.getString( R.string.logread_saved_format ), diveHead.maxDepth, res.getString( R.string.app_unit_depth ), diveHead.diveLength );
+      dbId = diveHead.diveId;
+    }
+    else
+    {
+      detailText = res.getString( R.string.logread_not_saved_yet_msg );
+    }
     //
     // jetzt eintagen in die Anzeige
     //
-    ReadLogItemObj rlio = new ReadLogItemObj( isSaved, String.format( "#%03d: %s", number, tm.toString( fmt ) ), fileName, runningActivity.getResources().getString(
-            R.string.logread_not_saved_yet_msg ), -1, number );
+    ReadLogItemObj rlio = new ReadLogItemObj( isSaved, String.format( "#%03d: %s", number, tm.toString( fmt ) ), fileName, detailText, dbId, number );
     // Eintrag an den Anfang stellen
     logListAdapter.insert( rlio, 0 );
   }
 
   /**
    * 
-   * Bearbeite ein array mit Loginfos
+   * Bearbeite ein Array mit Loginfos
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
@@ -179,6 +196,12 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     // ################################################################
       case ProjectConst.MESSAGE_CONNECTED:
         msgConnected( msg );
+        break;
+      // ################################################################
+      // Units vom SPX emnpfangen
+      // ################################################################
+      case ProjectConst.MESSAGE_UNITS_READ:
+        msgReciveUnits( msg );
         break;
       // ################################################################
       // Verzeichniseintrag gefunden
@@ -234,12 +257,15 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
         if( msg.getContainer() instanceof String )
         {
           Log.i( TAG, "stop logentry logNumberOnSPX <" + ( String )msg.getContainer() + "> on SPX" );
+          //
+          // XML-Datei schliessen
+          //
+          stopLogWriting();
+          //
+          // und nun noch weitere lesen?
+          //
           if( items != null && !items.isEmpty() )
           {
-            //
-            // XML-Datei schliessen
-            //
-            stopLogWriting();
             currPositionOnItems = items.remove( 0 );
             ReadLogItemObj dirItem = logListAdapter.getItem( currPositionOnItems );
             ( ( FragmentCommonActivity )runningActivity ).askForLogDetail( dirItem.numberOnSPX );
@@ -270,37 +296,106 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     //
     logListAdapter.clear();
     // Logdirectory lesen
+    ( ( FragmentCommonActivity )runningActivity ).aksForUnitsFromSPX42();
     ( ( FragmentCommonActivity )runningActivity ).askForLogDirectoryFromSPX();
   }
 
   @Override
   public void msgConnectError( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   @Override
   public void msgConnecting( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   @Override
   public void msgDisconnected( BtServiceMessage msg )
   {
-    // TODO Automatisch generierter Methodenstub
+    Log.v( TAG, "msgDisconnected" );
+    Intent intent = new Intent( getActivity(), AreaListActivity.class );
+    intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
+    startActivity( intent );
   }
 
   @Override
   public void msgRecivedAlive( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   @Override
   public void msgRecivedTick( BtServiceMessage msg )
+  {}
+
+  /**
+   * 
+   * Empfange Masseinheiten vom SPX42
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 15.08.2013
+   * @param msg
+   */
+  private void msgReciveUnits( BtServiceMessage msg )
   {
-    // TODO Automatisch generierter Methodenstub
+    // Kommando SPX_GET_SETUP_UNITS
+    // ~37:UD:UL:UW
+    // UD= 1=Fahrenheit/0=Celsius => immer 0 in der aktuellen Firmware 2.6.7.7_U
+    // UL= 0=metrisch 1=imperial
+    // UW= 0->Salzwasser 1->Süßwasser
+    int isImperial = 0;
+    String[] unitsParm;
+    SwitchPreference sp;
+    //
+    if( msg.getContainer() instanceof String[] )
+    {
+      unitsParm = ( String[] )msg.getContainer();
+      if( BuildConfig.DEBUG )
+      {
+        try
+        {
+          Log.d( TAG, "SPX units settings <" + unitsParm[0] + "," + unitsParm[1] + "," + unitsParm[2] + "> recived" );
+          Log.d( TAG, "temperature unit: " + ( unitsParm[0].equals( "0" ) ? "celsius" : "fahrenheit" ) );
+          Log.d( TAG, "depth unit: " + ( unitsParm[1].equals( "0" ) ? "metric" : "imperial" ) );
+          Log.d( TAG, "salnity: " + ( unitsParm[2].equals( "0" ) ? "salt water" : "fresh water" ) );
+        }
+        catch( IndexOutOfBoundsException ex )
+        {
+          Log.e( TAG, "msgReciveUnits: Units Object has not enough elements! (" + ex.getLocalizedMessage() + ")" );
+          return;
+        }
+      }
+    }
+    else
+    {
+      Log.e( TAG, "msgReciveUnits: message object not an String[] !" );
+      return;
+    }
+    //
+    // versuche die Parameter als Integer zu wandeln, gültige Werte erzeugen
+    //
+    try
+    {
+      isImperial = Integer.parseInt( unitsParm[1], 16 );
+      if( isImperial > 0 )
+      {
+        isUnitImperial = true;
+      }
+      else
+      {
+        isUnitImperial = false;
+      }
+    }
+    catch( IndexOutOfBoundsException ex )
+    {
+      Log.e( TAG, "msgReciveUnits: Units Object has not enough elements! (" + ex.getLocalizedMessage() + ")" );
+      return;
+    }
+    catch( NumberFormatException ex )
+    {
+      Log.e( TAG, "msgReciveUnits: Units Object is not an correct integer! (" + ex.getLocalizedMessage() + ")" );
+      return;
+    }
   }
 
   @Override
@@ -319,18 +414,6 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     {
       mainListView = ( ListView )runningActivity.findViewById( R.id.readLogDirListView );
       logListAdapter = new SPX42ReadLogListArrayAdapter( runningActivity, R.layout.read_log_array_adapter_view, FragmentCommonActivity.getAppStyle() );
-      //
-      // FOR DEBUG:
-      //
-      // ReadLogItemObj rlio = new ReadLogItemObj( false, "PROGRAM1", "PROGRAMDETAIL1" );
-      // logListAdapter.add( rlio );
-      // rlio = new ReadLogItemObj( false, "PROGRAM2", "PROGRAMDETAIL2" );
-      // logListAdapter.add( rlio );
-      // rlio = new ReadLogItemObj( false, "PROGRAM3", "PROGRAMDETAIL3" );
-      // logListAdapter.add( rlio );
-      //
-      // FOR DEBUG:
-      //
       mainListView.setAdapter( logListAdapter );
     }
     catch( NullPointerException ex )
@@ -464,11 +547,11 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     {
       if( logListAdapter.getMarked( position ) )
       {
-        ivMarked.setImageResource( R.drawable.star_full_yellow );
+        ivMarked.setImageResource( R.drawable.circle_full_yellow );
       }
       else
       {
-        ivMarked.setImageResource( R.drawable.star_empty_yellow );
+        ivMarked.setImageResource( R.drawable.circle_empty_yellow );
       }
     }
   }
@@ -565,7 +648,11 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     // erzeuge eine XML-Datei
     //
     diveHeader.xmlFile = new File( String.format( "%s%s%s-%04d-%s.xml", FragmentCommonActivity.databaseDir.getAbsolutePath(), File.separator, FragmentCommonActivity.serialNumber,
-            logNumberOnSPX, FragmentCommonActivity.mBtAdapter.getAddress() ) );
+            logNumberOnSPX, FragmentCommonActivity.mBtAdapter.getAddress().replaceAll( ":", "_" ) ) );
+    diveHeader.fileNameOnSpx = logListAdapter.getNameOnSPX( currPositionOnItems );
+    diveHeader.deviceSerialNumber = FragmentCommonActivity.serialNumber;
+    diveHeader.diveNumberOnSPX = logNumberOnSPX;
+    diveHeader.units = ( isUnitImperial ? "i" : "m" );
     //
     // und einen neuen XML-Dateicreator
     //
@@ -575,29 +662,43 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     }
     catch( XMLFileCreatorException ex )
     {
-      // TODO Automatisch generierter Erfassungsblock
-      ex.printStackTrace();
+      Log.e( TAG, "XML Creator Exception <" + ex.getLocalizedMessage() + ">" );
     }
   }
 
   private void stopLogWriting()
   {
+    Resources res = runningActivity.getResources();
+    String detailText;
+    //
     if( xmlCreator != null )
     {
       try
       {
         xmlCreator.closeLog();
         logManager.saveDive( diveHeader );
+        ReadLogItemObj rlo = logListAdapter.getItem( currPositionOnItems );
+        detailText = String.format( res.getString( R.string.logread_saved_format ), diveHeader.maxDepth, res.getString( R.string.app_unit_depth ), diveHeader.diveLength );
+        detailText = "currPos: " + currPositionOnItems + ", Head: " + rlo.itemName;
+        rlo.itemDetail = detailText;
+        rlo.dbId = diveHeader.diveId;
+        rlo.isMarked = false;
+        rlo.isSaved = true;
+        int firstPos = mainListView.getFirstVisiblePosition();
+        mainListView.setAdapter( logListAdapter );
+        View v = mainListView.getChildAt( currPositionOnItems );
+        int top = ( v == null ) ? 0 : v.getTop();
+        mainListView.setSelectionFromTop( firstPos, top );
+      }
+      catch( NullPointerException ex )
+      {
+        Log.e( TAG, "Nullpointer Exception <" + ex.getLocalizedMessage() + ">" );
       }
       catch( XMLFileCreatorException ex )
       {
-        // TODO Automatisch generierter Erfassungsblock
-        ex.printStackTrace();
+        Log.e( TAG, "XML Creator Exception <" + ex.getLocalizedMessage() + ">" );
       }
     }
-    //
-    // TODO: Daten in DB verankern
-    //
     //
     // aufräumen
     //
