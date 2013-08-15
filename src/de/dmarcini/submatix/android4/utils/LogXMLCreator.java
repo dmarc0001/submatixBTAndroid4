@@ -100,7 +100,7 @@ public class LogXMLCreator
     try
     {
       diveHeader.checkLowestTemp( Double.parseDouble( fields[2].trim() ) );
-      diveHeader.checkMaxDepth( Double.parseDouble( fields[1].trim() ) );
+      diveHeader.checkMaxDepth( Integer.parseInt( fields[1].trim() ) );
     }
     catch( NumberFormatException ex )
     {}
