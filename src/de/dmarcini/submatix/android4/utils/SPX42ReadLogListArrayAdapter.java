@@ -17,7 +17,6 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
 {
   @SuppressWarnings( "unused" )
   private static final String TAG     = SPX42ReadLogListArrayAdapter.class.getSimpleName();
-  @SuppressWarnings( "unused" )
   private int                 themeId = R.style.AppDarkTheme;
 
   public SPX42ReadLogListArrayAdapter( Context context, int textViewResourceId, int themeId )
@@ -97,11 +96,11 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
       }
       if( rlio.isMarked )
       {
-        ivMarked.setImageResource( R.drawable.star_full_yellow );
+        ivMarked.setImageResource( R.drawable.circle_full_yellow );
       }
       else
       {
-        ivMarked.setImageResource( R.drawable.star_empty_yellow );
+        ivMarked.setImageResource( R.drawable.circle_empty_yellow );
       }
     }
     catch( NullPointerException ex )

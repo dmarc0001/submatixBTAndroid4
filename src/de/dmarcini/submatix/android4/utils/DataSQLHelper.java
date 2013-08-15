@@ -83,7 +83,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
     sql += ProjectConst.H_FILEONMOBILE + " text not null, \n";
     sql += ProjectConst.H_DIVENUMBERONSPX + " text not null, \n";
     sql += ProjectConst.H_DEVICESERIAL + " text not null, \n";
-    sql += ProjectConst.H_STARTTIME + " text not null, \n";
+    sql += ProjectConst.H_STARTTIME + " integer not null, \n";
     sql += ProjectConst.H_HADSEND + " interger, \n";
     sql += ProjectConst.H_FILEONSPX + " text not null, \n";
     sql += ProjectConst.H_FIRSTTEMP + " real, \n";

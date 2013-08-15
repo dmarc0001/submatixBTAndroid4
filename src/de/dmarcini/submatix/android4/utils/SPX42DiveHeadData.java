@@ -14,6 +14,7 @@ import java.io.File;
  */
 public class SPX42DiveHeadData
 {
+  public int    diveId             = -1;
   public int    diveNumberOnSPX    = -1;
   public String fileNameOnSpx      = "";
   public File   xmlFile            = null;
@@ -21,12 +22,13 @@ public class SPX42DiveHeadData
   public long   startTime          = 0L;
   public double airTemp            = -1;
   public double lowestTemp         = -1;
-  public double maxDepth           = 0;
+  public int    maxDepth           = 0;
   public int    countSamples       = 0;
   public int    diveLength         = 0;
   public String units              = "m";
   public String longgitude         = "";
   public String latitude           = "";
+  public String notes              = null;
 
   public double checkLowestTemp( final double temp )
   {
@@ -40,7 +42,7 @@ public class SPX42DiveHeadData
     return( lowestTemp );
   }
 
-  public double checkMaxDepth( final double depth )
+  public double checkMaxDepth( final int depth )
   {
     // prüf das einfach immer wieder
     if( ( maxDepth == 0 ) || ( maxDepth < depth ) )
