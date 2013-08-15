@@ -178,6 +178,24 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     }
   }
 
+  /**
+   * 
+   * Frag den SPX nach den Masseinheiten
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 15.08.2013
+   */
+  public void aksForUnitsFromSPX42()
+  {
+    if( mService != null )
+    {
+      mService.aksForUnitsFromSPX42();
+    }
+  }
+
   //
   //@formatter:on
   //
@@ -281,6 +299,43 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     if( mService != null )
     {
       mService.askForLicenseFromSPX();
+    }
+  }
+
+  /**
+   * 
+   * Frage den SPX nach den schmutzigen Details eines Logs
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 07.08.2013
+   * @param numberOnSPX
+   */
+  public void askForLogDetail( int numberOnSPX )
+  {
+    if( mService != null )
+    {
+      mService.askForLogDetail( numberOnSPX );
+    }
+  }
+
+  /**
+   * 
+   * frage den SPX nach dem Logverzeichnis
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 06.08.2013
+   */
+  public void askForLogDirectoryFromSPX()
+  {
+    if( mService != null )
+    {
+      mService.askForLogDirectoryFromSPX();
     }
   }
 
@@ -1352,6 +1407,25 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
 
   /**
    * 
+   * schreibe ein Gas setup in den SPX42
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 18.07.2013
+   * @param gasUpdates
+   */
+  public void writeGasSetup( Vector<GasUpdateEntity> gasUpdates )
+  {
+    if( mService != null )
+    {
+      mService.writeGasSetup( gasUpdates );
+    }
+  }
+
+  /**
+   * 
    * schreibe INDIVIDUAL Einstellungen in den SPX42
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
@@ -1391,62 +1465,6 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     if( mService != null )
     {
       mService.writeUnitPrefs( isTempMetric, isDepthMetric, isFreshwater );
-    }
-  }
-
-  /**
-   * 
-   * schreibe ein Gas setup in den SPX42
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 18.07.2013
-   * @param gasUpdates
-   */
-  public void writeGasSetup( Vector<GasUpdateEntity> gasUpdates )
-  {
-    if( mService != null )
-    {
-      mService.writeGasSetup( gasUpdates );
-    }
-  }
-
-  /**
-   * 
-   * frage den SPX nach dem Logverzeichnis
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 06.08.2013
-   */
-  public void askForLogDirectoryFromSPX()
-  {
-    if( mService != null )
-    {
-      mService.askForLogDirectoryFromSPX();
-    }
-  }
-
-  /**
-   * 
-   * Frage den SPX nach den schmutzigen Details eines Logs
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 07.08.2013
-   * @param numberOnSPX
-   */
-  public void askForLogDetail( int numberOnSPX )
-  {
-    if( mService != null )
-    {
-      mService.askForLogDetail( numberOnSPX );
     }
   }
 }
