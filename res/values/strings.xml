@@ -11,6 +11,8 @@
     <string name="app_build_prefix">Build</string>
     <string name="app_build_date_prefix">Build date</string>
     <string name="app_programmer_name">programm by: Dirk Marciniak</string>
+    <string name="app_unit_depth">meters</string>
+    <string name="app_unit_minute">min</string>
     
     <!-- About Frame  -->
     <string name="about_headline">About SubmatixBTLogger</string>
@@ -278,6 +280,7 @@
     <string name="logread_please_wait_dialog_header" formatted="false">Read log #%02d</string>
     <string name="logread_please_wait_dialog_count_items" formatted="false">line %03d readet</string>
     <string name="logread_not_saved_yet_msg">log not saved yet</string>
+    <string name="logread_saved_format" formatted="false">dive depth:%s %s length:%s min </string>
     <string name="logread_please_patient">Please patience</string>
     
     <!-- sonstig  -->
