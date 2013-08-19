@@ -46,7 +46,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
   }
 
   /**
-   * Erzeuge Tabellen in einer bereits ge�ffneten Datenbank
+   * Erzeuge Tabellen in einer bereits geöffneten Datenbank
    * 
    * @author Dirk Marciniak
    * @param db
