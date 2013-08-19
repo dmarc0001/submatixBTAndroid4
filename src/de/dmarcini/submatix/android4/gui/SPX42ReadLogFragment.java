@@ -113,6 +113,8 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
       Log.e( TAG, "Fail to convert Hex to int: " + ex.getLocalizedMessage() );
       return;
     }
+    // Alles gelesen: Fertich
+    if( number == max ) return;
     fileName = fields[1];
     // verwandle die Dateiangabe in eine lesbare Datumsangabe
     // Format des Strings ist ja
