@@ -14,7 +14,6 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.preference.SwitchPreference;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,27 +42,28 @@ import de.dmarcini.submatix.android4.utils.UserAlertDialogFragment;
 
 public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener, OnItemClickListener, OnClickListener
 {
-  private static final String          TAG                 = SPX42ReadLogFragment.class.getSimpleName();
-  private Activity                     runningActivity     = null;
-  private ListView                     mainListView        = null;
-  private Button                       readDirButton       = null;
-  private SPX42LogManager              logManager          = null;
-  private SPX42ReadLogListArrayAdapter logListAdapter      = null;
-  private WaitProgressFragmentDialog   pd                  = null;
+  private static final String            TAG                 = SPX42ReadLogFragment.class.getSimpleName();
+  private Activity                       runningActivity     = null;
+  private ListView                       mainListView        = null;
+  private Button                         readDirButton       = null;
+  private SPX42LogManager                logManager          = null;
+  private SPX42ReadLogListArrayAdapter   logListAdapter      = null;
+  private WaitProgressFragmentDialog     pd                  = null;
   // aktuelles Log START
-  private int                          logLineCount        = 0;
-  private int                          logNumberOnSPX      = -1;
-  private int                          currPositionOnItems = -1;
-  private SPX42DiveHeadData            diveHeader          = null;
-  private LogXMLCreator                xmlCreator          = null;
+  private int                            logLineCount        = 0;
+  private int                            logNumberOnSPX      = -1;
+  private int                            currPositionOnItems = -1;
+  private SPX42DiveHeadData              diveHeader          = null;
+  private LogXMLCreator                  xmlCreator          = null;
   // aktuelles Log END
-  private Vector<Integer>              items               = null;
-  private CommToast                    theToast            = null;
+  private Vector<Integer>                items               = null;
+  private CommToast                      theToast            = null;
   // private static final Pattern fieldPatternDp = Pattern.compile( ":" );
-  private static final Pattern         fieldPatternUnderln = Pattern.compile( "[_.]" );
-  private static String                timeFormatterString = "yyyy-MM-dd - hh:mm:ss";
-  private boolean                      isUnitImperial      = false;
-  private final int                    themeId             = R.style.AppDarkTheme;
+  private static final Pattern           fieldPatternUnderln = Pattern.compile( "[_.]" );
+  private static final DateTimeFormatter entryTimeFormatter  = DateTimeFormat.forPattern( "yyyy-MM-dd - hh:mm:ss" );
+  private static final DateTimeFormatter diveTimeFormatter   = DateTimeFormat.forPattern( "hh:mm:ss" );
+  private boolean                        isUnitImperial      = false;
+  private final int                      themeId             = R.style.AppDarkTheme;
 
   /**
    * 
@@ -136,9 +136,8 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     // So, die Angaben des SPX sind immer im Localtime-Format
     // daher werde ich die auch so interpretieren
     // Die Funktion macht das in der default-Lokalzone, sollte also
-    // da sein, wio der SPX auch ist... (schwieriges Thema)
+    // da sein, wo der SPX auch ist... (schwieriges Thema)
     DateTime tm = new DateTime( year, month, day, hour, minute, second );
-    DateTimeFormatter fmt = DateTimeFormat.forPattern( timeFormatterString );
     //
     // Jetzt ist der Zeitpunkt, die Datenbank zu befragen, ob das Logteilchen schon gesichert ist
     //
@@ -146,7 +145,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     if( isSaved )
     {
       SPX42DiveHeadData diveHead = logManager.getDiveHeader( FragmentCommonActivity.serialNumber, fileName );
-      detailText = String.format( res.getString( R.string.logread_saved_format ), diveHead.maxDepth, res.getString( R.string.app_unit_depth ), diveHead.diveLength );
+      detailText = makeDetailText( diveHead );
       dbId = diveHead.diveId;
     }
     else
@@ -156,7 +155,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     //
     // jetzt eintagen in die Anzeige
     //
-    ReadLogItemObj rlio = new ReadLogItemObj( isSaved, String.format( "#%03d: %s", number, tm.toString( fmt ) ), fileName, detailText, dbId, number );
+    ReadLogItemObj rlio = new ReadLogItemObj( isSaved, String.format( "#%03d: %s", number, tm.toString( entryTimeFormatter ) ), fileName, detailText, dbId, number, tm.getMillis() );
     // Eintrag an den Anfang stellen
     logListAdapter.insert( rlio, 0 );
   }
@@ -233,6 +232,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
             //
             try
             {
+              // ich muss ja später wiedererkennen, welche Logdaten nun kommen
               logNumberOnSPX = Integer.parseInt( num.trim(), 16 );
               startLogWriting();
               pd.setMessage( String.format( runningActivity.getResources().getString( R.string.logread_please_wait_dialog_header ), logNumberOnSPX ) );
@@ -286,6 +286,29 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
       default:
         if( BuildConfig.DEBUG ) Log.i( TAG, "unknown messsage with id <" + what + "> recived!" );
     }
+  }
+
+  /**
+   * 
+   * Erzeuge den Text für die Details wenn ein Tauchgang gespeichert war
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 19.08.2013
+   * @param maxDepth
+   * @param diveLength
+   * @return
+   */
+  private String makeDetailText( SPX42DiveHeadData diveHead )
+  {
+    Resources res = runningActivity.getResources();
+    // DateTime tm = new DateTime( diveHead.diveLength * 1000 );
+    String diveLen = String.format( "%d:%02d", diveHead.diveLength / 60, diveHead.diveLength % 60 );
+    String detailText = String.format( res.getString( R.string.logread_saved_format ), diveHead.maxDepth / 10.0, res.getString( R.string.app_unit_depth_metric ),
+            diveHead.diveLength / 60, diveHead.diveLength % 60 );
+    return( detailText );
   }
 
   @Override
@@ -345,7 +368,6 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     // UW= 0->Salzwasser 1->Süßwasser
     int isImperial = 0;
     String[] unitsParm;
-    SwitchPreference sp;
     //
     if( msg.getContainer() instanceof String[] )
     {
@@ -636,10 +658,21 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     mainListView.setEnabled( enabled );
   }
 
+  /**
+   * 
+   * Beginne mit dem Einlesen eines Logeintrages
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 19.08.2013
+   */
   private void startLogWriting()
   {
     if( logNumberOnSPX == -1 ) return;
     if( currPositionOnItems == -1 ) return;
+    ReadLogItemObj rlio = logListAdapter.getItem( currPositionOnItems );
     //
     // erst mal ein neues Headerobjekt erzeugen
     //
@@ -649,9 +682,10 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     //
     diveHeader.xmlFile = new File( String.format( "%s%s%s-%04d-%s.xml", FragmentCommonActivity.databaseDir.getAbsolutePath(), File.separator, FragmentCommonActivity.serialNumber,
             logNumberOnSPX, FragmentCommonActivity.mBtAdapter.getAddress().replaceAll( ":", "_" ) ) );
-    diveHeader.fileNameOnSpx = logListAdapter.getNameOnSPX( currPositionOnItems );
+    diveHeader.fileNameOnSpx = rlio.itemNameOnSPX;
+    diveHeader.startTime = rlio.startTimeMilis;
+    diveHeader.diveNumberOnSPX = rlio.numberOnSPX;
     diveHeader.deviceSerialNumber = FragmentCommonActivity.serialNumber;
-    diveHeader.diveNumberOnSPX = logNumberOnSPX;
     diveHeader.units = ( isUnitImperial ? "i" : "m" );
     //
     // und einen neuen XML-Dateicreator
@@ -666,9 +700,18 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     }
   }
 
+  /**
+   * 
+   * Wenn das Einlesen eines Logs beendet ist
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 19.08.2013
+   */
   private void stopLogWriting()
   {
-    Resources res = runningActivity.getResources();
     String detailText;
     //
     if( xmlCreator != null )
@@ -678,8 +721,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
         xmlCreator.closeLog();
         logManager.saveDive( diveHeader );
         ReadLogItemObj rlo = logListAdapter.getItem( currPositionOnItems );
-        detailText = String.format( res.getString( R.string.logread_saved_format ), diveHeader.maxDepth, res.getString( R.string.app_unit_depth ), diveHeader.diveLength );
-        detailText = "currPos: " + currPositionOnItems + ", Head: " + rlo.itemName;
+        detailText = makeDetailText( diveHeader );
         rlo.itemDetail = detailText;
         rlo.dbId = diveHeader.diveId;
         rlo.isMarked = false;
