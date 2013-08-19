@@ -32,12 +32,13 @@ public class LogXMLCreator
   private DocumentBuilder     builder     = null;
   private Document            logXmlFile  = null;
   private final Element       rootNode;
-  private int                 countSets;
 
   public LogXMLCreator( SPX42DiveHeadData _diveHeader ) throws XMLFileCreatorException
   {
     diveHeader = _diveHeader;
-    countSets = 0;
+    diveHeader.diveLength = 0;
+    diveHeader.airTemp = -1.0D;
+    diveHeader.countSamples = 0;
     try
     {
       // So den XML-Erzeuger Creieren
@@ -47,7 +48,7 @@ public class LogXMLCreator
       transformer.setOutputProperty( OutputKeys.STANDALONE, "yes" );
       if( BuildConfig.DEBUG ) Log.d( TAG, "LogXMLCreator: create factory..." );
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-      factory.setNamespaceAware( true );
+      factory.setNamespaceAware( false );
       if( BuildConfig.DEBUG ) Log.d( TAG, "LogXMLCreator: create builder..." );
       builder = factory.newDocumentBuilder();
       if( BuildConfig.DEBUG ) Log.d( TAG, "LogXMLCreator: ...OK" );
@@ -96,47 +97,66 @@ public class LogXMLCreator
   {
     Element genNode;
     Element presNode, depthNode, tempNode, ackuNode, ppo2Node, setpointNode, nitroNode, heliumNode, zeroTimeNode, nextStepNode;
+    int stepDiff = 60000;
     //
     try
     {
+      diveHeader.countSamples++;
       diveHeader.checkLowestTemp( Double.parseDouble( fields[2].trim() ) );
       diveHeader.checkMaxDepth( Integer.parseInt( fields[1].trim() ) );
+      stepDiff = Integer.parseInt( fields[24].trim() );
+      diveHeader.diveLength += stepDiff;
+      if( diveHeader.airTemp == -1.0D )
+      {
+        diveHeader.airTemp = Double.parseDouble( fields[2].trim() );
+      }
     }
     catch( NumberFormatException ex )
     {}
     // Wurzel dieser Ebene
     genNode = logXmlFile.createElement( "logEntry" );
+    // Druck
     presNode = logXmlFile.createElement( "presure" );
     presNode.appendChild( logXmlFile.createTextNode( fields[0].trim() ) );
     genNode.appendChild( presNode );
+    // Tiefe
     depthNode = logXmlFile.createElement( "depth" );
     depthNode.appendChild( logXmlFile.createTextNode( fields[1].trim() ) );
     genNode.appendChild( depthNode );
+    // Temperatur
     tempNode = logXmlFile.createElement( "temp" );
     tempNode.appendChild( logXmlFile.createTextNode( fields[2].trim() ) );
     genNode.appendChild( tempNode );
+    // Ackuspannung
     ackuNode = logXmlFile.createElement( "acku" );
     ackuNode.appendChild( logXmlFile.createTextNode( fields[3].trim() ) );
     genNode.appendChild( ackuNode );
+    // Partialdruck O2
     ppo2Node = logXmlFile.createElement( "ppo2" );
     ppo2Node.appendChild( logXmlFile.createTextNode( fields[5].trim() ) );
     genNode.appendChild( ppo2Node );
+    // Setpoint
     setpointNode = logXmlFile.createElement( "setpoint" );
     setpointNode.appendChild( logXmlFile.createTextNode( fields[6].trim() ) );
     genNode.appendChild( setpointNode );
+    // Stickstoffanteil
     nitroNode = logXmlFile.createElement( "n2" );
     nitroNode.appendChild( logXmlFile.createTextNode( fields[16].trim() ) );
     genNode.appendChild( nitroNode );
+    // HE Anteil
     heliumNode = logXmlFile.createElement( "he" );
     heliumNode.appendChild( logXmlFile.createTextNode( fields[17].trim() ) );
     genNode.appendChild( heliumNode );
+    // Nullzeit
     zeroTimeNode = logXmlFile.createElement( "zerotime" );
     zeroTimeNode.appendChild( logXmlFile.createTextNode( fields[20].trim() ) );
     genNode.appendChild( zeroTimeNode );
+    // Sekunden bis zum nächsten Eintrag
     nextStepNode = logXmlFile.createElement( "step" );
     nextStepNode.appendChild( logXmlFile.createTextNode( fields[24].trim() ) );
     genNode.appendChild( nextStepNode );
-    countSets++;
+    // und in die RootNode
+    rootNode.appendChild( genNode );
   }
 
   /**
