@@ -58,10 +58,9 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   // aktuelles Log END
   private Vector<Integer>                items               = null;
   private CommToast                      theToast            = null;
-  // private static final Pattern fieldPatternDp = Pattern.compile( ":" );
   private static final Pattern           fieldPatternUnderln = Pattern.compile( "[_.]" );
-  private static final DateTimeFormatter entryTimeFormatter  = DateTimeFormat.forPattern( "yyyy-MM-dd - hh:mm:ss" );
-  private static final DateTimeFormatter diveTimeFormatter   = DateTimeFormat.forPattern( "hh:mm:ss" );
+  private static final DateTimeFormatter entryTimeFormatter  = DateTimeFormat.forPattern( "yyyy-MM-dd - HH:mm:ss" );
+  private static final DateTimeFormatter diveTimeFormatter   = DateTimeFormat.forPattern( "HH:mm:ss" );
   private boolean                        isUnitImperial      = false;
   private final int                      themeId             = R.style.AppDarkTheme;
 
