@@ -233,7 +233,7 @@
     <string name="conf_prog_units_head">Einheiten Anzeige</string>
     <!-- Format für die Zeitanzeige -->
     <string name="conf_prog_temp_units_title">Zeitformat</string>
-    <string name="conf_prog_temp_units_summary">Standart Format für die Zeitanzeige</string>
+    <string name="conf_prog_temp_units_summary" formatted="false">Standard Format: &lt;%s&gt;</string>
     <string name="conf_prog_temp_units_default">yyyy-MM-dd - HH:mm:ss</string>
     
     <!-- ### Kategorie Dateisystem ### -->
