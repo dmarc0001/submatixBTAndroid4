@@ -1,5 +1,7 @@
 package de.dmarcini.submatix.android4.gui;
 
+import org.joda.time.format.DateTimeFormat;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -112,6 +114,14 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
         return;
       }
       //
+      // wen das globale Zeitformat geändert wurde
+      //
+      if( key.equals( "keyProgUnitsTimeFormat" ) )
+      {
+        FragmentCommonActivity.localTimeFormatter = DateTimeFormat.forPattern( lP.getValue() );
+        lP.setSummary( String.format( res.getString( R.string.conf_prog_temp_units_summary ), lP.getEntry() ) );
+      }
+      //
       // was da so ist
       //
     }
@@ -215,13 +225,18 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
    */
   private void setAllSummarys()
   {
-    // ListPreference lP = null;
+    ListPreference lP = null;
     EditTextPreference tP = null;
     String temp = null;
     PreferenceScreen pS = getPreferenceScreen();
     Resources res = getResources();
     // SharedPreferences shared = getPreferenceManager().getSharedPreferences();
     //
+    //
+    // Zeitformat
+    //
+    lP = ( ListPreference )pS.findPreference( "keyProgUnitsTimeFormat" );
+    lP.setSummary( String.format( res.getString( R.string.conf_prog_temp_units_summary ), lP.getEntry() ) );
     //
     // Datenverzeichnis
     //

@@ -13,6 +13,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.DialogFragment;
@@ -51,21 +54,22 @@ import de.dmarcini.submatix.android4.utils.UserAlertDialogFragment;
  */
 public class FragmentCommonActivity extends Activity implements NoticeDialogListener, IBtServiceListener
 {
-  private static final String                 TAG             = FragmentCommonActivity.class.getSimpleName();
-  private static final String                 SERVICENAME     = BlueThoothComService.class.getCanonicalName();
-  private static final String                 PACKAGENAME     = "de.dmarcini.submatix.android4";
-  protected static File                       databaseDir     = null;
-  protected static boolean                    mTwoPane        = false;
-  protected static boolean                    isIndividual    = false;
-  protected static int                        mixLicense      = ProjectConst.SPX_LICENSE_NOT_SET;             // License State 0=Nitrox,1=Normoxic Trimix,2=Full Trimix
-  protected static String                     serialNumber    = null;
-  protected static String                     manufacturer    = null;
-  protected static BluetoothAdapter           mBtAdapter      = null;
-  private BlueThoothComService                mService        = null;
-  private LocalBinder                         binder          = null;
-  private final ArrayList<IBtServiceListener> serviceListener = new ArrayList<IBtServiceListener>();
-  private volatile boolean                    mIsBound        = false;
-  private static int                          currentStyleId  = R.style.AppDarkTheme;
+  private static final String                 TAG                = FragmentCommonActivity.class.getSimpleName();
+  private static final String                 SERVICENAME        = BlueThoothComService.class.getCanonicalName();
+  private static final String                 PACKAGENAME        = "de.dmarcini.submatix.android4";
+  public static DateTimeFormatter             localTimeFormatter = DateTimeFormat.forPattern( "yyyy-MM-dd - HH:mm:ss" );
+  protected static File                       databaseDir        = null;
+  protected static boolean                    mTwoPane           = false;
+  protected static boolean                    isIndividual       = false;
+  protected static int                        mixLicense         = ProjectConst.SPX_LICENSE_NOT_SET;                    // License State 0=Nitrox,1=Normoxic Trimix,2=Full Trimix
+  protected static String                     serialNumber       = null;
+  protected static String                     manufacturer       = null;
+  protected static BluetoothAdapter           mBtAdapter         = null;
+  private BlueThoothComService                mService           = null;
+  private LocalBinder                         binder             = null;
+  private final ArrayList<IBtServiceListener> serviceListener    = new ArrayList<IBtServiceListener>();
+  private volatile boolean                    mIsBound           = false;
+  private static int                          currentStyleId     = R.style.AppDarkTheme;
 
   public static final int getAppStyle()
   {

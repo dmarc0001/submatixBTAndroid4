@@ -5,8 +5,6 @@ import java.util.Vector;
 import java.util.regex.Pattern;
 
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -42,27 +40,24 @@ import de.dmarcini.submatix.android4.utils.UserAlertDialogFragment;
 
 public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener, OnItemClickListener, OnClickListener
 {
-  private static final String            TAG                 = SPX42ReadLogFragment.class.getSimpleName();
-  private Activity                       runningActivity     = null;
-  private ListView                       mainListView        = null;
-  private Button                         readDirButton       = null;
-  private SPX42LogManager                logManager          = null;
-  private SPX42ReadLogListArrayAdapter   logListAdapter      = null;
-  private WaitProgressFragmentDialog     pd                  = null;
+  private static final String          TAG                 = SPX42ReadLogFragment.class.getSimpleName();
+  private Activity                     runningActivity     = null;
+  private ListView                     mainListView        = null;
+  private Button                       readDirButton       = null;
+  private SPX42LogManager              logManager          = null;
+  private SPX42ReadLogListArrayAdapter logListAdapter      = null;
+  private WaitProgressFragmentDialog   pd                  = null;
   // aktuelles Log START
-  private int                            logLineCount        = 0;
-  private int                            logNumberOnSPX      = -1;
-  private int                            currPositionOnItems = -1;
-  private SPX42DiveHeadData              diveHeader          = null;
-  private LogXMLCreator                  xmlCreator          = null;
+  private int                          logLineCount        = 0;
+  private int                          logNumberOnSPX      = -1;
+  private int                          currPositionOnItems = -1;
+  private SPX42DiveHeadData            diveHeader          = null;
+  private LogXMLCreator                xmlCreator          = null;
   // aktuelles Log END
-  private Vector<Integer>                items               = null;
-  private CommToast                      theToast            = null;
-  private static final Pattern           fieldPatternUnderln = Pattern.compile( "[_.]" );
-  private static final DateTimeFormatter entryTimeFormatter  = DateTimeFormat.forPattern( "yyyy-MM-dd - HH:mm:ss" );
-  private static final DateTimeFormatter diveTimeFormatter   = DateTimeFormat.forPattern( "HH:mm:ss" );
-  private boolean                        isUnitImperial      = false;
-  private final int                      themeId             = R.style.AppDarkTheme;
+  private Vector<Integer>              items               = null;
+  private CommToast                    theToast            = null;
+  private static final Pattern         fieldPatternUnderln = Pattern.compile( "[_.]" );
+  private boolean                      isUnitImperial      = false;
 
   /**
    * 
@@ -156,7 +151,8 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     //
     // jetzt eintagen in die Anzeige
     //
-    ReadLogItemObj rlio = new ReadLogItemObj( isSaved, String.format( "#%03d: %s", number, tm.toString( entryTimeFormatter ) ), fileName, detailText, dbId, number, tm.getMillis() );
+    ReadLogItemObj rlio = new ReadLogItemObj( isSaved, String.format( "#%03d: %s", number, tm.toString( FragmentCommonActivity.localTimeFormatter ) ), fileName, detailText, dbId,
+            number, tm.getMillis() );
     // Eintrag an den Anfang stellen
     logListAdapter.insert( rlio, 0 );
   }
@@ -305,8 +301,6 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   private String makeDetailText( SPX42DiveHeadData diveHead )
   {
     Resources res = runningActivity.getResources();
-    // DateTime tm = new DateTime( diveHead.diveLength * 1000 );
-    String diveLen = String.format( "%d:%02d", diveHead.diveLength / 60, diveHead.diveLength % 60 );
     String detailText = String.format( res.getString( R.string.logread_saved_format ), diveHead.maxDepth / 10.0, res.getString( R.string.app_unit_depth_metric ),
             diveHead.diveLength / 60, diveHead.diveLength % 60 );
     return( detailText );

@@ -9,6 +9,8 @@ package de.dmarcini.submatix.android4.gui;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import org.joda.time.format.DateTimeFormat;
+
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -100,7 +102,7 @@ public class AreaListActivity extends FragmentCommonActivity
     //
     // Verzeichnis für Datenbanken etc
     //
-    databaseDir = new File( sPref.getString( "keyProgDataDirectory", getdatabeseDir().getAbsolutePath() ) );
+    databaseDir = new File( sPref.getString( "keyProgDataDirectory", getdatabaseDir().getAbsolutePath() ) );
     if( databaseDir != null )
     {
       if( !databaseDir.exists() )
@@ -108,6 +110,10 @@ public class AreaListActivity extends FragmentCommonActivity
         Log.i( TAG, "onCreate: create database root dir..." );
         databaseDir.mkdirs();
       }
+    }
+    if( sPref.contains( "keyProgUnitsTimeFormat" ) )
+    {
+      FragmentCommonActivity.localTimeFormatter = DateTimeFormat.forPattern( sPref.getString( "keyProgUnitsTimeFormat", "yyyy/dd/MM - hh:mm:ss a" ) );
     }
     //
     // guck mal. ob das ein grosses Display ist,
@@ -196,7 +202,7 @@ public class AreaListActivity extends FragmentCommonActivity
     //
     // external Storage eintragen
     //
-    databaseDir = getdatabeseDir();
+    databaseDir = getdatabaseDir();
     editor.putString( "keyProgDataDirectory", databaseDir.getAbsolutePath() );
     //
     // alles in die Propertys
@@ -222,7 +228,7 @@ public class AreaListActivity extends FragmentCommonActivity
    *         Stand: 25.07.2013
    * @return
    */
-  private File getdatabeseDir()
+  private File getdatabaseDir()
   {
     File extSdCard;
     File dataBaseRoot;

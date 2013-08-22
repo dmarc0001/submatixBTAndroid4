@@ -36,8 +36,7 @@ public class ProgramAboutFragment extends Fragment
       aboutVersionTextView.setText( String.format( "%s: %s", runningActivity.getResources().getString( R.string.app_version_prefix ), BuildVersion.getVersion() ) );
       aboutProgrammerTextView.setText( runningActivity.getResources().getString( R.string.app_programmer_name ) );
       aboutBuildTextView.setText( String.format( "%s: %s", runningActivity.getResources().getString( R.string.app_build_prefix ), BuildVersion.getBuildAsString() ) );
-      aboutBuildDateTextView.setText( String.format( "%s: %s", runningActivity.getResources().getString( R.string.app_build_date_prefix ),
-              BuildVersion.getLocaleDate( runningActivity.getResources().getString( R.string.app_locale_timeformat_date ) ) ) );
+      aboutBuildDateTextView.setText( String.format( "%s: %s", runningActivity.getResources().getString( R.string.app_build_date_prefix ), BuildVersion.getdefaukltDateString() ) );
     }
     catch( NullPointerException ex )
     {
