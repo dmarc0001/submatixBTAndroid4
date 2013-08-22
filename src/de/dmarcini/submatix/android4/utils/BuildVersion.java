@@ -7,18 +7,20 @@
  */
 package de.dmarcini.submatix.android4.utils;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.Locale;
+
+import org.joda.time.DateTime;
+
+import de.dmarcini.submatix.android4.gui.FragmentCommonActivity;
 
 /**
  * @author dmarc
  */
 public class BuildVersion
 {
-  private static final long buildNumber = 2607L;
-  private static final long buildDate = 1377161347062L;
-  private static final String buildNumberString = String.format( "%d", buildNumber );
-  private static final String buildDateString   = new Date( buildDate ).toString();
+  private static final long buildNumber = 2625L;
+  private static final long buildDate = 1377164000273L;
+  private static final String buildNumberString = String.format( Locale.ENGLISH, "%d", buildNumber );
 
   /**
    * Gib die Buildnummer zurück
@@ -37,33 +39,19 @@ public class BuildVersion
   }
 
   /**
-   * Gib das Builddatum als String zurück
    * 
-   * @author Dirk Marciniak 31.07.2012
-   * @return String
-   */
-  public static String getBuildDate()
-  {
-    return( buildDateString );
-  }
-
-  /**
+   * Gib die konfigurierte Zeitdarstellung zurück
    * 
-   * Das Builddatum als lokalisiertes Format
-   * 
-   * Project: SubmatixBTForPC Package: de.dmarcini.submatix.pclogger.utils
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 31.07.2012
-   * @param fmt
-   * @return Datum als String
+   *         Stand: 22.08.2013
+   * @return Zeitstring nach den Programmeinstellungen
    */
-  public static String getLocaleDate( String fmt )
+  public static String getdefaukltDateString()
   {
-    Date date = new Date( buildDate );
-    SimpleDateFormat sdf = new SimpleDateFormat( fmt );
-    return( sdf.format( date ) );
+    return( new DateTime( buildDate ).toString( FragmentCommonActivity.localTimeFormatter ) );
   }
 
   /**
