@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="timeFormatValuesArray">
+        <item>"yyyy-MM-dd - HH:mm:ss"</item>
+        <item>yyyy/dd/MM - hh:mm:ss a</item>
+        <item>dd.MM.yyyy HH:mm:ss</item>
+        </string-array>
+        
+    <string-array name="timeFormatNamesArray">
+        <item>YYYY-MM-DD HH:MM:SS</item>
+        <item>YYYY/MM/DD HH:MM:SS pm/am</item>
+        <item>DD.MM.YYYY HH:MM:SS</item>
+    </string-array>
+    
+</resources>

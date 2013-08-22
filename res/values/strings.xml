@@ -227,6 +227,13 @@
             
     <!-- Detailseite für Programmkonfiguration -->
     <string name="conf_prog_headline">app preferences</string>
+    <!-- ### Kategorie Zeitanzeige ### -->
+    <string name="conf_prog_units_head">unit view</string>
+    <!-- Format für die Zeitanzeige -->
+    <string name="conf_prog_temp_units_title">Timeformat</string>
+    <string name="conf_prog_temp_units_summary">Standart format for view time</string>
+    <string name="conf_prog_temp_units_default">yyyy/dd/MM - hh:mm:ss a</string>
+    
     <!-- ### Kategorie Dateisystem ### -->
     <string name="conf_prog_filesystem">FILESYSTEM PREFERENCES</string>
     <!-- datenverzeichnis für Logdaten -->
