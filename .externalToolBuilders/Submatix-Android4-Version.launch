@@ -2,7 +2,8 @@
 <launchConfiguration type="org.eclipse.ant.AntBuilderLaunchConfigurationType">
 <booleanAttribute key="org.eclipse.ant.ui.ATTR_TARGETS_UPDATED" value="true"/>
 <booleanAttribute key="org.eclipse.ant.ui.DEFAULT_VM_INSTALL" value="false"/>
-<stringAttribute key="org.eclipse.debug.core.ATTR_REFRESH_SCOPE" value="${working_set:&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#13;&#10;&lt;resources&gt;&#13;&#10;&lt;item path=&quot;/SubmatixBTLoggerAndroid_4&quot; type=&quot;4&quot;/&gt;&#13;&#10;&lt;/resources&gt;}"/>
+<booleanAttribute key="org.eclipse.debug.core.ATTR_REFRESH_RECURSIVE" value="false"/>
+<stringAttribute key="org.eclipse.debug.core.ATTR_REFRESH_SCOPE" value="${working_set:&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&#13;&#10;&lt;resources&gt;&#13;&#10;&lt;item path=&quot;/SubmatixBTLoggerAndroid/src/de/dmarcini/submatix/android4/gui/ProgramAboutFragment.java&quot; type=&quot;1&quot;/&gt;&#13;&#10;&lt;item path=&quot;/SubmatixBTLoggerAndroid/src/de/dmarcini/submatix/android4/utils/BuildVersion.java&quot; type=&quot;1&quot;/&gt;&#13;&#10;&lt;/resources&gt;}"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/SubmatixBTLoggerAndroid"/>
 </listAttribute>
@@ -14,8 +15,8 @@
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="true"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="SubmatixBTLoggerAndroid"/>
 <booleanAttribute key="org.eclipse.ui.externaltools.ATTR_BUILDER_ENABLED" value="true"/>
-<stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="${workspace_loc:/SubmatixBTLoggerAndroid_4/utils/versionsScript.xml}"/>
+<stringAttribute key="org.eclipse.ui.externaltools.ATTR_LOCATION" value="${workspace_loc:/SubmatixBTLoggerAndroid/utils/versionsScript.xml}"/>
 <stringAttribute key="org.eclipse.ui.externaltools.ATTR_RUN_BUILD_KINDS" value="full,incremental,"/>
 <booleanAttribute key="org.eclipse.ui.externaltools.ATTR_TRIGGERS_CONFIGURED" value="true"/>
-<stringAttribute key="org.eclipse.ui.externaltools.ATTR_WORKING_DIRECTORY" value="${workspace_loc:/SubmatixBTLoggerAndroid_4}"/>
+<stringAttribute key="org.eclipse.ui.externaltools.ATTR_WORKING_DIRECTORY" value="${workspace_loc:/SubmatixBTLoggerAndroid}"/>
 </launchConfiguration>
