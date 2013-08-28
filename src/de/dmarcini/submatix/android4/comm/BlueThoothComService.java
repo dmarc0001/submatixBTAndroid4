@@ -1811,7 +1811,7 @@ public class BlueThoothComService extends Service
         // BO -> Bailoutgas? (3?)
         // DI -> Diluent ( 0, 1 oder 2 )
         // CU Current Gas (0 oder 1)
-        kdoString = String.format( "~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_GASLIST, gasNr, gasParms.he, gasParms.n2, ( gasParms.bo ? 1 : 0 ), diluent,
+        kdoString = String.format( "~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_GASLIST, gasNr, gasParms.he, gasParms.n2, ( gasParms.bo ? 3 : 0 ), diluent,
                 ( gasParms.isCurr ? 1 : 0 ) );
         if( BuildConfig.DEBUG ) Log.d( TAG, "writeDecoPrefs: sending <OLDER-FIRMWARE <" + kdoString + ">>" );
         break;
