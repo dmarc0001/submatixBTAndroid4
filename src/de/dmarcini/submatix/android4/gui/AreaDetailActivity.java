@@ -125,7 +125,6 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
             break;
           //
           case R.string.progitem_loggraph:
-          case R.string.progitem_export:
             Log.i( TAG, "onCreate: the called page is in progress..." );
             currFragment = ( new WorkInProgressFragment() );
             setContentView( R.layout.fragment_in_progress );
@@ -133,6 +132,16 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
             getActionBar().setLogo( mItem.resIdOffline );
             Log.v( TAG, "onCreate: beginTransaction..." );
             getFragmentManager().beginTransaction().replace( R.id.inProgressOuterLayout, currFragment ).commit();
+            Log.v( TAG, "onCreate: add transaction...OK" );
+            break;
+          case R.string.progitem_export:
+            Log.i( TAG, "onCreate: start export Page..." );
+            currFragment = ( new SPXExportLogFragment() );
+            setContentView( R.layout.fragment_export_log );
+            getActionBar().setTitle( R.string.export_header );
+            getActionBar().setLogo( mItem.resIdOffline );
+            Log.v( TAG, "onCreate: beginTransaction..." );
+            getFragmentManager().beginTransaction().replace( R.id.exportLogOuterLayout, currFragment ).commit();
             Log.v( TAG, "onCreate: add transaction...OK" );
             break;
           default:

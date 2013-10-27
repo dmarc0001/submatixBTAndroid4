@@ -15,6 +15,7 @@ import java.io.File;
 public class SPX42DiveHeadData
 {
   public int    diveId             = -1;
+  public int    deviceId           = -1;
   public int    diveNumberOnSPX    = -1;
   public String fileNameOnSpx      = "";
   public File   xmlFile            = null;

@@ -60,6 +60,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
     if( BuildConfig.DEBUG ) Log.d( TAG, "create table " + ProjectConst.A_TABLE_ALIASES + "..." );
     sql = "create table  " + ProjectConst.A_TABLE_ALIASES + " ";
     sql += "(";
+    sql += ProjectConst.A_DEVICEID + " integer primary key autoincrement, \n";
     sql += ProjectConst.A_DEVNAME + " text not null, \n";
     sql += ProjectConst.A_ALIAS + " text not null, \n";
     sql += ProjectConst.A_MAC + " text not null, \n";
@@ -80,6 +81,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
     sql = "create table  " + ProjectConst.H_TABLE_DIVELOGS + " ";
     sql += "(";
     sql += ProjectConst.H_DIVEID + " integer primary key autoincrement, \n";
+    sql += ProjectConst.H_DEVICEID + " integer not null, \n";
     sql += ProjectConst.H_FILEONMOBILE + " text not null, \n";
     sql += ProjectConst.H_DIVENUMBERONSPX + " text not null, \n";
     sql += ProjectConst.H_DEVICESERIAL + " text not null, \n";
@@ -108,10 +110,13 @@ public class DataSQLHelper extends SQLiteOpenHelper
     }
     // Erzeuge index
     if( BuildConfig.DEBUG ) Log.d( TAG, "create INDEX  on Table " + ProjectConst.H_TABLE_DIVELOGS + "..." );
-    sql = "create INDEX  idx_" + ProjectConst.H_TABLE_DIVELOGS + "_" + ProjectConst.H_STARTTIME;
-    sql += " ON " + ProjectConst.H_TABLE_DIVELOGS + "(" + ProjectConst.H_STARTTIME + " ASC);";
     try
     {
+      sql = "create INDEX  idx_" + ProjectConst.H_TABLE_DIVELOGS + "_" + ProjectConst.H_STARTTIME;
+      sql += " ON " + ProjectConst.H_TABLE_DIVELOGS + "(" + ProjectConst.H_STARTTIME + " ASC);";
+      db.execSQL( sql );
+      sql = "create INDEX  idx_" + ProjectConst.H_DEVICEID;
+      sql += " ON " + ProjectConst.H_TABLE_DIVELOGS + "(" + ProjectConst.H_DEVICEID + " ASC);";
       db.execSQL( sql );
     }
     catch( SQLException ex )
@@ -178,7 +183,8 @@ public class DataSQLHelper extends SQLiteOpenHelper
    */
   public File getDbDir()
   {
-    File dbFile = new File( dbName );
+    File dbFile;
+    dbFile = new File( dbName );
     return( new File( dbFile.getParent() ) );
   }
 

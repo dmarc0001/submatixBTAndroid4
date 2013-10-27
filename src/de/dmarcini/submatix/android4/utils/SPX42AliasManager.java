@@ -1,5 +1,7 @@
 package de.dmarcini.submatix.android4.utils;
 
+import java.util.Vector;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -90,6 +92,42 @@ public class SPX42AliasManager
 
   /**
    * 
+   * Giv die Deviceid zurück
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 28.08.2013
+   * @param mac
+   * @return Deviceid
+   */
+  public int getIdForDevice( String mac )
+  {
+    String sql;
+    int deviceId = -1;
+    Cursor cu;
+    //
+    if( BuildConfig.DEBUG ) Log.i( TAG, "getIdForDevice..." );
+    sql = String.format( "select %s from %s where %s like '%s';", ProjectConst.A_DEVICEID, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_MAC, mac );
+    cu = dBase.rawQuery( sql, null );
+    // formatter:on
+    if( cu.moveToFirst() )
+    {
+      deviceId = cu.getInt( 0 );
+      //
+      // Cursor schliessen
+      //
+      cu.close();
+      if( BuildConfig.DEBUG ) Log.i( TAG, "getIdForDevice: found <" + deviceId + ">" );
+      return( deviceId );
+    }
+    if( BuildConfig.DEBUG ) Log.i( TAG, "getIdForDevice: not found, use default <-1>" );
+    return( -1 );
+  }
+
+  /**
+   * 
    * Erzeuge oder update einen Alias für ein Gerät
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
@@ -144,6 +182,94 @@ public class SPX42AliasManager
     {
       Log.e( TAG, "Error while setAliasForMac: <" + ex.getLocalizedMessage() + ">" );
       return( false );
+    }
+  }
+
+  /**
+   * 
+   * Erzeuge einen Eintrag in der Aliasdatenbank, wenn keiner vorhanden ist
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 28.08.2013
+   * @param _mac
+   * @param _deviceName
+   */
+  public void setAliasForMacIfNotExist( String _mac, String _deviceName )
+  {
+    String sql;
+    Cursor cu;
+    ContentValues values;
+    //
+    if( BuildConfig.DEBUG ) Log.i( TAG, "setAliasForMacIfNotExist..." );
+    sql = String.format( "select %s from %s where %s like '%s';", ProjectConst.A_ALIAS, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_MAC, _mac );
+    cu = dBase.rawQuery( sql, null );
+    //
+    try
+    {
+      if( cu.moveToFirst() )
+      {
+        //
+        // ja, der alias existiert, erledigt!
+        //
+        cu.close();
+        return;
+      }
+      //
+      // nein, das existiert noch nicht
+      //
+      values = new ContentValues();
+      values.put( ProjectConst.A_MAC, _mac );
+      values.put( ProjectConst.A_DEVNAME, _deviceName );
+      values.put( ProjectConst.A_ALIAS, _deviceName );
+      dBase.insertOrThrow( ProjectConst.A_TABLE_ALIASES, null, values );
+    }
+    catch( SQLException ex )
+    {
+      Log.e( TAG, "Error while setAliasForMacIfNotExist: <" + ex.getLocalizedMessage() + ">" );
+      return;
+    }
+  }
+
+  /**
+   * 
+   * Gib eine Liste der Deviceids zurück
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 28.08.2013
+   * @return Liste mit Deviceids
+   */
+  public Vector<Integer> getDeviceIdList()
+  {
+    String sql;
+    Cursor cu;
+    Vector<Integer> lst = new Vector<Integer>();
+    //
+    if( BuildConfig.DEBUG ) Log.i( TAG, "getDeviceIdList..." );
+    sql = String.format( "select %s from %s order by %s;", ProjectConst.A_DEVICEID, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_DEVICEID );
+    cu = dBase.rawQuery( sql, null );
+    //
+    try
+    {
+      if( cu.moveToFirst() )
+      {
+        while( cu.moveToNext() )
+        {
+          lst.add( cu.getInt( 0 ) );
+        }
+      }
+      Log.d( TAG, "read <" + lst.size() + "> entrys..." );
+      return( lst );
+    }
+    catch( SQLException ex )
+    {
+      Log.e( TAG, "Error while getDeviceIdList: <" + ex.getLocalizedMessage() + ">" );
+      return( null );
     }
   }
 }

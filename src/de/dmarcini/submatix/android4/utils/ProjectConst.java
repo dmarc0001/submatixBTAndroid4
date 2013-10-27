@@ -23,7 +23,7 @@ public final class ProjectConst
   public static final String MANUFACTVERS               = "0.4-BETA";
   public static final String GENYEAR                    = "2013";
   public static final String GENMONTH                   = "08";
-  public static final String GENDAY                     = "13";
+  public static final String GENDAY                     = "28";
   public static final boolean CHECK_PHYSICAL_BT         = false; 
 
   // ANDROID: Preferences Version
@@ -67,7 +67,7 @@ public final class ProjectConst
   public static final String DEFAULTDATADIR             = "database";
   public static final String DEFAULTEXPORTDIR           = "export";
   public static final String DATABASE_NAME              = "submatixDatabase.db";
-  public static final int DATABASE_VERSION              = 3;
+  public static final int DATABASE_VERSION              = 4;
   
   // Messages für SPX 42
   public static final String STX                        = new String( new byte[] { 0x02 } );
@@ -85,8 +85,8 @@ public final class ProjectConst
   public static final int SPX_DEVSOFTVERSION            = 0x06;
   public static final int SPX_SERIAL_NUMBER             = 0x07; //! Seriennummer des SPX
   public static final int SPX_SER1_FROM_SER0            = 0x08;
-  public static final int SPX_TIME                      = 0x20;
-  public static final int SPX_DATE                      = 0x21;
+  public static final int SPX_DATETIME                  = 0x20; //! Datum und Zeit setzen...
+  public static final int SPX_DATE_OSOLETE              = 0x21; //! erledigt
   public static final int SPX_TEMPSTICK                 = 0x22;
   public static final int SPX_HUD                       = 0x23; //! HUD Status senden
   public static final int SPX_UBAT                      = 0x24; //! UBAT anfordern auswerten
@@ -109,7 +109,7 @@ public final class ProjectConst
   public static final int SPX_GET_LOG_INDEX             = 0x41; //! Logbuch index senden (Bluetooth)
   public static final int SPX_GET_LOG_NUMBER            = 0x42; //! Logbuch senden (Bluetooth)
   public static final int SPX_GET_LOG_NUMBER_SE         = 0x43; //! Logbuch senden START/ENDE (Bluetooth)
-  public static final int SPX_GET_DEVICE_OFF            = 0x44; //! Flag ob Device aus den Syncmode gegangen is
+  public static final int SPX_GET_DEVICE_OFF            = 0x44; //! Flag ob Device aus den Syncmode gegangen ist
   public static final int SPX_SEND_FILE                 = 0x45; //! Sende ein File
   public static final int SPX_LICENSE_STATE             = 0x45; //! Lizenz Status zurückgeben!
   public static final int SPX_GET_LIC_STATUS            = 0x46; //! Lizenzstatus senden (Bluetooth)
@@ -218,6 +218,7 @@ public final class ProjectConst
   //
   // Tabelle für Alias und PIN des Gerätes
   public static final String A_TABLE_ALIASES            = "aliases";
+  public static final String A_DEVICEID                 = "devid";
   public static final String A_DEVNAME                  = "devname";
   public static final String A_ALIAS                    = "alias";
   public static final String A_MAC                      = "mac";
@@ -228,6 +229,7 @@ public final class ProjectConst
   // Tabelle dive_logs
   // speichert "Kopfdaten" der Logs
   public static final String H_TABLE_DIVELOGS           = "dive_logs";
+  public static final String H_DEVICEID                 = "devid";
   public static final String H_DIVEID                   = "dive_id";
   public static final String H_FILEONMOBILE             = "xml_file";
   public static final String H_DIVENUMBERONSPX          = "dive_number";

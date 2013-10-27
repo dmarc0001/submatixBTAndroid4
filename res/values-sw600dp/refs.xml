@@ -14,4 +14,5 @@
     <item name="fragment_about" type="layout">@layout/fragment_about_big</item>
     <item name="fragment_read_log" type="layout">@layout/fragment_read_log_big</item>
     <item name="read_log_array_adapter_view" type="layout">@layout/read_log_array_adapter_view_big</item>
+    <item name="fragment_export_log" type="layout">@layout/fragment_export_log_big</item>
 </resources>

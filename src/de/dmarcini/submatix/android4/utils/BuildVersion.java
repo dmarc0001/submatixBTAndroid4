@@ -18,8 +18,8 @@ import de.dmarcini.submatix.android4.gui.FragmentCommonActivity;
  */
 public class BuildVersion
 {
-  private static final long buildNumber = 2631L;
-  private static final long buildDate = 1377704139713L;
+  private static final long buildNumber = 2690L;
+  private static final long buildDate = 1382886194917L;
   private static final String buildNumberString = String.format( Locale.ENGLISH, "%d", buildNumber );
 
   /**

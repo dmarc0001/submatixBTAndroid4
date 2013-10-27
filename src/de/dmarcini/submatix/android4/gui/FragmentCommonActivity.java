@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -718,6 +719,8 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     askForFirmwareVersion();
     if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for SPX license..." );
     askForLicenseFromSPX();
+    if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): set Date and Time to Device (if possible)..." );
+    writeDateTimeToDevice();
   }
 
   @Override
@@ -1164,12 +1167,18 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, readLogFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
             break;
           case R.string.progitem_loggraph:
-          case R.string.progitem_export:
             Log.i( TAG, "the called page is in progress..." );
             WorkInProgressFragment ipf = new WorkInProgressFragment();
             ipf.setArguments( arguments );
             getActionBar().setTitle( R.string.in_progress_header );
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, ipf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+            break;
+          case R.string.progitem_export:
+            Log.i( TAG, "onListItemClick: startSPXExportLogFragment..." );
+            SPXExportLogFragment elf = new SPXExportLogFragment();
+            elf.setArguments( arguments );
+            getActionBar().setTitle( R.string.export_header );
+            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, elf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
             break;
           default:
             Log.w( TAG, "Not programitem found for <" + mItem.nId + ">" );
@@ -1224,12 +1233,19 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
             break;
           //
           case R.string.progitem_loggraph:
-          case R.string.progitem_export:
             Log.i( TAG, "the called page is in progress..." );
             WorkInProgressFragment ipf = new WorkInProgressFragment();
             ipf.setArguments( arguments );
             getActionBar().setTitle( R.string.in_progress_header );
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, ipf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+            break;
+          //
+          case R.string.progitem_export:
+            Log.i( TAG, "onListItemClick: startSPXExportLogFragment..." );
+            SPXExportLogFragment elf = new SPXExportLogFragment();
+            elf.setArguments( arguments );
+            getActionBar().setTitle( R.string.export_header );
+            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, elf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
             break;
           default:
             //
@@ -1361,6 +1377,24 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     if( mService != null )
     {
       mService.writeAutoSetpoint( auto, pressure );
+    }
+  }
+
+  /**
+   * 
+   * Schreibe nach dem verbinden in das Gerät die Korrekte Uhrzeit und das Datum
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 27.10.2013
+   */
+  private void writeDateTimeToDevice()
+  {
+    if( mService != null )
+    {
+      mService.writeDateTimeToDevice( new DateTime() );
     }
   }
 

@@ -57,6 +57,12 @@ public class ExtSdCardFinder
           }
         }
       }
+      extSdCard = new File( Environment.DIRECTORY_DOWNLOADS );
+      if( extSdCard.exists() && extSdCard.isDirectory() && extSdCard.canWrite() )
+      {
+        Log.i( TAG, "fallback on download directory on path <" + extSdCard.getAbsolutePath() + ">" );
+        return( extSdCard );
+      }
     }
     catch( FileNotFoundException ex )
     {

@@ -289,6 +289,12 @@
     <string name="logread_saved_format" formatted="false">dive depth: %02.1f %s length: %d:%02d </string>
     <string name="logread_please_patient">Please patience</string>
     
+    <!-- Fragment SPXExportLogFragment -->
+    <string name="export_header">Export logs from device</string>
+    <string name="export_subheader" formatted="false">Device: %s</string>
+    <string name="export_change_drive_button">Device...</string>
+    <string name="export_do_export">Export!</string>
+    
     <!-- sonstig  -->
     <string name="no_device">- no device -</string>
     <string name="array_with_pic_adapter_dummy">PROGRAMITEM</string>

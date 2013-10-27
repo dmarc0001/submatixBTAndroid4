@@ -108,7 +108,7 @@ public class AreaListActivity extends FragmentCommonActivity
       if( !databaseDir.exists() )
       {
         Log.i( TAG, "onCreate: create database root dir..." );
-        databaseDir.mkdirs();
+        if( !databaseDir.mkdirs() ) databaseDir = null;
       }
     }
     if( sPref.contains( "keyProgUnitsTimeFormat" ) )

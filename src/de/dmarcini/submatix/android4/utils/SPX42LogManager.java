@@ -1,7 +1,9 @@
 package de.dmarcini.submatix.android4.utils;
 
 import java.io.File;
+import java.util.Vector;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -76,6 +78,7 @@ public class SPX42LogManager extends SPX42AliasManager
     //
     values = new ContentValues();
     values.put( ProjectConst.H_FILEONMOBILE, diveHeader.xmlFile.getAbsolutePath() );
+    values.put( ProjectConst.H_DEVICEID, diveHeader.deviceId );
     values.put( ProjectConst.H_DIVENUMBERONSPX, String.format( "%d", diveHeader.diveNumberOnSPX ) );
     values.put( ProjectConst.H_DEVICESERIAL, diveHeader.deviceSerialNumber );
     values.put( ProjectConst.H_STARTTIME, diveHeader.startTime ); // TODO: prüfe, ob das so hinkommt
@@ -113,23 +116,24 @@ public class SPX42LogManager extends SPX42AliasManager
     //
     if( BuildConfig.DEBUG ) Log.d( TAG, "getDiveHeader..." );
     // @formatter:off
-    sql = String.format( "select %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s from %s where %s like '%s' and %s like '%s';", 
+    sql = String.format( "select %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s from %s where %s like '%s' and %s like '%s';", 
             ProjectConst.H_DIVEID,                     // 0 
-            ProjectConst.H_FILEONMOBILE,               // 1
-            ProjectConst.H_DIVENUMBERONSPX,            // 2
-            ProjectConst.H_FILEONSPX,                  // 3
-            ProjectConst.H_DEVICESERIAL,               // 4
-            ProjectConst.H_STARTTIME,                  // 5
-            ProjectConst.H_HADSEND,                    // 6
-            ProjectConst.H_FIRSTTEMP,                  // 7
-            ProjectConst.H_LOWTEMP,                    // 8
-            ProjectConst.H_MAXDEPTH,                   // 9
-            ProjectConst.H_SAMPLES,                    // 10
-            ProjectConst.H_DIVELENGTH,                 // 11 
-            ProjectConst.H_UNITS,                      // 12
-            ProjectConst.H_NOTES,                      // 13
-            ProjectConst.H_GEO_LON,                    // 14
-            ProjectConst.H_GEO_LAT,                    // 15
+            ProjectConst.H_DEVICEID,                   // 1
+            ProjectConst.H_FILEONMOBILE,               // 2
+            ProjectConst.H_DIVENUMBERONSPX,            // 3
+            ProjectConst.H_FILEONSPX,                  // 4
+            ProjectConst.H_DEVICESERIAL,               // 5
+            ProjectConst.H_STARTTIME,                  // 6
+            ProjectConst.H_HADSEND,                    // 7
+            ProjectConst.H_FIRSTTEMP,                  // 8
+            ProjectConst.H_LOWTEMP,                    // 9
+            ProjectConst.H_MAXDEPTH,                   // 10
+            ProjectConst.H_SAMPLES,                    // 11
+            ProjectConst.H_DIVELENGTH,                 // 12 
+            ProjectConst.H_UNITS,                      // 13
+            ProjectConst.H_NOTES,                      // 14
+            ProjectConst.H_GEO_LON,                    // 15
+            ProjectConst.H_GEO_LAT,                    // 16
             ProjectConst.H_TABLE_DIVELOGS,             // Tabelle
             ProjectConst.H_DEVICESERIAL, devSerial,    // seriennummer
             ProjectConst.H_FILEONSPX, fileOnSPX );     // Dateiname
@@ -139,26 +143,88 @@ public class SPX42LogManager extends SPX42AliasManager
     if( cu.moveToFirst() )
     {
       diveHeader.diveId = cu.getInt( 0 );
-      diveHeader.xmlFile = new File( cu.getString( 1 ) );
-      diveHeader.diveNumberOnSPX = cu.getInt( 2 );
-      diveHeader.fileNameOnSpx = cu.getString( 3 );
-      diveHeader.deviceSerialNumber = cu.getString( 4 );
-      diveHeader.startTime = cu.getLong( 5 );
-      diveHeader.airTemp = cu.getDouble( 7 );
-      diveHeader.lowestTemp = cu.getDouble( 8 );
-      diveHeader.maxDepth = cu.getInt( 9 );
-      diveHeader.countSamples = cu.getInt( 10 );
-      diveHeader.diveLength = cu.getInt( 11 );
-      diveHeader.units = cu.getString( 12 );
-      diveHeader.notes = cu.getString( 13 );
-      diveHeader.longgitude = cu.getString( 14 );
-      diveHeader.latitude = cu.getString( 15 );
+      diveHeader.deviceId = cu.getInt( 1 );
+      diveHeader.xmlFile = new File( cu.getString( 2 ) );
+      diveHeader.diveNumberOnSPX = cu.getInt( 3 );
+      diveHeader.fileNameOnSpx = cu.getString( 4 );
+      diveHeader.deviceSerialNumber = cu.getString( 5 );
+      diveHeader.startTime = cu.getLong( 6 );
+      diveHeader.airTemp = cu.getDouble( 8 );
+      diveHeader.lowestTemp = cu.getDouble( 9 );
+      diveHeader.maxDepth = cu.getInt( 10 );
+      diveHeader.countSamples = cu.getInt( 11 );
+      diveHeader.diveLength = cu.getInt( 12 );
+      diveHeader.units = cu.getString( 13 );
+      diveHeader.notes = cu.getString( 14 );
+      diveHeader.longgitude = cu.getString( 15 );
+      diveHeader.latitude = cu.getString( 16 );
       //
       // Cursor schliessen
       //
       cu.close();
       if( BuildConfig.DEBUG ) Log.d( TAG, "getDiveHeader: OK" );
       return( diveHeader );
+    }
+    return( null );
+  }
+
+  /**
+   * 
+   * Gib eine Liste mit Logs für ein Gerät zurück
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 28.08.2013
+   * @param _deviceId
+   * @return Vector mit Werten tauchid,Startzeit,Länge
+   */
+  @SuppressLint( "DefaultLocale" )
+  public Vector<Long[]> getDiveListForDevice( int _deviceId )
+  {
+    String sql;
+    Cursor cu;
+    Vector<Long[]> diveHeadList = new Vector<Long[]>();
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "getDiveListForDevice..." );
+    if( _deviceId < 0 )
+    {
+      Vector<Integer> lst = getDeviceIdList();
+      if( lst != null && lst.size() > 0 )
+      {
+        _deviceId = lst.get( 0 );
+      }
+      else
+      {
+        return( null );
+      }
+    }
+    // @formatter:off
+    sql = String.format( "select %s,%s,%s from %s where %s=%d order by %s;", 
+            ProjectConst.H_DIVEID,                     // 
+            ProjectConst.H_STARTTIME,                  // 
+            ProjectConst.H_DIVELENGTH,                 //  
+            ProjectConst.H_TABLE_DIVELOGS,             // Tabelle
+            ProjectConst.H_DEVICEID, _deviceId,        // nur Gerätenummer
+            ProjectConst.H_DIVEID);                    // Ordne nach Tauchlog-Nummer
+    // @formatter:on
+    cu = dBase.rawQuery( sql, null );
+    if( BuildConfig.DEBUG ) Log.d( TAG, "getDiveListForDevice had <" + cu.getCount() + "> results." );
+    if( cu.moveToFirst() )
+    {
+      while( cu.moveToNext() )
+      {
+        Long[] entry = new Long[]
+        { cu.getLong( 0 ), cu.getLong( 1 ), cu.getLong( 2 ) };
+        diveHeadList.add( entry );
+      }
+      //
+      // Cursor schliessen
+      //
+      cu.close();
+      if( BuildConfig.DEBUG ) Log.d( TAG, "getDiveListForDevice: OK" );
+      return( diveHeadList );
     }
     return( null );
   }

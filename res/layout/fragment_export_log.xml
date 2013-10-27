@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/exportLogOuterLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp" >
+
+    <ListView
+        android:id="@+id/exportLogsListView"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/icon_margin_left"
+        android:layout_marginRight="@dimen/icon_margin_left"
+        android:layout_weight="0.75"
+        android:drawSelectorOnTop="false" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp" >
+
+        <Button
+            android:id="@+id/changeDeviceButton"
+            android:layout_width="140dp"
+            android:layout_height="68dp"
+            android:layout_marginRight="@dimen/icon_margin_left"
+            android:layout_marginTop="@dimen/icon_margin_left"
+            android:hapticFeedbackEnabled="true"
+            android:text="@string/export_change_drive_button"
+            android:textColor="@color/exportDeviceButton.textColor" />
+
+        <Button
+            android:id="@+id/exportLogsButton"
+            android:layout_width="140dp"
+            android:layout_height="68dp"
+            android:layout_marginBottom="@dimen/icon_margin_left"
+            android:layout_marginRight="@dimen/icon_margin_left"
+            android:layout_marginTop="@dimen/icon_margin_left"
+            android:hapticFeedbackEnabled="true"
+            android:text="@string/export_do_export"
+            android:textColor="@color/exportLogsButton.textColor" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -351,6 +351,14 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     writePreferences();
   }
 
+  private void setAliasForDeviceIfNotExist( String _mac, String _deviceName )
+  {
+    if( aliasManager != null )
+    {
+      aliasManager.setAliasForMacIfNotExist( _mac, _deviceName );
+    }
+  }
+
   @Override
   public void msgConnectError( BtServiceMessage msg )
   {
@@ -547,6 +555,8 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
           //
           tb.setImageResource( R.drawable.bluetooth_icon_color );
           String device = ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getMAC( devSpinner.getSelectedItemPosition() );
+          String deviceName = ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getDevName( devSpinner.getSelectedItemPosition() );
+          setAliasForDeviceIfNotExist( device, deviceName );
           ( ( FragmentCommonActivity )runningActivity ).doConnectBtDevice( device );
           break;
         case ProjectConst.CONN_STATE_CONNECTING:

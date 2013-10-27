@@ -19,11 +19,10 @@
     <Button
         android:id="@+id/readLogDirButton"
         android:layout_width="140dp"
-        android:layout_height="match_parent"
+        android:layout_height="68dp"
         android:layout_marginBottom="@dimen/icon_margin_left"
         android:layout_marginRight="@dimen/icon_margin_left"
         android:layout_marginTop="@dimen/icon_margin_left"
-        android:layout_weight="0.25"
         android:hapticFeedbackEnabled="true"
         android:text="@string/logread_doit_button"
         android:textColor="@color/connectToastAlert.textColor" />

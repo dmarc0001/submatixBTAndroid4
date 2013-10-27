@@ -1,5 +1,7 @@
 package de.dmarcini.submatix.android4.gui;
 
+import java.io.File;
+
 import org.joda.time.format.DateTimeFormat;
 
 import android.content.Intent;
@@ -141,6 +143,12 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
       //
       if( key.equals( "keyProgDataDirectory" ) )
       {
+        FragmentCommonActivity.databaseDir = new File( tP.getText() );
+        if( !FragmentCommonActivity.databaseDir.exists() )
+        {
+          Log.i( TAG, "onCreate: create database root dir..." );
+          if( !FragmentCommonActivity.databaseDir.mkdirs() ) FragmentCommonActivity.databaseDir = null;
+        }
         tP.setSummary( String.format( res.getString( R.string.conf_prog_datadir_summary ), tP.getText() ) );
       }
       //
