@@ -10,6 +10,8 @@ import java.util.TimerTask;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
+import org.joda.time.DateTime;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -1989,6 +1991,33 @@ public class BlueThoothComService extends Service
     kdoString = String.format( "~%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_UNITS, isTempMetric, isDepthMetric, isFreshwater );
     if( BuildConfig.DEBUG ) Log.d( TAG, "writeUnitPrefs: sending <" + kdoString + ">" );
     this.writeSPXMsgToDevice( kdoString );
+  }
+
+  /**
+   * 
+   * schreibe Datum und Zeit in das Gerät
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 27.10.2013
+   * @param dTime
+   * 
+   */
+  public void writeDateTimeToDevice( DateTime dTime )
+  {
+    String kdoString;
+    //
+    //
+    // Setze das Zeit und Datum als Kommandostring zusammen
+    //
+    kdoString = String.format( "%s~%x:%02x:%02x:%02x:%02x:%02x%s", ProjectConst.STX, ProjectConst.SPX_DATETIME, dTime.getHourOfDay(), dTime.getMinuteOfHour(),
+            dTime.getDayOfMonth(), dTime.getMonthOfYear(), dTime.getYearOfCentury(), ProjectConst.ETX );
+    {
+      if( BuildConfig.DEBUG ) Log.d( TAG, "writeDateTimeToDevice()...send <" + kdoString + "> (DATETIME)" );
+    }
+    this.writeToDevice( kdoString );
   }
 
   /**
