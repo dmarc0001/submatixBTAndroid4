@@ -88,7 +88,7 @@ public class SPX42Config
    * 
    * @return Kann die Firmware ein Datum setzen
    */
-  public boolean canSetDate()
+  public boolean canSetDateTime()
   {
     return( canSetDate );
   }
@@ -287,6 +287,22 @@ public class SPX42Config
 
   /**
    * 
+   * Neue Helligkeitssteuerung (20% Schritte)
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 10.11.2013
+   * @return
+   */
+  public boolean isNewerDisplayBrithness()
+  {
+    return( isNewerDisplayBrightness );
+  }
+
+  /**
+   * 
    * Ist es die "Alte" Parameter Sortierung oder eie Neue
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
@@ -386,6 +402,7 @@ public class SPX42Config
         // hier kommt bestimmt noch irgendwas nach :-(
         hasSixValuesIndividual = true;
         isNewerDisplayBrightness = true;
+        canSetDate = true;
       }
     }
   }
