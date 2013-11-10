@@ -642,10 +642,16 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
         msgConnectError( smsg );
         break;
       // ################################################################
-      // Seriennummer des ccomputers wurde gelesen
+      // Seriennummer des Computers wurde gelesen
       // ################################################################
       case ProjectConst.MESSAGE_SERIAL_READ:
         msgRecivedSerial( smsg );
+        break;
+      // ################################################################
+      // Firmwareversion des ccomputers wurde gelesen
+      // ################################################################
+      case ProjectConst.MESSAGE_FWVERSION_READ:
+        msgRecivedFwVersion( smsg );
         break;
       // ################################################################
       // SPX sendet "ALIVE" und Ackuspannung
@@ -708,23 +714,16 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     if( !spxConfig.isInitialized() )
     {
       //
-      // wenn das Gerät noch nciht ausgelesen wurde alles abfragen
+      // wenn das Gerät noch nicht ausgelesen wurde alles abfragen
       //
       if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for manufacturer number..." );
       askForManufacturer();
       if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for serial number..." );
       askForSerialNumber();
-      if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for Firmware version..." );
-      askForFirmwareVersion();
       if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for SPX license..." );
       askForLicenseFromSPX();
-      if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): set Date and Time to Device (if possible)..." );
-      try
-      {
-        writeDateTimeToDevice();
-      }
-      catch( FirmwareNotSupportetException ex )
-      {}
+      if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for Firmware version..." );
+      askForFirmwareVersion();
     }
   }
 
@@ -774,6 +773,42 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   public void msgRecivedAlive( BtServiceMessage msg )
   {
     // TODO Automatisch generierter Methodenstub
+  }
+
+  /**
+   * 
+   * Nachricht über did Firmwareversion wurde empfangen
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 10.11.2013
+   * @param smsg
+   */
+  private void msgRecivedFwVersion( BtServiceMessage msg )
+  {
+    spxConfig.setFirmwareVersion( ( String )msg.getContainer() );
+    if( BuildConfig.DEBUG )
+    {
+      Log.i( TAG, "license: custom: " + spxConfig.getCustomEnabled() );
+      Log.i( TAG, "fahrenheid bug: " + spxConfig.hasFahrenheidBug() );
+      Log.i( TAG, "can set DateTime: " + spxConfig.canSetDateTime() );
+      Log.i( TAG, "has six custom values: " + spxConfig.hasSixValuesIndividual() );
+      Log.i( TAG, "is firmware supported: " + spxConfig.isFirmwareSupported() );
+      Log.i( TAG, "is old param order: " + spxConfig.isOldParamSorting() );
+      Log.i( TAG, "is newer display brightness: " + spxConfig.isNewerDisplayBrithness() );
+    }
+    //
+    // Jetzt währe es an der Zeit, auhc an DAtum und Zeit zu denken
+    //
+    if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): set Date and Time to Device (if possible)..." );
+    try
+    {
+      writeDateTimeToDevice();
+    }
+    catch( FirmwareNotSupportetException ex )
+    {}
   }
 
   /**

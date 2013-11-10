@@ -2008,7 +2008,7 @@ public class BlueThoothComService extends Service
       Log.e( TAG, "firmware not supportet for write settings!" );
       throw new FirmwareNotSupportetException( "write datetime to device" );
     }
-    if( cf.canSetDate() )
+    if( cf.canSetDateTime() )
     {
       //
       // Setze das Zeit und Datum als Kommandostring zusammen
