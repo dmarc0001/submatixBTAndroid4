@@ -10,6 +10,16 @@ import android.widget.TextView;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.gui.FragmentCommonActivity;
 
+/**
+ * 
+ * Eigene, farbig markierte Preferenz Kategorie, erbt von PreferenceCategory
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
+ */
 public class ColorizedPreferenceCategory extends PreferenceCategory
 {
   private int                 currStyle = R.style.AppDarkTheme;
@@ -39,9 +49,9 @@ public class ColorizedPreferenceCategory extends PreferenceCategory
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 28.01.2013
+   * Stand: 28.01.2013
+   * 
    * @param context
    * @return
    */

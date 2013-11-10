@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.utils;
+﻿package de.dmarcini.submatix.android4.utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,6 +12,16 @@ import android.widget.TextView;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.gui.EditAliasDialogFragment;
 
+/**
+ * 
+ * Benutzer Alarmdiialog
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
+ */
 public class UserAlertDialogFragment extends DialogFragment
 {
   @SuppressWarnings( "unused" )
@@ -28,9 +38,8 @@ public class UserAlertDialogFragment extends DialogFragment
    * 
    * Project: Android_4_BlueThoothTest Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 02.11.2012
+   * Stand: 02.11.2012
    */
   @SuppressWarnings( "unused" )
   private UserAlertDialogFragment()
@@ -42,9 +51,9 @@ public class UserAlertDialogFragment extends DialogFragment
    * 
    * Project: Android_4_BlueThoothTest Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 02.11.2012
+   * Stand: 02.11.2012
+   * 
    * @param headLine
    * @param msg
    */

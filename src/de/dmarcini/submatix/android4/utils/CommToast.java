@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.utils;
+﻿package de.dmarcini.submatix.android4.utils;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -41,9 +41,9 @@ public class CommToast
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 18.07.2013
+   * Stand: 18.07.2013
+   * 
    * @param act
    */
   public CommToast( Activity act )
@@ -59,9 +59,8 @@ public class CommToast
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 18.07.2013
+   * Stand: 18.07.2013
    */
   @SuppressWarnings( "unused" )
   private CommToast()
@@ -73,9 +72,9 @@ public class CommToast
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 18.07.2013
+   * Stand: 18.07.2013
+   * 
    * @param msg
    * @param isLong
    */
@@ -117,9 +116,9 @@ public class CommToast
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 15.07.2013
+   * Stand: 15.07.2013
+   * 
    * @param msg
    * @param isLong
    */
@@ -162,9 +161,9 @@ public class CommToast
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 17.07.2013
+   * Stand: 17.07.2013
+   * 
    * @param msg
    */
   public void showConnectionToastAlert( String msg )
@@ -195,9 +194,9 @@ public class CommToast
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 18.07.2013
+   * Stand: 18.07.2013
+   * 
    * @param maxevents
    * @param title
    * @param msg
@@ -233,9 +232,8 @@ public class CommToast
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 18.07.2013
+   * Stand: 18.07.2013
    */
   public void dismissDial()
   {

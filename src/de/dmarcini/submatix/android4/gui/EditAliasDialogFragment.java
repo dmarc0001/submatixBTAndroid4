@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.gui;
+﻿package de.dmarcini.submatix.android4.gui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -15,6 +15,16 @@ import android.widget.TextView;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.utils.NoticeDialogListener;
 
+/**
+ * 
+ * Der Dialog zum Editieren von Geräte-Aliasen
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
+ */
 public class EditAliasDialogFragment extends DialogFragment
 {
   private static final String  TAG        = EditAliasDialogFragment.class.getSimpleName();
@@ -31,13 +41,15 @@ public class EditAliasDialogFragment extends DialogFragment
    * 
    * Project: Android_4_BlueThoothTest Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 02.11.2012
+   * Stand: 02.11.2012
+   * 
+   * @throws Exception
    */
-  @SuppressWarnings( "unused" )
-  private EditAliasDialogFragment()
-  {}
+  public EditAliasDialogFragment() throws Exception
+  {
+    throw new Exception( "use NOT this constructor!" );
+  }
 
   /**
    * 
@@ -45,9 +57,9 @@ public class EditAliasDialogFragment extends DialogFragment
    * 
    * Project: Android_4_BlueThoothTest Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 02.11.2012
+   * Stand: 02.11.2012
+   * 
    * @param device
    * @param alias
    * @param mac
@@ -140,9 +152,9 @@ public class EditAliasDialogFragment extends DialogFragment
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 25.07.2013
+   * Stand: 25.07.2013
+   * 
    * @return Gerätename
    */
   public String getDeviceName()
@@ -156,9 +168,9 @@ public class EditAliasDialogFragment extends DialogFragment
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 25.07.2013
+   * Stand: 25.07.2013
+   * 
    * @return Alias des Gerätes
    */
   public String getAliasName()
@@ -172,9 +184,9 @@ public class EditAliasDialogFragment extends DialogFragment
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 26.07.2013
+   * Stand: 26.07.2013
+   * 
    * @return MAC Adresse des Gerätes
    */
   public String getMac()

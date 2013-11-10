@@ -1,7 +1,3 @@
-/**
- * Dieses Fraqgment wird nur erzeugt udn aufgerufen, wenn die Hauptactivity keine spezielle Seite finden kann. Es ist also eine Fallback-Seite, die hoffentlich im Normalbetrieb
- * nicht angezeigt wird
- */
 package de.dmarcini.submatix.android4.gui;
 
 import android.app.Fragment;
@@ -13,8 +9,14 @@ import android.view.ViewGroup;
 import de.dmarcini.submatix.android4.R;
 
 /**
- * A fragment representing a single area detail screen. This fragment is either contained in a {@link AreaListActivity} in two-pane mode (on tablets) or a
- * {@link AreaDetailActivity} on handsets.
+ * 
+ * Ein Fallback-Fragment, wenn die Activity keine spezielle Seite finden kann
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
  */
 public class AreaDetailFragment extends Fragment
 {

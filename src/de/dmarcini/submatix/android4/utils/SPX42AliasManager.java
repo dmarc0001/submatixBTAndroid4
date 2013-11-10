@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.utils;
+﻿package de.dmarcini.submatix.android4.utils;
 
 import java.util.Vector;
 
@@ -10,6 +10,16 @@ import android.util.Log;
 import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.exceptions.NoDatabaseException;
 
+/**
+ * 
+ * Klasse kapselt den Zugriff auf Gerätealiase in der Datenbank
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
+ */
 public class SPX42AliasManager
 {
   private static final String TAG   = SPX42AliasManager.class.getSimpleName();
@@ -21,9 +31,9 @@ public class SPX42AliasManager
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 26.07.2013
+   * Stand: 26.07.2013
+   * 
    * @param db
    * @throws NoDatabaseException
    */
@@ -42,9 +52,8 @@ public class SPX42AliasManager
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 26.07.2013
+   * Stand: 26.07.2013
    */
   public void close()
   {
@@ -60,9 +69,9 @@ public class SPX42AliasManager
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 26.07.2013
+   * Stand: 26.07.2013
+   * 
    * @param mac
    * @param defaultAlias
    * @return Den Alias des Gerätes zurück
@@ -96,9 +105,9 @@ public class SPX42AliasManager
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 28.08.2013
+   * Stand: 28.08.2013
+   * 
    * @param mac
    * @return Deviceid
    */
@@ -132,9 +141,9 @@ public class SPX42AliasManager
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 26.07.2013
+   * Stand: 26.07.2013
+   * 
    * @param mac
    * @param devName
    * @param alias
@@ -191,9 +200,9 @@ public class SPX42AliasManager
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 28.08.2013
+   * Stand: 28.08.2013
+   * 
    * @param _mac
    * @param _deviceName
    */
@@ -239,9 +248,9 @@ public class SPX42AliasManager
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 28.08.2013
+   * Stand: 28.08.2013
+   * 
    * @return Liste mit Deviceids
    */
   public Vector<Integer> getDeviceIdList()

@@ -11,6 +11,16 @@ import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
 
+/**
+ * 
+ * Ein Fragment zur Anzeige, daß die Funktion och in Arbeit ist
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
+ */
 public class WorkInProgressFragment extends Fragment implements IBtServiceListener
 {
   public static final String TAG             = WorkInProgressFragment.class.getSimpleName();

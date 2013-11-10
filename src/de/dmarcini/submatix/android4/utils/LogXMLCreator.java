@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.utils;
+﻿package de.dmarcini.submatix.android4.utils;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -24,6 +24,16 @@ import android.util.Log;
 import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.exceptions.XMLFileCreatorException;
 
+/**
+ * 
+ * Klasse soll die Logs als XML-File erzeugen
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
+ */
 public class LogXMLCreator
 {
   private static final String TAG         = LogXMLCreator.class.getSimpleName();
@@ -88,9 +98,9 @@ public class LogXMLCreator
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 13.08.2013
+   * Stand: 13.08.2013
+   * 
    * @param fields
    */
   public void appendLogLine( final String[] fields )
@@ -165,9 +175,9 @@ public class LogXMLCreator
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 13.08.2013
+   * Stand: 13.08.2013
+   * 
    * @return alles klar oder nicht?
    * @throws XMLFileCreatorException
    */

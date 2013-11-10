@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Activity für Details des Projektes
  * 
  * Wird ausgeführt, wenn bei kleinen Schirmen (Smartphones) eine Option des Menüs ausgewählt wurde. Bei grossen Schirmen wird diese Activity nicht ausgeführt Der Gemeisame Code für
@@ -17,9 +17,14 @@ import de.dmarcini.submatix.android4.content.ContentSwitcher;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 
 /**
+ * 
  * Diese Activity kommt nur bei kleinen Screens zum Einsatz, wenn vom Menü un der araeListActivity ein Eintrag gewählt wurde
  * 
- * @author dmarc
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
  */
 public class AreaDetailActivity extends FragmentCommonActivity implements OnItemSelectedListener
 {

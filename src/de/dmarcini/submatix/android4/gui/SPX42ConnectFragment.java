@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.gui;
+﻿package de.dmarcini.submatix.android4.gui;
 
 import java.io.File;
 import java.util.Set;
@@ -43,11 +43,11 @@ import de.dmarcini.submatix.android4.utils.UserAlertDialogFragment;
  * 
  * Ein Detsailfragment, welches die Verbindung mit dem SPX Managed
  * 
- * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.gui
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
  * 
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
  * 
- *         Stand: 04.11.2012
+ *         Stand: 10.11.2013
  */
 public class SPX42ConnectFragment extends Fragment implements IBtServiceListener, OnItemSelectedListener, OnClickListener
 {
@@ -141,9 +141,8 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 13.03.2013
+   * Stand: 13.03.2013
    */
   private void fillNewAdapterWithPairedDevices()
   {
@@ -311,9 +310,9 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
    * 
    * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 04.11.2012
+   * Stand: 04.11.2012
+   * 
    * @param inflater
    * @param container
    * @return
@@ -399,9 +398,9 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 26.07.2013
+   * Stand: 26.07.2013
+   * 
    * @param msg
    */
   private void msgReciveDeviceAliasSet( BtServiceMessage msg )
@@ -715,9 +714,9 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 17.02.2013
+   * Stand: 17.02.2013
+   * 
    * @param enabled
    */
   private void setItemsEnabledwhileDiscover( boolean enabled )
@@ -746,9 +745,8 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 28.05.2013
+   * Stand: 28.05.2013
    */
   private void setSpinnerToConnectedDevice()
   {
@@ -791,9 +789,9 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 26.04.2013
+   * Stand: 26.04.2013
+   * 
    * @param connState
    *          welcher Verbindungsstatus
    */
@@ -850,9 +848,8 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 17.02.2013
+   * Stand: 17.02.2013
    */
   private void startDiscoverBt()
   {
@@ -889,9 +886,8 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 06.05.2013
+   * Stand: 06.05.2013
    */
   private void stopDiscoverBt()
   {
@@ -906,9 +902,8 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 26.07.2013
+   * Stand: 26.07.2013
    */
   private void writePreferences()
   {

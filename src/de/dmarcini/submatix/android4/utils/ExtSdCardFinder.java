@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.utils;
+﻿package de.dmarcini.submatix.android4.utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,6 +8,16 @@ import android.os.Environment;
 import android.util.Log;
 import de.dmarcini.submatix.android4.BuildConfig;
 
+/**
+ * 
+ * Klasse findet externe SD-Cards
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
+ */
 public class ExtSdCardFinder
 {
   private static final String TAG = ExtSdCardFinder.class.getSimpleName();
@@ -18,9 +28,9 @@ public class ExtSdCardFinder
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 25.07.2013
+   * Stand: 25.07.2013
+   * 
    * @return den Kartenpfad oder null
    * @throws FileNotFoundException
    */
@@ -81,9 +91,9 @@ public class ExtSdCardFinder
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 25.07.2013
+   * Stand: 25.07.2013
+   * 
    * @return Pfad der externen SD-Karte (oder null)
    * @throws FileNotFoundException
    */

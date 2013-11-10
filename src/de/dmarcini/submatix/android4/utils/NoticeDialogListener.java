@@ -6,7 +6,7 @@ import android.app.DialogFragment;
  * 
  * Die aufrufende App muss das Interface implementieren
  * 
- * Project: Android_4_BlueThoothTest Package: de.dmarcini.submatix.android4.utils
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
  * 
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
  * 
@@ -18,4 +18,3 @@ public interface NoticeDialogListener
 
   public void onDialogNegativeClick( DialogFragment dialog );
 }
-

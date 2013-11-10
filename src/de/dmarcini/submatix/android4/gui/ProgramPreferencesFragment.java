@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.gui;
+﻿package de.dmarcini.submatix.android4.gui;
 
 import java.io.File;
 
@@ -26,11 +26,11 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
  * 
  * Klasse zur Bearbeitung der Programmeinstellungen
  * 
- * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
  * 
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
  * 
- *         Stand: 01.01.2013
+ *         Stand: 10.11.2013
  */
 public class ProgramPreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener
 {
@@ -190,9 +190,8 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 07.01.2013
+   * Stand: 07.01.2013
    */
   private void setThemeForApp()
   {
@@ -227,9 +226,8 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 01.01.2013
+   * Stand: 01.01.2013
    */
   private void setAllSummarys()
   {

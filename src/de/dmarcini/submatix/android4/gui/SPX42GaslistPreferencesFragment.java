@@ -1,13 +1,4 @@
-/**
- * Gaslisten im SPX42 editieren
- * 
- * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
- * 
- * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- * 
- *         Stand: 01.01.2013
- */
-package de.dmarcini.submatix.android4.gui;
+﻿package de.dmarcini.submatix.android4.gui;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -38,13 +29,14 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
 import de.dmarcini.submatix.android4.utils.SPX42GasParms;
 
 /**
+ * 
  * Editor für die Gaslisten
  * 
- * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
  * 
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
  * 
- *         Stand: 01.01.2013
+ *         Stand: 10.11.2013
  */
 public class SPX42GaslistPreferencesFragment extends PreferenceFragment implements IBtServiceListener, OnSharedPreferenceChangeListener
 {
@@ -190,9 +182,9 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 18.07.2013
+   * Stand: 18.07.2013
+   * 
    * @param smsg
    */
   private void msgReciveGasSetup( BtServiceMessage msg )
@@ -267,9 +259,9 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 18.07.2013
+   * Stand: 18.07.2013
+   * 
    * @param smsg
    */
   private void msgReciveGasSetupAck( BtServiceMessage smsg )
@@ -554,9 +546,8 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 01.01.2013
+   * Stand: 01.01.2013
    */
   @SuppressLint( "DefaultLocale" )
   private void setAllSummarys()
@@ -576,9 +567,9 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 18.07.2013
+   * Stand: 18.07.2013
+   * 
    * @param gasNr
    * @param gpp
    *          GasPickerPreference Referenz
@@ -600,9 +591,9 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 23.07.2013
+   * Stand: 23.07.2013
+   * 
    * @param gasNr
    * @param gpp
    * @param gasParms
@@ -633,9 +624,9 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 23.07.2013
+   * Stand: 23.07.2013
+   * 
    * @param idx
    * @return
    */

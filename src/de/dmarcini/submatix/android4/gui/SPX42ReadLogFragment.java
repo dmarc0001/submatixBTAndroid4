@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.gui;
+﻿package de.dmarcini.submatix.android4.gui;
 
 import java.io.File;
 import java.util.Vector;
@@ -38,6 +38,16 @@ import de.dmarcini.submatix.android4.utils.SPX42LogManager;
 import de.dmarcini.submatix.android4.utils.SPX42ReadLogListArrayAdapter;
 import de.dmarcini.submatix.android4.utils.UserAlertDialogFragment;
 
+/**
+ * 
+ * Fragment zur Anzeige der Liste der Logeinträge im SPX
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
+ */
 public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener, OnItemClickListener, OnClickListener
 {
   private static final String          TAG                 = SPX42ReadLogFragment.class.getSimpleName();
@@ -65,9 +75,9 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 06.08.2013
+   * Stand: 06.08.2013
+   * 
    * @param msg
    */
   private void computeDirentry( BtServiceMessage msg )
@@ -163,9 +173,9 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 07.08.2013
+   * Stand: 07.08.2013
+   * 
    * @param msg
    */
   private void computeLogLine( BtServiceMessage msg )
@@ -291,9 +301,9 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 19.08.2013
+   * Stand: 19.08.2013
+   * 
    * @param maxDepth
    * @param diveLength
    * @return
@@ -349,9 +359,9 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 15.08.2013
+   * Stand: 15.08.2013
+   * 
    * @param msg
    */
   private void msgReciveUnits( BtServiceMessage msg )
@@ -607,9 +617,9 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 07.08.2013
+   * Stand: 07.08.2013
+   * 
    * @param maxevents
    * @param msg
    */
@@ -643,9 +653,8 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 07.08.2013
+   * Stand: 07.08.2013
    */
   private void setEventsEnabled( boolean enabled )
   {
@@ -659,9 +668,8 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 19.08.2013
+   * Stand: 19.08.2013
    */
   private void startLogWriting()
   {
@@ -701,9 +709,8 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 19.08.2013
+   * Stand: 19.08.2013
    */
   private void stopLogWriting()
   {

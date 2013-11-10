@@ -1,11 +1,10 @@
-/**
+﻿/**
  * Code für Grundformular exportLog
  * 
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
  * 
- * @author Dirk Marciniak (dirk_marciniak@arcor.de)
  * 
- *         Stand: 28.08.2013
+ * Stand: 28.08.2013
  */
 package de.dmarcini.submatix.android4.gui;
 
@@ -36,13 +35,14 @@ import de.dmarcini.submatix.android4.utils.SPX42LogManager;
 import de.dmarcini.submatix.android4.utils.UserAlertDialogFragment;
 
 /**
+ * 
  * Klasse für das Grundformular zum exportieren der Logs
  * 
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
  * 
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
  * 
- *         Stand: 28.08.2013
+ *         Stand: 10.11.2013
  */
 public class SPXExportLogFragment extends Fragment implements IBtServiceListener, OnItemClickListener, OnClickListener
 {

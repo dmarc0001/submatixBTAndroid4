@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.comm;
+﻿package de.dmarcini.submatix.android4.comm;
 
 import java.util.Calendar;
 
@@ -9,7 +9,6 @@ import java.util.Calendar;
  * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
  * 
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- * 
  *         Stand: 23.02.2013
  */
 public class BtServiceMessage

@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.utils;
+﻿package de.dmarcini.submatix.android4.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -24,11 +24,11 @@ import de.dmarcini.submatix.android4.gui.FragmentCommonActivity;
  * 
  * Klasse für einen Dreifach-Numberpicker für Gasmischungen TRIMIX
  * 
- * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
  * 
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
  * 
- *         Stand: 01.01.2013
+ *         Stand: 10.11.2013
  */
 public class GasPickerPreference extends DialogPreference implements OnValueChangeListener, OnCheckedChangeListener
 {
@@ -38,9 +38,8 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 29.12.2012
+   * Stand: 29.12.2012
    */
   private static class SavedState extends BaseSavedState
   {
@@ -90,9 +89,8 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 02.01.2013
+   * Stand: 02.01.2013
    */
   @SuppressLint( "DefaultLocale" )
   private class TwoDigitFormatter implements Formatter
@@ -129,7 +127,6 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
   /**
    * Der Konstruktor
    * 
-   * @author Dirk Marciniak 28.12.2012
    * @param context
    * @param attrs
    */
@@ -146,7 +143,6 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
   /**
    * alternativer Konstruktor mit Style-Attributen
    * 
-   * @author Dirk Marciniak 28.12.2012
    * @param context
    * @param attrs
    * @param defStyle
@@ -167,9 +163,9 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 01.01.2013
+   * Stand: 01.01.2013
+   * 
    * @param defaultValueStr
    * @return ja oder nicht
    */
@@ -455,9 +451,8 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 01.01.2013
+   * Stand: 01.01.2013
    */
   private void onSetHeValue( int newVal )
   {
@@ -525,9 +520,9 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 01.01.2013
+   * Stand: 01.01.2013
+   * 
    * @param newVal
    * @param oldVal
    */
@@ -616,9 +611,9 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 31.01.2013
+   * Stand: 31.01.2013
+   * 
    * @param o2Current2
    * @param heCurrent2
    */
@@ -636,9 +631,9 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 02.01.2013
+   * Stand: 02.01.2013
+   * 
    * @param he
    */
   private void setHePickerColor( int he )
@@ -675,9 +670,9 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 02.01.2013
+   * Stand: 02.01.2013
+   * 
    * @param o2
    */
   private void setO2PickerColor( int o2 )
@@ -737,9 +732,8 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 01.01.2013
+   * Stand: 01.01.2013
    */
   private void setPickerWoEvent()
   {
@@ -758,9 +752,9 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 18.07.2013
+   * Stand: 18.07.2013
+   * 
    * @param gasParms
    */
   public void setValue( final SPX42GasParms gasParms )
@@ -779,9 +773,9 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 18.07.2013
+   * Stand: 18.07.2013
+   * 
    * @param theValueStr
    */
   public void setValue( final String theValueStr )
@@ -795,9 +789,9 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 18.07.2013
+   * Stand: 18.07.2013
+   * 
    * @return SPX42GasParms
    */
   public SPX42GasParms getValue()

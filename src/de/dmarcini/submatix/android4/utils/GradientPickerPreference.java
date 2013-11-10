@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Objekt zum einstellen einer Zahl via NumberPicker TODO: Werte Persistent machen...
  */
 package de.dmarcini.submatix.android4.utils;
@@ -22,9 +22,14 @@ import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.gui.FragmentCommonActivity;
 
 /**
+ * 
  * Eigene Klasse zum Einstellen der Gradienten für decompression
  * 
- * @author dmarc
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
  */
 public class GradientPickerPreference extends DialogPreference implements OnValueChangeListener
 {
@@ -41,7 +46,6 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
   /**
    * Private Klasse (nach Android Developers) zum sichern des aktuellen Status Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 29.12.2012
    */
   private static class SavedState extends BaseSavedState
   {
@@ -92,9 +96,8 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 02.01.2013
+   * Stand: 02.01.2013
    */
   @SuppressLint( "DefaultLocale" )
   private class TwoDigitFormatter implements Formatter
@@ -109,7 +112,6 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
   /**
    * Der Konstruktor
    * 
-   * @author Dirk Marciniak 28.12.2012
    * @param context
    * @param attrs
    */
@@ -124,7 +126,6 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
   /**
    * alternativer Konstruktor mit Style-Attributen
    * 
-   * @author Dirk Marciniak 28.12.2012
    * @param context
    * @param attrs
    * @param defStyle
@@ -226,9 +227,9 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 02.01.2013
+   * Stand: 02.01.2013
+   * 
    * @param gradient
    * @return
    */
@@ -293,9 +294,9 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 02.01.2013
+   * Stand: 02.01.2013
+   * 
    * @param cl
    */
   private void setLowColor( int cl )
@@ -316,9 +317,8 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 02.01.2013
+   * Stand: 02.01.2013
    */
   private void setHighColor( int cl )
   {
@@ -365,9 +365,9 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 13.07.2013
+   * Stand: 13.07.2013
+   * 
    * @param paramStr
    *          "LOW:HIGH"
    * @return erfolgreich oder nicht
@@ -408,9 +408,9 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 14.07.2013
+   * Stand: 14.07.2013
+   * 
    * @param parm
    *          int[2]
    * @return War das Setzen erfolgreich?
@@ -455,9 +455,9 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 13.07.2013
+   * Stand: 13.07.2013
+   * 
    * @return String "XX:XX"
    */
   public String getValueDecimal()
@@ -471,9 +471,9 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 13.07.2013
+   * Stand: 13.07.2013
+   * 
    * @return String "XX:XX"
    */
   public String getValueHex()
@@ -487,9 +487,9 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 13.07.2013
+   * Stand: 13.07.2013
+   * 
    * @return int[2]
    */
   public int[] getValue()
@@ -502,7 +502,6 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
   /**
    * Mach aus dem Parameterstring die Werte für die Gradienten Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 02.01.2013
    * @param defaultValueStr
    * @return ja oder nicht
    */

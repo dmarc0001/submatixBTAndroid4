@@ -1,5 +1,15 @@
-package de.dmarcini.submatix.android4.utils;
+﻿package de.dmarcini.submatix.android4.utils;
 
+/**
+ * 
+ * Klasse die einen einzelnen Logeintrag vom SPX darstellt/kapselt
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
+ */
 public class ReadLogItemObj
 {
   public boolean isSaved;
@@ -17,9 +27,9 @@ public class ReadLogItemObj
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 06.08.2013
+   * Stand: 06.08.2013
+   * 
    * @param _isSaved
    * @param _itemName
    * @param _itemNameOnSpx
@@ -42,9 +52,9 @@ public class ReadLogItemObj
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 06.08.2013
+   * Stand: 06.08.2013
+   * 
    * @param _isSaved
    * @param _itemName
    * @param _itemNameOnSpx
@@ -68,9 +78,9 @@ public class ReadLogItemObj
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 06.08.2013
+   * Stand: 06.08.2013
+   * 
    * @param _isSaved
    * @param _itemName
    * @param _itemNameOnSpx
@@ -95,9 +105,9 @@ public class ReadLogItemObj
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 19.08.2013
+   * Stand: 19.08.2013
+   * 
    * @param _isSaved
    * @param _itemName
    * @param _itemNameOnSpx

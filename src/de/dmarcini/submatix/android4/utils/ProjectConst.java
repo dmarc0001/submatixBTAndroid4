@@ -7,6 +7,16 @@ import java.util.UUID;
 
 import android.graphics.Color;
 
+/**
+ * 
+ * Klasse für die globalen Konstanten und Einstellungen des Programmes
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
+ */
 //@formatter:off
 public final class ProjectConst
 {

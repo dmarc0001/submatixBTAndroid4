@@ -16,9 +16,14 @@ import android.widget.Toast;
 import de.dmarcini.submatix.android4.BuildConfig;
 
 /**
- * Helferklasse für den Umgang mit SQLite Datenbanken.
  * 
- * Die Klasse nimmt die Arbeit des �ffnens, erzeugens und updaten der Datenbanken ab.
+ * Helferklasse für den Umgang mit SQLite Datenbanken. Die Klasse nimmt die Arbeit des Öffnens, Erzeugens und Updaten der Datenbanken ab.
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
  */
 public class DataSQLHelper extends SQLiteOpenHelper
 {
@@ -30,7 +35,6 @@ public class DataSQLHelper extends SQLiteOpenHelper
   /**
    * Der Konstruktor der Helferklasse.
    * 
-   * @author Dirk Marciniak
    * @see android.database.sqlite.SQLiteOpenHelper
    * @param context
    *          Der Anwendungskontext hier
@@ -48,7 +52,6 @@ public class DataSQLHelper extends SQLiteOpenHelper
   /**
    * Erzeuge Tabellen in einer bereits geöffneten Datenbank
    * 
-   * @author Dirk Marciniak
    * @param db
    *          Datenbankobjekt
    */
@@ -131,7 +134,6 @@ public class DataSQLHelper extends SQLiteOpenHelper
   /**
    * Lösche Tabellen aus einer bestehenden geöffneten Datenbank zur Erzeugung einer neuen Version.
    * 
-   * @author Dirk Marciniak
    * @param db
    *          geöffnete Datenbank
    */
@@ -176,9 +178,9 @@ public class DataSQLHelper extends SQLiteOpenHelper
    * 
    * Project: SubmatixBTLog-Service Package: de.dmarcini.bluethooth.submatix.btService
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 30.10.2011
+   * Stand: 30.10.2011
+   * 
    * @return Verzeichnis der DB als File Objekt
    */
   public File getDbDir()
@@ -191,7 +193,6 @@ public class DataSQLHelper extends SQLiteOpenHelper
   /**
    * Gib eine geöffnete Datenbank zurück.
    * 
-   * @author Dirk Marciniak
    * @param writable
    * @return Objekt einer Datenbank als SQLiteDatabase
    */
@@ -236,7 +237,6 @@ public class DataSQLHelper extends SQLiteOpenHelper
   /**
    * Gib eine nur lesbare Datenbank zurück
    * 
-   * @author Dirk Marciniak
    * @return eine nur lesbare Datenbank oder null
    */
   @Override
@@ -260,7 +260,6 @@ public class DataSQLHelper extends SQLiteOpenHelper
   /**
    * Gib eine beschreibbare Datenbank zurück
    * 
-   * @author Dirk Marciniak
    * @return eine bescheibbare Datenbank oder null
    */
   @Override
@@ -284,7 +283,6 @@ public class DataSQLHelper extends SQLiteOpenHelper
   /**
    * Ereignis beim Erzeugen des Objektes, nach Konstruktor...
    * 
-   * @author Dirk Marciniak
    * @param db
    *          geöffnete Datenbank
    */
@@ -299,7 +297,6 @@ public class DataSQLHelper extends SQLiteOpenHelper
   /**
    * Wird beim öffnen einer Datenbank aufgerufen um zu checken, ob ein Update der Datenbankstrukturen nowendig ist.
    * 
-   * @author Dirk Marciniak
    * @param db
    *          geöffnete Datenbank
    * @param newVersion
@@ -339,9 +336,9 @@ public class DataSQLHelper extends SQLiteOpenHelper
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 07.08.2013
+   * Stand: 07.08.2013
+   * 
    * @param db
    */
   private void createMainTable( SQLiteDatabase db )

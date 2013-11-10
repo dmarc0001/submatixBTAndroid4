@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Hauptaktivity des Projektes
  * 
  * Wird als erstes ausgeführt. Bei kleinen Schirmen wird bei Auswahl einer Option an die detailActivity übergeben (eine Liste der Optionen angezeigt), bei großen Schirmen wird
@@ -23,9 +23,14 @@ import de.dmarcini.submatix.android4.utils.ExtSdCardFinder;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 
 /**
+ * 
  * Activity mit welcher die App startet. Bei Tablett die Main-Activity, bei kleinen screens die Menü-Activity
  * 
- * @author dmarc
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
  */
 public class AreaListActivity extends FragmentCommonActivity
 {
@@ -36,7 +41,6 @@ public class AreaListActivity extends FragmentCommonActivity
   /**
    * Erzeuge die Menüeinträge Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 17.12.2012
    */
   private void initStaticContenSwitcher()
   {
@@ -63,7 +67,6 @@ public class AreaListActivity extends FragmentCommonActivity
    * Wenn die Activity erzeugt wird, u.A. herausfinden ob ein- oder zwei-Flächen Mode
    * 
    * @see android.app.Activity#onCreate(android.os.Bundle)
-   * @author Dirk Marciniak 28.12.2012
    * @param savedInstanceState
    */
   @Override
@@ -174,7 +177,6 @@ public class AreaListActivity extends FragmentCommonActivity
   /**
    * Erzeuge Preferenzen für den SPX42 Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 29.12.2012
    */
   public void setDefaultPreferences()
   {
@@ -223,9 +225,9 @@ public class AreaListActivity extends FragmentCommonActivity
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 25.07.2013
+   * Stand: 25.07.2013
+   * 
    * @return
    */
   private File getdatabaseDir()

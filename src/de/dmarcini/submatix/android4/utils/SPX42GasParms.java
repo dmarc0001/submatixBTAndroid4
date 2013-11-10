@@ -1,11 +1,9 @@
-/**
+﻿/**
  * Container für Gasparameter
  * 
  * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
  * 
- * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- * 
- *         Stand: 18.07.2013 TODO
+ * Stand: 18.07.2013 TODO
  */
 package de.dmarcini.submatix.android4.utils;
 

@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.gui;
+﻿package de.dmarcini.submatix.android4.gui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,6 +11,16 @@ import android.util.Log;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.utils.NoticeDialogListener;
 
+/**
+ * 
+ * Ein Fragment für die anzeige der Frage, ob der user sicher ist
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
+ */
 public class AreYouSureDialogFragment extends DialogFragment
 {
   private static final String  TAG       = AreYouSureDialogFragment.class.getSimpleName();
@@ -25,9 +35,8 @@ public class AreYouSureDialogFragment extends DialogFragment
    * 
    * Project: Android_4_BlueThoothTest Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 02.11.2012
+   * Stand: 02.11.2012
    */
   @SuppressWarnings( "unused" )
   private AreYouSureDialogFragment()
@@ -39,9 +48,9 @@ public class AreYouSureDialogFragment extends DialogFragment
    * 
    * Project: Android_4_BlueThoothTest Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 02.11.2012
+   * Stand: 02.11.2012
+   * 
    * @param msg
    */
   public AreYouSureDialogFragment( String msg )

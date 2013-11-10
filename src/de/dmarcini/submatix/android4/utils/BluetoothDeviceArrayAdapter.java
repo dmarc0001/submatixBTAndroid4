@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.utils;
+﻿package de.dmarcini.submatix.android4.utils;
 
 // Eigener Adapter für Geräte
 // Es werden String gespeichert, Felder werden durch "\n" getrennt
@@ -56,9 +56,9 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    * 
    * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 05.11.2012
+   * Stand: 05.11.2012
+   * 
    * @param context
    * @param textViewResourceId
    * @param themeId
@@ -87,9 +87,9 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 17.02.2013
+   * Stand: 17.02.2013
+   * 
    * @param items
    */
   @Override
@@ -107,9 +107,9 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 13.03.2013
+   * Stand: 13.03.2013
+   * 
    * @param items
    */
   public void addOrUpdate( String[] items )
@@ -137,9 +137,9 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    * 
    * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 05.11.2012
+   * Stand: 05.11.2012
+   * 
    * @param position
    * @return den String
    */
@@ -154,9 +154,9 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 28.04.2013
+   * Stand: 28.04.2013
+   * 
    * @param position
    * @param cconvertView
    * @param parent
@@ -232,9 +232,9 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 17.02.2013
+   * Stand: 17.02.2013
+   * 
    * @param position
    * @return dbId
    */
@@ -265,9 +265,9 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    * 
    * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 05.11.2012
+   * Stand: 05.11.2012
+   * 
    * @param position
    * @return den String
    */
@@ -282,9 +282,9 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    * 
    * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 05.11.2012
+   * Stand: 05.11.2012
+   * 
    * @param position
    * @return den String
    */
@@ -305,9 +305,9 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    * 
    * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 05.11.2012
+   * Stand: 05.11.2012
+   * 
    * @param position
    * @return den String
    */
@@ -322,9 +322,9 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    * 
    * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 05.11.2012
+   * Stand: 05.11.2012
+   * 
    * @param position
    * @param index
    * @return
@@ -351,9 +351,9 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 25.02.2013
+   * Stand: 25.02.2013
+   * 
    * @param position
    * @return gepart?
    */
@@ -373,9 +373,9 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 13.03.2013
+   * Stand: 13.03.2013
+   * 
    * @param position
    * @return ist es online markiert?
    */
@@ -395,9 +395,9 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 24.07.2013
+   * Stand: 24.07.2013
+   * 
    * @param position
    */
   public void setDeviceIsOnline( int position )
@@ -425,9 +425,8 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 24.07.2013
+   * Stand: 24.07.2013
    */
   public void setDevicesOffline()
   {
@@ -444,9 +443,9 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 17.02.2013
+   * Stand: 17.02.2013
+   * 
    * @param item
    * @return -1 nicht, ansonsten Nummer des Eintrages
    */
@@ -469,9 +468,9 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 28.05.2013
+   * Stand: 28.05.2013
+   * 
    * @param item
    * @return Index des Eintrages
    */
@@ -494,9 +493,9 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 13.03.2013
+   * Stand: 13.03.2013
+   * 
    * @param position
    * @param newName
    * 

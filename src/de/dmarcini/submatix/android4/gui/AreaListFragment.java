@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.gui;
+﻿package de.dmarcini.submatix.android4.gui;
 
 import android.app.Activity;
 import android.app.ListFragment;
@@ -15,8 +15,14 @@ import de.dmarcini.submatix.android4.utils.ArrayAdapterWithPics;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 
 /**
- * A list fragment representing a list of areas. This fragment also supports tablet devices by allowing list items to be given an 'activated' state upon selection. This helps
- * indicate which item is currently being viewed in a {@link AreaDetailFragment}.
+ * 
+ * Ein Fragment, welches die Liste der verfügbaren Aktionen anzeigt.
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
  */
 public class AreaListFragment extends ListFragment
 {
@@ -28,7 +34,6 @@ public class AreaListFragment extends ListFragment
   /**
    * Der Konstruktor Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 04.11.2012
    */
   public AreaListFragment()
   {}
@@ -51,9 +56,9 @@ public class AreaListFragment extends ListFragment
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 15.05.2013
+   * Stand: 15.05.2013
+   * 
    * @param isOnline
    */
   public void setListAdapterForOnlinestatus( boolean isOnline )
@@ -141,7 +146,6 @@ public class AreaListFragment extends ListFragment
   /**
    * Schaltet den Activate-On-click Mode an, damit erhalten angefasste Einträge den Activate Status Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 22.12.2012
    * @param activateOnItemClick
    */
   public void setActivateOnItemClick( boolean activateOnItemClick )
@@ -155,7 +159,6 @@ public class AreaListFragment extends ListFragment
   /**
    * Kennzeichne die aktivierte Position Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 23.12.2012
    * @param position
    */
   private void setActivatedPosition( int position )

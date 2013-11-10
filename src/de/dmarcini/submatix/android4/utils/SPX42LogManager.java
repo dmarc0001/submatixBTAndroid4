@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.utils;
+﻿package de.dmarcini.submatix.android4.utils;
 
 import java.io.File;
 import java.util.Vector;
@@ -11,6 +11,16 @@ import android.util.Log;
 import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.exceptions.NoDatabaseException;
 
+/**
+ * 
+ * Kapselt Logeinträge und Aliase in der Datenbank
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
+ */
 public class SPX42LogManager extends SPX42AliasManager
 {
   private static final String TAG = SPX42LogManager.class.getSimpleName();
@@ -27,9 +37,9 @@ public class SPX42LogManager extends SPX42AliasManager
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 09.08.2013
+   * Stand: 09.08.2013
+   * 
    * @param devSerial
    * @param fileOnSPX
    * @return Schon da oder nicht
@@ -64,9 +74,9 @@ public class SPX42LogManager extends SPX42AliasManager
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 13.08.2013
+   * Stand: 13.08.2013
+   * 
    * @param diveHeader
    * @return Hat geklappt oder nicht
    */
@@ -101,9 +111,9 @@ public class SPX42LogManager extends SPX42AliasManager
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 15.08.2013
+   * Stand: 15.08.2013
+   * 
    * @param devSerial
    * @param fileOnSPX
    * @return SPX42DiveHeadData Headerdaten zum Tauchgang
@@ -174,9 +184,9 @@ public class SPX42LogManager extends SPX42AliasManager
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 28.08.2013
+   * Stand: 28.08.2013
+   * 
    * @param _deviceId
    * @return Vector mit Werten tauchid,Startzeit,Länge
    */

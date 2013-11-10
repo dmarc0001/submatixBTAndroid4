@@ -1,11 +1,10 @@
-/**
+﻿/**
  * Ein Dialog zum WARTEN
  * 
  * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
  * 
- * @author Dirk Marciniak (dirk_marciniak@arcor.de)
  * 
- *         Stand: 13.06.2013
+ * Stand: 13.06.2013
  */
 package de.dmarcini.submatix.android4.gui;
 
@@ -19,13 +18,14 @@ import android.widget.TextView;
 import de.dmarcini.submatix.android4.R;
 
 /**
+ * 
  * Klasse für den Wartedialog
  * 
- * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
  * 
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
  * 
- *         Stand: 13.06.2013
+ *         Stand: 10.11.2013
  */
 public class WaitProgressFragmentDialog extends DialogFragment
 {
@@ -114,9 +114,9 @@ public class WaitProgressFragmentDialog extends DialogFragment
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 07.08.2013
+   * Stand: 07.08.2013
+   * 
    * @param msg
    */
   public void setSubMessage( String msg )

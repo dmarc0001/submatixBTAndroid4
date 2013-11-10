@@ -1,10 +1,9 @@
-/**
+﻿/**
  * Implementation der Konfiguration für SPX42 Android
  * 
  * 
- * @author Dirk Marciniak (dirk_marciniak@arcor.de)
  * 
- *         Stand: 10.10.13
+ * Stand: 10.10.13
  */
 package de.dmarcini.submatix.android4.utils;
 
@@ -14,7 +13,7 @@ package de.dmarcini.submatix.android4.utils;
  * 
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
  * 
- * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)#
  * 
  *         Stand: 10.11.2013
  */
@@ -42,7 +41,6 @@ public class SPX42Config
   /**
    * Der Konstruktor, füllt falls notwendig sinnvolle Anfangswerte Project: SubmatixBTConfigPC Package: de.dmarcini.submatix.pclg.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 02.01.2012
    */
   public SPX42Config()
   {}
@@ -50,7 +48,6 @@ public class SPX42Config
   /**
    * Kopierkonstruktor Project: SubmatixBTConfigPC Package: de.dmarcini.submatix.pclg.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 03.01.2012
    * @param cf
    */
   /**
@@ -59,9 +56,9 @@ public class SPX42Config
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
+   * 
    * @param cf
    *          Das zu kopierende Config-Element
    */
@@ -86,9 +83,9 @@ public class SPX42Config
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
+   * 
    * @return Kann die Firmware ein Datum setzen
    */
   public boolean canSetDate()
@@ -102,9 +99,8 @@ public class SPX42Config
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
    */
   public void clear()
   {
@@ -117,9 +113,9 @@ public class SPX42Config
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
+   * 
    * @param cf
    * @return Wahr, wenn die Configs gleich sind
    */
@@ -147,9 +143,9 @@ public class SPX42Config
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
+   * 
    * @return "1" wenn custom (individual) liuzensiert ist
    */
   public int getCustomEnabled()
@@ -167,9 +163,9 @@ public class SPX42Config
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
+   * 
    * @return Den Gerätenamen zurückgeben
    */
   public String getDeviceName()
@@ -183,9 +179,9 @@ public class SPX42Config
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
+   * 
    * @return Gib die Firmwareversion zurück
    */
   public String getFirmwareVersion()
@@ -199,9 +195,9 @@ public class SPX42Config
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
+   * 
    * @return Gib den Lizenzstatus zurück
    */
   public int getLicenseState()
@@ -215,9 +211,9 @@ public class SPX42Config
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
+   * 
    * @return Gib die Geräte-Is (Seriennummer) zurück
    */
   public String getSerial()
@@ -231,9 +227,9 @@ public class SPX42Config
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
+   * 
    * @return Hat die (alte) Firmware den "Fahrenheid" Bug
    */
   public boolean hasFahrenheidBug()
@@ -247,9 +243,9 @@ public class SPX42Config
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
+   * 
    * @return Hat die Firmware sechs Parameter bei der Custom / individual Einstellung
    */
   public boolean hasSixValuesIndividual()
@@ -263,9 +259,9 @@ public class SPX42Config
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
+   * 
    * @return Wahr, wenn die Firmware unterstützt wird
    */
   public boolean isFirmwareSupported()
@@ -279,9 +275,9 @@ public class SPX42Config
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
+   * 
    * @return Wahr, wenn das Objekt mit der Seriennummer initialisiert wurde
    */
   public boolean isInitialized()
@@ -295,9 +291,9 @@ public class SPX42Config
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
+   * 
    * @return Wahr, wenn die Parameterreihenfolge der Alten Firmware zutrifft
    */
   public boolean isOldParamSorting()
@@ -311,9 +307,9 @@ public class SPX42Config
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
+   * 
    * @param en
    */
   public void setCustomEnabled( boolean en )
@@ -327,9 +323,9 @@ public class SPX42Config
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
+   * 
    * @param name
    */
   public void setDeviceName( String name )
@@ -343,9 +339,9 @@ public class SPX42Config
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
+   * 
    * @param version
    */
   public void setFirmwareVersion( String version )
@@ -400,9 +396,9 @@ public class SPX42Config
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
+   * 
    * @param lic
    *          String[] 0=License, 1=Custom enabled
    * @return Lizenzstatus korrekt erkannt?
@@ -442,9 +438,9 @@ public class SPX42Config
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
+   * 
    * @param status
    */
   public void setLizenseStatus( int status )
@@ -458,9 +454,9 @@ public class SPX42Config
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
+   * 
    * @param serial
    */
   public void setSerial( String serial )
@@ -477,9 +473,9 @@ public class SPX42Config
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
+   * 
    * @param wasInit
    */
   public void setWasInit( boolean wasInit )

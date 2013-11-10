@@ -1,5 +1,15 @@
 package de.dmarcini.submatix.android4.utils;
 
+/**
+ * 
+ * Klasse als Container für ein Gas-Update
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
+ */
 public class GasUpdateEntity
 {
   private int           gasNr    = 0;

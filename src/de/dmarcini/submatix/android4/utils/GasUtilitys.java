@@ -1,7 +1,17 @@
-package de.dmarcini.submatix.android4.utils;
+﻿package de.dmarcini.submatix.android4.utils;
 
 import android.annotation.SuppressLint;
 
+/**
+ * 
+ * Klasse, die für Gasberechnungen verwendet werden soll
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
+ */
 public class GasUtilitys
 {
   private static double barOffset          = 1.0D; // Oberflächendruck Meereshöhe
@@ -14,9 +24,9 @@ public class GasUtilitys
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 02.01.2013
+   * Stand: 02.01.2013
+   * 
    * @param o2
    * @param he
    * @return Gasname
@@ -66,9 +76,9 @@ public class GasUtilitys
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 26.07.2013
+   * Stand: 26.07.2013
+   * 
    * @param o2
    * @return Maximum Oxigen Depth
    */
@@ -94,9 +104,9 @@ public class GasUtilitys
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 26.07.2013
+   * Stand: 26.07.2013
+   * 
    * @param o2
    * @param he
    * @param ppo2Setpoint

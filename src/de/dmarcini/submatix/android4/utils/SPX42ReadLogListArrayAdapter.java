@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.utils;
+﻿package de.dmarcini.submatix.android4.utils;
 
 import java.util.List;
 import java.util.Vector;
@@ -13,6 +13,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import de.dmarcini.submatix.android4.R;
 
+/**
+ * 
+ * Erzeugt einen eigenen Adapter für die Darstellung der Logs auf dem SPX mit Icons
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
+ */
 public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
 {
   @SuppressWarnings( "unused" )
@@ -116,9 +126,9 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 06.08.2013
+   * Stand: 06.08.2013
+   * 
    * @param position
    * @return ist der Eintrag als gesichert markiert
    */
@@ -134,9 +144,9 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 06.08.2013
+   * Stand: 06.08.2013
+   * 
    * @param position
    * @param isSaved
    */
@@ -156,9 +166,9 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 06.08.2013
+   * Stand: 06.08.2013
+   * 
    * @param position
    * @param isSaved
    * @param dbId
@@ -176,9 +186,9 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 06.08.2013
+   * Stand: 06.08.2013
+   * 
    * @param position
    * @return Name des Eintrages
    */
@@ -194,9 +204,9 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 06.08.2013
+   * Stand: 06.08.2013
+   * 
    * @param position
    * @return die NMummer des Eintrages
    */
@@ -212,9 +222,9 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 06.08.2013
+   * Stand: 06.08.2013
+   * 
    * @param position
    * @return Dateiname auf dem SPX
    */
@@ -230,9 +240,9 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 06.08.2013
+   * Stand: 06.08.2013
+   * 
    * @param position
    * @param marked
    */
@@ -248,9 +258,9 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 06.08.2013
+   * Stand: 06.08.2013
+   * 
    * @param position
    * @return markiert oder nicht
    */
@@ -266,9 +276,9 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 07.08.2013
+   * Stand: 07.08.2013
+   * 
    * @return Vector mit Nummern
    */
   public Vector<Integer> getMarkedItems()

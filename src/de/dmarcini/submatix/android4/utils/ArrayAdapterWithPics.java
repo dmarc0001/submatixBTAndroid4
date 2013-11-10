@@ -1,11 +1,10 @@
-/**
+﻿/**
  * Eigener Arrayadapter, der Icons beinhaltet
  * 
  * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
  * 
- * @author Dirk Marciniak (dirk_marciniak@arcor.de)
  * 
- *         Stand: 23.12.2012
+ * Stand: 23.12.2012
  */
 package de.dmarcini.submatix.android4.utils;
 
@@ -25,9 +24,14 @@ import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.content.ContentSwitcher;
 
 /**
- * Das Objekt leitet sich vom ArrayAdapter ab Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
  * 
- * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 23.12.2012
+ * Das Objekt leitet sich vom ArrayAdapter ab, erzeugt Adapter mit Icons
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
  */
 public class ArrayAdapterWithPics extends ArrayAdapter<ContentSwitcher.ProgItem>
 {
@@ -38,7 +42,6 @@ public class ArrayAdapterWithPics extends ArrayAdapter<ContentSwitcher.ProgItem>
   /**
    * Mein Konstruktor Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 23.12.2012
    * @param context
    * @param textViewResourceId
    * @param isOnline
@@ -79,7 +82,6 @@ public class ArrayAdapterWithPics extends ArrayAdapter<ContentSwitcher.ProgItem>
    * Die Methode gibt mein in XML Creiertes Objekt für jeden Listenpunkt zurück
    * 
    * @see android.widget.ArrayAdapter#getView(int, android.view.View, android.view.ViewGroup)
-   * @author Dirk Marciniak 03.01.2013
    * @param position
    * @param convertView
    * @param parent

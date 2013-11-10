@@ -12,6 +12,16 @@ import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.utils.BuildVersion;
 
+/**
+ * 
+ * Eine "Über das Programm" Seite
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
+ */
 public class ProgramAboutFragment extends Fragment
 {
   public static final String TAG                     = ProgramAboutFragment.class.getSimpleName();

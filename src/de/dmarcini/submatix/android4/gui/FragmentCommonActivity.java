@@ -1,9 +1,8 @@
-/**
+﻿/**
  * gemeinsamer Code der List- und der Detailactivity
  * 
  * FragmentCommonActivity.java de.dmarcini.submatix.android4.gui SubmatixBTLoggerAndroid_4
  * 
- * @author Dirk Marciniak 28.12.2012
  */
 package de.dmarcini.submatix.android4.gui;
 
@@ -52,9 +51,14 @@ import de.dmarcini.submatix.android4.utils.SPX42Config;
 import de.dmarcini.submatix.android4.utils.UserAlertDialogFragment;
 
 /**
+ * 
  * Der gemeinsame Code der List- und Detailactivity
  * 
- * @author dmarc
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
  */
 public class FragmentCommonActivity extends Activity implements NoticeDialogListener, IBtServiceListener
 {
@@ -141,7 +145,6 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 24.02.2013
    * @param listener
@@ -194,7 +197,6 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 15.08.2013
    */
@@ -212,7 +214,6 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   /**
    * Frage, ob BR erlaubt werden sollte Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 20.12.2012
    */
   private void askEnableBT()
   {
@@ -228,9 +229,8 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 02.06.2013
+   * Stand: 02.06.2013
    */
   public void askForConfigFromSPX42()
   {
@@ -246,9 +246,8 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 13.07.2013
+   * Stand: 13.07.2013
    */
   public void askForDecoConfig()
   {
@@ -264,9 +263,8 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 02.06.2013
+   * Stand: 02.06.2013
    */
   public void askForFirmwareVersion()
   {
@@ -282,9 +280,8 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 18.07.2013
+   * Stand: 18.07.2013
    */
   public void askForGasFromSPX()
   {
@@ -300,9 +297,8 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 04.06.2013
+   * Stand: 04.06.2013
    */
   public void askForLicenseFromSPX()
   {
@@ -318,9 +314,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 07.08.2013
+   * Stand: 07.08.2013
+   * 
    * @param numberOnSPX
    */
   public void askForLogDetail( int numberOnSPX )
@@ -337,9 +333,8 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 06.08.2013
+   * Stand: 06.08.2013
    */
   public void askForLogDirectoryFromSPX()
   {
@@ -355,9 +350,8 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 04.06.2013
+   * Stand: 04.06.2013
    */
   public void askForManufacturer()
   {
@@ -373,9 +367,8 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 28.05.2013
+   * Stand: 28.05.2013
    */
   public void askForSerialNumber()
   {
@@ -391,9 +384,8 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 02.06.2013
+   * Stand: 02.06.2013
    */
   public void askForSPXAlive()
   {
@@ -409,9 +401,8 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 23.02.2013
+   * Stand: 23.02.2013
    */
   private void doBindService()
   {
@@ -457,9 +448,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 04.03.2013
+   * Stand: 04.03.2013
+   * 
    * @param device
    */
   public void doConnectBtDevice( String device )
@@ -477,9 +468,8 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 04.03.2013
+   * Stand: 04.03.2013
    */
   public void doDisconnectBtDevice()
   {
@@ -496,9 +486,8 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 23.02.2013
+   * Stand: 23.02.2013
    */
   private void doUnbindService()
   {
@@ -542,9 +531,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 28.05.2013
+   * Stand: 28.05.2013
+   * 
    * @return MAC-Addr des Gerätes
    */
   public String getConnectedDevice()
@@ -562,9 +551,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 13.03.2013
+   * Stand: 13.03.2013
+   * 
    * @return der Verbindungsstatus
    */
   public int getConnectionStatus()
@@ -690,9 +679,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 07.01.2013
+   * Stand: 07.01.2013
+   * 
    * @return ist zweigeteilt oder nicht
    */
   public boolean istActivityTwoPane()
@@ -706,9 +695,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 23.02.2013
+   * Stand: 23.02.2013
+   * 
    * @param msg
    */
   @Override
@@ -751,9 +740,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 23.02.2013
+   * Stand: 23.02.2013
+   * 
    * @param msg
    */
   @Override
@@ -768,9 +757,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 23.02.2013
+   * Stand: 23.02.2013
+   * 
    * @param msg
    * 
    */
@@ -793,9 +782,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 17.07.2013
+   * Stand: 17.07.2013
+   * 
    * @param msg
    */
   public void msgRecivedSerial( BtServiceMessage msg )
@@ -816,9 +805,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 17.07.2013
+   * Stand: 17.07.2013
+   * 
    * @param msg
    */
   public void msgReciveLicenseState( BtServiceMessage msg )
@@ -854,9 +843,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 17.07.2013
+   * Stand: 17.07.2013
+   * 
    * @param msg
    */
   public void msgReciveManufacturer( BtServiceMessage msg )
@@ -912,7 +901,6 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * Wenn die Activity erzeugt wird, u.A. herausfinden ob ein- oder zwei-Flächen Mode
    * 
    * @see android.app.Activity#onCreate(android.os.Bundle)
-   * @author Dirk Marciniak 28.12.2012
    * @param savedInstanceState
    */
   @Override
@@ -982,7 +970,6 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * Wird ein Dialog negativ beendet (nein oder Abbruch)
    * 
    * @see de.dmarcini.submatix.android4.gui.AreYouSureDialogFragment.NoticeDialogListener#onDialogNegativeClick(android.app.DialogFragment)
-   * @author Dirk Marciniak 28.12.2012
    * @param dialog
    */
   @SuppressWarnings( "javadoc" )
@@ -996,7 +983,6 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * Wird ein dialog Positiv beendet (ja oder Ok...)
    * 
    * @see de.dmarcini.submatix.android4.gui.AreYouSureDialogFragment.NoticeDialogListener#onDialogPositiveClick(android.app.DialogFragment)
-   * @author Dirk Marciniak 28.12.2012
    * @param dialog
    */
   @SuppressWarnings( "javadoc" )
@@ -1054,7 +1040,6 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   /**
    * Wird ein Eintrag der Auswahlliste angeklickt Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 22.12.2012
    * @param listView
    * @param view
    * @param position
@@ -1342,9 +1327,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 24.02.2013
+   * Stand: 24.02.2013
+   * 
    * @param listener
    */
   public void removeServiceListener( IBtServiceListener listener )
@@ -1366,9 +1351,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 02.06.2013
+   * Stand: 02.06.2013
+   * 
    * @param auto
    * @param pressure
    * @throws FirmwareNotSupportetException
@@ -1387,9 +1372,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 27.10.2013
+   * Stand: 27.10.2013
+   * 
    * @throws FirmwareNotSupportetException
    */
   private void writeDateTimeToDevice() throws FirmwareNotSupportetException
@@ -1406,9 +1391,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 13.07.2013
+   * Stand: 13.07.2013
+   * 
    * @param logG
    * @param highG
    * @param deepSt
@@ -1430,9 +1415,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 14.07.2013
+   * Stand: 14.07.2013
+   * 
    * @param lumin
    *          Helligkeit
    * @param orient
@@ -1453,9 +1438,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 18.07.2013
+   * Stand: 18.07.2013
+   * 
    * @param gasUpdates
    * @throws FirmwareNotSupportetException
    */
@@ -1473,9 +1458,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 14.07.2013
+   * Stand: 14.07.2013
+   * 
    * @param sensorsOff
    * @param pscrOff
    * @param sensorsCount
@@ -1497,9 +1482,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 14.07.2013
+   * Stand: 14.07.2013
+   * 
    * @param isTempMetric
    * @param isDepthMetric
    * @param isFreshwater

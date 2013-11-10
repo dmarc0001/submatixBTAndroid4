@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.comm;
+﻿package de.dmarcini.submatix.android4.comm;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +33,15 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
 import de.dmarcini.submatix.android4.utils.SPX42Config;
 import de.dmarcini.submatix.android4.utils.SPX42GasParms;
 
+  /**
+   * 
+   * Bluethooth COMM Service
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   */
 // @formatter:off
 public class BlueThoothComService extends Service
 {
@@ -43,7 +52,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 02.03.2013
    */
@@ -59,7 +67,6 @@ public class BlueThoothComService extends Service
      * 
      * Project: SubmatixBluethoothLogger Package: de.dmarcini.submatix.logger.service
      * 
-     * @author Dirk Marciniak (dirk_marciniak@arcor.de)
      * 
      *         Stand: 24.02.2012
      * @param device
@@ -92,7 +99,6 @@ public class BlueThoothComService extends Service
      * 
      * Project: SubmatixBluethoothLogger Package: de.dmarcini.submatix.logger.service
      * 
-     * @author Dirk Marciniak (dirk_marciniak@arcor.de)
      * 
      *         Stand: 24.02.2012
      */
@@ -169,7 +175,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: BtServiceVersuch Package: de.dmarcini.android.btservive
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 21.02.2013
    */
@@ -211,7 +216,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 02.03.2013
    */
@@ -230,7 +234,6 @@ public class BlueThoothComService extends Service
      * 
      * Project: SubmatixBluethoothLogger Package: de.dmarcini.submatix.logger.service
      * 
-     * @author Dirk Marciniak (dirk_marciniak@arcor.de)
      * 
      *         Stand: 24.02.2012
      * @param socket
@@ -262,7 +265,6 @@ public class BlueThoothComService extends Service
      * 
      * Project: SubmatixBluethoothLogger Package: de.dmarcini.submatix.logger.service
      * 
-     * @author Dirk Marciniak (dirk_marciniak@arcor.de)
      * 
      *         Stand: 24.02.2012
      */
@@ -288,7 +290,6 @@ public class BlueThoothComService extends Service
      * 
      * Project: SubmatixBluethoothLogger Package: de.dmarcini.submatix.logger.service
      * 
-     * @author Dirk Marciniak (dirk_marciniak@arcor.de)
      * 
      *         Stand: 24.02.2012
      * @param start
@@ -341,7 +342,6 @@ public class BlueThoothComService extends Service
      * 
      * Project: SubmatixBluethoothLogger Package: de.dmarcini.submatix.logger.service
      * 
-     * @author Dirk Marciniak (dirk_marciniak@arcor.de)
      * 
      *         Stand: 24.02.2012
      * @param start
@@ -751,7 +751,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 10.11.2013
    */
@@ -769,7 +768,6 @@ public class BlueThoothComService extends Service
      * 
      * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
      * 
-     * @author Dirk Marciniak (dirk_marciniak@arcor.de)
      * 
      *         Stand: 28.05.2013
      * @param socket
@@ -801,7 +799,6 @@ public class BlueThoothComService extends Service
      * 
      * Project: SubmatixBluethoothLogger Package: de.dmarcini.submatix.logger.service
      * 
-     * @author Dirk Marciniak (dirk_marciniak@arcor.de)
      * 
      *         Stand: 28.05.2013
      */
@@ -896,7 +893,6 @@ public class BlueThoothComService extends Service
      * 
      * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
      * 
-     * @author Dirk Marciniak (dirk_marciniak@arcor.de)
      * 
      *         Stand: 28.05.2013
      * @param msg
@@ -942,7 +938,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 02.06.2013
    */
@@ -965,7 +960,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 15.08.2013
    */
@@ -986,7 +980,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 13.07.2013
    */
@@ -1007,7 +1000,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 02.06.2013
    * 
@@ -1035,7 +1027,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 18.07.2013 TODO
    */
@@ -1053,7 +1044,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 04.06.2013
    */
@@ -1080,7 +1070,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 04.06.2013
    */
@@ -1110,7 +1099,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 28.05.2013
    */
@@ -1137,7 +1125,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 28.05.2013
    */
@@ -1156,7 +1143,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 06.08.2013
    */
@@ -1172,7 +1158,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 02.03.2013
    * @param addr
@@ -1218,7 +1203,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 04.03.2013
    */
@@ -1240,7 +1224,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 13.03.2013
    */
@@ -1259,7 +1242,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 02.03.2013
    * @param mmSocket2
@@ -1309,7 +1291,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 02.03.2013
    */
@@ -1340,7 +1321,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 28.05.2013
    * @return status
@@ -1363,7 +1343,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 02.06.2013
    * @return geräte Seriennummer
@@ -1379,7 +1358,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 04.03.2013
    * @return verbindungsstatus
@@ -1450,7 +1428,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: BtServiceVersuch Package: de.dmarcini.android.btservive
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 21.02.2013
    */
@@ -1541,7 +1518,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: BtServiceVersuch Package: de.dmarcini.android.btservive
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 21.02.2013
    * @param msg
@@ -1572,7 +1548,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 02.03.2013
    * @param state
@@ -1612,7 +1587,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: BtServiceVersuch Package: de.dmarcini.android.btservive
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 21.02.2013
    */
@@ -1640,7 +1614,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 02.06.2013
    * @param cf
@@ -1697,7 +1670,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 13.07.2013
    * @param cf
@@ -1754,7 +1726,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 14.07.2013
    * @param cf
@@ -1781,7 +1752,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 18.07.2013
    * @param cf
@@ -1849,7 +1819,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 23.07.2013
    * @param cf
@@ -1931,7 +1900,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 14.07.2013
    * @param cf
@@ -1962,7 +1930,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 02.06.2013
    * @param msg
@@ -1978,7 +1945,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 28.05.2013
    * @param msg
@@ -1997,7 +1963,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 14.07.2013
    * @param cf
@@ -2026,7 +1991,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 27.10.2013
    * @param cf
@@ -2068,7 +2032,6 @@ public class BlueThoothComService extends Service
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 07.08.2013
    * @param numberOnSPX

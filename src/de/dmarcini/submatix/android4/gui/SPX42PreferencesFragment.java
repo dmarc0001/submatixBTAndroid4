@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.gui;
+﻿package de.dmarcini.submatix.android4.gui;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -28,9 +28,14 @@ import de.dmarcini.submatix.android4.utils.GradientPickerPreference;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 
 /**
- * Ein Objekt zum bearbeiten der SPX42 Einstellungen Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
  * 
- * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 31.12.2012
+ * Ein Objekt zum bearbeiten der SPX42 Einstellungen
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 10.11.2013
  */
 public class SPX42PreferencesFragment extends PreferenceFragment implements IBtServiceListener, OnSharedPreferenceChangeListener
 {
@@ -67,9 +72,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 15.07.2013
+   * Stand: 15.07.2013
+   * 
    * @return
    */
   private int[] getDecoGradients()
@@ -102,9 +107,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 15.07.2013
+   * Stand: 15.07.2013
+   * 
    * @param prefKey
    * @return
    */
@@ -129,9 +134,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 15.07.2013
+   * Stand: 15.07.2013
+   * 
    * @param prefKey
    * @return
    */
@@ -276,7 +281,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   /**
    * Feststellen, ob das die "kaputte" Firmware ist Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 14.07.2013
    * @return
    */
   private boolean isBuggyFirmware()
@@ -342,9 +346,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 17.07.2013
+   * Stand: 17.07.2013
+   * 
    * @param msg
    */
   private void msgReciveAutosetpoint( BtServiceMessage msg )
@@ -418,9 +422,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 17.07.2013
+   * Stand: 17.07.2013
+   * 
    * @param msg
    */
   private void msgReciveAutosetpointAck( BtServiceMessage msg )
@@ -443,9 +447,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 17.07.2013
+   * Stand: 17.07.2013
+   * 
    * @param msg
    */
   private void msgReciveDeco( BtServiceMessage msg )
@@ -562,9 +566,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 17.07.2013
+   * Stand: 17.07.2013
+   * 
    * @param msg
    */
   private void msgReciveDecoAck( BtServiceMessage msg )
@@ -580,9 +584,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 17.07.2013
+   * Stand: 17.07.2013
+   * 
    * @param msg
    */
   private void msgReciveDisplay( BtServiceMessage msg )
@@ -669,9 +673,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 17.07.2013
+   * Stand: 17.07.2013
+   * 
    * @param msg
    */
   private void msgReciveDisplayAck( BtServiceMessage msg )
@@ -691,9 +695,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 17.07.2013
+   * Stand: 17.07.2013
+   * 
    * @param msg
    */
   private void msgReciveFirmwareversion( BtServiceMessage msg )
@@ -708,9 +712,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 17.07.2013
+   * Stand: 17.07.2013
+   * 
    * @param msg
    */
   private void msgReciveIndividuals( BtServiceMessage msg )
@@ -839,9 +843,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 17.07.2013
+   * Stand: 17.07.2013
+   * 
    * @param msg
    */
   private void msgReciveIndividualsAck( BtServiceMessage msg )
@@ -857,9 +861,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 17.07.2013
+   * Stand: 17.07.2013
+   * 
    * @param msg
    */
   private void msgReciveUnits( BtServiceMessage msg )
@@ -984,9 +988,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 17.07.2013
+   * Stand: 17.07.2013
+   * 
    * @param msg
    */
   private void msgReciveUnitsAck( BtServiceMessage msg )
@@ -1355,7 +1359,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   /**
    * Wenn der User den Setpoint verändert hat, dann schicke das an den SPX Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 02.06.2013
    */
   private void sendAutoSetpoint()
   {
@@ -1410,7 +1413,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   /**
    * Sende DECO Preferenzen Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 13.07.2013
    */
   private void sendDecoPrefs()
   {
@@ -1521,7 +1523,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   /**
    * Sende Display Einstellungen zum SPX Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 14.07.2013
    */
   private void sendDisplayPrefs()
   {
@@ -1575,7 +1576,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   /**
    * sende die individualeinstellungen zum SPX Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 14.07.2013
    */
   private void sendIndividualPrefs()
   {
@@ -1696,7 +1696,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   /**
    * Sende geänderte Einstellungen der Masseinheiten an den SPX Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 14.07.2013
    */
   private void sendUnitPrefs()
   {
@@ -1790,7 +1789,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   /**
    * Setze alle Summarys auf ihren aktuellen Wert (weil das die Activity nicht selber macht) Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 31.12.2012
    */
   private void setAllSummarys()
   {
@@ -1850,7 +1848,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 13.07.2013
    * @param presetCandidateStr
    * @return
    */
@@ -1899,9 +1896,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
+   * 
    * @param presetCandidate
    * @return Wahr, wenn alles OK
    */
@@ -1938,7 +1935,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   /**
    * Setze das Preset auf einen definierten Wert oder auf CUSTOM Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 14.07.2013
    * @param presetCandidate
    */
   private void setDecoGradientsPreset( int[] presetCandidate )
@@ -1987,7 +1983,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   /**
    * zusammenstellen der Summary für Gradienten Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de) Stand: 13.07.2013
    */
   private void setDecoGradientsSummary()
   {
