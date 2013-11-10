@@ -49,11 +49,12 @@ public final class ProjectConst
   public static final String FIRMWARE_2_6_7_7V          = "V2.6.7.7_V";
   public static final String FIRMWARE_2_7V              = "V2.7_V";
   public static final String FIRMWARE_2_7H              = "V2.7_H";
+  public static final String FIRMWARE_2_7H_R83CE        = "V2.7_H r83 ce";
   
-  public static final int    FW_NOT_SET                 = -1;
-  public static final int    FW_2_6_7_7V                = 0;
-  public static final int    FW_2_7V                    = 1;
-  public static final int    FW_2_7H                    = 2;
+//  public static final int    FW_NOT_SET                 = -1;
+//  public static final int    FW_2_6_7_7V                = 0;
+//  public static final int    FW_2_7V                    = 1;
+//  public static final int    FW_2_7H                    = 2;
   
   // Lizenzstati des SPX42
   public static final int SPX_LICENSE_NOT_SET           = -1;
@@ -117,6 +118,11 @@ public final class ProjectConst
   public static final int SPX_GET_LOG_NUMBER_DETAIL_OK  = 0x48; //! Logdatei senden OK/ENDE
   //
   public static final String IS_END_LOGLISTENTRY        = ":41";
+  
+  // Temstick Versionen ab Version FIRMWARE_2_7H_R83CE
+  public static final int SPX_TEMPSTICK_T1              = 0;
+  public static final int SPX_TEMPSTICK_T2              = 1;
+  public static final int SPX_TEMPSTICK_T3              = 2;
   
   // Einheiten default(wie gespeichert)/metrisch umrechnen/imperial umrechnen
   public static final int  UNITS_DEFAULT                = 0;

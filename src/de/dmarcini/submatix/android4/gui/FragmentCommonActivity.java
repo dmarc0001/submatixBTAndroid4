@@ -17,6 +17,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.DialogFragment;
@@ -43,9 +44,11 @@ import de.dmarcini.submatix.android4.comm.BlueThoothComService;
 import de.dmarcini.submatix.android4.comm.BlueThoothComService.LocalBinder;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.content.ContentSwitcher;
+import de.dmarcini.submatix.android4.exceptions.FirmwareNotSupportetException;
 import de.dmarcini.submatix.android4.utils.GasUpdateEntity;
 import de.dmarcini.submatix.android4.utils.NoticeDialogListener;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
+import de.dmarcini.submatix.android4.utils.SPX42Config;
 import de.dmarcini.submatix.android4.utils.UserAlertDialogFragment;
 
 /**
@@ -61,10 +64,11 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   public static DateTimeFormatter             localTimeFormatter = DateTimeFormat.forPattern( "yyyy-MM-dd - HH:mm:ss" );
   protected static File                       databaseDir        = null;
   protected static boolean                    mTwoPane           = false;
-  protected static boolean                    isIndividual       = false;
-  protected static int                        mixLicense         = ProjectConst.SPX_LICENSE_NOT_SET;                    // License State 0=Nitrox,1=Normoxic Trimix,2=Full Trimix
-  protected static String                     serialNumber       = null;
-  protected static String                     manufacturer       = null;
+  protected static SPX42Config                spxConfig          = new SPX42Config();                                   // Da werden SPX-Spezifische Sachen gespeichert
+  // protected static boolean isIndividual = false;
+  // protected static int mixLicense = ProjectConst.SPX_LICENSE_NOT_SET; // License State 0=Nitrox,1=Normoxic Trimix,2=Full Trimix
+  // protected static String serialNumber = null;
+  // protected static String manufacturer = null;
   protected static BluetoothAdapter           mBtAdapter         = null;
   private BlueThoothComService                mService           = null;
   private LocalBinder                         binder             = null;
@@ -109,6 +113,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   //
   // Ein Messagehandler, der vom Service kommende Messages bearbeitet
   //
+  @SuppressLint( "HandlerLeak" )
   private final Handler mHandler = new Handler() 
   {
     @Override
@@ -711,16 +716,27 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   {
     Log.v( TAG, "connected..." );
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for manufacturer number..." );
-    askForManufacturer();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for serial number..." );
-    askForSerialNumber();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for Firmware version..." );
-    askForFirmwareVersion();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for SPX license..." );
-    askForLicenseFromSPX();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): set Date and Time to Device (if possible)..." );
-    writeDateTimeToDevice();
+    if( !spxConfig.isInitialized() )
+    {
+      //
+      // wenn das Gerät noch nciht ausgelesen wurde alles abfragen
+      //
+      if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for manufacturer number..." );
+      askForManufacturer();
+      if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for serial number..." );
+      askForSerialNumber();
+      if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for Firmware version..." );
+      askForFirmwareVersion();
+      if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for SPX license..." );
+      askForLicenseFromSPX();
+      if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): set Date and Time to Device (if possible)..." );
+      try
+      {
+        writeDateTimeToDevice();
+      }
+      catch( FirmwareNotSupportetException ex )
+      {}
+    }
   }
 
   @Override
@@ -762,11 +778,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   public void msgDisconnected( BtServiceMessage msg )
   {
     Log.v( TAG, "disconnected..." );
-    serialNumber = null;
-    mixLicense = ProjectConst.SPX_LICENSE_NOT_SET;
-    isIndividual = false;
-    serialNumber = null;
-    manufacturer = null;
+    spxConfig.clear();
   }
 
   @Override
@@ -789,7 +801,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   public void msgRecivedSerial( BtServiceMessage msg )
   {
     if( BuildConfig.DEBUG ) Log.d( TAG, "serial <" + ( String )msg.getContainer() + "> recived" );
-    serialNumber = new String( ( String )msg.getContainer() );
+    spxConfig.setSerial( new String( ( String )msg.getContainer() ) );
   }
 
   @Override
@@ -814,23 +826,12 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     // LS : License State 0=Nitrox,1=Normoxic Trimix,2=Full Trimix
     // CE : Custom Enabled 0= disabled, 1=enabled
     String[] lic = ( String[] )msg.getContainer();
+    spxConfig.setLicenseStatus( lic );
     if( BuildConfig.DEBUG ) Log.d( TAG, "SPX License state <" + lic[0] + "," + lic[1] + "> recived" );
-    try
-    {
-      // wie ist der Status?
-      mixLicense = Integer.parseInt( lic[0] );
-    }
-    catch( NumberFormatException ex )
-    {
-      mixLicense = ProjectConst.SPX_LICENSE_NITROX;
-      Log.e( TAG, "license status read exception: <" + ex.getLocalizedMessage() + ">" );
-    }
-    // ist individual AN?
-    isIndividual = ( lic[1].matches( "1" ) );
     if( BuildConfig.DEBUG )
     {
-      Log.d( TAG, "SPX License INDIVIDUAL: <" + isIndividual + ">" );
-      switch ( mixLicense )
+      Log.d( TAG, "SPX License INDIVIDUAL: <" + spxConfig.getCustomEnabled() + ">" );
+      switch ( spxConfig.getLicenseState() )
       {
         case 0:
           Log.d( TAG, "SPX MIX License : NITROX" );
@@ -860,8 +861,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    */
   public void msgReciveManufacturer( BtServiceMessage msg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Manufacturer <" + ( String )msg.getContainer() + "> recived" );
-    manufacturer = ( String )msg.getContainer();
+    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Manufacturer <" + ( String )msg.getContainer() + "> recived. Ignore." );
   }
 
   @Override
@@ -1371,12 +1371,13 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    *         Stand: 02.06.2013
    * @param auto
    * @param pressure
+   * @throws FirmwareNotSupportetException
    */
-  public void writeAutoSetpoint( int auto, int pressure )
+  public void writeAutoSetpoint( int auto, int pressure ) throws FirmwareNotSupportetException
   {
     if( mService != null )
     {
-      mService.writeAutoSetpoint( auto, pressure );
+      mService.writeAutoSetpoint( spxConfig, auto, pressure );
     }
   }
 
@@ -1389,12 +1390,13 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 27.10.2013
+   * @throws FirmwareNotSupportetException
    */
-  private void writeDateTimeToDevice()
+  private void writeDateTimeToDevice() throws FirmwareNotSupportetException
   {
     if( mService != null )
     {
-      mService.writeDateTimeToDevice( new DateTime() );
+      mService.writeDateTimeToDevice( spxConfig, new DateTime() );
     }
   }
 
@@ -1412,12 +1414,13 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * @param deepSt
    * @param dynGr
    * @param lastStop
+   * @throws FirmwareNotSupportetException
    */
-  public void writeDecoPrefs( int logG, int highG, int deepSt, int dynGr, int lastStop )
+  public void writeDecoPrefs( int logG, int highG, int deepSt, int dynGr, int lastStop ) throws FirmwareNotSupportetException
   {
     if( mService != null )
     {
-      mService.writeDecoPrefs( logG, highG, deepSt, dynGr, lastStop );
+      mService.writeDecoPrefs( spxConfig, logG, highG, deepSt, dynGr, lastStop );
     }
   }
 
@@ -1434,12 +1437,13 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    *          Helligkeit
    * @param orient
    *          Orientierung
+   * @throws FirmwareNotSupportetException
    */
-  public void writeDisplayPrefs( int lumin, int orient )
+  public void writeDisplayPrefs( int lumin, int orient ) throws FirmwareNotSupportetException
   {
     if( mService != null )
     {
-      mService.writeDisplayPrefs( lumin, orient );
+      mService.writeDisplayPrefs( spxConfig, lumin, orient );
     }
   }
 
@@ -1453,12 +1457,13 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    *         Stand: 18.07.2013
    * @param gasUpdates
+   * @throws FirmwareNotSupportetException
    */
-  public void writeGasSetup( Vector<GasUpdateEntity> gasUpdates )
+  public void writeGasSetup( Vector<GasUpdateEntity> gasUpdates ) throws FirmwareNotSupportetException
   {
     if( mService != null )
     {
-      mService.writeGasSetup( gasUpdates );
+      mService.writeGasSetup( spxConfig, gasUpdates );
     }
   }
 
@@ -1476,12 +1481,13 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * @param sensorsCount
    * @param soundOn
    * @param logInterval
+   * @throws FirmwareNotSupportetException
    */
-  public void writeIndividualPrefs( int sensorsOff, int pscrOff, int sensorsCount, int soundOn, int logInterval )
+  public void writeIndividualPrefs( int sensorsOff, int pscrOff, int sensorsCount, int soundOn, int logInterval ) throws FirmwareNotSupportetException
   {
     if( mService != null )
     {
-      mService.writeIndividualPrefs( sensorsOff, pscrOff, sensorsCount, soundOn, logInterval );
+      mService.writeIndividualPrefs( spxConfig, sensorsOff, pscrOff, sensorsCount, soundOn, logInterval );
     }
   }
 
@@ -1497,12 +1503,13 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * @param isTempMetric
    * @param isDepthMetric
    * @param isFreshwater
+   * @throws FirmwareNotSupportetException
    */
-  public void writeUnitPrefs( int isTempMetric, int isDepthMetric, int isFreshwater )
+  public void writeUnitPrefs( int isTempMetric, int isDepthMetric, int isFreshwater ) throws FirmwareNotSupportetException
   {
     if( mService != null )
     {
-      mService.writeUnitPrefs( isTempMetric, isDepthMetric, isFreshwater );
+      mService.writeUnitPrefs( spxConfig, isTempMetric, isDepthMetric, isFreshwater );
     }
   }
 }

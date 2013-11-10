@@ -137,10 +137,10 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     //
     // Jetzt ist der Zeitpunkt, die Datenbank zu befragen, ob das Logteilchen schon gesichert ist
     //
-    isSaved = logManager.isLogInDatabase( FragmentCommonActivity.serialNumber, fileName );
+    isSaved = logManager.isLogInDatabase( FragmentCommonActivity.spxConfig.getSerial(), fileName );
     if( isSaved )
     {
-      SPX42DiveHeadData diveHead = logManager.getDiveHeader( FragmentCommonActivity.serialNumber, fileName );
+      SPX42DiveHeadData diveHead = logManager.getDiveHeader( FragmentCommonActivity.spxConfig.getSerial(), fileName );
       detailText = makeDetailText( diveHead );
       dbId = diveHead.diveId;
     }
@@ -675,12 +675,12 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     //
     // erzeuge eine XML-Datei
     //
-    diveHeader.xmlFile = new File( String.format( "%s%s%s-%04d-%s.xml", FragmentCommonActivity.databaseDir.getAbsolutePath(), File.separator, FragmentCommonActivity.serialNumber,
-            logNumberOnSPX, FragmentCommonActivity.mBtAdapter.getAddress().replaceAll( ":", "_" ) ) );
+    diveHeader.xmlFile = new File( String.format( "%s%s%s-%04d-%s.xml", FragmentCommonActivity.databaseDir.getAbsolutePath(), File.separator,
+            FragmentCommonActivity.spxConfig.getSerial(), logNumberOnSPX, FragmentCommonActivity.mBtAdapter.getAddress().replaceAll( ":", "_" ) ) );
     diveHeader.fileNameOnSpx = rlio.itemNameOnSPX;
     diveHeader.startTime = rlio.startTimeMilis;
     diveHeader.diveNumberOnSPX = rlio.numberOnSPX;
-    diveHeader.deviceSerialNumber = FragmentCommonActivity.serialNumber;
+    diveHeader.deviceSerialNumber = FragmentCommonActivity.spxConfig.getSerial();
     diveHeader.units = ( isUnitImperial ? "i" : "m" );
     //
     // und einen neuen XML-Dateicreator

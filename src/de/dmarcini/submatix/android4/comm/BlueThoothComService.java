@@ -26,9 +26,11 @@ import android.os.IBinder;
 import android.util.Log;
 import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
+import de.dmarcini.submatix.android4.exceptions.FirmwareNotSupportetException;
 import de.dmarcini.submatix.android4.gui.AreaListActivity;
 import de.dmarcini.submatix.android4.utils.GasUpdateEntity;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
+import de.dmarcini.submatix.android4.utils.SPX42Config;
 import de.dmarcini.submatix.android4.utils.SPX42GasParms;
 
 // @formatter:off
@@ -420,30 +422,6 @@ public class BlueThoothComService extends Service
           break;
         case ProjectConst.SPX_APPLICATION_ID:
           // Sende Nachricht Firmwareversion empfangen!
-          //
-          // Mach erst mal die Bestimmung, ob ich die unterstützte
-          //
-          connectedDeviceFWVersion = fields[1];
-          if( fields[1].startsWith( ProjectConst.FIRMWARE_2_6_7_7V ) )
-          {
-            if( BuildConfig.DEBUG ) Log.d( TAGREADER, "FIRMWARE 2.6.7.7V" );
-            firmware = ProjectConst.FW_2_6_7_7V;
-          }
-          else if( fields[1].startsWith( ProjectConst.FIRMWARE_2_7H ) )
-          {
-            if( BuildConfig.DEBUG ) Log.d( TAGREADER, "FIRMWARE 2.7H" );
-            firmware = ProjectConst.FW_2_7H;
-          }
-          else if( fields[1].startsWith( ProjectConst.FIRMWARE_2_7V ) )
-          {
-            if( BuildConfig.DEBUG ) Log.d( TAGREADER, "FIRMWARE 2.7V" );
-            firmware = ProjectConst.FW_2_7V;
-          }
-          else
-          {
-            firmware = ProjectConst.FW_NOT_SET;
-            Log.e( TAGREADER, "firmwareversion not supportet (" + fields[1] + ")" );
-          }
           msg = new BtServiceMessage( ProjectConst.MESSAGE_FWVERSION_READ, new String( fields[1] ) );
           sendMessageToApp( msg );
           if( BuildConfig.DEBUG ) Log.d( TAGREADER, "Application ID (Firmware Version)  recived! <" + fields[1] + ">" );
@@ -767,6 +745,16 @@ public class BlueThoothComService extends Service
     }
   }
 
+  /**
+   * 
+   * Thread zum schreiben von Kommandos und daten an den angeschlossenen SPX
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.comm
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 10.11.2013
+   */
   private class WriterThread extends Thread
   {
     private final String            TAGWRITER    = WriterThread.class.getSimpleName();
@@ -947,7 +935,6 @@ public class BlueThoothComService extends Service
   private String               connectedDeviceManufacturer = null;
   private String               connectedDeviceFWVersion    = null;
   private String[]             connectedDeviceLicense      = null;
-  private int                  firmware                    = ProjectConst.FW_NOT_SET;
 
   /**
    * 
@@ -1656,10 +1643,12 @@ public class BlueThoothComService extends Service
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 02.06.2013
+   * @param cf
    * @param auto
    * @param pressure
+   * @throws FirmwareNotSupportetException
    */
-  public void writeAutoSetpoint( int auto, int pressure )
+  public void writeAutoSetpoint( SPX42Config cf, int auto, int pressure ) throws FirmwareNotSupportetException
   {
     String kdoString;
     String debugString;
@@ -1668,34 +1657,36 @@ public class BlueThoothComService extends Service
     {
       Log.d( TAG, "write setpoint propertys" );
     }
-    switch ( firmware )
+    if( !cf.isFirmwareSupported() )
     {
-      case ProjectConst.FW_2_6_7_7V:
-        //
-        // Kommando SPX_SET_SETUP_SETPOINT
-        // ~30:P:A
-        // P = Partialdruck (0..4) 1.0 .. 1.4
-        // A = Setpoint bei (0,1,2,3,4) = (0,5,15,20,25)
-        kdoString = String.format( "~%x:%x:%x", ProjectConst.SPX_SET_SETUP_SETPOINT, pressure, auto );
-        if( BuildConfig.DEBUG )
-        {
-          debugString = String.format( "OLD-FIRMWARE <~%x:P%x:A%x>", ProjectConst.SPX_SET_SETUP_SETPOINT, pressure, auto );
-          Log.d( TAG, "writeAutoSetpoint: sending <" + debugString + ">" );
-        }
-        break;
-      default:
-      case ProjectConst.FW_2_7V:
-      case ProjectConst.FW_2_7H:
-        // ~30:A:P
-        // A = Setpoint bei (0,1,2,3,4) = (0,5,15,20,25)
-        // P = Partialdruck (0..4) 1.0 .. 1.4
-        kdoString = String.format( "~%x:%x:%x", ProjectConst.SPX_SET_SETUP_SETPOINT, auto, pressure );
-        if( BuildConfig.DEBUG )
-        {
-          debugString = String.format( "NEWER-FIRMWARE <~%x:A%x:P%x>", ProjectConst.SPX_SET_SETUP_SETPOINT, auto, pressure );
-          Log.d( TAG, "writeAutoSetpoint: sending <" + debugString + ">" );
-        }
-        break;
+      Log.e( TAG, "firmware not supportet for write settings!" );
+      throw new FirmwareNotSupportetException( "write Auto Setpoint" );
+    }
+    if( cf.isOldParamSorting() )
+    {
+      //
+      // Kommando SPX_SET_SETUP_SETPOINT
+      // ~30:P:A
+      // P = Partialdruck (0..4) 1.0 .. 1.4
+      // A = Setpoint bei (0,1,2,3,4) = (0,5,15,20,25)
+      kdoString = String.format( "~%x:%x:%x", ProjectConst.SPX_SET_SETUP_SETPOINT, pressure, auto );
+      if( BuildConfig.DEBUG )
+      {
+        debugString = String.format( "OLD-FIRMWARE <~%x:P%x:A%x>", ProjectConst.SPX_SET_SETUP_SETPOINT, pressure, auto );
+        Log.d( TAG, "writeAutoSetpoint: sending <" + debugString + ">" );
+      }
+    }
+    else
+    {
+      // ~30:A:P
+      // A = Setpoint bei (0,1,2,3,4) = (0,5,15,20,25)
+      // P = Partialdruck (0..4) 1.0 .. 1.4
+      kdoString = String.format( "~%x:%x:%x", ProjectConst.SPX_SET_SETUP_SETPOINT, auto, pressure );
+      if( BuildConfig.DEBUG )
+      {
+        debugString = String.format( "NEWER-FIRMWARE <~%x:A%x:P%x>", ProjectConst.SPX_SET_SETUP_SETPOINT, auto, pressure );
+        Log.d( TAG, "writeAutoSetpoint: sending <" + debugString + ">" );
+      }
     }
     this.writeSPXMsgToDevice( kdoString );
   }
@@ -1709,6 +1700,7 @@ public class BlueThoothComService extends Service
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 13.07.2013
+   * @param cf
    * @param lowG
    *          Low gradient
    * @param highG
@@ -1719,36 +1711,39 @@ public class BlueThoothComService extends Service
    *          Dyn gradients enable?
    * @param lastStop
    *          last stop 3 oder 6 Meter?
+   * @throws FirmwareNotSupportetException
    */
-  public void writeDecoPrefs( int lowG, int highG, int deepSt, int dynGr, int lastStop )
+  public void writeDecoPrefs( SPX42Config cf, int lowG, int highG, int deepSt, int dynGr, int lastStop ) throws FirmwareNotSupportetException
   {
     String kdoString;
     //
-    switch ( firmware )
+    if( !cf.isFirmwareSupported() )
     {
-      case ProjectConst.FW_2_6_7_7V:
-        // ~29:GH:GL:LS:DY:DS
-        // GH = Gradient HIGH
-        // GL = Gradient LOW
-        // LS = Last Stop 0=>3m 1=>6m
-        // DY = Dynamische gradienten 0->off 1->on
-        // DS = Deepstops 0=> enabled, 1=>disabled
-        // kdoString = String.format( "~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_DEKO, highG, lowG, ( ( lastStop == 1 ) ? 0 : 1 ), dynGr, deepSt );
-        kdoString = String.format( "~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_DEKO, highG, lowG, lastStop, dynGr, deepSt );
-        if( BuildConfig.DEBUG ) Log.d( TAG, "writeDecoPrefs: sending <OLDER-FIRMWARE <" + kdoString + ">>" );
-        break;
-      default:
-      case ProjectConst.FW_2_7V:
-      case ProjectConst.FW_2_7H:
-        // Kommando SPX_SET_SETUP_DEKO
-        // ~29:GL:GH:DS:DY:LS
-        // GL=GF-Low, GH=GF-High,
-        // DS=Deepstops (0/1)
-        // DY=Dynamische Gradienten (0/1)
-        // LS=Last Decostop (0=3 Meter/1=6 Meter)
-        kdoString = String.format( "~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_DEKO, lowG, highG, deepSt, dynGr, lastStop );
-        if( BuildConfig.DEBUG ) Log.d( TAG, "writeDecoPrefs: sending <NEWER-FIRMWARE <" + kdoString + ">>" );
-        break;
+      Log.e( TAG, "firmware not supportet for write settings!" );
+      throw new FirmwareNotSupportetException( "write deco prefs" );
+    }
+    if( cf.isOldParamSorting() )
+    {
+      // ~29:GH:GL:LS:DY:DS
+      // GH = Gradient HIGH
+      // GL = Gradient LOW
+      // LS = Last Stop 0=>3m 1=>6m
+      // DY = Dynamische gradienten 0->off 1->on
+      // DS = Deepstops 0=> enabled, 1=>disabled
+      // kdoString = String.format( "~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_DEKO, highG, lowG, ( ( lastStop == 1 ) ? 0 : 1 ), dynGr, deepSt );
+      kdoString = String.format( "~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_DEKO, highG, lowG, lastStop, dynGr, deepSt );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "writeDecoPrefs: sending <OLDER-FIRMWARE <" + kdoString + ">>" );
+    }
+    else
+    {
+      // Kommando SPX_SET_SETUP_DEKO
+      // ~29:GL:GH:DS:DY:LS
+      // GL=GF-Low, GH=GF-High,
+      // DS=Deepstops (0/1)
+      // DY=Dynamische Gradienten (0/1)
+      // LS=Last Decostop (0=3 Meter/1=6 Meter)
+      kdoString = String.format( "~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_DEKO, lowG, highG, deepSt, dynGr, lastStop );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "writeDecoPrefs: sending <NEWER-FIRMWARE <" + kdoString + ">>" );
     }
     this.writeSPXMsgToDevice( kdoString );
   }
@@ -1762,12 +1757,19 @@ public class BlueThoothComService extends Service
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 14.07.2013
+   * @param cf
    * @param lumin
    * @param orient
+   * @throws FirmwareNotSupportetException
    */
-  public void writeDisplayPrefs( int lumin, int orient )
+  public void writeDisplayPrefs( SPX42Config cf, int lumin, int orient ) throws FirmwareNotSupportetException
   {
     String kdoString;
+    if( !cf.isFirmwareSupported() )
+    {
+      Log.e( TAG, "firmware not supportet for write settings!" );
+      throw new FirmwareNotSupportetException( "write display prefs" );
+    }
     kdoString = String.format( "~%x:%x:%x", ProjectConst.SPX_SET_SETUP_DISPLAYSETTINGS, lumin, orient );
     if( BuildConfig.DEBUG ) Log.d( TAG, "writeDisplayPrefs: sending <" + kdoString + ">" );
     this.writeSPXMsgToDevice( kdoString );
@@ -1782,10 +1784,12 @@ public class BlueThoothComService extends Service
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 18.07.2013
+   * @param cf
    * @param gasNr
    * @param gasParms
+   * @throws FirmwareNotSupportetException
    */
-  public void writeGasSetup( int gasNr, SPX42GasParms gasParms )
+  public void writeGasSetup( SPX42Config cf, int gasNr, SPX42GasParms gasParms ) throws FirmwareNotSupportetException
   {
     String kdoString;
     int diluent;
@@ -1802,36 +1806,38 @@ public class BlueThoothComService extends Service
     {
       diluent = 0;
     }
-    switch ( firmware )
+    if( !cf.isFirmwareSupported() )
     {
-      case ProjectConst.FW_2_6_7_7V:
-        // Kommando SPX_SET_SETUP_GASLIST
-        // ~40:NR:HE:N2:BO:DI:CU
-        // NR -> Gas Nummer
-        // HE -> Heliumanteil
-        // N2 -> Stickstoffanteil
-        // BO -> Bailoutgas? (3?)
-        // DI -> Diluent ( 0, 1 oder 2 )
-        // CU Current Gas (0 oder 1)
-        kdoString = String.format( "~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_GASLIST, gasNr, gasParms.he, gasParms.n2, ( gasParms.bo ? 3 : 0 ), diluent,
-                ( gasParms.isCurr ? 1 : 0 ) );
-        if( BuildConfig.DEBUG ) Log.d( TAG, "writeDecoPrefs: sending <OLDER-FIRMWARE <" + kdoString + ">>" );
-        break;
-      default:
-      case ProjectConst.FW_2_7V:
-      case ProjectConst.FW_2_7H:
-        // Kommando SPX_SET_SETUP_GASLIST
-        // ~40:NR:N2:HE:BO:DI:CU
-        // NR: Nummer des Gases 0..7
-        // N2: Sticksoff in %
-        // HE: Heluim in %
-        // BO: Bailout (Werte 0,1 und 3 gefunden, 0 kein BO, 3 BO Wert 1 unbekannt?)
-        // DI: Diluent 1 oder 2
-        // CU: Current Gas
-        kdoString = String.format( "~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_GASLIST, gasNr, gasParms.n2, gasParms.he, ( gasParms.bo ? 1 : 0 ), diluent,
-                ( gasParms.isCurr ? 1 : 0 ) );
-        if( BuildConfig.DEBUG ) Log.d( TAG, "writeDecoPrefs: sending <NEWER-FIRMWARE <" + kdoString + ">>" );
-        break;
+      Log.e( TAG, "firmware not supportet for write settings!" );
+      throw new FirmwareNotSupportetException( "write gas setup" );
+    }
+    if( cf.isOldParamSorting() )
+    {
+      // Kommando SPX_SET_SETUP_GASLIST
+      // ~40:NR:HE:N2:BO:DI:CU
+      // NR -> Gas Nummer
+      // HE -> Heliumanteil
+      // N2 -> Stickstoffanteil
+      // BO -> Bailoutgas? (3?)
+      // DI -> Diluent ( 0, 1 oder 2 )
+      // CU Current Gas (0 oder 1)
+      kdoString = String.format( "~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_GASLIST, gasNr, gasParms.he, gasParms.n2, ( gasParms.bo ? 3 : 0 ), diluent,
+              ( gasParms.isCurr ? 1 : 0 ) );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "writeDecoPrefs: sending <OLDER-FIRMWARE <" + kdoString + ">>" );
+    }
+    else
+    {
+      // Kommando SPX_SET_SETUP_GASLIST
+      // ~40:NR:N2:HE:BO:DI:CU
+      // NR: Nummer des Gases 0..7
+      // N2: Sticksoff in %
+      // HE: Heluim in %
+      // BO: Bailout (Werte 0,1 und 3 gefunden, 0 kein BO, 3 BO Wert 1 unbekannt?)
+      // DI: Diluent 1 oder 2
+      // CU: Current Gas
+      kdoString = String.format( "~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_GASLIST, gasNr, gasParms.n2, gasParms.he, ( gasParms.bo ? 1 : 0 ), diluent,
+              ( gasParms.isCurr ? 1 : 0 ) );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "writeDecoPrefs: sending <NEWER-FIRMWARE <" + kdoString + ">>" );
     }
     //
     this.writeSPXMsgToDevice( kdoString );
@@ -1846,15 +1852,23 @@ public class BlueThoothComService extends Service
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 23.07.2013
+   * @param cf
    * @param gasUpdates
+   * @throws FirmwareNotSupportetException
    */
-  public void writeGasSetup( Vector<GasUpdateEntity> gasUpdates )
+  public void writeGasSetup( SPX42Config cf, Vector<GasUpdateEntity> gasUpdates ) throws FirmwareNotSupportetException
   {
     String kdoString = "";
     SPX42GasParms gasParms;
     int diluent, gasNr;
     //
     if( gasUpdates.isEmpty() ) return;
+    //
+    if( !cf.isFirmwareSupported() )
+    {
+      Log.e( TAG, "firmware not supportet for write settings!" );
+      throw new FirmwareNotSupportetException( "write gas setup" );
+    }
     //
     // einen iterator für die Durchforstung des Vectors erzeugen
     //
@@ -1878,38 +1892,35 @@ public class BlueThoothComService extends Service
       {
         diluent = 0;
       }
-      switch ( firmware )
+      if( cf.isOldParamSorting() )
       {
-        case ProjectConst.FW_2_6_7_7V:
-          // Kommando SPX_SET_SETUP_GASLIST
-          // ~40:NR:HE:N2:BO:DI:CU
-          // NR -> Gas Nummer
-          // HE -> Heliumanteil
-          // N2 -> Stickstoffanteil
-          // BO -> Bailoutgas? (3?)
-          // DI -> Diluent ( 0, 1 oder 2 )
-          // CU Current Gas (0 oder 1)
-          kdoString = String.format( "~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_GASLIST, gasNr, gasParms.he, gasParms.n2, ( gasParms.bo ? 1 : 0 ), diluent,
-                  ( gasParms.isCurr ? 1 : 0 ) );
-          if( BuildConfig.DEBUG ) Log.d( TAG, "writeDecoPrefs: sending <OLDER-FIRMWARE <" + kdoString + ">>" );
-          this.writeSPXMsgToDevice( kdoString );
-          break;
-        default:
-        case ProjectConst.FW_2_7V:
-        case ProjectConst.FW_2_7H:
-          // Kommando SPX_SET_SETUP_GASLIST
-          // ~40:NR:N2:HE:BO:DI:CU
-          // NR: Nummer des Gases 0..7
-          // N2: Sticksoff in %
-          // HE: Heluim in %
-          // BO: Bailout (Werte 0,1 und 3 gefunden, 0 kein BO, 3 BO Wert 1 unbekannt?)
-          // DI: Diluent 1 oder 2
-          // CU: Current Gas
-          kdoString += String.format( "~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_GASLIST, gasNr, gasParms.n2, gasParms.he, ( gasParms.bo ? 1 : 0 ), diluent,
-                  ( gasParms.isCurr ? 1 : 0 ) );
-          if( BuildConfig.DEBUG ) Log.d( TAG, "writeDecoPrefs: sending <NEWER-FIRMWARE <" + kdoString + ">>" );
-          this.writeSPXMsgToDevice( kdoString );
-          break;
+        // Kommando SPX_SET_SETUP_GASLIST
+        // ~40:NR:HE:N2:BO:DI:CU
+        // NR -> Gas Nummer
+        // HE -> Heliumanteil
+        // N2 -> Stickstoffanteil
+        // BO -> Bailoutgas? (3?)
+        // DI -> Diluent ( 0, 1 oder 2 )
+        // CU Current Gas (0 oder 1)
+        kdoString = String.format( "~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_GASLIST, gasNr, gasParms.he, gasParms.n2, ( gasParms.bo ? 1 : 0 ), diluent,
+                ( gasParms.isCurr ? 1 : 0 ) );
+        if( BuildConfig.DEBUG ) Log.d( TAG, "writeDecoPrefs: sending <OLDER-FIRMWARE <" + kdoString + ">>" );
+        this.writeSPXMsgToDevice( kdoString );
+      }
+      else
+      {
+        // Kommando SPX_SET_SETUP_GASLIST
+        // ~40:NR:N2:HE:BO:DI:CU
+        // NR: Nummer des Gases 0..7
+        // N2: Sticksoff in %
+        // HE: Heluim in %
+        // BO: Bailout (Werte 0,1 und 3 gefunden, 0 kein BO, 3 BO Wert 1 unbekannt?)
+        // DI: Diluent 1 oder 2
+        // CU: Current Gas
+        kdoString += String.format( "~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_GASLIST, gasNr, gasParms.n2, gasParms.he, ( gasParms.bo ? 1 : 0 ), diluent,
+                ( gasParms.isCurr ? 1 : 0 ) );
+        if( BuildConfig.DEBUG ) Log.d( TAG, "writeDecoPrefs: sending <NEWER-FIRMWARE <" + kdoString + ">>" );
+        this.writeSPXMsgToDevice( kdoString );
       }
     }
   }
@@ -1923,15 +1934,23 @@ public class BlueThoothComService extends Service
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 14.07.2013
+   * @param cf
    * @param sensorsOff
    * @param pscrOff
    * @param sensorsCount
    * @param soundOn
    * @param logInterval
+   * @throws FirmwareNotSupportetException
    */
-  public void writeIndividualPrefs( int sensorsOff, int pscrOff, int sensorsCount, int soundOn, int logInterval )
+  public void writeIndividualPrefs( SPX42Config cf, int sensorsOff, int pscrOff, int sensorsCount, int soundOn, int logInterval ) throws FirmwareNotSupportetException
   {
     String kdoString;
+    //
+    if( !cf.isFirmwareSupported() )
+    {
+      Log.e( TAG, "firmware not supportet for write settings!" );
+      throw new FirmwareNotSupportetException( "write individual prefs" );
+    }
     kdoString = String.format( "~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_INDIVIDUAL, sensorsOff, pscrOff, sensorsCount, soundOn, logInterval );
     if( BuildConfig.DEBUG ) Log.d( TAG, "writeIndividualPrefs: sending <" + kdoString + ">" );
     this.writeSPXMsgToDevice( kdoString );
@@ -1981,13 +2000,21 @@ public class BlueThoothComService extends Service
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 14.07.2013
+   * @param cf
    * @param isTempMetric
    * @param isDepthMetric
    * @param isFreshwater
+   * @throws FirmwareNotSupportetException
    */
-  public void writeUnitPrefs( int isTempMetric, int isDepthMetric, int isFreshwater )
+  public void writeUnitPrefs( SPX42Config cf, int isTempMetric, int isDepthMetric, int isFreshwater ) throws FirmwareNotSupportetException
   {
     String kdoString;
+    //
+    if( !cf.isFirmwareSupported() )
+    {
+      Log.e( TAG, "firmware not supportet for write settings!" );
+      throw new FirmwareNotSupportetException( "write unit prefs" );
+    }
     kdoString = String.format( "~%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_UNITS, isTempMetric, isDepthMetric, isFreshwater );
     if( BuildConfig.DEBUG ) Log.d( TAG, "writeUnitPrefs: sending <" + kdoString + ">" );
     this.writeSPXMsgToDevice( kdoString );
@@ -2002,22 +2029,37 @@ public class BlueThoothComService extends Service
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 27.10.2013
+   * @param cf
    * @param dTime
+   * @throws FirmwareNotSupportetException
    * 
    */
-  public void writeDateTimeToDevice( DateTime dTime )
+  public void writeDateTimeToDevice( SPX42Config cf, DateTime dTime ) throws FirmwareNotSupportetException
   {
     String kdoString;
     //
     //
-    // Setze das Zeit und Datum als Kommandostring zusammen
-    //
-    kdoString = String.format( "%s~%x:%02x:%02x:%02x:%02x:%02x%s", ProjectConst.STX, ProjectConst.SPX_DATETIME, dTime.getHourOfDay(), dTime.getMinuteOfHour(),
-            dTime.getDayOfMonth(), dTime.getMonthOfYear(), dTime.getYearOfCentury(), ProjectConst.ETX );
+    if( !cf.isFirmwareSupported() )
     {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "writeDateTimeToDevice()...send <" + kdoString + "> (DATETIME)" );
+      Log.e( TAG, "firmware not supportet for write settings!" );
+      throw new FirmwareNotSupportetException( "write datetime to device" );
     }
-    this.writeToDevice( kdoString );
+    if( cf.canSetDate() )
+    {
+      //
+      // Setze das Zeit und Datum als Kommandostring zusammen
+      //
+      kdoString = String.format( "%s~%x:%02x:%02x:%02x:%02x:%02x%s", ProjectConst.STX, ProjectConst.SPX_DATETIME, dTime.getHourOfDay(), dTime.getMinuteOfHour(),
+              dTime.getDayOfMonth(), dTime.getMonthOfYear(), dTime.getYearOfCentury(), ProjectConst.ETX );
+      {
+        if( BuildConfig.DEBUG ) Log.d( TAG, "writeDateTimeToDevice()...send <" + kdoString + "> (DATETIME)" );
+      }
+      this.writeToDevice( kdoString );
+    }
+    else
+    {
+      if( BuildConfig.DEBUG ) Log.d( TAG, "writeDateTimeToDevice()...Firmware not support <set datetime> yet" );
+    }
   }
 
   /**

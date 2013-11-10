@@ -1,5 +1,6 @@
 package de.dmarcini.submatix.android4.gui;
 
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +22,7 @@ import android.view.View;
 import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
+import de.dmarcini.submatix.android4.exceptions.FirmwareNotSupportetException;
 import de.dmarcini.submatix.android4.utils.CommToast;
 import de.dmarcini.submatix.android4.utils.GradientPickerPreference;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
@@ -1075,7 +1077,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     Log.v( TAG, "onCreate()..." );
     theToast = new CommToast( getActivity() );
     Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_individual + ">..." );
-    if( FragmentCommonActivity.isIndividual )
+    if( FragmentCommonActivity.spxConfig.getCustomEnabled() == 1 )
     {
       if( BuildConfig.DEBUG ) Log.d( TAG, "Preferences in INDIVIDUAL Mode" );
       addPreferencesFromResource( R.xml.config_spx42_preference_individual );
@@ -1394,7 +1396,15 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     ignorePrefChange = true;
-    fActivity.writeAutoSetpoint( autoSp, sP );
+    try
+    {
+      fActivity.writeAutoSetpoint( autoSp, sP );
+    }
+    catch( FirmwareNotSupportetException ex )
+    {
+      // TODO Erzeuge Warnung an Benutzer!
+      ex.printStackTrace();
+    }
   }
 
   /**
@@ -1497,7 +1507,15 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     ignorePrefChange = true;
     if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs: write deco prefs via runningActivity..." );
-    fActivity.writeDecoPrefs( lowG, highG, deepStops, dynGr, lastStop );
+    try
+    {
+      fActivity.writeDecoPrefs( lowG, highG, deepStops, dynGr, lastStop );
+    }
+    catch( FirmwareNotSupportetException ex )
+    {
+      // TODO Fehklermeldung an User generieren
+      ex.printStackTrace();
+    }
   }
 
   /**
@@ -1543,7 +1561,15 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     ignorePrefChange = true;
     if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "sendDisplayPrefs: write display prefs via runningActivity lum:%d, orient:%d...", lumin, orient ) );
-    fActivity.writeDisplayPrefs( lumin, orient );
+    try
+    {
+      fActivity.writeDisplayPrefs( lumin, orient );
+    }
+    catch( FirmwareNotSupportetException ex )
+    {
+      // TODO FEhlermeldung für User generieren
+      ex.printStackTrace();
+    }
   }
 
   /**
@@ -1656,7 +1682,15 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     if( BuildConfig.DEBUG )
       Log.d( TAG, String.format( "sendIndividualPrefs: write individual prefs via runningActivity :<SE:%d, PS:%d, SC:%d, SN:%d, LI:%d>...", sensorsOff, pscrOff, sensorsCount,
               soundOn, logInterval ) );
-    fActivity.writeIndividualPrefs( sensorsOff, pscrOff, sensorsCount, soundOn, logInterval );
+    try
+    {
+      fActivity.writeIndividualPrefs( sensorsOff, pscrOff, sensorsCount, soundOn, logInterval );
+    }
+    catch( FirmwareNotSupportetException ex )
+    {
+      // Fehlermeldung für User generieren
+      ex.printStackTrace();
+    }
   }
 
   /**
@@ -1742,7 +1776,15 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     ignorePrefChange = true;
     if( BuildConfig.DEBUG )
       Log.d( TAG, String.format( "sendUnitPrefs: write display prefs via runningActivity temp:%d, depth:%d, freshwater:%d...", isTempImperial, isDepthImperial, isFreshwater ) );
-    fActivity.writeUnitPrefs( isTempImperial, isDepthImperial, isFreshwater );
+    try
+    {
+      fActivity.writeUnitPrefs( isTempImperial, isDepthImperial, isFreshwater );
+    }
+    catch( FirmwareNotSupportetException ex )
+    {
+      // TODO FEhlermeldung für User generieren
+      ex.printStackTrace();
+    }
   }
 
   /**
@@ -1788,7 +1830,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // das nur bei Individuallizenz
     //
-    if( FragmentCommonActivity.isIndividual )
+    if( FragmentCommonActivity.spxConfig.getCustomEnabled() == 1 )
     {
       //
       // Sensors Count for Warning
@@ -1836,7 +1878,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       //
       if( BuildConfig.DEBUG )
       {
-        presetCandidateStr = String.format( "%02d:%02d", presetCandidate[0], presetCandidate[1] );
+        presetCandidateStr = String.format( Locale.getDefault(), "%02d:%02d", presetCandidate[0], presetCandidate[1] );
         Log.d( TAG, "set Gradients value to preference (" + presetCandidateStr + ")..." );
       }
       dgp.setValue( presetCandidate );
@@ -1851,6 +1893,18 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     }
   }
 
+  /**
+   * 
+   * Schjreibe DECO Gradienetne zum Gerät
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+   * 
+   *         Stand: 10.11.2013
+   * @param presetCandidate
+   * @return Wahr, wenn alles OK
+   */
   private boolean setDecoGradients( String presetCandidate )
   {
     int[] vals =

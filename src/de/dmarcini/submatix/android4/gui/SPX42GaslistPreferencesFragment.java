@@ -29,6 +29,7 @@ import android.view.View;
 import de.dmarcini.submatix.android4.BuildConfig;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
+import de.dmarcini.submatix.android4.exceptions.FirmwareNotSupportetException;
 import de.dmarcini.submatix.android4.utils.CommToast;
 import de.dmarcini.submatix.android4.utils.GasPickerPreference;
 import de.dmarcini.submatix.android4.utils.GasUpdateEntity;
@@ -502,7 +503,15 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     ignorePrefChange = true;
     // wie viele ACK muss ich abwarten?
     waitForGasOkCount = waitForGasNumber = gasUpdates.size();
-    fActivity.writeGasSetup( gasUpdates );
+    try
+    {
+      fActivity.writeGasSetup( gasUpdates );
+    }
+    catch( FirmwareNotSupportetException ex )
+    {
+      // TODO GEneriere Fehlermeldung an User
+      ex.printStackTrace();
+    }
     Log.v( TAG, "onSharedPreferenceChanged....OK" );
   }
 
