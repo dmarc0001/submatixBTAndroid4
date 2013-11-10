@@ -63,7 +63,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   private static final String  unitsIsFreshwater            = "keyUnitsIsFreshwater";
   // Ende Schlüsselwerte
   private boolean              ignorePrefChange             = false;
-  private String               currFirmwareVersion          = null;
   private CommToast            theToast                     = null;
 
   /**
@@ -199,12 +198,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
         msgRecivedAlive( smsg );
         break;
       // ################################################################
-      // SPX sendet Firmwareversion
-      // ################################################################
-      case ProjectConst.MESSAGE_FWVERSION_READ:
-        msgReciveFirmwareversion( smsg );
-        break;
-      // ################################################################
       // SPX sendet Setpoint
       // ################################################################
       case ProjectConst.MESSAGE_SETPOINT_READ:
@@ -276,21 +269,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       default:
         if( BuildConfig.DEBUG ) Log.i( TAG, "unhandled message with id <" + smsg.getId() + "> recived!" );
     }
-  }
-
-  /**
-   * Feststellen, ob das die "kaputte" Firmware ist Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @return
-   */
-  private boolean isBuggyFirmware()
-  {
-    // Die Firmware gibt IMMER Fahrenheit zurück!
-    if( currFirmwareVersion.equals( ProjectConst.FIRMWARE_2_6_7_7V ) )
-    {
-      return( true );
-    }
-    return false;
   }
 
   @Override
@@ -691,23 +669,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
 
   /**
    * 
-   * Empfange Nachricht über die Firmwareversion des SPX42
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * 
-   * Stand: 17.07.2013
-   * 
-   * @param msg
-   */
-  private void msgReciveFirmwareversion( BtServiceMessage msg )
-  {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Firmware <" + ( String )msg.getContainer() + "> recived" );
-    currFirmwareVersion = ( String )msg.getContainer();
-  }
-
-  /**
-   * 
    * Empfange Nachricht über individuelle Einstellungen
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
@@ -923,7 +884,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // ist es die fehhlerhafte firmware?
     //
-    if( isBuggyFirmware() )
+    if( FragmentCommonActivity.spxConfig.hasFahrenheidBug() )
     {
       // ist es die Fehlerhafte Firmware, IMMER alles gemeinsam auf METRISCH/Imperial setzen
       if( isDepthImperial == 0 )
@@ -1137,7 +1098,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   {
     super.onResume();
     Log.v( TAG, "onResume()..." );
-    currFirmwareVersion = null;
     //
     // setze Listener, der überwacht, wenn Preferenzen geändert wurden
     //
