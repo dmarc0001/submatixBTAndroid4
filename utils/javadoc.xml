@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="javadoc">
+    <target name="javadoc">
+        <javadoc access="private" author="true" 
+        	classpath="C:\Program Files\android-sdk-windows\tools\support\annotations.jar;C:\Program Files\android-sdk-windows\platforms\android-15\android.jar;../libs/joda-time-2.2.jar" 
+        	destdir="../doc" 
+        	doctitle="SubmatixBTLogger Android" 
+        	nodeprecated="false" 
+        	nodeprecatedlist="false" 
+        	noindex="false" 
+        	nonavbar="false" 
+        	notree="false" 
+        	packagenames="de.dmarcini.submatix.android4.exceptions,de.dmarcini.submatix.android4.content,de.dmarcini.submatix.android4.utils,de.dmarcini.submatix.android4.gui,de.dmarcini.submatix.android4.comm" 
+        	source="1.6" 
+        	sourcepath="../src;../gen" 
+        	splitindex="false" 
+        	use="true" 
+        	version="true">
+            <link href="file:/C:/DATEN/eclipseWorkspace/SubmatixBTLoggerAndroid/doc/"/>
+            <link href="file:/C:/Program%20Files/android-sdk-windows/docs/reference"/>
+        </javadoc>
+    </target>
+</project>
