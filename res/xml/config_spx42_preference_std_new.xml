@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:title="@string/conf_headline" android:key="keyConfig">
+    
+     <!-- Kategorie _Highsetpoint auto/off -->
+    <de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory android:title="@string/conf_setpoint_header" android:key="keySetpoint">
+      <ListPreference 
+          android:key="keySetpointAutosetpointDepth" 
+          android:entryValues="@array/highsetpointDepthValuesArray" 
+          android:title="@string/conf_autoset_label" 
+          android:entries="@array/highsetpointDepthNamesArray"
+          android:defaultValue="@string/conf_autoset_default"/>
+      <ListPreference 
+          android:key="keySetpointHighsetpointValue" 
+          android:title="@string/conf_highset_header"
+          android:entryValues="@array/highsetpointValuesArray" 
+          android:entries="@array/highsetpointNamesArray" 
+          android:defaultValue="@string/conf_highset_default"/>
+    </de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory>
+    
+    <!-- Voreinstellung Deco-Gradienten -->
+    <de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory android:title="@string/conf_deco_header" android:key="keyDeco">
+        <ListPreference 
+            android:entryValues="@array/gradientPresetValuesArray" 
+            android:entries="@array/gradientPresetNamesArray" 
+            android:title="@string/conf_deco_preset_header" 
+            android:key="keyDecoGradientPresets" 
+            android:summary="@string/conf_deco_presets_summary" 
+            android:defaultValue="@string/conf_deco_presets_default"/>
+        <de.dmarcini.submatix.android4.utils.GradientPickerPreference  
+            android:title="@string/conf_deco_gradient" 
+            android:key="keyDecoGradient" 
+            android:defaultValue="@string/conf_deco_gradient_default"/>
+        <SwitchPreference 
+            android:key="keyDecoLastStop" 
+            android:title="@string/conf_deco_last_stop_header" 
+            android:switchTextOff="@string/conf_deco_last_stop_off" 
+            android:switchTextOn="@string/conf_deco_last_stop_on" 
+            android:summaryOff="@string/conf_deco_last_stop_off_summary" 
+            android:summaryOn="@string/conf_deco_last_stop_on_summary" 
+            android:defaultValue="true"/>
+        <SwitchPreference 
+            android:key="keyDecoDynGradients" 
+            android:title="@string/conf_deco_dyn_gradients_header" 
+            android:summaryOn="@string/conf_deco_dyn_gradients_summary_on" 
+            android:summaryOff="@string/conf_deco_dyn_gradients_summary_off" 
+            android:switchTextOn="@string/conf_deco_dyn_gradients_on" 
+            android:switchTextOff="@string/conf_deco_dyn_gradients_off" 
+            android:defaultValue="true"/>
+        <SwitchPreference 
+            android:key="keyDecoDeepStops" 
+            android:title="@string/conf_deco_deppstops_header" 
+            android:summaryOn="@string/conf_deco_deepstops_summary_on" 
+            android:summaryOff="@string/conf_deco_deppstops_summary_off" 
+            android:switchTextOn="@string/conf_deco_deepstops_on" 
+            android:switchTextOff="@string/conf_deco_deepstops_off" 
+            android:defaultValue="true"/>
+        
+    </de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory>
+      
+    <!-- Einstellungen für die Anzeige -->
+    <de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory android:title="@string/conf_display_header" android:key="keyDisplay">
+        <ListPreference 
+            android:key="keyDisplayLuminance" 
+            android:title="@string/conf_display_luminance_header" 
+            android:entryValues="@array/displayNewLuminanceValuesArray" 
+            android:entries="@array/displayNewLuminanceNamesArray" 
+            android:defaultValue="@string/conf_luminance_default"/>
+        <ListPreference 
+            android:key="keyDisplayOrientation" 
+            android:title="@string/conf_display_orientation_header" 
+            android:entryValues="@array/displayOrientationValuesArray" 
+            android:entries="@array/displayOrientationNamesArray" 
+            android:defaultValue="@string/conf_display_orientation_default"/>
+        
+    </de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory>
+    
+    <!-- Einstellungen für Einheiten -->
+    <de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory android:title="@string/conf_units_header" android:key="keyUnits">
+        <SwitchPreference 
+            android:key="keyUnitsIsTempMetric" 
+            android:title="@string/conf_units_temp_header" 
+            android:switchTextOff="@string/conf_units_temp_fahrenheid" 
+            android:switchTextOn="@string/conf_units_temp_metric" 
+            android:summaryOn="@string/conf_units_temp_metric_summary" 
+            android:summaryOff="@string/conf_units_temp_fahrenheid_summary" 
+            android:defaultValue="true"/>
+        <SwitchPreference 
+            android:title="@string/conf_units_depth_header" 
+            android:key="keyUnitsIsDepthMetric" 
+            android:summaryOff="@string/conf_units_depth_foot_summary" 
+            android:summaryOn="@string/conf_units_depth_meters_summary" 
+            android:switchTextOn="@string/conf_units_depth_meters" 
+            android:switchTextOff="@string/conf_units_depth_foot" 
+            android:defaultValue="true"/>
+        <SwitchPreference 
+            android:title="@string/conf_units_watertype_header" 
+            android:key="keyUnitsIsFreshwater" 
+            android:switchTextOff="@string/conf_units_saltwater" 
+            android:switchTextOn="@string/conf_units_freshwater" 
+            android:summaryOn="@string/conf_units_freshwater_summary" 
+            android:summaryOff="@string/conf_units_saltwater_summary" 
+            android:defaultValue="true"/>
+        
+    </de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory>
+    
+    <!-- Individual-Einstellungen fehlen bei diesem Lizenzmodell-->
+</PreferenceScreen>
