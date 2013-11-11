@@ -130,11 +130,11 @@
     <!-- display helligkeit -->
     <string name="conf_display_luminance_header">"Helligkeit:"</string>
     <string name="conf_luminance_header_summary">"aktuelle Helligkeit %s%% auf SPX42"</string>
-    <string name="conf_luminance_default">"100"</string>
+    <string name="conf_luminance_default">"0"</string>
     <!-- display orientierung -->
     <string name="conf_display_orientation_header">"Display-Ausrichtung"</string>
     <string name="conf_display_orientation_header_summary">"Aktuell ist \"%s\""</string>
-    <string name="conf_display_orientation_default">"0"</string>
+    <string name="conf_display_orientation_default">"100"</string>
     <!-- ### kategorie Einheiten ### -->
     <string name="conf_units_header">"SPX42 Einheiten"</string>
     <!-- temperatureinheiten -->
