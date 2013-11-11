@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Code für Grundformular exportLog
  * 
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui

@@ -1,4 +1,4 @@
-﻿package de.dmarcini.submatix.android4.gui;
+package de.dmarcini.submatix.android4.gui;
 
 import java.io.File;
 import java.util.Set;

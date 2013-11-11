@@ -69,10 +69,6 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   protected static File                       databaseDir        = null;
   protected static boolean                    mTwoPane           = false;
   protected static SPX42Config                spxConfig          = new SPX42Config();                                   // Da werden SPX-Spezifische Sachen gespeichert
-  // protected static boolean isIndividual = false;
-  // protected static int mixLicense = ProjectConst.SPX_LICENSE_NOT_SET; // License State 0=Nitrox,1=Normoxic Trimix,2=Full Trimix
-  // protected static String serialNumber = null;
-  // protected static String manufacturer = null;
   protected static BluetoothAdapter           mBtAdapter         = null;
   private BlueThoothComService                mService           = null;
   private LocalBinder                         binder             = null;
@@ -797,7 +793,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       Log.i( TAG, "has six custom values: " + spxConfig.hasSixValuesIndividual() );
       Log.i( TAG, "is firmware supported: " + spxConfig.isFirmwareSupported() );
       Log.i( TAG, "is old param order: " + spxConfig.isOldParamSorting() );
-      Log.i( TAG, "is newer display brightness: " + spxConfig.isNewerDisplayBrithness() );
+      Log.i( TAG, "is newer display brightness: " + spxConfig.isNewerDisplayBrigthness() );
     }
     //
     // Jetzt währe es an der Zeit, auhc an DAtum und Zeit zu denken

@@ -25,18 +25,48 @@ public class ColorizedPreferenceCategory extends PreferenceCategory
   private int                 currStyle = R.style.AppDarkTheme;
   private static final String TAG       = ColorizedPreferenceCategory.class.getSimpleName();
 
+  /**
+   * Konstruktor mit Kontext
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * Stand: 11.11.2013
+   * 
+   * @param context
+   */
   public ColorizedPreferenceCategory( Context context )
   {
     super( context );
     getTheme( context );
   }
 
+  /**
+   * Konstruktor mit Context und Attibuten
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * Stand: 11.11.2013
+   * 
+   * @param context
+   * @param attrs
+   */
   public ColorizedPreferenceCategory( Context context, AttributeSet attrs )
   {
     super( context, attrs );
     getTheme( context );
   }
 
+  /**
+   * Konstruktor mit Context und Attibuten und Style
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * Stand: 11.11.2013
+   * 
+   * @param context
+   * @param attrs
+   * @param defStyle
+   */
   public ColorizedPreferenceCategory( Context context, AttributeSet attrs, int defStyle )
   {
     super( context, attrs, defStyle );
@@ -66,7 +96,7 @@ public class ColorizedPreferenceCategory extends PreferenceCategory
    * We catch the view after its creation, and before the activity will use it, in order to make our changes
    * 
    * @param parent
-   * @return Der Kategirietitel
+   * @return Der Kategorietitel
    */
   @Override
   protected View onCreateView( ViewGroup parent )

@@ -43,7 +43,9 @@ public class SPX42Config
    * 
    */
   public SPX42Config()
-  {}
+  {
+    clear();
+  }
 
   /**
    * Kopierkonstruktor Project: SubmatixBTConfigPC Package: de.dmarcini.submatix.pclg.utils
@@ -105,6 +107,17 @@ public class SPX42Config
   public void clear()
   {
     wasCorrectInitialized = false;
+    deviceName = "no name";
+    firmwareVersion = "0";
+    serialNumber = "0";
+    licenseState = 0;
+    customEnabled = false;
+    hasFahrenheidBug = false;
+    canSetDate = true;
+    hasSixValuesIndividual = false;
+    isFirmwareSupported = false;
+    isOldParamSorting = false; // bei alter Firmware war die Reihenfolge der Paramete anders
+    isNewerDisplayBrightness = false; // ab FW FIRMWARE_2_7H_R83CE 20 % Schritte
   }
 
   /**
@@ -296,7 +309,7 @@ public class SPX42Config
    *         Stand: 10.11.2013
    * @return
    */
-  public boolean isNewerDisplayBrithness()
+  public boolean isNewerDisplayBrigthness()
   {
     return( isNewerDisplayBrightness );
   }
@@ -369,6 +382,7 @@ public class SPX42Config
     hasSixValuesIndividual = false;
     isFirmwareSupported = false;
     isOldParamSorting = false;
+    isNewerDisplayBrightness = false;
     //
     // versuch mal die Eigenschaften rauszufinden
     //

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Ein Dialog zum WARTEN
  * 
  * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui

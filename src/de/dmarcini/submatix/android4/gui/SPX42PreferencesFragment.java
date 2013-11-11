@@ -1,4 +1,4 @@
-﻿package de.dmarcini.submatix.android4.gui;
+package de.dmarcini.submatix.android4.gui;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -14,6 +14,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
+import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 import android.util.Log;
@@ -276,7 +277,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   {
     Log.v( TAG, "msgConnected()...ask for SPX config..." );
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
-    if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for SPX config..." );
     // Dialog schliesen, wenn geöffnet
     theToast.dismissDial();
     theToast.openWaitDial( maxEvents, getActivity().getResources().getString( R.string.dialog_please_wait_title ),
@@ -578,6 +578,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // Kommando GET_SETUP_DISPLAYSETTINGS liefert
     // ~36:D:A
     // D= 0->10&, 1->50%, 2->100%
+    // ODER 0=20%, 1=40%,2=60%,3=80%,4=100%
     // A= 0->Landscape 1->180Grad
     //
     // gibt es Parameter zu lesen?
@@ -597,7 +598,14 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     try
     {
       lumin = Integer.parseInt( displayParm[0], 16 );
-      if( lumin < 0 || lumin > 2 ) lumin = 1;
+      if( FragmentCommonActivity.spxConfig.isNewerDisplayBrigthness() )
+      {
+        if( lumin < 0 || lumin > 4 ) lumin = 1;
+      }
+      else
+      {
+        if( lumin < 0 || lumin > 2 ) lumin = 1;
+      }
       orient = Integer.parseInt( displayParm[1], 16 );
       if( orient < 0 || orient > 1 ) orient = 0;
     }
@@ -1041,16 +1049,41 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate()..." );
     theToast = new CommToast( getActivity() );
-    Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_individual + ">..." );
-    if( FragmentCommonActivity.spxConfig.getCustomEnabled() == 1 )
+    if( FragmentCommonActivity.spxConfig.isInitialized() && FragmentCommonActivity.spxConfig.isNewerDisplayBrigthness() )
     {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "Preferences in INDIVIDUAL Mode" );
-      addPreferencesFromResource( R.xml.config_spx42_preference_individual );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "setDefaultPreferences: make default preferences..." );
+      PreferenceManager.setDefaultValues( getActivity(), R.xml.config_spx42_preference_individual_new, true );
+      // Neuere Helligkeitsabstufung machen
+      if( FragmentCommonActivity.spxConfig.getCustomEnabled() == 1 )
+      {
+        if( BuildConfig.DEBUG ) Log.d( TAG, "Preferences in INDIVIDUAL Mode" );
+        addPreferencesFromResource( R.xml.config_spx42_preference_individual_new );
+        Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_individual_new + ">..." );
+      }
+      else
+      {
+        if( BuildConfig.DEBUG ) Log.d( TAG, "Preferences in STANDART Mode" );
+        addPreferencesFromResource( R.xml.config_spx42_preference_std_new );
+        Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_std_new + ">..." );
+      }
     }
     else
     {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "Preferences in STANDART Mode" );
-      addPreferencesFromResource( R.xml.config_spx42_preference_std );
+      if( BuildConfig.DEBUG ) Log.d( TAG, "setDefaultPreferences: make default preferences..." );
+      PreferenceManager.setDefaultValues( getActivity(), R.xml.config_spx42_preference_individual, true );
+      // ältere Helligkeitsabstufung machen
+      if( FragmentCommonActivity.spxConfig.getCustomEnabled() == 1 )
+      {
+        if( BuildConfig.DEBUG ) Log.d( TAG, "Preferences in INDIVIDUAL Mode" );
+        addPreferencesFromResource( R.xml.config_spx42_preference_individual );
+        Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_individual + ">..." );
+      }
+      else
+      {
+        if( BuildConfig.DEBUG ) Log.d( TAG, "Preferences in STANDART Mode" );
+        addPreferencesFromResource( R.xml.config_spx42_preference_std );
+        Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_std + ">..." );
+      }
     }
     //
     // initiiere die notwendigen summarys

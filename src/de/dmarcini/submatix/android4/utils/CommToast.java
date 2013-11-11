@@ -190,7 +190,7 @@ public class CommToast
 
   /**
    * 
-   * einen bite warten Dialog herzaubern
+   * einen bitte warten Dialog herzaubern
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
