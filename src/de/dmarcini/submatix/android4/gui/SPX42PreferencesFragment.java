@@ -12,9 +12,9 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
-import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 import android.util.Log;
@@ -52,8 +52,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   private static final String  decoLastStop                 = "keyDecoLastStop";
   private static final String  decoDynGradients             = "keyDecoDynGradients";
   private static final String  decoDeepStops                = "keyDecoDeepStops";
+  private static final String  displayCategory              = "keyDisplay";
   private static final String  displayLuminance             = "keyDisplayLuminance";
-  private static final String  displayLuminanceN            = "keyDisplayLuminanceN";
   private static final String  displayOrient                = "keyDisplayOrientation";
   private static final String  individualSensorsOn          = "keyIndividualSensorsOn";
   private static final String  individualPSCROn             = "keyIndividualPSCROn";
@@ -126,6 +126,32 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       }
     }
     Log.e( TAG, "getListPreference: Key <" + prefKey + "> was not found an ListPreference! abort!" );
+    return( null );
+  }
+
+  /**
+   * 
+   * Finde eine Preferenz Kategorie
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 16.11.2013
+   * 
+   * @param prefKey
+   * @return die gesuchte Kategorie oder null
+   */
+  private PreferenceCategory getPreferenceCategory( String prefKey )
+  {
+    PreferenceCategory pC = null;
+    if( getPreferenceScreen().findPreference( prefKey ) instanceof PreferenceCategory )
+    {
+      pC = ( PreferenceCategory )getPreferenceScreen().findPreference( prefKey );
+      if( pC != null )
+      {
+        return( pC );
+      }
+    }
+    Log.e( TAG, "getPreferenceCategory: Key <" + prefKey + "> was not found an PreferenceCategory! abort!" );
     return( null );
   }
 
@@ -622,16 +648,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     }
     ignorePrefChange = true;
     //
-    // jetzt Helligkeit eintragen, abhängig von Helligkeitsart den Key wählen
+    // jetzt Helligkeit eintragen
     //
-    if( FragmentCommonActivity.spxConfig.isInitialized() && FragmentCommonActivity.spxConfig.isNewerDisplayBrigthness() )
-    {
-      lP = getListPreference( displayLuminanceN );
-    }
-    else
-    {
-      lP = getListPreference( displayLuminance );
-    }
+    lP = getListPreference( displayLuminance );
     if( lP == null )
     {
       ignorePrefChange = false;
@@ -1057,41 +1076,24 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     super.onCreate( savedInstanceState );
     Log.v( TAG, "onCreate()..." );
     theToast = new CommToast( getActivity() );
-    if( FragmentCommonActivity.spxConfig.isInitialized() && FragmentCommonActivity.spxConfig.isNewerDisplayBrigthness() )
+    if( FragmentCommonActivity.spxConfig.getCustomEnabled() == 1 )
     {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "setDefaultPreferences: make default preferences..." );
-      PreferenceManager.setDefaultValues( getActivity(), R.xml.config_spx42_preference_individual_new, true );
-      // Neuere Helligkeitsabstufung machen
-      if( FragmentCommonActivity.spxConfig.getCustomEnabled() == 1 )
-      {
-        if( BuildConfig.DEBUG ) Log.d( TAG, "Preferences in INDIVIDUAL Mode" );
-        addPreferencesFromResource( R.xml.config_spx42_preference_individual_new );
-        Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_individual_new + ">..." );
-      }
-      else
-      {
-        if( BuildConfig.DEBUG ) Log.d( TAG, "Preferences in STANDART Mode" );
-        addPreferencesFromResource( R.xml.config_spx42_preference_std_new );
-        Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_std_new + ">..." );
-      }
+      if( BuildConfig.DEBUG ) Log.d( TAG, "Preferences in INDIVIDUAL Mode" );
+      addPreferencesFromResource( R.xml.config_spx42_preference_individual );
+      Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_individual + ">..." );
     }
     else
     {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "setDefaultPreferences: make default preferences..." );
-      PreferenceManager.setDefaultValues( getActivity(), R.xml.config_spx42_preference_individual, true );
-      // ältere Helligkeitsabstufung machen
-      if( FragmentCommonActivity.spxConfig.getCustomEnabled() == 1 )
-      {
-        if( BuildConfig.DEBUG ) Log.d( TAG, "Preferences in INDIVIDUAL Mode" );
-        addPreferencesFromResource( R.xml.config_spx42_preference_individual );
-        Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_individual + ">..." );
-      }
-      else
-      {
-        if( BuildConfig.DEBUG ) Log.d( TAG, "Preferences in STANDART Mode" );
-        addPreferencesFromResource( R.xml.config_spx42_preference_std );
-        Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_std + ">..." );
-      }
+      if( BuildConfig.DEBUG ) Log.d( TAG, "Preferences in STANDART Mode" );
+      addPreferencesFromResource( R.xml.config_spx42_preference_std );
+      Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_std + ">..." );
+    }
+    //
+    // die richtigen Helligkeitsstufen setzen
+    //
+    if( FragmentCommonActivity.spxConfig.isInitialized() )
+    {
+      setNewLuminancePropertys( FragmentCommonActivity.spxConfig.isNewerDisplayBrigthness() );
     }
     //
     // initiiere die notwendigen summarys
@@ -1208,12 +1210,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       //
       else if( key.equals( displayLuminance ) )
       {
-        lP.setSummary( String.format( getResources().getString( R.string.conf_luminance_header_summary ), lP.getEntry() ) );
-        sendDisplayPrefs();
-      }
-      else if( key.equals( displayLuminanceN ) )
-      {
-        lP.setSummary( String.format( getResources().getString( R.string.conf_luminance_header_summary ), lP.getEntry() ) );
+        lP.setSummary( String.format( getResources().getString( R.string.conf_luminance_header_summary ), lP.getValue() ) );
         sendDisplayPrefs();
       }
       //
@@ -1537,16 +1534,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     if( BuildConfig.DEBUG ) Log.d( TAG, "sendDisplayPrefs()..." );
     theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_display ), true );
     //
-    // Helligkeit erfragen, Key abhängig vom Typ der helligkeitssteuerung
+    // Helligkeit erfragen
     //
-    if( FragmentCommonActivity.spxConfig.isInitialized() && FragmentCommonActivity.spxConfig.isNewerDisplayBrigthness() )
-    {
-      lP = getListPreference( displayLuminanceN );
-    }
-    else
-    {
-      lP = getListPreference( displayLuminance );
-    }
+    lP = getListPreference( displayLuminance );
     if( lP == null )
     {
       return;
@@ -1829,17 +1819,10 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     setDecoGradientsSummary();
     //
-    // Displayhelligkeit, Key abhängig vom Typ der Helligkeitsstufen
+    // Displayhelligkeit
     //
-    if( FragmentCommonActivity.spxConfig.isInitialized() && FragmentCommonActivity.spxConfig.isNewerDisplayBrigthness() )
-    {
-      lP = ( ListPreference )pS.findPreference( displayLuminanceN );
-    }
-    else
-    {
-      lP = ( ListPreference )pS.findPreference( displayLuminance );
-    }
-    lP.setSummary( String.format( res.getString( R.string.conf_luminance_header_summary ), lP.getEntry() ) );
+    lP = ( ListPreference )pS.findPreference( displayLuminance );
+    lP.setSummary( String.format( res.getString( R.string.conf_luminance_header_summary ), lP.getValue() ) );
     //
     // Display Orientierung
     //
@@ -2023,5 +2006,43 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // die Summary Geschichte schreiben
     if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "setDecoGradientsSummary: write " + getResources().getString( R.string.conf_deco_gradient_summary ), low, high ) );
     getPreferenceScreen().findPreference( decoGradient ).setSummary( String.format( getResources().getString( R.string.conf_deco_gradient_summary ), low, high ) );
+  }
+
+  /**
+   * 
+   * Stelle die Preferenz entsprechend des Type der Helligkeit
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 16.11.2013
+   * 
+   * @param isNew
+   * @return True ist in Ordnung, false ist FEHLER
+   */
+  private boolean setNewLuminancePropertys( boolean isNew )
+  {
+    PreferenceCategory pC = getPreferenceCategory( displayCategory );
+    ListPreference lP = getListPreference( displayLuminance );
+    // PreferenceManager.setDefaultValues( getActivity(), R.xml.config_spx42_preference_individual, true );
+    if( pC == null || lP == null )
+    {
+      Log.e( TAG, "can't find Preference category <" + displayCategory + "> or ListPreference <" + displayLuminance + ">" );
+      // TODO: Fehlermeldung generieren
+      return( false );
+    }
+    if( isNew )
+    {
+      pC.setTitle( R.string.conf_display_header );
+      lP.setEntries( R.array.displayNewLuminanceNamesArray );
+      lP.setEntryValues( R.array.displayNewLuminanceValuesArray );
+    }
+    else
+    {
+      pC.setTitle( R.string.conf_display_header_new );
+      lP.setEntries( R.array.displayLuminanceNamesArray );
+      lP.setEntryValues( R.array.displayLuminanceValuesArray );
+    }
+    // lP.setDefaultValue( R.string.conf_luminance_default );
+    return( true );
   }
 }
