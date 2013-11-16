@@ -53,6 +53,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   private static final String  decoDynGradients             = "keyDecoDynGradients";
   private static final String  decoDeepStops                = "keyDecoDeepStops";
   private static final String  displayLuminance             = "keyDisplayLuminance";
+  private static final String  displayLuminanceN            = "keyDisplayLuminanceN";
   private static final String  displayOrient                = "keyDisplayOrientation";
   private static final String  individualSensorsOn          = "keyIndividualSensorsOn";
   private static final String  individualPSCROn             = "keyIndividualPSCROn";
@@ -621,9 +622,16 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     }
     ignorePrefChange = true;
     //
-    // jetzt Helligkeit eintragen
+    // jetzt Helligkeit eintragen, abhängig von Helligkeitsart den Key wählen
     //
-    lP = getListPreference( displayLuminance );
+    if( FragmentCommonActivity.spxConfig.isInitialized() && FragmentCommonActivity.spxConfig.isNewerDisplayBrigthness() )
+    {
+      lP = getListPreference( displayLuminanceN );
+    }
+    else
+    {
+      lP = getListPreference( displayLuminance );
+    }
     if( lP == null )
     {
       ignorePrefChange = false;
@@ -1203,6 +1211,11 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
         lP.setSummary( String.format( getResources().getString( R.string.conf_luminance_header_summary ), lP.getEntry() ) );
         sendDisplayPrefs();
       }
+      else if( key.equals( displayLuminanceN ) )
+      {
+        lP.setSummary( String.format( getResources().getString( R.string.conf_luminance_header_summary ), lP.getEntry() ) );
+        sendDisplayPrefs();
+      }
       //
       // Orientierung Display
       //
@@ -1524,9 +1537,16 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     if( BuildConfig.DEBUG ) Log.d( TAG, "sendDisplayPrefs()..." );
     theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_display ), true );
     //
-    // Helligkeit erfragen
+    // Helligkeit erfragen, Key abhängig vom Typ der helligkeitssteuerung
     //
-    lP = getListPreference( displayLuminance );
+    if( FragmentCommonActivity.spxConfig.isInitialized() && FragmentCommonActivity.spxConfig.isNewerDisplayBrigthness() )
+    {
+      lP = getListPreference( displayLuminanceN );
+    }
+    else
+    {
+      lP = getListPreference( displayLuminance );
+    }
     if( lP == null )
     {
       return;
@@ -1809,9 +1829,16 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     setDecoGradientsSummary();
     //
-    // Displayhelligkeit
+    // Displayhelligkeit, Key abhängig vom Typ der Helligkeitsstufen
     //
-    lP = ( ListPreference )pS.findPreference( displayLuminance );
+    if( FragmentCommonActivity.spxConfig.isInitialized() && FragmentCommonActivity.spxConfig.isNewerDisplayBrigthness() )
+    {
+      lP = ( ListPreference )pS.findPreference( displayLuminanceN );
+    }
+    else
+    {
+      lP = ( ListPreference )pS.findPreference( displayLuminance );
+    }
     lP.setSummary( String.format( res.getString( R.string.conf_luminance_header_summary ), lP.getEntry() ) );
     //
     // Display Orientierung
