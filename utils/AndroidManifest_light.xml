@@ -25,7 +25,7 @@
         <!-- Die List/Main activity -->
         <activity
             android:name=".gui.AreaListActivity"
-            android:label="@string/app_name"
+            android:label="@string/app_name_light"
             android:screenOrientation="sensorLandscape" android:launchMode="singleTop">            
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
