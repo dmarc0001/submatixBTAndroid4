@@ -127,6 +127,8 @@
     <string name="conf_deco_deepstops_off">"kein tiefer Stop"</string>
     <!-- ### kategorie display ### -->
     <string name="conf_display_header">"ANZEIGE"</string>
+    <string name="conf_display_header_new">ANZUEIGE-N</string>
+    
     <!-- display helligkeit -->
     <string name="conf_display_luminance_header">"Helligkeit:"</string>
     <string name="conf_luminance_header_summary">"aktuelle Helligkeit %s%% auf SPX42"</string>
