@@ -32,7 +32,6 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
  * 
  *         Stand: 10.11.2013
  * 
- *         TODO: DISPLAY Preference 3-Schritt oder 20% Schritt
  */
 public class ProgramPreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener
 {

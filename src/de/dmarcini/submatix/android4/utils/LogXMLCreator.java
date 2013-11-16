@@ -43,6 +43,17 @@ public class LogXMLCreator
   private Document            logXmlFile  = null;
   private final Element       rootNode;
 
+  /**
+   * 
+   * Erzeugt eine XML-Logdatei
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * Stand: 16.11.2013
+   * 
+   * @param _diveHeader
+   * @throws XMLFileCreatorException
+   */
   public LogXMLCreator( SPX42DiveHeadData _diveHeader ) throws XMLFileCreatorException
   {
     diveHeader = _diveHeader;

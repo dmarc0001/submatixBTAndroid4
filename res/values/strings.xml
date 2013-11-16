@@ -2,8 +2,10 @@
 <resources>
 
     <string name="app_name">SubmatixBTLogger</string>
+    <string name="app_name_light">SubmatixBTLogger LIGHT</string>
     <string name="title_area_detail">Detail</string>
     <string name="app_description">this app connects with SUBMATIX SPX42 an read logs or read \/write configuration of this device</string>
+    <string name="app_description_light">this app connects with SUBMATIX SPX42 an read \/write configuration of this device</string>
     <string name="dummy_filler">SUBMATIX BT Config</string>
     <string name="app_bt_service">BluethootService</string>
     <string name="app_locale_timeformat_date">yyyy/MM/dd hh:mm:ss a</string>

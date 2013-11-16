@@ -65,6 +65,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   private static final String                 TAG                = FragmentCommonActivity.class.getSimpleName();
   private static final String                 SERVICENAME        = BlueThoothComService.class.getCanonicalName();
   private static final String                 PACKAGENAME        = "de.dmarcini.submatix.android4";
+  @SuppressWarnings( "javadoc" )
   public static DateTimeFormatter             localTimeFormatter = DateTimeFormat.forPattern( "yyyy-MM-dd - HH:mm:ss" );
   protected static File                       databaseDir        = null;
   protected static boolean                    mTwoPane           = false;

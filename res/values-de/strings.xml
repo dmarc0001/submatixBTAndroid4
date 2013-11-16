@@ -2,8 +2,10 @@
 <resources>
 
     <string name="app_name">"SubmatixBTLogger"</string>
+    <string name="app_name_light">SubmatixBTLogger LIGHT</string>
     <string name="title_area_detail">"Detail"</string>
     <string name="app_description">"Diese App verbindet sich mit dem SUBMATIX SPX42 und liest Logdaten bzw. konfiguriert den Tauchcomputer"</string>
+    <string name="app_description_light">"Diese App verbindet sich mit dem SUBMATIX SPX42 und konfiguriert den Tauchcomputer"</string>
     <string name="dummy_filler">"SUBMATIX BT Config"</string>
     <string name="app_bt_service">"BluethootService"</string>
     <string name="app_locale_timeformat_date">dd.MM.yyyy HH:mm:ss</string>

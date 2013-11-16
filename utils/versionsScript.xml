@@ -5,17 +5,49 @@
   </description>
   
   <property name="versionFile" value="${basedir}\src\de\dmarcini\submatix\android4\utils\BuildVersion.java"/>
-	<property name="counterExec" value ="${basedir}\utils\buildCounter.jar" /> 
+	<property name="counterExec" value="${basedir}\utils\buildCounter.jar" /> 
+	<property name="manifestLightSrc" value="${basedir}\utils\AndroidManifest_light.xml" />
+  <property name="manifestFullSrc" value="${basedir}\utils\AndroidManifest_full.xml" />
+  <property name="manifestDest" value="${basedir}\AndroidManifest.xml" />
   <property name="buildCounterFile" value ="${basedir}\utils\build.txt" /> 
 
 
-	<target name="makeVersion">
+	<!-- Einfach die Versionsnummer hochzählen -->
+	<target name="makeVersion" >
+    <echo>Buildnummer hochzählen</echo>
+    <echo>Version    : ${ant.version}</echo>
+    <echo>Base Dir   : ${basedir}</echo>
+    <echo>ProjectName: ${ant.project.name}</echo>
+    <taskdef name="countBuild" classname="de.dmarcini.utils.buildcounter.BuildCounter" classpath="${counterExec}"/>
+    <countBuild message="${buildCounterFile}#${versionFile}"/>
+	</target>
+	
+	<!-- Mache eine LIGHT-Version -->
+	<target name="makeLightVersion">
+    <!-- "Light" Mainfest kopieren -->
+    <echo>Kopiere LIGHT Manifest...</echo>
+    <copy file="${manifestLightSrc}" tofile="${manifestDest}" overwrite="true" />
+    <!--  Version hochzählen-->
+    <echo>Buildnummer hochzählen</echo>
+    <echo>Version    : ${ant.version}</echo>
+    <echo>Base Dir   : ${basedir}</echo>
+    <echo>ProjectName: ${ant.project.name}</echo>
+    <taskdef name="countBuild" classname="de.dmarcini.utils.buildcounter.BuildCounter" classpath="${counterExec}"/>
+    <countBuild message="${buildCounterFile}#${versionFile}#light"/>
+	</target>
+	
+	<!-- mache eine FULL Version -->	
+	<target name="makeNormalVersion">
+		<!-- "Normales" Mainfest kopieren -->
+    <echo>Kopiere normales Manifest...</echo>
+    <copy file="${manifestFullSrc}" tofile="${manifestDest}" overwrite="true" />
   	<!--  Version hochzählen-->
     <echo>Buildnummer hochzählen</echo>
 	  <echo>Version    : ${ant.version}</echo>
 	  <echo>Base Dir   : ${basedir}</echo>
     <echo>ProjectName: ${ant.project.name}</echo>
 	  <taskdef name="countBuild" classname="de.dmarcini.utils.buildcounter.BuildCounter" classpath="${counterExec}"/>
-	  <countBuild message="${buildCounterFile}#${versionFile}"/>
+	  <countBuild message="${buildCounterFile}#${versionFile}#0"/>
 	</target>
+
 </project>

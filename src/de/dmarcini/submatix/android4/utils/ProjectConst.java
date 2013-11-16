@@ -18,6 +18,7 @@ import android.graphics.Color;
  *         Stand: 10.11.2013
  */
 //@formatter:off
+@SuppressWarnings( "javadoc" )
 public final class ProjectConst
 {
   // 0 Grad Celsius

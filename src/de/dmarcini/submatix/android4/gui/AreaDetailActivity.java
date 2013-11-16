@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.content.ContentSwitcher;
+import de.dmarcini.submatix.android4.utils.BuildVersion;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
 
 /**
@@ -119,35 +120,44 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
             break;
           //
           case R.string.progitem_logging:
-            Log.v( TAG, "onCreate: start SPX42ReadLogFragment..." );
-            currFragment = ( new SPX42ReadLogFragment() );
-            setContentView( R.layout.fragment_read_log );
-            getActionBar().setTitle( R.string.logread_headline );
-            getActionBar().setLogo( mItem.resIdOffline );
-            Log.v( TAG, "onCreate: beginTransaction..." );
-            getFragmentManager().beginTransaction().replace( R.id.readLogOuterLayout, currFragment ).commit();
-            Log.v( TAG, "onCreate: add transaction...OK" );
+            if( !BuildVersion.isLightVersion )
+            {
+              Log.v( TAG, "onCreate: start SPX42ReadLogFragment..." );
+              currFragment = ( new SPX42ReadLogFragment() );
+              setContentView( R.layout.fragment_read_log );
+              getActionBar().setTitle( R.string.logread_headline );
+              getActionBar().setLogo( mItem.resIdOffline );
+              Log.v( TAG, "onCreate: beginTransaction..." );
+              getFragmentManager().beginTransaction().replace( R.id.readLogOuterLayout, currFragment ).commit();
+              Log.v( TAG, "onCreate: add transaction...OK" );
+            }
             break;
           //
           case R.string.progitem_loggraph:
-            Log.i( TAG, "onCreate: the called page is in progress..." );
-            currFragment = ( new WorkInProgressFragment() );
-            setContentView( R.layout.fragment_in_progress );
-            getActionBar().setTitle( R.string.in_progress_header );
-            getActionBar().setLogo( mItem.resIdOffline );
-            Log.v( TAG, "onCreate: beginTransaction..." );
-            getFragmentManager().beginTransaction().replace( R.id.inProgressOuterLayout, currFragment ).commit();
-            Log.v( TAG, "onCreate: add transaction...OK" );
+            if( !BuildVersion.isLightVersion )
+            {
+              Log.i( TAG, "onCreate: the called page is in progress..." );
+              currFragment = ( new WorkInProgressFragment() );
+              setContentView( R.layout.fragment_in_progress );
+              getActionBar().setTitle( R.string.in_progress_header );
+              getActionBar().setLogo( mItem.resIdOffline );
+              Log.v( TAG, "onCreate: beginTransaction..." );
+              getFragmentManager().beginTransaction().replace( R.id.inProgressOuterLayout, currFragment ).commit();
+              Log.v( TAG, "onCreate: add transaction...OK" );
+            }
             break;
           case R.string.progitem_export:
-            Log.i( TAG, "onCreate: start export Page..." );
-            currFragment = ( new SPXExportLogFragment() );
-            setContentView( R.layout.fragment_export_log );
-            getActionBar().setTitle( R.string.export_header );
-            getActionBar().setLogo( mItem.resIdOffline );
-            Log.v( TAG, "onCreate: beginTransaction..." );
-            getFragmentManager().beginTransaction().replace( R.id.exportLogOuterLayout, currFragment ).commit();
-            Log.v( TAG, "onCreate: add transaction...OK" );
+            if( !BuildVersion.isLightVersion )
+            {
+              Log.i( TAG, "onCreate: start export Page..." );
+              currFragment = ( new SPXExportLogFragment() );
+              setContentView( R.layout.fragment_export_log );
+              getActionBar().setTitle( R.string.export_header );
+              getActionBar().setLogo( mItem.resIdOffline );
+              Log.v( TAG, "onCreate: beginTransaction..." );
+              getFragmentManager().beginTransaction().replace( R.id.exportLogOuterLayout, currFragment ).commit();
+              Log.v( TAG, "onCreate: add transaction...OK" );
+            }
             break;
           default:
             Log.w( TAG, "onCreate: Not programitem found for <" + showId + ">" );
