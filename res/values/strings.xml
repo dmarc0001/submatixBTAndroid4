@@ -129,7 +129,7 @@
     <string name="conf_display_header_new">DISPLAY-N</string>
     <!-- display helligkeit -->
     <string name="conf_display_luminance_header">luminance</string>
-    <string name="conf_luminance_header_summary">current luminance is %s%% on SPX42</string>
+    <string name="conf_luminance_header_summary">current luminance is %s percent on SPX42</string>
     <string name="conf_luminance_default">100</string>
     <!-- display orientierung -->
     <string name="conf_display_orientation_header">display orientation</string>

@@ -131,7 +131,7 @@
     
     <!-- display helligkeit -->
     <string name="conf_display_luminance_header">"Helligkeit:"</string>
-    <string name="conf_luminance_header_summary">"aktuelle Helligkeit %s%% auf SPX42"</string>
+    <string name="conf_luminance_header_summary">"aktuelle Helligkeit %s Prozent auf SPX42"</string>
     <string name="conf_luminance_default">"0"</string>
     <!-- display orientierung -->
     <string name="conf_display_orientation_header">"Display-Ausrichtung"</string>
