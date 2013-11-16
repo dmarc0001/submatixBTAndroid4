@@ -58,9 +58,9 @@
     </de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory>
       
     <!-- Einstellungen für die Anzeige -->
-    <de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory android:title="@string/conf_display_header" android:key="keyDisplay">
+    <de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory android:title="@string/conf_display_header_new" android:key="keyDisplay">
         <ListPreference 
-            android:key="keyDisplayLuminance" 
+            android:key="keyDisplayLuminanceN" 
             android:title="@string/conf_display_luminance_header" 
             android:entryValues="@array/displayNewLuminanceValuesArray" 
             android:entries="@array/displayNewLuminanceNamesArray" 
