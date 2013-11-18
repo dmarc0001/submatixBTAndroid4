@@ -12,7 +12,7 @@ package de.dmarcini.submatix.android4;
 public class ApplicationDEBUG
 {
   //
-  // dies ist ein Workarround, da BuildConfig.DEBUG ncht funktioniert :-(
+  // dies ist ein Workarround, da BuildConfig.DEBUG nicht funktioniert :-(
   //
-  public static final boolean DEBUG = true;
+  public static final boolean DEBUG = false;
 }
