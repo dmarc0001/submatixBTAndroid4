@@ -141,6 +141,12 @@
             android:key="keyIndividualLoginterval" 
             android:title="@string/conf_ind_interval_header" 
             android:defaultValue="@string/conf_ind_interval_default"/>
+        <ListPreference 
+            android:entries="@array/individualTempstickTypeNamesArray" 
+            android:entryValues="@array/individualTempstickTypeArray" 
+            android:key="keyIndividualTempStick" 
+            android:title="@string/conf_ind_tempstick_header" 
+            android:defaultValue="@string/conf_ind_tempstick_default"/>
         
     </de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory>
 </PreferenceScreen>

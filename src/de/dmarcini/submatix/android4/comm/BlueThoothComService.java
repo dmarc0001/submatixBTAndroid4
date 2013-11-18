@@ -33,15 +33,15 @@ import de.dmarcini.submatix.android4.utils.ProjectConst;
 import de.dmarcini.submatix.android4.utils.SPX42Config;
 import de.dmarcini.submatix.android4.utils.SPX42GasParms;
 
-  /**
-   * 
-   * Bluethooth COMM Service
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   */
+/**
+ * 
+ * Bluethooth COMM Service
+ * 
+ * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ */
 // @formatter:off
 public class BlueThoothComService extends Service
 {
@@ -53,7 +53,7 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 02.03.2013
+   * Stand: 02.03.2013
    */
   private class ConnectThread extends Thread
   {
@@ -68,7 +68,8 @@ public class BlueThoothComService extends Service
      * Project: SubmatixBluethoothLogger Package: de.dmarcini.submatix.logger.service
      * 
      * 
-     *         Stand: 24.02.2012
+     * Stand: 24.02.2012
+     * 
      * @param device
      */
     public ConnectThread( BluetoothDevice device )
@@ -100,7 +101,7 @@ public class BlueThoothComService extends Service
      * Project: SubmatixBluethoothLogger Package: de.dmarcini.submatix.logger.service
      * 
      * 
-     *         Stand: 24.02.2012
+     * Stand: 24.02.2012
      */
     public void cancel()
     {
@@ -176,7 +177,7 @@ public class BlueThoothComService extends Service
    * Project: BtServiceVersuch Package: de.dmarcini.android.btservive
    * 
    * 
-   *         Stand: 21.02.2013
+   * Stand: 21.02.2013
    */
   public class LocalBinder extends Binder
   {
@@ -217,7 +218,7 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 02.03.2013
+   * Stand: 02.03.2013
    */
   private class ReaderThread extends Thread
   {
@@ -235,7 +236,8 @@ public class BlueThoothComService extends Service
      * Project: SubmatixBluethoothLogger Package: de.dmarcini.submatix.logger.service
      * 
      * 
-     *         Stand: 24.02.2012
+     * Stand: 24.02.2012
+     * 
      * @param socket
      */
     public ReaderThread( BluetoothSocket socket )
@@ -266,7 +268,7 @@ public class BlueThoothComService extends Service
      * Project: SubmatixBluethoothLogger Package: de.dmarcini.submatix.logger.service
      * 
      * 
-     *         Stand: 24.02.2012
+     * Stand: 24.02.2012
      */
     public void cancel()
     {
@@ -291,7 +293,8 @@ public class BlueThoothComService extends Service
      * Project: SubmatixBluethoothLogger Package: de.dmarcini.submatix.logger.service
      * 
      * 
-     *         Stand: 24.02.2012
+     * Stand: 24.02.2012
+     * 
      * @param start
      * @param end
      * @param mInStrBuffer
@@ -343,7 +346,8 @@ public class BlueThoothComService extends Service
      * Project: SubmatixBluethoothLogger Package: de.dmarcini.submatix.logger.service
      * 
      * 
-     *         Stand: 24.02.2012
+     * Stand: 24.02.2012
+     * 
      * @param start
      * @param end
      * @param mInStrBuffer
@@ -514,12 +518,20 @@ public class BlueThoothComService extends Service
           // SC: SensorCount
           // SN: Sound 0->OFF 1->ON
           // LI: Loginterval 0->10sec 1->30Sec 2->60 Sec
+          // TS: TempStick (bei neuerer Firmware)
           if( fields.length == 6 )
           {
             msg = new BtServiceMessage( ProjectConst.MESSAGE_INDIVID_READ, new String[]
             { fields[1], fields[2], fields[3], fields[4], fields[5] } );
             sendMessageToApp( msg );
             if( BuildConfig.DEBUG ) Log.d( TAGREADER, "Device individual settings recived!" );
+          }
+          else if( fields.length == 7 )
+          {
+            msg = new BtServiceMessage( ProjectConst.MESSAGE_INDIVID_READ, new String[]
+            { fields[1], fields[2], fields[3], fields[4], fields[5], fields[6] } );
+            sendMessageToApp( msg );
+            if( BuildConfig.DEBUG ) Log.d( TAGREADER, "Device individual settings (incl TempStick) recived!" );
           }
           else
           {
@@ -752,7 +764,7 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 10.11.2013
+   * Stand: 10.11.2013
    */
   private class WriterThread extends Thread
   {
@@ -769,7 +781,8 @@ public class BlueThoothComService extends Service
      * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
      * 
      * 
-     *         Stand: 28.05.2013
+     * Stand: 28.05.2013
+     * 
      * @param socket
      */
     public WriterThread( BluetoothSocket socket )
@@ -800,7 +813,7 @@ public class BlueThoothComService extends Service
      * Project: SubmatixBluethoothLogger Package: de.dmarcini.submatix.logger.service
      * 
      * 
-     *         Stand: 28.05.2013
+     * Stand: 28.05.2013
      */
     public void cancel()
     {
@@ -894,7 +907,8 @@ public class BlueThoothComService extends Service
      * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
      * 
      * 
-     *         Stand: 28.05.2013
+     * Stand: 28.05.2013
+     * 
      * @param msg
      */
     public synchronized void writeToDevice( String msg )
@@ -939,7 +953,7 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 02.06.2013
+   * Stand: 02.06.2013
    */
   public void askForConfigFromSPX42()
   {
@@ -961,7 +975,7 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 15.08.2013
+   * Stand: 15.08.2013
    */
   public void aksForUnitsFromSPX42()
   {
@@ -981,7 +995,7 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 13.07.2013
+   * Stand: 13.07.2013
    */
   public void askForDecoConfig()
   {
@@ -1001,7 +1015,7 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 02.06.2013
+   * Stand: 02.06.2013
    * 
    */
   public void askForFirmwareVersion()
@@ -1028,7 +1042,7 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 18.07.2013 TODO
+   * Stand: 18.07.2013 TODO
    */
   public void askForGasFromSPX()
   {
@@ -1045,7 +1059,7 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 04.06.2013
+   * Stand: 04.06.2013
    */
   public void askForLicenseFromSPX()
   {
@@ -1071,7 +1085,7 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 04.06.2013
+   * Stand: 04.06.2013
    */
   public void askForManufacturer()
   {
@@ -1100,7 +1114,7 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 28.05.2013
+   * Stand: 28.05.2013
    */
   public void askForSerialNumber()
   {
@@ -1126,7 +1140,7 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 28.05.2013
+   * Stand: 28.05.2013
    */
   public void askForSPXAlive()
   {
@@ -1144,7 +1158,7 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 06.08.2013
+   * Stand: 06.08.2013
    */
   public void askForLogDirectoryFromSPX()
   {
@@ -1159,7 +1173,8 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 02.03.2013
+   * Stand: 02.03.2013
+   * 
    * @param addr
    */
   public synchronized void connect( String addr )
@@ -1204,7 +1219,7 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 04.03.2013
+   * Stand: 04.03.2013
    */
   private void connectionFailed()
   {
@@ -1225,7 +1240,7 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 13.03.2013
+   * Stand: 13.03.2013
    */
   private void connectionLost()
   {
@@ -1243,7 +1258,8 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 02.03.2013
+   * Stand: 02.03.2013
+   * 
    * @param mmSocket2
    * @param mmDevice2
    */
@@ -1292,7 +1308,7 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 02.03.2013
+   * Stand: 02.03.2013
    */
   public void disconnect()
   {
@@ -1322,7 +1338,8 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 28.05.2013
+   * Stand: 28.05.2013
+   * 
    * @return status
    */
   public String getConnectedDevice()
@@ -1344,7 +1361,8 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 02.06.2013
+   * Stand: 02.06.2013
+   * 
    * @return geräte Seriennummer
    */
   public synchronized String getConnectedDeviceSerialNumber()
@@ -1359,7 +1377,8 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 04.03.2013
+   * Stand: 04.03.2013
+   * 
    * @return verbindungsstatus
    */
   public int getConnectionState()
@@ -1429,7 +1448,7 @@ public class BlueThoothComService extends Service
    * Project: BtServiceVersuch Package: de.dmarcini.android.btservive
    * 
    * 
-   *         Stand: 21.02.2013
+   * Stand: 21.02.2013
    */
   private void onTimerTick()
   {
@@ -1519,7 +1538,8 @@ public class BlueThoothComService extends Service
    * Project: BtServiceVersuch Package: de.dmarcini.android.btservive
    * 
    * 
-   *         Stand: 21.02.2013
+   * Stand: 21.02.2013
+   * 
    * @param msg
    */
   private void sendMessageToApp( BtServiceMessage msg )
@@ -1549,7 +1569,8 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 02.03.2013
+   * Stand: 02.03.2013
+   * 
    * @param state
    */
   private void setState( int state )
@@ -1588,7 +1609,7 @@ public class BlueThoothComService extends Service
    * Project: BtServiceVersuch Package: de.dmarcini.android.btservive
    * 
    * 
-   *         Stand: 21.02.2013
+   * Stand: 21.02.2013
    */
   private void showNotification( CharSequence head, CharSequence msg )
   {
@@ -1615,7 +1636,8 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 02.06.2013
+   * Stand: 02.06.2013
+   * 
    * @param cf
    * @param auto
    * @param pressure
@@ -1671,7 +1693,8 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 13.07.2013
+   * Stand: 13.07.2013
+   * 
    * @param cf
    * @param lowG
    *          Low gradient
@@ -1727,7 +1750,8 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 14.07.2013
+   * Stand: 14.07.2013
+   * 
    * @param cf
    * @param lumin
    * @param orient
@@ -1753,7 +1777,8 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 18.07.2013
+   * Stand: 18.07.2013
+   * 
    * @param cf
    * @param gasNr
    * @param gasParms
@@ -1820,7 +1845,8 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 23.07.2013
+   * Stand: 23.07.2013
+   * 
    * @param cf
    * @param gasUpdates
    * @throws FirmwareNotSupportetException
@@ -1901,16 +1927,20 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 14.07.2013
+   * Stand: 14.07.2013
+   * 
    * @param cf
    * @param sensorsOff
    * @param pscrOff
    * @param sensorsCount
    * @param soundOn
    * @param logInterval
+   * @param tempStick
+   *          bei neuerer Firmware Typ des Tempstick
    * @throws FirmwareNotSupportetException
    */
-  public void writeIndividualPrefs( SPX42Config cf, int sensorsOff, int pscrOff, int sensorsCount, int soundOn, int logInterval ) throws FirmwareNotSupportetException
+  public void writeIndividualPrefs( SPX42Config cf, int sensorsOff, int pscrOff, int sensorsCount, int soundOn, int logInterval, int tempStick )
+          throws FirmwareNotSupportetException
   {
     String kdoString;
     //
@@ -1919,7 +1949,14 @@ public class BlueThoothComService extends Service
       Log.e( TAG, "firmware not supportet for write settings!" );
       throw new FirmwareNotSupportetException( "write individual prefs" );
     }
-    kdoString = String.format( "~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_INDIVIDUAL, sensorsOff, pscrOff, sensorsCount, soundOn, logInterval );
+    if( cf.hasSixValuesIndividual() )
+    {
+      kdoString = String.format( "~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_INDIVIDUAL, sensorsOff, pscrOff, sensorsCount, soundOn, logInterval, tempStick );
+    }
+    else
+    {
+      kdoString = String.format( "~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_INDIVIDUAL, sensorsOff, pscrOff, sensorsCount, soundOn, logInterval );
+    }
     if( BuildConfig.DEBUG ) Log.d( TAG, "writeIndividualPrefs: sending <" + kdoString + ">" );
     this.writeSPXMsgToDevice( kdoString );
   }
@@ -1931,7 +1968,8 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 02.06.2013
+   * Stand: 02.06.2013
+   * 
    * @param msg
    */
   public synchronized void writeSPXMsgToDevice( String msg )
@@ -1946,7 +1984,8 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 28.05.2013
+   * Stand: 28.05.2013
+   * 
    * @param msg
    */
   public synchronized void writeToDevice( String msg )
@@ -1964,7 +2003,8 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 14.07.2013
+   * Stand: 14.07.2013
+   * 
    * @param cf
    * @param isTempMetric
    * @param isDepthMetric
@@ -1992,7 +2032,8 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 27.10.2013
+   * Stand: 27.10.2013
+   * 
    * @param cf
    * @param dTime
    * @throws FirmwareNotSupportetException
@@ -2033,7 +2074,8 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   *         Stand: 07.08.2013
+   * Stand: 07.08.2013
+   * 
    * @param numberOnSPX
    */
   public void askForLogDetail( int numberOnSPX )

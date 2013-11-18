@@ -60,6 +60,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   private static final String  individualCountSensorWarning = "keyIndividualCountSensorWarning";
   private static final String  individualAcousticWarnings   = "keyIndividualAcousticWarnings";
   private static final String  individualLoginterval        = "keyIndividualLoginterval";
+  private static final String  individualTempStick          = "keyIndividualTempStick";
   private static final String  unitsIsTempMetric            = "keyUnitsIsTempMetric";
   private static final String  unitsIsDepthImperial         = "keyUnitsIsDepthMetric";
   private static final String  unitsIsFreshwater            = "keyUnitsIsFreshwater";
@@ -716,7 +717,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   private void msgReciveIndividuals( BtServiceMessage msg )
   {
     String[] individualParm;
-    int sensorsOff = 0, pscrOff = 0, sensorsCount = 3, soundOn = 1, logInterval = 2;
+    int sensorsOff = 0, pscrOff = 0, sensorsCount = 3, soundOn = 1, logInterval = 2, tempStick = 0;
     SwitchPreference sp;
     ListPreference lP;
     //
@@ -730,6 +731,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // SC: SensorCount
     // SN: Sound 0->OFF 1->ON
     // LI: Loginterval 0->10sec 1->30Sec 2->60 Sec
+    // TS: TempStick Typ (bei neuerer Firmware)
     //
     if( msg.getContainer() instanceof String[] )
     {
@@ -750,8 +752,12 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       sensorsCount = Integer.parseInt( individualParm[2], 16 );
       soundOn = Integer.parseInt( individualParm[3], 16 );
       logInterval = Integer.parseInt( individualParm[4], 16 );
+      if( individualParm.length == 6 )
+      {
+        tempStick = Integer.parseInt( individualParm[5], 16 );
+      }
       if( BuildConfig.DEBUG )
-        Log.d( TAG, String.format( "SPX individuals settings <SE:%d, PS:%d, SC:%d, SN:%d, LI:%d>", sensorsOff, pscrOff, sensorsCount, soundOn, logInterval ) );
+        Log.d( TAG, String.format( "SPX individuals settings <SE:%d, PS:%d, SC:%d, SN:%d, LI:%d, TS:%d>", sensorsOff, pscrOff, sensorsCount, soundOn, logInterval, tempStick ) );
     }
     catch( IndexOutOfBoundsException ex )
     {
@@ -830,6 +836,21 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveIndividuals: set loginterval value to preference..." );
     lP.setValueIndex( logInterval );
     lP.setSummary( String.format( getResources().getString( R.string.conf_ind_interval_header_summary ), lP.getEntry() ) );
+    //
+    // und den Tempstick einstellen, wenn vorhanden
+    //
+    if( FragmentCommonActivity.spxConfig.hasSixValuesIndividual() )
+    {
+      lP = getListPreference( individualTempStick );
+      if( lP == null )
+      {
+        ignorePrefChange = false;
+        return;
+      }
+      if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveIndividuals: set tempstick value to preference..." );
+      lP.setValueIndex( tempStick );
+      lP.setSummary( String.format( getResources().getString( R.string.conf_ind_tempstick_header_summary ), lP.getEntry() ) );
+    }
     ignorePrefChange = false;
   }
 
@@ -1079,8 +1100,16 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     if( FragmentCommonActivity.spxConfig.getCustomEnabled() == 1 )
     {
       if( BuildConfig.DEBUG ) Log.d( TAG, "Preferences in INDIVIDUAL Mode" );
-      addPreferencesFromResource( R.xml.config_spx42_preference_individual );
-      Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_individual + ">..." );
+      if( FragmentCommonActivity.spxConfig.hasSixValuesIndividual() )
+      {
+        addPreferencesFromResource( R.xml.config_spx42_preference_individual_six );
+        Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_individual_six + ">..." );
+      }
+      else
+      {
+        addPreferencesFromResource( R.xml.config_spx42_preference_individual );
+        Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_individual + ">..." );
+      }
     }
     else
     {
@@ -1235,6 +1264,11 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       else if( key.equals( individualLoginterval ) )
       {
         lP.setSummary( String.format( getResources().getString( R.string.conf_ind_interval_header_summary ), lP.getEntry() ) );
+        sendIndividualPrefs();
+      }
+      else if( key.equals( individualTempStick ) )
+      {
+        lP.setSummary( String.format( getResources().getString( R.string.conf_ind_tempstick_header_summary ), lP.getEntry() ) );
         sendIndividualPrefs();
       }
     }
@@ -1582,7 +1616,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    */
   private void sendIndividualPrefs()
   {
-    int sensorsOff = 0, pscrOff = 0, sensorsCount = 2, soundOn = 1, logInterval = 2;
+    int sensorsOff = 0, pscrOff = 0, sensorsCount = 2, soundOn = 1, logInterval = 2, tempStick = 0;
     SwitchPreference sp;
     ListPreference lP;
     //
@@ -1594,6 +1628,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // SC: SensorCount
     // SN: Sound 0->OFF 1->ON
     // LI: Loginterval 0->10sec 1->30Sec 2->60 Sec
+    // TS: Temppstick 1,2 oder 3 (bei neueren Versionen)
     //
     // Sensoren an/aus ...
     //
@@ -1680,14 +1715,28 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     logInterval = lP.findIndexOfValue( lP.getValue() );
     if( logInterval == -1 ) logInterval = 2;
     //
+    // Tempstick auslesen
+    //
+    if( FragmentCommonActivity.spxConfig.hasSixValuesIndividual() )
+    {
+      lP = getListPreference( individualTempStick );
+      if( lP == null )
+      {
+        ignorePrefChange = false;
+        return;
+      }
+      if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read tempstick typ value from preference..." );
+      tempStick = lP.findIndexOfValue( lP.getValue() );
+    }
+    //
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     ignorePrefChange = true;
     if( BuildConfig.DEBUG )
-      Log.d( TAG, String.format( "sendIndividualPrefs: write individual prefs via runningActivity :<SE:%d, PS:%d, SC:%d, SN:%d, LI:%d>...", sensorsOff, pscrOff, sensorsCount,
-              soundOn, logInterval ) );
+      Log.d( TAG, String.format( "sendIndividualPrefs: write individual prefs via runningActivity :<SE:%d, PS:%d, SC:%d, SN:%d, LI:%d, TS:%d>...", sensorsOff, pscrOff,
+              sensorsCount, soundOn, logInterval, tempStick ) );
     try
     {
-      fActivity.writeIndividualPrefs( sensorsOff, pscrOff, sensorsCount, soundOn, logInterval );
+      fActivity.writeIndividualPrefs( sensorsOff, pscrOff, sensorsCount, soundOn, logInterval, tempStick );
     }
     catch( FirmwareNotSupportetException ex )
     {
@@ -1843,6 +1892,14 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       //
       lP = ( ListPreference )pS.findPreference( individualLoginterval );
       lP.setSummary( String.format( res.getString( R.string.conf_ind_interval_header_summary ), lP.getEntry() ) );
+      //
+      // Tempstick
+      //
+      if( FragmentCommonActivity.spxConfig.hasSixValuesIndividual() )
+      {
+        lP = ( ListPreference )pS.findPreference( individualTempStick );
+        lP.setSummary( String.format( res.getString( R.string.conf_ind_tempstick_header_summary ), lP.getEntry() ) );
+      }
     }
   }
 
@@ -2022,9 +2079,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   private boolean setNewLuminancePropertys( boolean isNew )
   {
     PreferenceCategory pC = getPreferenceCategory( displayCategory );
-    ListPreference lP = getListPreference( displayLuminance );
-    // PreferenceManager.setDefaultValues( getActivity(), R.xml.config_spx42_preference_individual, true );
-    if( pC == null || lP == null )
+    ListPreference lPL = getListPreference( displayLuminance );
+    if( pC == null || lPL == null )
     {
       Log.e( TAG, "can't find Preference category <" + displayCategory + "> or ListPreference <" + displayLuminance + ">" );
       // TODO: Fehlermeldung generieren
@@ -2032,17 +2088,16 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     }
     if( isNew )
     {
-      pC.setTitle( R.string.conf_display_header );
-      lP.setEntries( R.array.displayNewLuminanceNamesArray );
-      lP.setEntryValues( R.array.displayNewLuminanceValuesArray );
+      pC.setTitle( R.string.conf_display_header_new );
+      lPL.setEntries( R.array.displayNewLuminanceNamesArray );
+      lPL.setEntryValues( R.array.displayNewLuminanceValuesArray );
     }
     else
     {
-      pC.setTitle( R.string.conf_display_header_new );
-      lP.setEntries( R.array.displayLuminanceNamesArray );
-      lP.setEntryValues( R.array.displayLuminanceValuesArray );
+      pC.setTitle( R.string.conf_display_header );
+      lPL.setEntries( R.array.displayLuminanceNamesArray );
+      lPL.setEntryValues( R.array.displayLuminanceValuesArray );
     }
-    // lP.setDefaultValue( R.string.conf_luminance_default );
     return( true );
   }
 }

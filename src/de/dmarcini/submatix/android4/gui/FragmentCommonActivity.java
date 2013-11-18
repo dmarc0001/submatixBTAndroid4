@@ -1498,13 +1498,15 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * @param sensorsCount
    * @param soundOn
    * @param logInterval
+   * @param tempStick
+   *          TemopStick typ (bei neuerer Firmware, sonst 0)
    * @throws FirmwareNotSupportetException
    */
-  public void writeIndividualPrefs( int sensorsOff, int pscrOff, int sensorsCount, int soundOn, int logInterval ) throws FirmwareNotSupportetException
+  public void writeIndividualPrefs( int sensorsOff, int pscrOff, int sensorsCount, int soundOn, int logInterval, int tempStick ) throws FirmwareNotSupportetException
   {
     if( mService != null )
     {
-      mService.writeIndividualPrefs( spxConfig, sensorsOff, pscrOff, sensorsCount, soundOn, logInterval );
+      mService.writeIndividualPrefs( spxConfig, sensorsOff, pscrOff, sensorsCount, soundOn, logInterval, tempStick );
     }
   }
 
