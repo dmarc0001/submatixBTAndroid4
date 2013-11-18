@@ -185,7 +185,11 @@
     <string name="conf_ind_interval_header">loginterval</string>
     <string name="conf_ind_interval_header_summary">interval %s between two logentrys</string>
     <string name="conf_ind_interval_default">60</string>
-    
+    <!--  tempstick Version  -->
+    <string name="conf_ind_tempstick_header">tempstick type</string>
+    <string name="conf_ind_tempstick_header_summary">type of tempstick: %s </string>
+    <string name="conf_ind_tempstick_default">T1</string>
+        
     <!-- Detailseite connect mit spx -->
     <string name="connect_headline">Connection to SPX42</string>
     <string name="connect_discover_button_title">Discover BT Devices</string>

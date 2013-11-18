@@ -187,6 +187,10 @@
     <string name="conf_ind_interval_header">"log Interval"</string>
     <string name="conf_ind_interval_header_summary">"Intervall %s zwischen zwei Logeinträgen"</string>
     <string name="conf_ind_interval_default">"60"</string>
+    <!--  tempstick Version  -->
+    <string name="conf_ind_tempstick_header">Temperatur Stick Typ</string>
+    <string name="conf_ind_tempstick_header_summary">Typ des Temp. Sticks ist: %s </string>
+    <string name="conf_ind_tempstick_default">T1</string>
     
     <!-- Detailseite connect mit spx -->
     <string name="connect_headline">"Verbindung zu SPX42"</string>
