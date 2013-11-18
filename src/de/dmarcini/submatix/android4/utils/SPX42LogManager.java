@@ -8,7 +8,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import de.dmarcini.submatix.android4.BuildConfig;
+import de.dmarcini.submatix.android4.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.exceptions.NoDatabaseException;
 
 /**
@@ -25,7 +25,17 @@ public class SPX42LogManager extends SPX42AliasManager
 {
   private static final String TAG = SPX42LogManager.class.getSimpleName();
 
-  //
+  /**
+   * 
+   * Konstriúktor
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * Stand: 18.11.2013
+   * 
+   * @param db
+   * @throws NoDatabaseException
+   */
   public SPX42LogManager( SQLiteDatabase db ) throws NoDatabaseException
   {
     super( db );
@@ -50,7 +60,7 @@ public class SPX42LogManager extends SPX42AliasManager
     int count = 0;
     Cursor cu;
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "isLogInDatabase..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "isLogInDatabase..." );
     sql = String.format( "select count(*) from %s where %s like '%s' and %s like '%s';", ProjectConst.H_TABLE_DIVELOGS, ProjectConst.H_DEVICESERIAL, devSerial,
             ProjectConst.H_FILEONSPX, fileOnSPX );
     cu = dBase.rawQuery( sql, null );
@@ -61,10 +71,10 @@ public class SPX42LogManager extends SPX42AliasManager
       //
       // Cursor schliessen
       //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "isLogInDatabase: found <" + count + ">" );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "isLogInDatabase: found <" + count + ">" );
     }
     cu.close();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "isLogInDatabase... datasets is <" + count + ">" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "isLogInDatabase... datasets is <" + count + ">" );
     return( ( count == 0 ) ? false : true );
   }
 
@@ -124,7 +134,7 @@ public class SPX42LogManager extends SPX42AliasManager
     Cursor cu;
     SPX42DiveHeadData diveHeader = new SPX42DiveHeadData();
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "getDiveHeader..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getDiveHeader..." );
     // @formatter:off
     sql = String.format( "select %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s from %s where %s like '%s' and %s like '%s';", 
             ProjectConst.H_DIVEID,                     // 0 
@@ -149,7 +159,7 @@ public class SPX42LogManager extends SPX42AliasManager
             ProjectConst.H_FILEONSPX, fileOnSPX );     // Dateiname
     // @formatter:on
     cu = dBase.rawQuery( sql, null );
-    if( BuildConfig.DEBUG ) Log.d( TAG, "getDiveHeader had <" + cu.getCount() + "> results." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getDiveHeader had <" + cu.getCount() + "> results." );
     if( cu.moveToFirst() )
     {
       diveHeader.diveId = cu.getInt( 0 );
@@ -172,7 +182,7 @@ public class SPX42LogManager extends SPX42AliasManager
       // Cursor schliessen
       //
       cu.close();
-      if( BuildConfig.DEBUG ) Log.d( TAG, "getDiveHeader: OK" );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getDiveHeader: OK" );
       return( diveHeader );
     }
     return( null );
@@ -197,7 +207,7 @@ public class SPX42LogManager extends SPX42AliasManager
     Cursor cu;
     Vector<Long[]> diveHeadList = new Vector<Long[]>();
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "getDiveListForDevice..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getDiveListForDevice..." );
     if( _deviceId < 0 )
     {
       Vector<Integer> lst = getDeviceIdList();
@@ -220,7 +230,7 @@ public class SPX42LogManager extends SPX42AliasManager
             ProjectConst.H_DIVEID);                    // Ordne nach Tauchlog-Nummer
     // @formatter:on
     cu = dBase.rawQuery( sql, null );
-    if( BuildConfig.DEBUG ) Log.d( TAG, "getDiveListForDevice had <" + cu.getCount() + "> results." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getDiveListForDevice had <" + cu.getCount() + "> results." );
     if( cu.moveToFirst() )
     {
       while( cu.moveToNext() )
@@ -233,7 +243,7 @@ public class SPX42LogManager extends SPX42AliasManager
       // Cursor schliessen
       //
       cu.close();
-      if( BuildConfig.DEBUG ) Log.d( TAG, "getDiveListForDevice: OK" );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getDiveListForDevice: OK" );
       return( diveHeadList );
     }
     return( null );

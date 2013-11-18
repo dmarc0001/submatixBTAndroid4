@@ -17,7 +17,7 @@ import android.widget.NumberPicker;
 import android.widget.NumberPicker.Formatter;
 import android.widget.NumberPicker.OnValueChangeListener;
 import android.widget.TextView;
-import de.dmarcini.submatix.android4.BuildConfig;
+import de.dmarcini.submatix.android4.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.gui.FragmentCommonActivity;
 
@@ -141,7 +141,7 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
   @Override
   public void onValueChange( NumberPicker picker, int oldVal, int newVal )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onValueChange: oldVal: <" + oldVal + ">, newVal: <" + newVal + ">" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onValueChange: oldVal: <" + oldVal + ">, newVal: <" + newVal + ">" );
     if( picker.equals( lowPicker ) )
     {
       lowGradient = newVal;
@@ -157,7 +157,7 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
   @Override
   protected View onCreateDialogView()
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onCreateDialogView()..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateDialogView()..." );
     setDialogLayoutResource( R.layout.gradient_picker_layout );
     currentStyleId = FragmentCommonActivity.getAppStyle();
     return super.onCreateDialogView();
@@ -168,7 +168,7 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
   {
     int index;
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onBindDialogView()..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onBindDialogView()..." );
     lowGradientTextView = ( TextView )v.findViewById( R.id.lowGradientTextView );
     highGradientTextView = ( TextView )v.findViewById( R.id.highGradientTextView );
     //
@@ -218,7 +218,7 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
     //
     setLowColor( getGradientColor( lowGradient ) );
     setHighColor( getGradientColor( highGradient ) );
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onBindDialogView()...OK" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onBindDialogView()...OK" );
   }
 
   /**
@@ -338,7 +338,7 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
     String defaultValueStr;
     //
     super.onSetInitialValue( restoreValue, def );
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onSetInitialValue: restore:<" + restoreValue + ">" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onSetInitialValue: restore:<" + restoreValue + ">" );
     if( restoreValue )
     {
       // es soll restored werden
@@ -507,7 +507,7 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
    */
   private boolean makeValuesFromString( String defaultValueStr )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "makeValuesFromString: String to split <" + defaultValueStr + ">" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "makeValuesFromString: String to split <" + defaultValueStr + ">" );
     String fields[] = defaultValueStr.split( ":" );
     if( ( fields != null ) && ( fields.length >= 2 ) )
     {
@@ -539,7 +539,7 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
     String defaultString = null;
     //
     super.onGetDefaultValue( a, index );
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onGetDefaultValue()..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onGetDefaultValue()..." );
     //
     // versuche aus einer Stringresource einen defaultwert zu machen
     //
@@ -560,7 +560,7 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
   protected void onDialogClosed( boolean shouldSave )
   {
     super.onDialogClosed( shouldSave );
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onDialogClosed()..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onDialogClosed()..." );
     if( shouldSave )
     {
       Log.v( TAG, "onDialogClosed: should save..." );
@@ -574,7 +574,7 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
     super.onSaveInstanceState();
     final Parcelable superState = super.onSaveInstanceState();
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onSaveInstanceState()..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onSaveInstanceState()..." );
     // Check whether this Preference is persistent (continually saved)
     if( isPersistent() )
     {
@@ -592,7 +592,7 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
   protected void onRestoreInstanceState( Parcelable state )
   {
     super.onRestoreInstanceState( state );
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onRestoreInstanceState()..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onRestoreInstanceState()..." );
     // Check whether we saved the state in onSaveInstanceState
     if( state == null || !state.getClass().equals( SavedState.class ) )
     {

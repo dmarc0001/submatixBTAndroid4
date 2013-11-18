@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import de.dmarcini.submatix.android4.BuildConfig;
+import de.dmarcini.submatix.android4.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.gui.FragmentCommonActivity;
 import de.dmarcini.submatix.android4.gui.WaitProgressFragmentDialog;
@@ -203,7 +203,7 @@ public class CommToast
    */
   public void openWaitDial( int maxevents, String title, String msg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "openWaitDial()..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "openWaitDial()..." );
     //
     // wenn ein Dialog da ist, erst mal aus den Fragmenten entfernen
     //
@@ -237,7 +237,7 @@ public class CommToast
    */
   public void dismissDial()
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "dismissDial()..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "dismissDial()..." );
     FragmentTransaction ft = act.getFragmentManager().beginTransaction();
     Fragment prev = act.getFragmentManager().findFragmentByTag( "dialog" );
     if( prev != null )

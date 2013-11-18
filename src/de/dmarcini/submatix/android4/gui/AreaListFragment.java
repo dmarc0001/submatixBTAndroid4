@@ -8,7 +8,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
-import de.dmarcini.submatix.android4.BuildConfig;
+import de.dmarcini.submatix.android4.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.content.ContentSwitcher;
 import de.dmarcini.submatix.android4.utils.ArrayAdapterWithPics;
@@ -152,7 +152,7 @@ public class AreaListFragment extends ListFragment
   {
     // When setting CHOICE_MODE_SINGLE, ListView will automatically
     // give items the 'activated' state when touched
-    if( BuildConfig.DEBUG ) Log.d( TAG, "setActivateOnItemClick( " + activateOnItemClick + " )" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "setActivateOnItemClick( " + activateOnItemClick + " )" );
     getListView().setChoiceMode( activateOnItemClick ? ListView.CHOICE_MODE_SINGLE : ListView.CHOICE_MODE_NONE );
   }
 
@@ -169,7 +169,7 @@ public class AreaListFragment extends ListFragment
     }
     else
     {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "setActivatedPosition: checked Position was: <" + getListView().getCheckedItemPosition() + ">" );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "setActivatedPosition: checked Position was: <" + getListView().getCheckedItemPosition() + ">" );
       getListView().setItemChecked( position, true );
     }
     mActivatedPosition = position;

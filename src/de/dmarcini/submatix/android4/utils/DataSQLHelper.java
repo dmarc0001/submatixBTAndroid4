@@ -13,7 +13,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
-import de.dmarcini.submatix.android4.BuildConfig;
+import de.dmarcini.submatix.android4.ApplicationDEBUG;
 
 /**
  * 
@@ -44,7 +44,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
   public DataSQLHelper( Context context, String dbn )
   {
     super( context, ProjectConst.DATABASE_NAME, null, ProjectConst.DATABASE_VERSION );
-    if( BuildConfig.DEBUG ) Log.d( TAG, "DataSQLHelper..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "DataSQLHelper..." );
     cx = context;
     dbName = dbn;
   }
@@ -60,7 +60,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
     String sql;
     Log.i( TAG, "createTables..." );
     // Alias Tabelle
-    if( BuildConfig.DEBUG ) Log.d( TAG, "create table " + ProjectConst.A_TABLE_ALIASES + "..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "create table " + ProjectConst.A_TABLE_ALIASES + "..." );
     sql = "create table  " + ProjectConst.A_TABLE_ALIASES + " ";
     sql += "(";
     sql += ProjectConst.A_DEVICEID + " integer primary key autoincrement, \n";
@@ -80,7 +80,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
       return;
     }
     // Main-Tabelle
-    if( BuildConfig.DEBUG ) Log.d( TAG, "create table " + ProjectConst.H_TABLE_DIVELOGS + "..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "create table " + ProjectConst.H_TABLE_DIVELOGS + "..." );
     sql = "create table  " + ProjectConst.H_TABLE_DIVELOGS + " ";
     sql += "(";
     sql += ProjectConst.H_DIVEID + " integer primary key autoincrement, \n";
@@ -112,7 +112,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
       return;
     }
     // Erzeuge index
-    if( BuildConfig.DEBUG ) Log.d( TAG, "create INDEX  on Table " + ProjectConst.H_TABLE_DIVELOGS + "..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "create INDEX  on Table " + ProjectConst.H_TABLE_DIVELOGS + "..." );
     try
     {
       sql = "create INDEX  idx_" + ProjectConst.H_TABLE_DIVELOGS + "_" + ProjectConst.H_STARTTIME;
@@ -143,11 +143,11 @@ public class DataSQLHelper extends SQLiteOpenHelper
     Log.i( TAG, "dropTables..." );
     // Aliase
     sql = "drop table " + ProjectConst.A_TABLE_ALIASES + ";";
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SQL: <" + sql + ">" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SQL: <" + sql + ">" );
     try
     {
       db.execSQL( sql );
-      if( BuildConfig.DEBUG ) Log.d( TAG, "SQL: <" + sql + ">.... OK" );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SQL: <" + sql + ">.... OK" );
     }
     catch( SQLException ex )
     {
@@ -157,11 +157,11 @@ public class DataSQLHelper extends SQLiteOpenHelper
     }
     // Maindaten
     sql = "drop table " + ProjectConst.H_TABLE_DIVELOGS + ";";
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SQL: <" + sql + ">" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SQL: <" + sql + ">" );
     try
     {
       db.execSQL( sql );
-      if( BuildConfig.DEBUG ) Log.d( TAG, "SQL: <" + sql + ">.... OK" );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SQL: <" + sql + ">.... OK" );
     }
     catch( SQLException ex )
     {
@@ -243,7 +243,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
   public SQLiteDatabase getReadableDatabase()
   {
     SQLiteDatabase dbObj;
-    if( BuildConfig.DEBUG )
+    if( ApplicationDEBUG.DEBUG )
     {
       Log.d( TAG, "getReadableDatabase()... " );
       Log.d( TAG, "Datepath: " + dbName );
@@ -266,7 +266,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
   public SQLiteDatabase getWritableDatabase()
   {
     SQLiteDatabase dbObj;
-    if( BuildConfig.DEBUG )
+    if( ApplicationDEBUG.DEBUG )
     {
       Log.d( TAG, "getWritableDatabase... " );
       Log.d( TAG, "Datepath: " + dbName );
@@ -289,9 +289,9 @@ public class DataSQLHelper extends SQLiteOpenHelper
   @Override
   public void onCreate( SQLiteDatabase db )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onCreate..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
     createTables( db );
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onCreate...OK" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate...OK" );
   }
 
   /**
@@ -305,7 +305,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
   @Override
   public void onUpgrade( SQLiteDatabase db, int oldVersion, int newVersion )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onUpgrade Old: <" + oldVersion + "> New: <" + newVersion + ">..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onUpgrade Old: <" + oldVersion + "> New: <" + newVersion + ">..." );
     if( oldVersion >= newVersion ) return;
     Log.i( TAG, "onUpgrade: update Version from Old: <" + oldVersion + "> to New: <" + newVersion + ">..." );
     if( db.isReadOnly() )
@@ -345,7 +345,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
   {
     String sql;
     // Main-Tabelle
-    if( BuildConfig.DEBUG ) Log.d( TAG, "create table " + ProjectConst.H_TABLE_DIVELOGS + "..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "create table " + ProjectConst.H_TABLE_DIVELOGS + "..." );
     sql = "create table  " + ProjectConst.H_TABLE_DIVELOGS + " ";
     sql += "(";
     sql += ProjectConst.H_DIVEID + " integer primary key autoincrement, \n";
@@ -375,7 +375,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
       return;
     }
     // Erzeuge index
-    if( BuildConfig.DEBUG ) Log.d( TAG, "create INDEX  on Table " + ProjectConst.H_TABLE_DIVELOGS + "..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "create INDEX  on Table " + ProjectConst.H_TABLE_DIVELOGS + "..." );
     sql = "create INDEX  idx_" + ProjectConst.H_TABLE_DIVELOGS + "_" + ProjectConst.H_STARTTIME;
     sql += " ON " + ProjectConst.H_TABLE_DIVELOGS + "(" + ProjectConst.H_STARTTIME + " ASC);";
     try

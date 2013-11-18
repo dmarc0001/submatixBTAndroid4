@@ -7,7 +7,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import de.dmarcini.submatix.android4.BuildConfig;
+import de.dmarcini.submatix.android4.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.exceptions.NoDatabaseException;
 
 /**
@@ -81,7 +81,7 @@ public class SPX42AliasManager
     String sql, alias;
     Cursor cu;
     //
-    if( BuildConfig.DEBUG ) Log.i( TAG, "getAliasForMac..." );
+    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getAliasForMac..." );
     sql = String.format( "select %s from %s where %s like '%s';", ProjectConst.A_ALIAS, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_MAC, mac );
     cu = dBase.rawQuery( sql, null );
     // formatter:on
@@ -92,10 +92,10 @@ public class SPX42AliasManager
       // Cursor schliessen
       //
       cu.close();
-      if( BuildConfig.DEBUG ) Log.i( TAG, "getAliasForMac: found <" + alias + ">" );
+      if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getAliasForMac: found <" + alias + ">" );
       return( alias );
     }
-    if( BuildConfig.DEBUG ) Log.i( TAG, "getAliasForMac: not found, use default <" + defaultAlias + ">" );
+    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getAliasForMac: not found, use default <" + defaultAlias + ">" );
     return( defaultAlias );
   }
 
@@ -117,7 +117,7 @@ public class SPX42AliasManager
     int deviceId = -1;
     Cursor cu;
     //
-    if( BuildConfig.DEBUG ) Log.i( TAG, "getIdForDevice..." );
+    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getIdForDevice..." );
     sql = String.format( "select %s from %s where %s like '%s';", ProjectConst.A_DEVICEID, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_MAC, mac );
     cu = dBase.rawQuery( sql, null );
     // formatter:on
@@ -128,10 +128,10 @@ public class SPX42AliasManager
       // Cursor schliessen
       //
       cu.close();
-      if( BuildConfig.DEBUG ) Log.i( TAG, "getIdForDevice: found <" + deviceId + ">" );
+      if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getIdForDevice: found <" + deviceId + ">" );
       return( deviceId );
     }
-    if( BuildConfig.DEBUG ) Log.i( TAG, "getIdForDevice: not found, use default <-1>" );
+    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getIdForDevice: not found, use default <-1>" );
     return( -1 );
   }
 
@@ -157,7 +157,7 @@ public class SPX42AliasManager
     Cursor cu;
     ContentValues values;
     //
-    if( BuildConfig.DEBUG ) Log.i( TAG, "setAliasForMac..." );
+    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "setAliasForMac..." );
     sql = String.format( "select %s from %s where %s like '%s';", ProjectConst.A_ALIAS, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_MAC, mac );
     cu = dBase.rawQuery( sql, null );
     //
@@ -212,7 +212,7 @@ public class SPX42AliasManager
     Cursor cu;
     ContentValues values;
     //
-    if( BuildConfig.DEBUG ) Log.i( TAG, "setAliasForMacIfNotExist..." );
+    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "setAliasForMacIfNotExist..." );
     sql = String.format( "select %s from %s where %s like '%s';", ProjectConst.A_ALIAS, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_MAC, _mac );
     cu = dBase.rawQuery( sql, null );
     //
@@ -259,7 +259,7 @@ public class SPX42AliasManager
     Cursor cu;
     Vector<Integer> lst = new Vector<Integer>();
     //
-    if( BuildConfig.DEBUG ) Log.i( TAG, "getDeviceIdList..." );
+    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getDeviceIdList..." );
     sql = String.format( "select %s from %s order by %s;", ProjectConst.A_DEVICEID, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_DEVICEID );
     cu = dBase.rawQuery( sql, null );
     //

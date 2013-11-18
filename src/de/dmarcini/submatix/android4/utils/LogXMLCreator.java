@@ -21,7 +21,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import android.util.Log;
-import de.dmarcini.submatix.android4.BuildConfig;
+import de.dmarcini.submatix.android4.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.exceptions.XMLFileCreatorException;
 
 /**
@@ -63,16 +63,16 @@ public class LogXMLCreator
     try
     {
       // So den XML-Erzeuger Creieren
-      if( BuildConfig.DEBUG ) Log.d( TAG, "LogXMLCreator: create Transformer..." );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "LogXMLCreator: create Transformer..." );
       transformer = TransformerFactory.newInstance().newTransformer();
       transformer.setOutputProperty( OutputKeys.OMIT_XML_DECLARATION, "no" );
       transformer.setOutputProperty( OutputKeys.STANDALONE, "yes" );
-      if( BuildConfig.DEBUG ) Log.d( TAG, "LogXMLCreator: create factory..." );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "LogXMLCreator: create factory..." );
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       factory.setNamespaceAware( false );
-      if( BuildConfig.DEBUG ) Log.d( TAG, "LogXMLCreator: create builder..." );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "LogXMLCreator: create builder..." );
       builder = factory.newDocumentBuilder();
-      if( BuildConfig.DEBUG ) Log.d( TAG, "LogXMLCreator: ...OK" );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "LogXMLCreator: ...OK" );
     }
     catch( TransformerConfigurationException ex )
     {
@@ -194,19 +194,19 @@ public class LogXMLCreator
    */
   public boolean closeLog() throws XMLFileCreatorException
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "closeLog: normalize DOM Object..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "closeLog: normalize DOM Object..." );
     logXmlFile.normalizeDocument();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "closeLog: create writer..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "closeLog: create writer..." );
     try
     {
       StringWriter writer = new StringWriter();
       DOMSource doc = new DOMSource( logXmlFile );
       StreamResult res = new StreamResult( writer );
-      if( BuildConfig.DEBUG ) Log.d( TAG, "closeLog: transform... " );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "closeLog: transform... " );
       transformer.transform( doc, res );
       // ungezipptes file erzeugen
       Log.v( TAG, "domToFile()...write to unzipped file... " );
-      if( BuildConfig.DEBUG ) Log.d( TAG, "closeLog: fileName:<" + diveHeader.xmlFile.getAbsoluteFile() + ">" );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "closeLog: fileName:<" + diveHeader.xmlFile.getAbsoluteFile() + ">" );
       if( diveHeader.xmlFile.exists() )
       {
         // Datei ist da, ich will sie ueberschreiben

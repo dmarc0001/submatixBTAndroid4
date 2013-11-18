@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.gui;
+﻿package de.dmarcini.submatix.android4.gui;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -17,7 +17,7 @@ import android.preference.PreferenceFragment;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import de.dmarcini.submatix.android4.BuildConfig;
+import de.dmarcini.submatix.android4.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.exceptions.FirmwareNotSupportetException;
@@ -118,7 +118,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
       // Sonst....
       // ################################################################
       default:
-        if( BuildConfig.DEBUG ) Log.i( TAG, "unhandled message with id <" + smsg.getId() + "> recived!" );
+        if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "unhandled message with id <" + smsg.getId() + "> recived!" );
     }
   }
 
@@ -127,7 +127,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   {
     Log.v( TAG, "msgConnected()...ask for SPX config..." );
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
-    if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for SPX config..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgConnected(): ask for SPX config..." );
     // Dialog schliesen, wenn geöffnet
     theToast.dismissDial();
     theToast.openWaitDial( maxEvents, getActivity().getResources().getString( R.string.dialog_please_wait_title ),
@@ -168,7 +168,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   @Override
   public void msgRecivedAlive( BtServiceMessage msg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Alive <" + ( String )msg.getContainer() + "> recived" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX Alive <" + ( String )msg.getContainer() + "> recived" );
     theToast.dismissDial();
   }
 
@@ -232,7 +232,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
       Log.e( TAG, "msgReciveGasSetup: gas setup object is not an correct integer! (" + ex.getLocalizedMessage() + ")" );
       return;
     }
-    if( BuildConfig.DEBUG )
+    if( ApplicationDEBUG.DEBUG )
       Log.d( TAG, String.format( "msgReciveGasSetup: gas: %d, n2:%02d%%, he:%02d%%, bailout:%b, dil: %d, currentGas: %d", gasNr, gasParms.n2, gasParms.he, gasParms.bo, dil, cg ) );
     // Jetz in die Preference und damit in die GUI meisseln
     try
@@ -268,7 +268,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   {
     int gasNr;
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX SET GAS settings ACK recived" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX SET GAS settings ACK recived" );
     if( waitForGasOkCount > 1 )
     {
       // zähle die zu erwartenden ACK herunter...
@@ -321,7 +321,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     // artig die richtige Meldung absetzen
     //
       case ProjectConst.SPX_SET_SETUP_GASLIST:
-        if( BuildConfig.DEBUG ) Log.d( TAG, "SPX gas setup was not correct set!" );
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX gas setup was not correct set!" );
         theToast.showConnectionToastAlert( getResources().getString( R.string.toast_comm_set_gas_alert ) );
         break;
       default:
@@ -406,7 +406,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     // lösche Listener, der überwacht, wenn Preferenzen geändert wurden
     //
     getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener( this );
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onPause(): clear service listener for preferences fragment..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause(): clear service listener for preferences fragment..." );
     ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
   }
 
@@ -424,7 +424,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     waitForGasNumber = 0;
     // Service Listener setzen
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onResume(): set service listener for preferences fragment..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume(): set service listener for preferences fragment..." );
     fActivity.addServiceListener( this );
   }
 
@@ -437,10 +437,10 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     int gasNr;
     //
     Log.v( TAG, "onSharedPreferenceChanged...." );
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onSharedPreferenceChanged: key = <" + key + ">" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onSharedPreferenceChanged: key = <" + key + ">" );
     if( ignorePrefChange )
     {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "onSharedPreferenceChanged: ignore change..." );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onSharedPreferenceChanged: ignore change..." );
       return;
     }
     //
@@ -478,7 +478,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     // Den Vector für die Gasupdates anlegen
     gasUpdates = new Vector<GasUpdateEntity>();
     // das aktuelle Gas schon mal eintragen
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onSharedPreferenceChanged: gas to update to list: <" + gasNr + ">" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onSharedPreferenceChanged: gas to update to list: <" + gasNr + ">" );
     gasUpdates.add( new GasUpdateEntity( gasNr, gasParms ) );
     Iterator<Integer> it = changeSets.iterator();
     // für alle zu ändernden Gase Parameter festlegen und in einen Vector schreiben
@@ -488,7 +488,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
       gpp = gasPrefs.get( gasNr );
       gasParms = gpp.getValue();
       setGasSummary( gasNr, gasParms );
-      if( BuildConfig.DEBUG ) Log.d( TAG, "onSharedPreferenceChanged: gas to update to list: <" + gasNr + ">" );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onSharedPreferenceChanged: gas to update to list: <" + gasNr + ">" );
       gasUpdates.add( new GasUpdateEntity( gasNr, gasParms ) );
     }
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
@@ -519,7 +519,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     {
       GasPickerPreference gP = gasPrefs.get( idx );
       gasPrefs.add( gP );
-      if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "The Preference <%s> is number %d", gP.getTitle(), idx ) );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "The Preference <%s> is number %d", gP.getTitle(), idx ) );
       if( idx % 2 > 0 )
       {
         if( FragmentCommonActivity.getAppStyle() == R.style.AppDarkTheme )
@@ -612,10 +612,10 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     if( gasParms.bo ) gasExt += bailoutString;
     gasName = GasUtilitys.getNameForGas( gasParms.o2, gasParms.he ) + gasExt;
     // schreib schön!
-    if( BuildConfig.DEBUG )
+    if( ApplicationDEBUG.DEBUG )
       Log.d( TAG, String.format( "setGasSummary: gas number <%02d> has O2 <%02d%%>, MOD: %f ", gasNr, gasParms.o2, GasUtilitys.getMODForGasMetric( gasParms.o2 ) ) );
     gpp.setSummary( String.format( getResources().getString( R.string.conf_gaslist_summary_first ), gasNr + 1, gasName, Math.round( GasUtilitys.getMODForGasMetric( gasParms.o2 ) ) ) );
-    if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "setGasSummary: gas number <%02d> has now summary <%s>", gasNr, gasName ) );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "setGasSummary: gas number <%02d> has now summary <%s>", gasNr, gasName ) );
   }
 
   /**
@@ -665,7 +665,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
           if( prefD1 && gasParms.d1 )
           {
             // ups, das muss korrigiert werden!
-            if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "checkDiluentSets: gas number <%d> was diluent 1 changed, write to Preference", idx ) );
+            if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "checkDiluentSets: gas number <%d> was diluent 1 changed, write to Preference", idx ) );
             wasChanged = true;
             gasParms.d1 = false;
           }
@@ -677,7 +677,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
           if( prefD2 && gasParms.d2 )
           {
             // ups, das muss korrigiert werden!
-            if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "checkDiluentSets: gas number <%d> was diluent 2 changed, write to Preference", idx ) );
+            if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "checkDiluentSets: gas number <%d> was diluent 2 changed, write to Preference", idx ) );
             wasChanged = true;
             gasParms.d2 = false;
           }

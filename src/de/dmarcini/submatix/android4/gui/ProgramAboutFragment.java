@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.gui;
+﻿package de.dmarcini.submatix.android4.gui;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import de.dmarcini.submatix.android4.BuildConfig;
+import de.dmarcini.submatix.android4.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.utils.BuildVersion;
 
@@ -36,7 +36,7 @@ public class ProgramAboutFragment extends Fragment
   {
     super.onActivityCreated( bundle );
     runningActivity = getActivity();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
     try
     {
       aboutVersionTextView = ( TextView )runningActivity.findViewById( R.id.aboutVersionTextView );
@@ -59,7 +59,7 @@ public class ProgramAboutFragment extends Fragment
   {
     super.onAttach( activity );
     runningActivity = activity;
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
   }
 
   /**
@@ -69,7 +69,7 @@ public class ProgramAboutFragment extends Fragment
   public void onCreate( Bundle savedInstanceState )
   {
     super.onCreate( savedInstanceState );
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onCreate..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
   }
 
   /**
@@ -79,7 +79,7 @@ public class ProgramAboutFragment extends Fragment
   public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
   {
     View rootView;
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onCreateView..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView..." );
     //
     // wenn kein Container vorhanden ist, dann gibts auch keinen View
     //
@@ -93,7 +93,7 @@ public class ProgramAboutFragment extends Fragment
     //
     if( runningActivity instanceof AreaDetailActivity )
     {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
       return( null );
     }
     //

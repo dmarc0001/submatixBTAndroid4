@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Code für Grundformular exportLog
  * 
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
@@ -25,7 +25,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import de.dmarcini.submatix.android4.BuildConfig;
+import de.dmarcini.submatix.android4.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.exceptions.NoDatabaseException;
@@ -147,7 +147,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
   {
     super.onActivityCreated( bundle );
     runningActivity = getActivity();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
     try
     {
       mainListView = ( ListView )runningActivity.findViewById( R.id.exportLogsListView );
@@ -165,14 +165,14 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
   {
     super.onAttach( activity );
     runningActivity = activity;
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
     //
     // die Datenbank öffnen
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onAttach: create SQLite helper..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create SQLite helper..." );
     DataSQLHelper sqlHelper = new DataSQLHelper( getActivity().getApplicationContext(), FragmentCommonActivity.databaseDir.getAbsolutePath() + File.separator
             + ProjectConst.DATABASE_NAME );
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onAttach: open Database..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: open Database..." );
     try
     {
       logManager = new SPX42LogManager( sqlHelper.getWritableDatabase() );
@@ -194,7 +194,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
   @Override
   public void onClick( View v )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "Click" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Click" );
   }
 
   @Override
@@ -202,7 +202,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
   {
     View rootView = null;
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onCreateView..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView..." );
     //
     // wenn kein Container vorhanden ist, dann gibts auch keinen View
     //
@@ -216,7 +216,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     //
     if( runningActivity instanceof AreaDetailActivity )
     {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
       //
       // Objekte lokalisieren, Verbindungsseite ist von onePane Mode
       //
@@ -261,7 +261,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
   @Override
   public void onItemClick( AdapterView<?> parent, View clickedView, int position, long id )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "Click on ListView! Pos: <" + position + ">" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Click on ListView! Pos: <" + position + ">" );
     // // invertiere die Markierung im Adapter
     // logListAdapter.setMarked( position, !logListAdapter.getMarked( position ) );
     // // mache die Markierung auch im View (das wird ja sonst nicht automatisch aktualisiert)
@@ -283,7 +283,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
   public synchronized void onResume()
   {
     super.onResume();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onResume..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
     // Listener aktivieren
     ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
     mainListView.setOnItemClickListener( this );

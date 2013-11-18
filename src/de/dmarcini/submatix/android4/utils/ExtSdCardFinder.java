@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 import android.os.Environment;
 import android.util.Log;
-import de.dmarcini.submatix.android4.BuildConfig;
+import de.dmarcini.submatix.android4.ApplicationDEBUG;
 
 /**
  * 
@@ -41,7 +41,7 @@ public class ExtSdCardFinder
     // scanne das proc-System nach Anzeichen für eine SD-Card
     // nach Artikel c't 23/12, S. 172
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "findSdCard: scan /proc/mounts..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "findSdCard: scan /proc/mounts..." );
     try
     {
       Scanner scanner = new Scanner( new File( "/proc/mounts" ) );

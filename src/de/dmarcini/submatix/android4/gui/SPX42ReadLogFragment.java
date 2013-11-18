@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.gui;
+﻿package de.dmarcini.submatix.android4.gui;
 
 import java.io.File;
 import java.util.Vector;
@@ -23,7 +23,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import de.dmarcini.submatix.android4.BuildConfig;
+import de.dmarcini.submatix.android4.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.exceptions.NoDatabaseException;
@@ -291,7 +291,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
       // DEFAULT
       // ################################################################
       default:
-        if( BuildConfig.DEBUG ) Log.i( TAG, "unknown messsage with id <" + what + "> recived!" );
+        if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "unknown messsage with id <" + what + "> recived!" );
     }
   }
 
@@ -377,7 +377,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     if( msg.getContainer() instanceof String[] )
     {
       unitsParm = ( String[] )msg.getContainer();
-      if( BuildConfig.DEBUG )
+      if( ApplicationDEBUG.DEBUG )
       {
         try
         {
@@ -436,7 +436,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   {
     super.onActivityCreated( bundle );
     runningActivity = getActivity();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
     try
     {
       mainListView = ( ListView )runningActivity.findViewById( R.id.readLogDirListView );
@@ -454,14 +454,14 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   {
     super.onAttach( activity );
     runningActivity = activity;
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
     //
     // die Datenbank öffnen
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onAttach: create SQLite helper..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create SQLite helper..." );
     DataSQLHelper sqlHelper = new DataSQLHelper( getActivity().getApplicationContext(), FragmentCommonActivity.databaseDir.getAbsolutePath() + File.separator
             + ProjectConst.DATABASE_NAME );
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onAttach: open Database..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: open Database..." );
     try
     {
       logManager = new SPX42LogManager( sqlHelper.getWritableDatabase() );
@@ -481,10 +481,10 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   @Override
   public void onClick( View view )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "Click..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Click..." );
     if( ( view instanceof Button ) && view.equals( readDirButton ) )
     {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "Click on READ DIR BUTTON..." );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Click on READ DIR BUTTON..." );
       items = logListAdapter.getMarkedItems();
       // wenn nix markiert ist, wech
       if( items.size() == 0 )
@@ -511,7 +511,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   {
     // Layout View
     super.onCreate( savedInstanceState );
-    if( BuildConfig.DEBUG ) Log.v( TAG, "onCreate..." );
+    if( ApplicationDEBUG.DEBUG ) Log.v( TAG, "onCreate..." );
     theToast = new CommToast( getActivity() );
   }
 
@@ -520,7 +520,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   {
     View rootView = null;
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onCreateView..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView..." );
     //
     // wenn kein Container vorhanden ist, dann gibts auch keinen View
     //
@@ -534,7 +534,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     //
     if( runningActivity instanceof AreaDetailActivity )
     {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
       //
       // Objekte lokalisieren, Verbindungsseite ist von onePane Mode
       //
@@ -565,7 +565,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   @Override
   public void onItemClick( AdapterView<?> parent, View clickedView, int position, long id )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "Click on ListView! Pos: <" + position + ">" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Click on ListView! Pos: <" + position + ">" );
     // invertiere die Markierung im Adapter
     logListAdapter.setMarked( position, !logListAdapter.getMarked( position ) );
     // mache die Markierung auch im View (das wird ja sonst nicht automatisch aktualisiert)
@@ -587,11 +587,11 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   public void onPause()
   {
     super.onPause();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onPause..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause..." );
     //
     // die abgeleiteten Objekte führen das auch aus
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
     ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
   }
 
@@ -602,7 +602,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   public synchronized void onResume()
   {
     super.onResume();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onResume..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
     // Listener aktivieren
     ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
     mainListView.setOnItemClickListener( this );
@@ -625,7 +625,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
    */
   public void openWaitDial( int maxevents, String msg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "openWaitDial()..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "openWaitDial()..." );
     //
     // wenn ein Dialog da ist, erst mal aus den Fragmenten entfernen
     //

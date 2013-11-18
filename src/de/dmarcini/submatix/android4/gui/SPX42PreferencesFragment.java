@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.gui;
+﻿package de.dmarcini.submatix.android4.gui;
 
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -20,7 +20,7 @@ import android.preference.SwitchPreference;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import de.dmarcini.submatix.android4.BuildConfig;
+import de.dmarcini.submatix.android4.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.exceptions.FirmwareNotSupportetException;
@@ -296,7 +296,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       // Sonst....
       // ################################################################
       default:
-        if( BuildConfig.DEBUG ) Log.i( TAG, "unhandled message with id <" + smsg.getId() + "> recived!" );
+        if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "unhandled message with id <" + smsg.getId() + "> recived!" );
     }
   }
 
@@ -364,14 +364,14 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     String[] setPoint;
     int autoSp, sP;
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Autosetpoint recived" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX Autosetpoint recived" );
     //
     // versuche einmal, die beiden erwarteten Werter zu bekommen
     //
     if( msg.getContainer() instanceof String[] )
     {
       setPoint = ( String[] )msg.getContainer();
-      if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Autosetpoint is <" + setPoint[0] + "," + setPoint[0] + ">" );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX Autosetpoint is <" + setPoint[0] + "," + setPoint[0] + ">" );
     }
     else
     {
@@ -407,7 +407,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // setze den Index auf den Wert, der ausgelesen wurde
     // empfangen werden kann 0..3, also kan ich das 1:1 übernehmen
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "set autosetpoint value to preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "set autosetpoint value to preference..." );
     lP.setValueIndex( autoSp );
     //
     lP = getListPreference( setpointHigh );
@@ -418,7 +418,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // setze den Index auf den Wert, der ausgelesen wurde
     // empfangen werden kann 0..4, also kan ich das 1:1 übernehmen
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "set highsetpoint value to preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "set highsetpoint value to preference..." );
     lP.setValueIndex( sP );
   }
 
@@ -435,7 +435,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    */
   private void msgReciveAutosetpointAck( BtServiceMessage msg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Autosetpoint successful set (preferences)" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX Autosetpoint successful set (preferences)" );
     theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_autosetpoint_ok ), false );
     ignorePrefChange = false;
   }
@@ -443,7 +443,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   @Override
   public void msgRecivedAlive( BtServiceMessage msg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Alive <" + ( String )msg.getContainer() + "> recived" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX Alive <" + ( String )msg.getContainer() + "> recived" );
     theToast.dismissDial();
   }
 
@@ -467,7 +467,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     int lowG, highG, deepStops, dynGr, lastStop;
     //
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX deco settings recived" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX deco settings recived" );
     // Kommando SPX_GET_SETUP_DEKO liefert zurück:
     // ~34:LL:HH:D:Y:C
     // LL=GF-Low, HH=GF-High,
@@ -510,7 +510,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       return;
     }
     ignorePrefChange = true;
-    if( BuildConfig.DEBUG )
+    if( ApplicationDEBUG.DEBUG )
       Log.d( TAG, String.format( "SPX deco settings are low:%d, high:%d, deepstops:%d, dyn gradients:%d, last deco:%d", lowG, highG, deepStops, dynGr, lastStop ) );
     //
     // hier hab ich alle Werte (hoffentlich)
@@ -533,7 +533,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // jetzt die Werte für LastStop übernehmen
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "set deco last stop value to preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "set deco last stop value to preference..." );
     sp.setChecked( ( lastStop == 0 ) );
     //
     // Dynamische Gradienten on/off übernehmen
@@ -547,7 +547,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // jetzt die Werte für LastStop übernehmen
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "set dynGradients value to preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "set dynGradients value to preference..." );
     sp.setChecked( ( dynGr > 0 ) );
     //
     // Deep stops on/off übernehmen
@@ -561,7 +561,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // jetzt die Werte für LastStop übernehmen
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "set deepStops value to preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "set deepStops value to preference..." );
     sp.setChecked( ( deepStops > 0 ) );
     ignorePrefChange = false;
   }
@@ -579,7 +579,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    */
   private void msgReciveDecoAck( BtServiceMessage msg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX DECO propertys successful set (preferences)" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX DECO propertys successful set (preferences)" );
     theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_deco_ok ), false );
     ignorePrefChange = false;
   }
@@ -602,7 +602,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     int orient = 0;
     ListPreference lP;
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX display settings recived" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX display settings recived" );
     // Kommando GET_SETUP_DISPLAYSETTINGS liefert
     // ~36:D:A
     // D= 0->10&, 1->50%, 2->100%
@@ -661,7 +661,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // jetzt den Preset übernehmen
     // Index sollte lumin sein....
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveDisplay: set luminance value to preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgReciveDisplay: set luminance value to preference..." );
     lP.setValueIndex( lumin );
     //
     // jetzt Orientierung eintragen
@@ -676,7 +676,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // jetzt den Preset übernehmen
     // Index sollte lumin sein....
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveDisplay: set display angle value to preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgReciveDisplay: set display angle value to preference..." );
     lP.setValueIndex( orient );
     ignorePrefChange = false;
   }
@@ -694,7 +694,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    */
   private void msgReciveDisplayAck( BtServiceMessage msg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX display settings ACK recived" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX display settings ACK recived" );
     theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_display_ok ), false );
     ignorePrefChange = false;
   }
@@ -721,7 +721,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     SwitchPreference sp;
     ListPreference lP;
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX individuals settings recived" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX individuals settings recived" );
     //
     // gibt es Parameter zu lesen?
     // Kommando GET_SETUP_INDIVIDUAL liefert
@@ -756,7 +756,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       {
         tempStick = Integer.parseInt( individualParm[5], 16 );
       }
-      if( BuildConfig.DEBUG )
+      if( ApplicationDEBUG.DEBUG )
         Log.d( TAG, String.format( "SPX individuals settings <SE:%d, PS:%d, SC:%d, SN:%d, LI:%d, TS:%d>", sensorsOff, pscrOff, sensorsCount, soundOn, logInterval, tempStick ) );
     }
     catch( IndexOutOfBoundsException ex )
@@ -782,7 +782,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // jetzt die Werte für Sensoren an/aus
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "set sensors on/off value to preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "set sensors on/off value to preference..." );
     sp.setChecked( ( sensorsOff == 0 ) );
     //
     // PSCR-Mode an/aus ...
@@ -796,7 +796,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // jetzt die Werte für PSCR an/aus
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "set PSCR-Mode on/off value to preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "set PSCR-Mode on/off value to preference..." );
     sp.setChecked( ( pscrOff == 1 ) );
     //
     // Anzahl der Sensoren für die Berechnungen wählen
@@ -807,7 +807,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       ignorePrefChange = false;
       return;
     }
-    if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveIndividuals: set sensors count value to preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgReciveIndividuals: set sensors count value to preference..." );
     lP.setValueIndex( sensorsCount );
     lP.setSummary( String.format( getResources().getString( R.string.conf_ind_count_sensorwarning_header_summary ), lP.getEntry() ) );
     //
@@ -822,7 +822,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // jetzt die Werte für Akustische Warnungen an/aus
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "set acoustic warnings on/off value to preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "set acoustic warnings on/off value to preference..." );
     sp.setChecked( ( soundOn == 1 ) );
     //
     // Loginterval in Oberfläche einbauen
@@ -833,7 +833,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       ignorePrefChange = false;
       return;
     }
-    if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveIndividuals: set loginterval value to preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgReciveIndividuals: set loginterval value to preference..." );
     lP.setValueIndex( logInterval );
     lP.setSummary( String.format( getResources().getString( R.string.conf_ind_interval_header_summary ), lP.getEntry() ) );
     //
@@ -847,7 +847,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
         ignorePrefChange = false;
         return;
       }
-      if( BuildConfig.DEBUG ) Log.d( TAG, "msgReciveIndividuals: set tempstick value to preference..." );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgReciveIndividuals: set tempstick value to preference..." );
       lP.setValueIndex( tempStick );
       lP.setSummary( String.format( getResources().getString( R.string.conf_ind_tempstick_header_summary ), lP.getEntry() ) );
     }
@@ -867,7 +867,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    */
   private void msgReciveIndividualsAck( BtServiceMessage msg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX INDIVIDUALS settings ACK recived" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX INDIVIDUALS settings ACK recived" );
     theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_individuals_ok ), false );
     ignorePrefChange = false;
   }
@@ -897,7 +897,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     if( msg.getContainer() instanceof String[] )
     {
       unitsParm = ( String[] )msg.getContainer();
-      if( BuildConfig.DEBUG )
+      if( ApplicationDEBUG.DEBUG )
       {
         try
         {
@@ -951,7 +951,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       {
         isTempImperial = 1;
       }
-      if( BuildConfig.DEBUG ) Log.w( TAG, "msgReciveUnits: SPX firmware is buggy version: switch all to " + ( isDepthImperial == 0 ? "metric" : "imperial" ) );
+      if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "msgReciveUnits: SPX firmware is buggy version: switch all to " + ( isDepthImperial == 0 ? "metric" : "imperial" ) );
     }
     ignorePrefChange = true;
     //
@@ -966,7 +966,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // jetzt die Werte für Temperatureinheit übernehmen
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "set temp unit value to preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "set temp unit value to preference..." );
     sp.setChecked( ( isTempImperial == 0 ) );
     //
     // Tiefeneinheit...
@@ -980,7 +980,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // jetzt die Werte für Tiefgeneinheit übernehmen
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "set depth unit value to preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "set depth unit value to preference..." );
     sp.setChecked( ( isDepthImperial == 0 ) );
     //
     // Süsswasser...
@@ -994,7 +994,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // jetzt Wert für Süß oder Salzwasser eintragen
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "set salnity value to preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "set salnity value to preference..." );
     sp.setChecked( ( isFreshwater > 0 ) );
     ignorePrefChange = false;
   }
@@ -1012,7 +1012,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    */
   private void msgReciveUnitsAck( BtServiceMessage msg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX units settings ACK recived" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX units settings ACK recived" );
     theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_units_ok ), false );
     ignorePrefChange = false;
   }
@@ -1054,23 +1054,23 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // artig die richtige Meldung absetzen
     //
       case ProjectConst.SPX_SET_SETUP_SETPOINT:
-        if( BuildConfig.DEBUG ) Log.d( TAG, "SPX O2 setpoint was not correct send!" );
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX O2 setpoint was not correct send!" );
         theToast.showConnectionToastAlert( getResources().getString( R.string.toast_comm_set_autosetpoint_alert ) );
         break;
       case ProjectConst.SPX_SET_SETUP_DEKO:
-        if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Deco settings was not correct send!" );
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX Deco settings was not correct send!" );
         theToast.showConnectionToastAlert( getResources().getString( R.string.toast_comm_set_deco_alert ) );
         break;
       case ProjectConst.SPX_SET_SETUP_DISPLAYSETTINGS:
-        if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Display settings was not correct send!" );
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX Display settings was not correct send!" );
         theToast.showConnectionToastAlert( getResources().getString( R.string.toast_comm_set_display_alert ) );
         break;
       case ProjectConst.SPX_SET_SETUP_INDIVIDUAL:
-        if( BuildConfig.DEBUG ) Log.d( TAG, "SPX individual settings was not correct send!" );
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX individual settings was not correct send!" );
         theToast.showConnectionToastAlert( getResources().getString( R.string.toast_comm_set_individuals_alert ) );
         break;
       case ProjectConst.SPX_GET_SETUP_UNITS:
-        if( BuildConfig.DEBUG ) Log.d( TAG, "SPX unit settings was not correct send!" );
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX unit settings was not correct send!" );
         theToast.showConnectionToastAlert( getResources().getString( R.string.toast_comm_set_units_alert ) );
         break;
       default:
@@ -1099,7 +1099,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     theToast = new CommToast( getActivity() );
     if( FragmentCommonActivity.spxConfig.getCustomEnabled() == 1 )
     {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "Preferences in INDIVIDUAL Mode" );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Preferences in INDIVIDUAL Mode" );
       if( FragmentCommonActivity.spxConfig.hasSixValuesIndividual() )
       {
         addPreferencesFromResource( R.xml.config_spx42_preference_individual_six );
@@ -1113,7 +1113,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     }
     else
     {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "Preferences in STANDART Mode" );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Preferences in STANDART Mode" );
       addPreferencesFromResource( R.xml.config_spx42_preference_std );
       Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_std + ">..." );
     }
@@ -1161,7 +1161,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // lösche Listener, der überwacht, wenn Preferenzen geändert wurden
     //
     getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener( this );
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onPause(): clear service listener for preferences fragment..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause(): clear service listener for preferences fragment..." );
     ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
   }
 
@@ -1177,7 +1177,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     ignorePrefChange = true;
     // Service Listener setzen
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onResume(): set service listener for preferences fragment..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume(): set service listener for preferences fragment..." );
     fActivity.addServiceListener( this );
   }
 
@@ -1189,10 +1189,10 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     Log.v( TAG, "onSharedPreferenceChanged()...." );
     if( ignorePrefChange )
     {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "onSharedPreferenceChanged(): ignore Change Event" );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onSharedPreferenceChanged(): ignore Change Event" );
       return;
     }
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onSharedPreferenceChanged(): key = <" + key + ">" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onSharedPreferenceChanged(): key = <" + key + ">" );
     //
     // zuerst mal die ListPreferenzen abklappern
     //
@@ -1362,15 +1362,15 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     super.onViewCreated( view, savedInstanceState );
     Log.v( TAG, "onViewCreated..." );
     PreferenceScreen ps = getPreferenceScreen();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "this preferencescreen has <" + ps.getPreferenceCount() + "> preferenes." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "this preferencescreen has <" + ps.getPreferenceCount() + "> preferenes." );
     for( int groupIdx = 0; groupIdx < ps.getPreferenceCount(); groupIdx++ )
     {
       PreferenceGroup pg = ( PreferenceGroup )ps.getPreference( groupIdx );
-      if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "The Group <%s> has %d preferences", pg.getTitle(), pg.getPreferenceCount() ) );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "The Group <%s> has %d preferences", pg.getTitle(), pg.getPreferenceCount() ) );
       for( int prefIdx = 0; prefIdx < pg.getPreferenceCount(); prefIdx++ )
       {
         Preference pref = pg.getPreference( prefIdx );
-        if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "The Preference <%s> is number %d", pref.getTitle(), prefIdx ) );
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "The Preference <%s> is number %d", pref.getTitle(), prefIdx ) );
         // jede ungerade Zeile färben
         if( prefIdx % 2 > 0 )
         {
@@ -1403,7 +1403,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // Preference pref = null;
     int autoSp = 0, sP = 0;
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "sendAutoSetpoint()..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "sendAutoSetpoint()..." );
     theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_autosetpoint ), true );
     //
     // aus den Voreinstellungen holen
@@ -1457,7 +1457,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     SwitchPreference sp;
     //
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "sendDecoPrefs..." );
     theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_deco ), true );
     //
     // Low/High Gradient erfragen
@@ -1473,7 +1473,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       //
       // jetzt die Werte für Gradienten übernehmen
       //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs: get Gradients value from preference..." );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "sendDecoPrefs: get Gradients value from preference..." );
       int[] val = dgp.getValue();
       lowG = val[0];
       highG = val[1];
@@ -1494,7 +1494,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // jetzt die Werte für LastStop übernehmen
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs: get deco last stop value from preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "sendDecoPrefs: get deco last stop value from preference..." );
     if( sp.isChecked() )
     {
       lastStop = 0;
@@ -1514,7 +1514,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // jetzt die Werte für LastStop übernehmen
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs: get dynGradients value from preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "sendDecoPrefs: get dynGradients value from preference..." );
     if( sp.isChecked() )
     {
       dynGr = 1;
@@ -1534,7 +1534,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // jetzt die Werte für LastStop übernehmen
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs: get deepStops value from preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "sendDecoPrefs: get deepStops value from preference..." );
     if( sp.isChecked() )
     {
       deepStops = 1;
@@ -1545,7 +1545,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     }
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     ignorePrefChange = true;
-    if( BuildConfig.DEBUG ) Log.d( TAG, "sendDecoPrefs: write deco prefs via runningActivity..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "sendDecoPrefs: write deco prefs via runningActivity..." );
     try
     {
       fActivity.writeDecoPrefs( lowG, highG, deepStops, dynGr, lastStop );
@@ -1565,7 +1565,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   {
     ListPreference lP = null;
     int lumin = 1, orient = 0;
-    if( BuildConfig.DEBUG ) Log.d( TAG, "sendDisplayPrefs()..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "sendDisplayPrefs()..." );
     theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_display ), true );
     //
     // Helligkeit erfragen
@@ -1578,7 +1578,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // jetzt die Werte für Helligkeit übernehmen
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "get display luminance value from preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "get display luminance value from preference..." );
     lumin = lP.findIndexOfValue( lP.getValue() );
     if( lumin == -1 ) lumin = 2;
     //
@@ -1592,13 +1592,13 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // jetzt die Werte für Ausrichtung übernehmen
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "get display orientation value from preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "get display orientation value from preference..." );
     orient = lP.findIndexOfValue( lP.getValue() );
     if( orient == -1 ) orient = 0;
     //
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     ignorePrefChange = true;
-    if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "sendDisplayPrefs: write display prefs via runningActivity lum:%d, orient:%d...", lumin, orient ) );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "sendDisplayPrefs: write display prefs via runningActivity lum:%d, orient:%d...", lumin, orient ) );
     try
     {
       fActivity.writeDisplayPrefs( lumin, orient );
@@ -1620,7 +1620,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     SwitchPreference sp;
     ListPreference lP;
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs()..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "sendIndividualPrefs()..." );
     theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_individuals ), true );
     // ~38:SE:PS:SC:SN:LI
     // SE: Sensors 0->ON 1->OFF
@@ -1640,7 +1640,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // jetzt die Werte für Sensoren an/aus
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read sensors on/off value from preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read sensors on/off value from preference..." );
     if( sp.isChecked() )
     {
       sensorsOff = 0;
@@ -1660,7 +1660,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // jetzt die Werte für PSCR an/aus
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs read PSCR-Mode on/off value from preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "sendIndividualPrefs read PSCR-Mode on/off value from preference..." );
     if( sp.isChecked() )
     {
       pscrOff = 1;
@@ -1678,7 +1678,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       ignorePrefChange = false;
       return;
     }
-    if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read sensors count value from preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read sensors count value from preference..." );
     sensorsCount = lP.findIndexOfValue( lP.getValue() );
     if( sensorsCount == -1 ) sensorsCount = 2;
     //
@@ -1693,7 +1693,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // jetzt die Werte für Akustische Warnungen an/aus
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read acoustic warnings on/off value from preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read acoustic warnings on/off value from preference..." );
     if( sp.isChecked() )
     {
       soundOn = 1;
@@ -1711,7 +1711,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       ignorePrefChange = false;
       return;
     }
-    if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read loginterval value from preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read loginterval value from preference..." );
     logInterval = lP.findIndexOfValue( lP.getValue() );
     if( logInterval == -1 ) logInterval = 2;
     //
@@ -1725,13 +1725,13 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
         ignorePrefChange = false;
         return;
       }
-      if( BuildConfig.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read tempstick typ value from preference..." );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "sendIndividualPrefs: read tempstick typ value from preference..." );
       tempStick = lP.findIndexOfValue( lP.getValue() );
     }
     //
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     ignorePrefChange = true;
-    if( BuildConfig.DEBUG )
+    if( ApplicationDEBUG.DEBUG )
       Log.d( TAG, String.format( "sendIndividualPrefs: write individual prefs via runningActivity :<SE:%d, PS:%d, SC:%d, SN:%d, LI:%d, TS:%d>...", sensorsOff, pscrOff,
               sensorsCount, soundOn, logInterval, tempStick ) );
     try
@@ -1757,7 +1757,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     int isTempImperial = 0, isDepthImperial = 0, isFreshwater = 1;
     SwitchPreference sp;
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "sendUnitPrefs()..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "sendUnitPrefs()..." );
     theToast.showConnectionToast( getResources().getString( R.string.toast_comm_set_units ), true );
     //
     // Temperatur Einheit Celsius oder Imperial
@@ -1770,7 +1770,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // jetzt die Werte für Temperatureinheit übernehmen
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "sendUnitPrefs: get temp unit value from preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "sendUnitPrefs: get temp unit value from preference..." );
     if( sp.isChecked() )
     {
       // Celsius!
@@ -1791,7 +1791,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // jetzt die Werte für Tiefeneinheit übernehmen
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "sendUnitPrefs: get depth unit value from preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "sendUnitPrefs: get depth unit value from preference..." );
     if( sp.isChecked() )
     {
       // metrisch
@@ -1812,7 +1812,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // jetzt die Werte für Süß oder Salzwasser übernehmen
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "sendUnitPrefs: get salnity value from preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "sendUnitPrefs: get salnity value from preference..." );
     if( sp.isChecked() )
     {
       // süßwasser
@@ -1825,7 +1825,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     ignorePrefChange = true;
-    if( BuildConfig.DEBUG )
+    if( ApplicationDEBUG.DEBUG )
       Log.d( TAG, String.format( "sendUnitPrefs: write display prefs via runningActivity temp:%d, depth:%d, freshwater:%d...", isTempImperial, isDepthImperial, isFreshwater ) );
     try
     {
@@ -1933,14 +1933,14 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       //
       // jetzt die Werte für Gradienten übernehmen
       //
-      if( BuildConfig.DEBUG )
+      if( ApplicationDEBUG.DEBUG )
       {
         presetCandidateStr = String.format( Locale.getDefault(), "%02d:%02d", presetCandidate[0], presetCandidate[1] );
         Log.d( TAG, "set Gradients value to preference (" + presetCandidateStr + ")..." );
       }
       dgp.setValue( presetCandidate );
       setDecoGradientsSummary();
-      if( BuildConfig.DEBUG ) Log.d( TAG, "set Gradients value to preference (" + presetCandidateStr + ")...OK" );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "set Gradients value to preference (" + presetCandidateStr + ")...OK" );
       return( true );
     }
     else
@@ -1966,7 +1966,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   {
     int[] vals =
     { 0, 0 };
-    if( BuildConfig.DEBUG ) Log.d( TAG, "setDecoGradients(STRING): String to split <" + presetCandidate + ">" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "setDecoGradients(STRING): String to split <" + presetCandidate + ">" );
     String fields[] = presetCandidate.split( ":" );
     if( ( fields != null ) && ( fields.length >= 2 ) )
     {
@@ -1976,7 +1976,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       {
         vals[0] = Integer.parseInt( fields[0] );
         vals[1] = Integer.parseInt( fields[1] );
-        if( BuildConfig.DEBUG ) Log.d( TAG, "setDecoGradients(STRING): successful set Values" );
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "setDecoGradients(STRING): successful set Values" );
         return( setDecoGradients( vals ) );
       }
       catch( NumberFormatException ex )
@@ -2019,7 +2019,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     {
       if( presetCandidateStr.equals( gradientPresetsVals[i] ) )
       {
-        if( BuildConfig.DEBUG )
+        if( ApplicationDEBUG.DEBUG )
         {
           String[] gradientPresetsNames = getResources().getStringArray( R.array.gradientPresetNamesArray );
           Log.d( TAG, "setDecoGradientsPreset: deco preset (" + presetCandidateStr + " = " + gradientPresetsNames[i] + ") found!" );
@@ -2036,7 +2036,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // jetzt den Preset übernehmen
     // Index sollte i sein....
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "setDecoGradientsPreset: set preset value to preference..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "setDecoGradientsPreset: set preset value to preference..." );
     lP.setValueIndex( i );
   }
 
@@ -2061,7 +2061,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       return;
     }
     // die Summary Geschichte schreiben
-    if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "setDecoGradientsSummary: write " + getResources().getString( R.string.conf_deco_gradient_summary ), low, high ) );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "setDecoGradientsSummary: write " + getResources().getString( R.string.conf_deco_gradient_summary ), low, high ) );
     getPreferenceScreen().findPreference( decoGradient ).setSummary( String.format( getResources().getString( R.string.conf_deco_gradient_summary ), low, high ) );
   }
 

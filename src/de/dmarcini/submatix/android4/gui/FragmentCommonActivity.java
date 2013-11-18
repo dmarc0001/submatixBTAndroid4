@@ -37,7 +37,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
-import de.dmarcini.submatix.android4.BuildConfig;
+import de.dmarcini.submatix.android4.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BlueThoothComService;
 import de.dmarcini.submatix.android4.comm.BlueThoothComService.LocalBinder;
@@ -92,7 +92,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     @Override
     public void onServiceConnected( ComponentName name, IBinder service )
     {
-      if( BuildConfig.DEBUG ) Log.d(TAG,"onServiceConnected()...");
+      if( ApplicationDEBUG.DEBUG ) Log.d(TAG,"onServiceConnected()...");
       binder = ( LocalBinder )service;
       mService = binder.getService();
       binder.registerServiceHandler( mHandler );
@@ -101,10 +101,10 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     @Override
     public void onServiceDisconnected( ComponentName name )
     {
-      if( BuildConfig.DEBUG ) Log.d(TAG,"onServiceDisconnected...");
+      if( ApplicationDEBUG.DEBUG ) Log.d(TAG,"onServiceDisconnected...");
       if( mService != null && binder != null )
       {
-        if( BuildConfig.DEBUG ) Log.d(TAG,"onServiceDisconnected...unregister Handler...");
+        if( ApplicationDEBUG.DEBUG ) Log.d(TAG,"onServiceDisconnected...unregister Handler...");
         binder.unregisterServiceHandler( mHandler );
       }
       mService = null;
@@ -413,20 +413,20 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     //
     for( int i = 0; i < services.size(); i++ )
     {
-      // if( BuildConfig.DEBUG ) Log.d( TAG, "Service Nr." + i + ":" + services.get( i ).service + "<" + services.get( i ).service.getPackageName() + ">" );
+      // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Service Nr." + i + ":" + services.get( i ).service + "<" + services.get( i ).service.getPackageName() + ">" );
       if( ( services.get( i ).service.getPackageName() ).matches( PACKAGENAME ) )
       {
-        // if( BuildConfig.DEBUG ) Log.d( TAG, "Service class name <" + services.get( i ).service.getClassName() + ">" );
+        // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Service class name <" + services.get( i ).service.getClassName() + ">" );
         if( SERVICENAME.equals( services.get( i ).service.getClassName() ) )
         {
-          if( BuildConfig.DEBUG ) Log.d( TAG, "Service is running, need not start..." );
+          if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Service is running, need not start..." );
           isServiceFound = true;
         }
       }
     }
     if( !isServiceFound )
     {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "Starting Service..." );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Starting Service..." );
       Intent service = new Intent( this, BlueThoothComService.class );
       startService( service );
     }
@@ -452,7 +452,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    */
   public void doConnectBtDevice( String device )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "recived do connect device <%s>", device ) );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "recived do connect device <%s>", device ) );
     if( mIsBound )
     {
       mService.connect( device );
@@ -470,7 +470,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    */
   public void doDisconnectBtDevice()
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "recived do disconnect device " );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "recived do disconnect device " );
     if( mIsBound )
     {
       mService.disconnect();
@@ -498,7 +498,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
         {
           if( mService != null && binder != null )
           {
-            if( BuildConfig.DEBUG ) Log.d( TAG, "doUnbindService...unregister Handler..." );
+            if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "doUnbindService...unregister Handler..." );
             binder.unregisterServiceHandler( mHandler );
           }
           unbindService( mConnection );
@@ -672,7 +672,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       // Sonst....
       // ################################################################
       default:
-        if( BuildConfig.DEBUG ) Log.i( TAG, "unknown message with id <" + smsg.getId() + "> recived!" );
+        if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "unknown message with id <" + smsg.getId() + "> recived!" );
     }
   }
 
@@ -713,13 +713,13 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       //
       // wenn das Gerät noch nicht ausgelesen wurde alles abfragen
       //
-      if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for manufacturer number..." );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgConnected(): ask for manufacturer number..." );
       askForManufacturer();
-      if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for serial number..." );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgConnected(): ask for serial number..." );
       askForSerialNumber();
-      if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for SPX license..." );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgConnected(): ask for SPX license..." );
       askForLicenseFromSPX();
-      if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): ask for Firmware version..." );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgConnected(): ask for Firmware version..." );
       askForFirmwareVersion();
     }
   }
@@ -727,7 +727,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   @Override
   public void msgConnectError( BtServiceMessage msg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "connection error (device not online?)" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "connection error (device not online?)" );
   }
 
   /**
@@ -786,7 +786,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   private void msgRecivedFwVersion( BtServiceMessage msg )
   {
     spxConfig.setFirmwareVersion( ( String )msg.getContainer() );
-    if( BuildConfig.DEBUG )
+    if( ApplicationDEBUG.DEBUG )
     {
       Log.i( TAG, "license: custom: " + spxConfig.getCustomEnabled() );
       Log.i( TAG, "fahrenheid bug: " + spxConfig.hasFahrenheidBug() );
@@ -799,7 +799,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     //
     // Jetzt währe es an der Zeit, auhc an DAtum und Zeit zu denken
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "msgConnected(): set Date and Time to Device (if possible)..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgConnected(): set Date and Time to Device (if possible)..." );
     try
     {
       writeDateTimeToDevice();
@@ -821,14 +821,14 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    */
   public void msgRecivedSerial( BtServiceMessage msg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "serial <" + ( String )msg.getContainer() + "> recived" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "serial <" + ( String )msg.getContainer() + "> recived" );
     spxConfig.setSerial( new String( ( String )msg.getContainer() ) );
   }
 
   @Override
   public void msgRecivedTick( BtServiceMessage msg )
   {
-    // if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
+    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
   }
 
   /**
@@ -848,8 +848,8 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     // CE : Custom Enabled 0= disabled, 1=enabled
     String[] lic = ( String[] )msg.getContainer();
     spxConfig.setLicenseStatus( lic );
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX License state <" + lic[0] + "," + lic[1] + "> recived" );
-    if( BuildConfig.DEBUG )
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX License state <" + lic[0] + "," + lic[1] + "> recived" );
+    if( ApplicationDEBUG.DEBUG )
     {
       Log.d( TAG, "SPX License INDIVIDUAL: <" + spxConfig.getCustomEnabled() + ">" );
       switch ( spxConfig.getLicenseState() )
@@ -882,7 +882,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    */
   public void msgReciveManufacturer( BtServiceMessage msg )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "SPX Manufacturer <" + ( String )msg.getContainer() + "> recived. Ignore." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX Manufacturer <" + ( String )msg.getContainer() + "> recived. Ignore." );
   }
 
   @Override
@@ -958,13 +958,13 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       boolean whishedTheme = sPref.getBoolean( "keyProgOthersThemeIsDark", false );
       if( whishedTheme )
       {
-        if( BuildConfig.DEBUG ) Log.d( TAG, "onCreate: select DARK theme while preference was set" );
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate: select DARK theme while preference was set" );
         currentStyleId = R.style.AppDarkTheme;
         setTheme( R.style.AppDarkTheme );
       }
       else
       {
-        if( BuildConfig.DEBUG ) Log.d( TAG, "onCreate: select Blue theme while preference was set" );
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate: select Blue theme while preference was set" );
         currentStyleId = R.style.AppLightTheme;
         setTheme( R.style.AppLightTheme );
       }
@@ -1301,7 +1301,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     switch ( item.getItemId() )
     {
       case android.R.id.home:
-        if( BuildConfig.DEBUG ) Log.d( TAG, "onOptionsItemSelected: navigate UP!" );
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onOptionsItemSelected: navigate UP!" );
         // This is called when the Home (Up) button is pressed
         // in the Action Bar.
         Intent parentActivityIntent = new Intent( this, AreaListActivity.class );
@@ -1366,7 +1366,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    */
   public void removeServiceListener( IBtServiceListener listener )
   {
-    if( BuildConfig.DEBUG ) Log.d( TAG, "clearServiceListener()..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "clearServiceListener()..." );
     //
     // wenn der listener vorhanden ist, entferne ihn aus der Liste
     //

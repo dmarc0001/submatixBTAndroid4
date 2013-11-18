@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.gui;
+﻿package de.dmarcini.submatix.android4.gui;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -7,7 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import de.dmarcini.submatix.android4.BuildConfig;
+import de.dmarcini.submatix.android4.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
 
@@ -31,7 +31,7 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
   {
     super.onActivityCreated( bundle );
     runningActivity = getActivity();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
   }
 
   @Override
@@ -39,7 +39,7 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
   {
     super.onAttach( activity );
     runningActivity = activity;
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
   }
 
   /**
@@ -49,7 +49,7 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
   public void onCreate( Bundle savedInstanceState )
   {
     super.onCreate( savedInstanceState );
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onCreate..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
   }
 
   /**
@@ -59,7 +59,7 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
   public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
   {
     View rootView;
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onCreateView..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView..." );
     //
     // wenn kein Container vorhanden ist, dann gibts auch keinen View
     //
@@ -73,14 +73,14 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
     //
     if( runningActivity instanceof AreaDetailActivity )
     {
-      if( BuildConfig.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
       return( null );
     }
     //
     // Verbindungsseite via twoPane ausgewählt
     //
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "makeConnectionView..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "makeConnectionView..." );
     //
     // View aus Resource laden
     //
@@ -98,11 +98,11 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
   public void onPause()
   {
     super.onPause();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onPause..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause..." );
     //
     // die abgeleiteten Objekte führen das auch aus
     //
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
     ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
   }
 
@@ -113,7 +113,7 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
   public synchronized void onResume()
   {
     super.onResume();
-    if( BuildConfig.DEBUG ) Log.d( TAG, "onResume..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
     ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
     // wenn zu diesem Zeitpunkt das Array noch nicht gefüllt ist, dann mach das nun
   }
