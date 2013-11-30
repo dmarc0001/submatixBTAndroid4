@@ -35,6 +35,8 @@ public class SPX42Config
   protected boolean                      isFirmwareSupported = false;
   protected boolean                        isOldParamSorting = false;  // bei alter Firmware war die Reihenfolge der Paramete anders
   protected boolean                 isNewerDisplayBrightness = false; // ab FW FIRMWARE_2_7H_R83CE 20 % Schritte
+  protected boolean                  isSixMetersAutoSetpoint = false; // ab FW FIRMWARE_2_7H_R83CE autosetpoint ab 6 Meter 
+
   
   //
   //@formatter:on
@@ -77,6 +79,7 @@ public class SPX42Config
     isFirmwareSupported = cf.isFirmwareSupported;
     isOldParamSorting = cf.isOldParamSorting;
     isNewerDisplayBrightness = cf.isNewerDisplayBrightness;
+    isSixMetersAutoSetpoint = cf.isSixMetersAutoSetpoint;
   }
 
   /**
@@ -118,6 +121,7 @@ public class SPX42Config
     isFirmwareSupported = false;
     isOldParamSorting = false; // bei alter Firmware war die Reihenfolge der Paramete anders
     isNewerDisplayBrightness = false; // ab FW FIRMWARE_2_7H_R83CE 20 % Schritte
+    isSixMetersAutoSetpoint = false;
   }
 
   /**
@@ -147,6 +151,7 @@ public class SPX42Config
     if( isFirmwareSupported != cf.isFirmwareSupported ) return( false );
     if( isOldParamSorting != cf.isOldParamSorting ) return( false );
     if( isNewerDisplayBrightness != cf.isNewerDisplayBrightness ) return( false );
+    if( isSixMetersAutoSetpoint != cf.isSixMetersAutoSetpoint ) return( false );
     return( true );
   }
 
@@ -332,6 +337,21 @@ public class SPX42Config
 
   /**
    * 
+   * Ist in der Firmware sechs Meter der erste Autosetpoint?
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * Stand: 30.11.2013
+   * 
+   * @return
+   */
+  public boolean isSixMetersAutoSetpoint()
+  {
+    return( isSixMetersAutoSetpoint );
+  }
+
+  /**
+   * 
    * Setze, ob CUSTOM lizensiert wurde
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
@@ -383,6 +403,7 @@ public class SPX42Config
     isFirmwareSupported = false;
     isOldParamSorting = false;
     isNewerDisplayBrightness = false;
+    isSixMetersAutoSetpoint = false;
     //
     // versuch mal die Eigenschaften rauszufinden
     //
@@ -416,6 +437,7 @@ public class SPX42Config
         // hier kommt bestimmt noch irgendwas nach :-(
         hasSixValuesIndividual = true;
         isNewerDisplayBrightness = true;
+        isSixMetersAutoSetpoint = true;
         canSetDate = true;
       }
     }
