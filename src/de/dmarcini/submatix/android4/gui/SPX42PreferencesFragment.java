@@ -1094,8 +1094,10 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   @Override
   public void onCreate( Bundle savedInstanceState )
   {
+    ListPreference autoSetPref = null;
+    //
     super.onCreate( savedInstanceState );
-    Log.v( TAG, "onCreate()..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate()..." );
     theToast = new CommToast( getActivity() );
     if( FragmentCommonActivity.spxConfig.getCustomEnabled() == 1 )
     {
@@ -1103,19 +1105,35 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       if( FragmentCommonActivity.spxConfig.hasSixValuesIndividual() )
       {
         addPreferencesFromResource( R.xml.config_spx42_preference_individual_six );
-        Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_individual_six + ">..." );
+        if( ApplicationDEBUG.DEBUG ) Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_individual_six + ">..." );
       }
       else
       {
         addPreferencesFromResource( R.xml.config_spx42_preference_individual );
-        Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_individual + ">..." );
+        if( ApplicationDEBUG.DEBUG ) Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_individual + ">..." );
       }
     }
     else
     {
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Preferences in STANDART Mode" );
       addPreferencesFromResource( R.xml.config_spx42_preference_std );
-      Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_std + ">..." );
+      if( ApplicationDEBUG.DEBUG ) Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_std + ">..." );
+    }
+    if( FragmentCommonActivity.spxConfig.isSixMetersAutoSetpoint() )
+    {
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate: isSixMetersAutoSetpoint..." );
+      autoSetPref = getListPreference( setpointAuto );
+      if( autoSetPref != null )
+      {
+        if( ApplicationDEBUG.DEBUG ) Log.v( TAG, "onCreate: isSixMetersAutoSetpoint...found resource" );
+        autoSetPref.setEntries( R.array.highsetpointSixDepthNamesArray );
+        autoSetPref.setEntryValues( R.array.highsetpointSixDepthValuesArray );
+        if( ApplicationDEBUG.DEBUG ) Log.v( TAG, "onCreate: isSixMetersAutoSetpoint...set resource" );
+      }
+    }
+    else
+    {
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate: NOT isSixMetersAutoSetpoint..." );
     }
     //
     // die richtigen Helligkeitsstufen setzen
@@ -2061,7 +2079,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       return;
     }
     // die Summary Geschichte schreiben
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "setDecoGradientsSummary: write " + getResources().getString( R.string.conf_deco_gradient_summary ), low, high ) );
+    if( ApplicationDEBUG.DEBUG )
+      Log.d( TAG, String.format( "setDecoGradientsSummary: write \"" + getResources().getString( R.string.conf_deco_gradient_summary ), low, high ) + "\"" );
     getPreferenceScreen().findPreference( decoGradient ).setSummary( String.format( getResources().getString( R.string.conf_deco_gradient_summary ), low, high ) );
   }
 
