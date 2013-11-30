@@ -795,9 +795,10 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       Log.i( TAG, "is firmware supported: " + spxConfig.isFirmwareSupported() );
       Log.i( TAG, "is old param order: " + spxConfig.isOldParamSorting() );
       Log.i( TAG, "is newer display brightness: " + spxConfig.isNewerDisplayBrigthness() );
+      Log.i( TAG, "has six meters first autosetpoint: " + spxConfig.isSixMetersAutoSetpoint() );
     }
     //
-    // Jetzt währe es an der Zeit, auhc an DAtum und Zeit zu denken
+    // Jetzt währe es an der Zeit, auch an Datum und Zeit zu denken
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgConnected(): set Date and Time to Device (if possible)..." );
     try
