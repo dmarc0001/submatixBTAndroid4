@@ -1036,6 +1036,11 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       {
         Log.i( TAG, "User will close app..." );
         Toast.makeText( this, R.string.toast_exit, Toast.LENGTH_SHORT ).show();
+        if( mService != null )
+        {
+          mService.destroyService();
+          mService = null;
+        }
         if( BluetoothAdapter.getDefaultAdapter() != null )
         {
           // TODO: Preferences -> Programmeinstellungen soll das automatisch passieren?

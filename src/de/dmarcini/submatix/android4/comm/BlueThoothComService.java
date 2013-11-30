@@ -2085,4 +2085,18 @@ public class BlueThoothComService extends Service
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "askForLogDetail: sending <" + kdoString + ">" );
     this.writeSPXMsgToDevice( kdoString );
   }
+
+  /**
+   * 
+   * Den Service zerstören!!!!
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.comm
+   * 
+   * Stand: 30.11.2013
+   */
+  public void destroyService()
+  {
+    disconnect();
+    stopSelf();
+  }
 }
