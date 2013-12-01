@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.util.Pair;
 import de.dmarcini.submatix.android4.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.exceptions.NoDatabaseException;
 
@@ -267,6 +268,7 @@ public class SPX42AliasManager
     {
       if( cu.moveToFirst() )
       {
+        lst.add( cu.getInt( 0 ) );
         while( cu.moveToNext() )
         {
           lst.add( cu.getInt( 0 ) );
@@ -278,6 +280,47 @@ public class SPX42AliasManager
     catch( SQLException ex )
     {
       Log.e( TAG, "Error while getDeviceIdList: <" + ex.getLocalizedMessage() + ">" );
+      return( null );
+    }
+  }
+
+  /**
+   * 
+   * Funktion liest eine Liste der gespeicherten Devices aus der Datenbank
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * Stand: 01.12.2013
+   * 
+   * @return
+   */
+  public Vector<Pair<Integer, String>> getDeviceNameIdList()
+  {
+    // Pair<Integer,String> = new Pair<Integer,String>(null, null);
+    String sql;
+    Cursor cu;
+    Vector<Pair<Integer, String>> devList = new Vector<Pair<Integer, String>>();
+    //
+    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getDeviceNameIdList..." );
+    sql = String.format( "select %s,%s from %s order by %s", ProjectConst.A_DEVICEID, ProjectConst.A_ALIAS, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_DEVICEID );
+    cu = dBase.rawQuery( sql, null );
+    //
+    try
+    {
+      if( cu.moveToFirst() )
+      {
+        devList.add( new Pair<Integer, String>( cu.getInt( 0 ), cu.getString( 1 ) ) );
+        while( cu.moveToNext() )
+        {
+          devList.add( new Pair<Integer, String>( cu.getInt( 0 ), cu.getString( 1 ) ) );
+        }
+      }
+      Log.d( TAG, "getDeviceNameIdList: read <" + devList.size() + "> entrys..." );
+      return( devList );
+    }
+    catch( SQLException ex )
+    {
+      Log.e( TAG, "Error while getDeviceNameIdList: <" + ex.getLocalizedMessage() + ">" );
       return( null );
     }
   }
