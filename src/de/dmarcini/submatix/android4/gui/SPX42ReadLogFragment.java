@@ -427,9 +427,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
 
   @Override
   public void msgReciveWriteTmeout( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   @Override
   public void onActivityCreated( Bundle bundle )
