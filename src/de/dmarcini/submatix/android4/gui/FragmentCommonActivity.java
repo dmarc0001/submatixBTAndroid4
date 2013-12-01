@@ -708,7 +708,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   {
     Log.v( TAG, "connected..." );
     //
-    if( !spxConfig.isInitialized() )
+    if( !spxConfig.isInitialized() && ( mService != null ) && ( mService.getConnectionState() == ProjectConst.MESSAGE_CONNECTED ) )
     {
       //
       // wenn das Gerät noch nicht ausgelesen wurde alles abfragen
