@@ -1010,6 +1010,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   public void onDialogNegativeClick( DialogFragment dialog )
   {
     Log.v( TAG, "Negative dialog click!" );
+    mHandler.obtainMessage( ProjectConst.MESSAGE_DIALOG_NEGATIVE, new BtServiceMessage( ProjectConst.MESSAGE_DIALOG_NEGATIVE ) ).sendToTarget();
   }
 
   /**
@@ -1073,6 +1074,8 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       startActivity( intent );
       finish();
     }
+    // hat sonst irgendwer Verwendung dafür?
+    mHandler.obtainMessage( ProjectConst.MESSAGE_DIALOG_POSITIVE, new BtServiceMessage( ProjectConst.MESSAGE_DIALOG_POSITIVE ) ).sendToTarget();
   }
 
   /**
