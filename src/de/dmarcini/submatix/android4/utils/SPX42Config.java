@@ -300,6 +300,13 @@ public class SPX42Config
    */
   public boolean isInitialized()
   {
+    if( !wasCorrectInitialized )
+    {
+      if( firmwareVersion != "0" && serialNumber != "0" && deviceName != "no name" && licenseState != 0 )
+      {
+        wasCorrectInitialized = true;
+      }
+    }
     return( wasCorrectInitialized );
   }
 
