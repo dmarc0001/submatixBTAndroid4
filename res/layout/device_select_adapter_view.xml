@@ -11,7 +11,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="@dimen/icon_margin_left"
         android:layout_marginTop="@dimen/icon_margin_top"
-        android:contentDescription="@string/array_with_pic_adapter_dummy"
         android:src="@drawable/spx42" />
 
     <TextView
@@ -22,7 +21,7 @@
         android:layout_marginLeft="19dp"
         android:layout_toRightOf="@+id/devSelectAdapterIconView"
         android:gravity="center_horizontal"
-        android:text="@string/array_with_pic_adapter_dummy"
+        android:text="@string/app_name"
         android:textAppearance="?android:attr/textAppearanceMedium" />
     
 </RelativeLayout>
