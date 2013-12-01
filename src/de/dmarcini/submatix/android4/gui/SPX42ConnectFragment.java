@@ -378,6 +378,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   public void msgDisconnected( BtServiceMessage msg )
   {
     int index;
+    FragmentCommonActivity.spxConfig.clear();
     setToggleButtonTextAndStat( ProjectConst.CONN_STATE_NONE );
     index = devSpinner.getSelectedItemPosition();
     btArrayAdapter = ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter();
