@@ -708,7 +708,8 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   {
     Log.v( TAG, "connected..." );
     //
-    if( !spxConfig.isInitialized() && ( mService != null ) && ( mService.getConnectionState() == ProjectConst.MESSAGE_CONNECTED ) )
+    // if( !spxConfig.isInitialized() && ( mService != null ) && ( mService.getConnectionState() == ProjectConst.MESSAGE_CONNECTED ) )
+    if( !spxConfig.isInitialized() )
     {
       //
       // wenn das Gerät noch nicht ausgelesen wurde alles abfragen
@@ -1002,7 +1003,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   /**
    * Wird ein Dialog negativ beendet (nein oder Abbruch)
    * 
-   * @see de.dmarcini.submatix.android4.gui.AreYouSureDialogFragment.NoticeDialogListener#onDialogNegativeClick(android.app.DialogFragment)
+   * @see de.dmarcini.submatix.android4.gui.AreYouSureDialogFragment.NoticeDialogListener#onDialogNegative(android.app.DialogFragment)
    * @param dialog
    */
   @SuppressWarnings( "javadoc" )
@@ -1010,13 +1011,13 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   public void onDialogNegativeClick( DialogFragment dialog )
   {
     Log.v( TAG, "Negative dialog click!" );
-    mHandler.obtainMessage( ProjectConst.MESSAGE_DIALOG_NEGATIVE, new BtServiceMessage( ProjectConst.MESSAGE_DIALOG_NEGATIVE ) ).sendToTarget();
+    mHandler.obtainMessage( ProjectConst.MESSAGE_DIALOG_NEGATIVE, new BtServiceMessage( ProjectConst.MESSAGE_DIALOG_NEGATIVE, dialog ) ).sendToTarget();
   }
 
   /**
    * Wird ein dialog Positiv beendet (ja oder Ok...)
    * 
-   * @see de.dmarcini.submatix.android4.gui.AreYouSureDialogFragment.NoticeDialogListener#onDialogPositiveClick(android.app.DialogFragment)
+   * @see de.dmarcini.submatix.android4.gui.AreYouSureDialogFragment.NoticeDialogListener#onDialogPositive(android.app.DialogFragment)
    * @param dialog
    */
   @SuppressWarnings( "javadoc" )
@@ -1040,7 +1041,6 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
         if( mService != null )
         {
           mService.destroyService();
-          mService = null;
         }
         if( BluetoothAdapter.getDefaultAdapter() != null )
         {
@@ -1075,7 +1075,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       finish();
     }
     // hat sonst irgendwer Verwendung dafür?
-    mHandler.obtainMessage( ProjectConst.MESSAGE_DIALOG_POSITIVE, new BtServiceMessage( ProjectConst.MESSAGE_DIALOG_POSITIVE ) ).sendToTarget();
+    mHandler.obtainMessage( ProjectConst.MESSAGE_DIALOG_POSITIVE, new BtServiceMessage( ProjectConst.MESSAGE_DIALOG_POSITIVE, dialog ) ).sendToTarget();
   }
 
   /**
