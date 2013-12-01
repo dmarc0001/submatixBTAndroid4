@@ -68,6 +68,7 @@
     <string name="dialog_save_button">Save</string>
     <string name="dialog_sqlite_error_header">Database ERROR</string>
     <string name="dialog_sqlite_nodatabase_error">no database found or\ndatabase can not open/create!\nprogram must abort!</string>
+    <string name="device_select_title">Select Device for exports</string>
     
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title" formatted="false">Searching BT Devices..</string>
@@ -298,6 +299,7 @@
     
     <!-- Fragment SPXExportLogFragment -->
     <string name="export_header">Export logs from device</string>
+    <string name="export_header_device" formatted="false" >Export logs from device %lt;%s&gt;</string>
     <string name="export_subheader" formatted="false">Device: %s</string>
     <string name="export_change_drive_button">Device...</string>
     <string name="export_do_export">Export!</string>
