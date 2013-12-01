@@ -688,6 +688,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     diveHeader.diveNumberOnSPX = rlio.numberOnSPX;
     diveHeader.deviceSerialNumber = FragmentCommonActivity.spxConfig.getSerial();
     diveHeader.units = ( isUnitImperial ? "i" : "m" );
+    diveHeader.deviceId = logManager.getIdForDeviceFromSerial( FragmentCommonActivity.spxConfig.getSerial() );
     //
     // und einen neuen XML-Dateicreator
     //
