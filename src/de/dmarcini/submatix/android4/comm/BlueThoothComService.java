@@ -940,7 +940,7 @@ public class BlueThoothComService extends Service
   private static WriterThread  mWriterThread               = null;
   private static volatile int  mConnectionState;
   private volatile boolean     isLogentryMode              = false;
-  private String               connectedDevice             = null;
+  private String               connectedDeviceMac          = null;
   private String               connectedDeviceSerialNumber = null;
   private String               connectedDeviceManufacturer = null;
   private String               connectedDeviceFWVersion    = null;
@@ -1176,12 +1176,13 @@ public class BlueThoothComService extends Service
    * Stand: 02.03.2013
    * 
    * @param addr
+   *          (MAC)
    */
   public synchronized void connect( String addr )
   {
     BluetoothDevice device = null;
     Log.v( TAG, "connect to: " + addr );
-    connectedDevice = null;
+    connectedDeviceMac = null;
     connectedDeviceSerialNumber = null;
     // connectedDeviceAlias = null;
     if( mAdapter == null )
@@ -1207,7 +1208,7 @@ public class BlueThoothComService extends Service
     }
     // Start the thread to connect with the given device
     mConnectThread = new ConnectThread( device );
-    connectedDevice = addr;
+    connectedDeviceMac = addr;
     mConnectThread.start();
     setState( ProjectConst.CONN_STATE_CONNECTING );
   }
@@ -1346,9 +1347,9 @@ public class BlueThoothComService extends Service
   {
     if( mConnectionState == ProjectConst.CONN_STATE_CONNECTED )
     {
-      if( connectedDevice != null )
+      if( connectedDeviceMac != null )
       {
-        return( connectedDevice );
+        return( connectedDeviceMac );
       }
     }
     return( null );
@@ -1584,7 +1585,7 @@ public class BlueThoothComService extends Service
       default:
       case ProjectConst.CONN_STATE_NONE:
         // die Daten löschen
-        connectedDevice = null;
+        connectedDeviceMac = null;
         connectedDeviceSerialNumber = null;
         connectedDeviceManufacturer = null;
         connectedDeviceFWVersion = null;
