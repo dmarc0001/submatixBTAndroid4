@@ -18,6 +18,7 @@ import de.dmarcini.submatix.android4.R;
  * 
  *         Stand: 17.12.2012
  */
+@SuppressWarnings( "javadoc" )
 public class ContentSwitcher
 {
   public static final String           TAG          = ContentSwitcher.class.getSimpleName();

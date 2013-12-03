@@ -24,10 +24,10 @@ import de.dmarcini.submatix.android4.gui.FragmentCommonActivity;
  */
 public class BuildVersion
 {
-  private static final long buildNumber = 2950L;
-  private static final long buildDate = 1386096915940L;
+  private static final long buildNumber = 2955L;
+  private static final long buildDate = 1386099372323L;
   @SuppressWarnings( "javadoc" )
-  public static final boolean isLightVersion = false;
+  public static final boolean isLightVersion    = false;
   /**
    * Kennzeichnung für eine Light-Version
    */
@@ -43,6 +43,16 @@ public class BuildVersion
     return( buildNumber );
   }
 
+  /**
+   * 
+   * Gib den Build als String zurück
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * Stand: 03.12.2013
+   * 
+   * @return Buildstring
+   */
   public static String getBuildAsString()
   {
     return( buildNumberString );

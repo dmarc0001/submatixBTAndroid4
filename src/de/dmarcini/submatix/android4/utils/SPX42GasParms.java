@@ -17,6 +17,7 @@ package de.dmarcini.submatix.android4.utils;
  * 
  *         Stand: 18.07.2013
  */
+@SuppressWarnings( "javadoc" )
 public class SPX42GasParms
 {
   public int     o2     = 21;

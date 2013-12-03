@@ -51,6 +51,7 @@ import de.dmarcini.submatix.android4.utils.UserAlertDialogFragment;
  */
 public class SPX42ConnectFragment extends Fragment implements IBtServiceListener, OnItemSelectedListener, OnClickListener
 {
+  @SuppressWarnings( "javadoc" )
   public static final String          TAG                       = SPX42ConnectFragment.class.getSimpleName();
   private static final String         LAST_CONNECTED_DEVICE_KEY = "keyLastConnectedDevice";
   private String                      lastConnectedDeviceMac    = null;

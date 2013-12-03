@@ -14,7 +14,9 @@ import android.app.DialogFragment;
  */
 public interface NoticeDialogListener
 {
+  @SuppressWarnings( "javadoc" )
   public void onDialogPositiveClick( DialogFragment dialog );
 
+  @SuppressWarnings( "javadoc" )
   public void onDialogNegativeClick( DialogFragment dialog );
 }

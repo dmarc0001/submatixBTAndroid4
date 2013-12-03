@@ -12,13 +12,21 @@
  */
 public class ReadLogItemObj
 {
+  @SuppressWarnings( "javadoc" )
   public boolean isSaved;
+  @SuppressWarnings( "javadoc" )
   public String  itemName;
+  @SuppressWarnings( "javadoc" )
   public String  itemNameOnSPX;
+  @SuppressWarnings( "javadoc" )
   public String  itemDetail;
+  @SuppressWarnings( "javadoc" )
   public int     dbId;
+  @SuppressWarnings( "javadoc" )
   public int     numberOnSPX;
+  @SuppressWarnings( "javadoc" )
   public long    startTimeMilis;
+  @SuppressWarnings( "javadoc" )
   public boolean isMarked = false;
 
   /**

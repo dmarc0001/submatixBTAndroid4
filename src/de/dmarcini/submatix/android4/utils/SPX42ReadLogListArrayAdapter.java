@@ -29,18 +29,55 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
   private static final String TAG     = SPX42ReadLogListArrayAdapter.class.getSimpleName();
   private int                 themeId = R.style.AppDarkTheme;
 
+  /**
+   * 
+   * Konstruktor mit Parametern
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * Stand: 03.12.2013
+   * 
+   * @param context
+   * @param textViewResourceId
+   * @param themeId
+   */
   public SPX42ReadLogListArrayAdapter( Context context, int textViewResourceId, int themeId )
   {
     super( context, textViewResourceId );
     this.themeId = themeId;
   }
 
+  /**
+   * Konstruktor mit Parametern
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * Stand: 03.12.2013
+   * 
+   * @param context
+   * @param resource
+   * @param textViewResourceId
+   * @param themeId
+   */
   private SPX42ReadLogListArrayAdapter( Context context, int resource, int textViewResourceId, int themeId )
   {
     super( context, resource, textViewResourceId );
     this.themeId = themeId;
   }
 
+  /**
+   * 
+   * Konstruktor mit Parametern
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * Stand: 03.12.2013
+   * 
+   * @param context
+   * @param textViewResourceId
+   * @param objects
+   * @param themeId
+   */
   private SPX42ReadLogListArrayAdapter( Context context, int textViewResourceId, List<ReadLogItemObj> objects, int themeId )
   {
     super( context, textViewResourceId, objects );

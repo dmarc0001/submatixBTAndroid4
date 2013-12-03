@@ -34,7 +34,9 @@ import de.dmarcini.submatix.android4.R;
  */
 public class DeviceSelectArrayAdapterWithPics extends ArrayAdapter<Pair<Integer, String>>
 {
+  @SuppressWarnings( "unused" )
   private static final String TAG = DeviceSelectArrayAdapterWithPics.class.getSimpleName();
+  @SuppressWarnings( "unused" )
   private final Context       context;
 
   /**
@@ -63,6 +65,7 @@ public class DeviceSelectArrayAdapterWithPics extends ArrayAdapter<Pair<Integer,
   /* private view holder class */
   private class ViewHolder
   {
+    @SuppressWarnings( "unused" )
     public ImageView imageView;
     public TextView  txtTitle;
   }
@@ -129,7 +132,7 @@ public class DeviceSelectArrayAdapterWithPics extends ArrayAdapter<Pair<Integer,
    * Stand: 01.12.2013
    * 
    * @param position
-   * @return
+   * @return ID des Gerätes an der Position
    */
   public int getDeviceIdAd( int position )
   {
@@ -145,6 +148,7 @@ public class DeviceSelectArrayAdapterWithPics extends ArrayAdapter<Pair<Integer,
    * Stand: 01.12.2013
    * 
    * @param position
+   * @return GErätename an Position
    */
   public String getDeviceNameAt( int position )
   {

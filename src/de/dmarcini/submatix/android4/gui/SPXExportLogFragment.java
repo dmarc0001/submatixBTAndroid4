@@ -241,7 +241,6 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
   public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
   {
     View rootView = null;
-    String titleString;
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView..." );
     //

@@ -42,12 +42,19 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
 
   private static final String TAG               = BluetoothDeviceArrayAdapter.class.getSimpleName();
   private int                 themeId           = R.style.AppDarkTheme;
+  @SuppressWarnings( "javadoc" )
   public static final int     BT_DEVAR_ALIAS    = 0;
+  @SuppressWarnings( "javadoc" )
   public static final int     BT_DEVAR_MAC      = 1;
+  @SuppressWarnings( "javadoc" )
   public static final int     BT_DEVAR_NAME     = 2;
+  @SuppressWarnings( "javadoc" )
   public static final int     BT_DEVAR_DBID     = 3;
+  @SuppressWarnings( "javadoc" )
   public static final int     BT_DEVAR_ISPAIRED = 4;
+  @SuppressWarnings( "javadoc" )
   public static final int     BT_DEVAR_ISONLINE = 5;
+  @SuppressWarnings( "javadoc" )
   public static final int     BT_DEVAR_COUNT    = 6;
 
   /**

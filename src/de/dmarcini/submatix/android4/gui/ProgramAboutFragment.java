@@ -24,6 +24,7 @@ import de.dmarcini.submatix.android4.utils.BuildVersion;
  */
 public class ProgramAboutFragment extends Fragment
 {
+  @SuppressWarnings( "javadoc" )
   public static final String TAG                     = ProgramAboutFragment.class.getSimpleName();
   private Activity           runningActivity         = null;
   private TextView           aboutVersionTextView    = null;

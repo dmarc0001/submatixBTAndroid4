@@ -12,6 +12,7 @@ import java.io.File;
  * 
  *         Stand: 13.08.2013
  */
+@SuppressWarnings( "javadoc" )
 public class SPX42DiveHeadData
 {
   public int    diveId             = -1;
@@ -31,6 +32,18 @@ public class SPX42DiveHeadData
   public String latitude           = "";
   public String notes              = null;
 
+  /**
+   * 
+   * Ist das die niedrigste Temperatur?
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * Stand: 03.12.2013
+   * 
+   * @param temp
+   * @return geringste Temperatur
+   * 
+   */
   public double checkLowestTemp( final double temp )
   {
     // Beim ersten Mal ist DAS die tieste Temperatur!
@@ -43,6 +56,17 @@ public class SPX42DiveHeadData
     return( lowestTemp );
   }
 
+  /**
+   * 
+   * Ist das die Max Tiefe?
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * Stand: 03.12.2013
+   * 
+   * @param depth
+   * @return
+   */
   public double checkMaxDepth( final int depth )
   {
     // prüf das einfach immer wieder

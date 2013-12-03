@@ -46,7 +46,7 @@ public class SelectDeviceDialogFragment extends DialogFragment
    * 
    * Stand: 01.12.2013
    * 
-   * @return
+   * @return ID des selektierten Gerätes
    */
   public int getSelectedDeviceId()
   {

@@ -8,6 +8,7 @@
  */
 package de.dmarcini.submatix.android4.gui;
 
+import android.annotation.SuppressLint;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -38,6 +39,18 @@ public class WaitProgressFragmentDialog extends DialogFragment
   private int         maxEvents    = 10;
   private int         progress     = 0;
 
+  /**
+   * 
+   * Ein eigener Konstruktor
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 03.12.2013
+   * 
+   * @param title
+   * @param msg
+   */
+  @SuppressLint( "ValidFragment" )
   public WaitProgressFragmentDialog( final String title, final String msg )
   {
     this.vMessage = msg;
@@ -72,6 +85,16 @@ public class WaitProgressFragmentDialog extends DialogFragment
     return rootView;
   }
 
+  /**
+   * 
+   * Wir gross ist der Wertebereich maximal
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 03.12.2013
+   * 
+   * @param maxevents
+   */
   public void setMax( int maxevents )
   {
     maxEvents = maxevents;
@@ -81,6 +104,16 @@ public class WaitProgressFragmentDialog extends DialogFragment
     }
   }
 
+  /**
+   * 
+   * Setze aktuelle Position
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 03.12.2013
+   * 
+   * @param progress
+   */
   public void setProgress( int progress )
   {
     this.progress = progress;
@@ -90,6 +123,16 @@ public class WaitProgressFragmentDialog extends DialogFragment
     }
   }
 
+  /**
+   * 
+   * Setze den Fenstertitel
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 03.12.2013
+   * 
+   * @param title
+   */
   public void setTitle( String title )
   {
     this.messageTitle = title;
@@ -99,6 +142,16 @@ public class WaitProgressFragmentDialog extends DialogFragment
     }
   }
 
+  /**
+   * 
+   * Setze die Nachricht im Fenster
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 03.12.2013
+   * 
+   * @param msg
+   */
   public void setMessage( String msg )
   {
     vMessage = msg;

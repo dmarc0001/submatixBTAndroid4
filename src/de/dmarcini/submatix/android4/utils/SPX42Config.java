@@ -20,7 +20,9 @@ package de.dmarcini.submatix.android4.utils;
 //@formatter:off
 public class SPX42Config
 {
+  @SuppressWarnings( "javadoc" )
   public static final int                       UNITS_METRIC = 1;
+  @SuppressWarnings( "javadoc" )
   public static final int                     UNITS_IMPERIAL = 2;
   //
   protected boolean                    wasCorrectInitialized = false;
@@ -323,7 +325,7 @@ public class SPX42Config
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
    *         Stand: 10.11.2013
-   * @return
+   * @return Ist es die neuere Abstufung in 20%
    */
   public boolean isNewerDisplayBrigthness()
   {
@@ -354,7 +356,7 @@ public class SPX42Config
    * 
    * Stand: 30.11.2013
    * 
-   * @return
+   * @return Ist der Autosetpoint nun bei 6 Metern?
    */
   public boolean isSixMetersAutoSetpoint()
   {
@@ -571,7 +573,7 @@ public class SPX42Config
    * 
    * Stand: 01.12.2013
    * 
-   * @return
+   * @return MAc des verbundenen Gerätes
    */
   public String getConnectedDeviceMac()
   {

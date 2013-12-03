@@ -12,11 +12,10 @@ import java.util.Locale;
  * 
  *         Stand: 13.12.2011
  */
+@SuppressWarnings( "javadoc" )
+//@formatter:off
 public class SPX42LogEntryObj
 {
-
-
-  //@formatter:off
   public int     presure   = 0;
   public double  depth     = -1000;
   public double  temp      = -1000;
@@ -33,6 +32,14 @@ public class SPX42LogEntryObj
   public boolean gasswitch = false;
   public boolean ppo2switch = false;
   //@formatter:on
+  /**
+   * 
+   * Alles zurücksetzen
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * Stand: 03.12.2013
+   */
   public void clean()
   {
     presure = 0;
@@ -50,6 +57,16 @@ public class SPX42LogEntryObj
     gasswitch = false;
   }
 
+  /**
+   * 
+   * Sind alle Daten vollständig?
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * Stand: 03.12.2013
+   * 
+   * @return
+   */
   public boolean whereAlDataThere()
   {
     if( presure == 0 )

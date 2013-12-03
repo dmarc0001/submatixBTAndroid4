@@ -1,5 +1,6 @@
 package de.dmarcini.submatix.android4.exceptions;
 
+@SuppressWarnings( "javadoc" )
 public class XMLFileCreatorException extends Exception
 {
   /**

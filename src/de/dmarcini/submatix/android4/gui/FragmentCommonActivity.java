@@ -79,6 +79,16 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   private volatile boolean                    mIsBound           = false;
   private static int                          currentStyleId     = R.style.AppDarkTheme;
 
+  /**
+   * 
+   * Gib den Style der App zurück
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 03.12.2013
+   * 
+   * @return Style der App
+   */
   public static final int getAppStyle()
   {
     return( currentStyleId );

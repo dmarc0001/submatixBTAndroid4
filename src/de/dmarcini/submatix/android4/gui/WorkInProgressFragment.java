@@ -23,6 +23,7 @@ import de.dmarcini.submatix.android4.comm.BtServiceMessage;
  */
 public class WorkInProgressFragment extends Fragment implements IBtServiceListener
 {
+  @SuppressWarnings( "javadoc" )
   public static final String TAG             = WorkInProgressFragment.class.getSimpleName();
   private Activity           runningActivity = null;
 

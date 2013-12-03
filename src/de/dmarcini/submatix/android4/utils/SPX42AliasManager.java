@@ -149,7 +149,7 @@ public class SPX42AliasManager
    * 
    * Stand: 01.12.2013
    * 
-   * @return
+   * @return Ein Objekt mit Daten über die Devices in der Datenbank
    */
   public Vector<Pair<Integer, String>> getDeviceNameIdList()
   {
@@ -227,7 +227,7 @@ public class SPX42AliasManager
    * Stand: 01.12.2013
    * 
    * @param serial
-   * @return
+   * @return Datenbank-Id des gesuchten Gerätes
    */
   public int getIdForDeviceFromSerial( String serial )
   {

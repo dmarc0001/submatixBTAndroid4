@@ -15,6 +15,17 @@ public class GasUpdateEntity
   private int           gasNr    = 0;
   private SPX42GasParms gasParms = null;
 
+  /**
+   * 
+   * Konstruktor mit Parametern
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * Stand: 03.12.2013
+   * 
+   * @param nr
+   * @param parms
+   */
   public GasUpdateEntity( int nr, SPX42GasParms parms )
   {
     gasNr = nr;

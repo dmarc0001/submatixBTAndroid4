@@ -76,7 +76,6 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
    */
   private boolean setLightVersion( boolean isLight )
   {
-    PreferenceCategory mC;
     if( isLight )
     {
       if( getPreferenceScreen().findPreference( mailCategory ) instanceof PreferenceCategory )

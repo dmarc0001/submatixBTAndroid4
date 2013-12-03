@@ -181,11 +181,31 @@ public class BlueThoothComService extends Service
    */
   public class LocalBinder extends Binder
   {
+    /**
+     * 
+     * Gib den Binder zurück
+     * 
+     * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.comm
+     * 
+     * Stand: 03.12.2013
+     * 
+     * @return Bindrerobj
+     */
     public BlueThoothComService getService()
     {
       return BlueThoothComService.this;
     }
 
+    /**
+     * 
+     * Registriere den Handler zum Versand von Nachrichten
+     * 
+     * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.comm
+     * 
+     * Stand: 03.12.2013
+     * 
+     * @param mHandler
+     */
     public void registerServiceHandler( Handler mHandler )
     {
       Log.i( TAG, "Client register" );
@@ -196,6 +216,16 @@ public class BlueThoothComService extends Service
       setState( mConnectionState );
     }
 
+    /**
+     * 
+     * Hebe die Registrierung eines Handlers auf
+     * 
+     * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.comm
+     * 
+     * Stand: 03.12.2013
+     * 
+     * @param mHandler
+     */
     public void unregisterServiceHandler( Handler mHandler )
     {
       // if( mIsBusy ) return( null );
