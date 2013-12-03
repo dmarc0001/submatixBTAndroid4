@@ -27,7 +27,7 @@ public class SPX42LogManager extends SPX42AliasManager
 
   /**
    * 
-   * Konstriúktor
+   * Konstriuktor
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
@@ -198,7 +198,7 @@ public class SPX42LogManager extends SPX42AliasManager
    * Stand: 28.08.2013
    * 
    * @param _deviceId
-   * @return Vector mit Werten tauchid,Startzeit,Länge
+   * @return Vector mit Werten tauchid,Startzeit,Länge,spx-Nummer,max-Tiefe
    */
   @SuppressLint( "DefaultLocale" )
   public Vector<Long[]> getDiveListForDevice( int _deviceId )
@@ -221,10 +221,12 @@ public class SPX42LogManager extends SPX42AliasManager
       }
     }
     // @formatter:off
-    sql = String.format( "select %s,%s,%s from %s where %s=%d order by %s;", 
+    sql = String.format( "select %s,%s,%s,%s,%s from %s where %s=%d order by %s;", 
             ProjectConst.H_DIVEID,                     // 
             ProjectConst.H_STARTTIME,                  // 
-            ProjectConst.H_DIVELENGTH,                 //  
+            ProjectConst.H_DIVELENGTH,                 // 
+            ProjectConst.H_DIVENUMBERONSPX,
+            ProjectConst.H_MAXDEPTH,
             ProjectConst.H_TABLE_DIVELOGS,             // Tabelle
             ProjectConst.H_DEVICEID, _deviceId,        // nur Gerätenummer
             ProjectConst.H_DIVEID);                    // Ordne nach Tauchlog-Nummer
@@ -236,7 +238,7 @@ public class SPX42LogManager extends SPX42AliasManager
       while( cu.moveToNext() )
       {
         Long[] entry = new Long[]
-        { cu.getLong( 0 ), cu.getLong( 1 ), cu.getLong( 2 ) };
+        { cu.getLong( 0 ), cu.getLong( 1 ), cu.getLong( 2 ), cu.getLong( 3 ), cu.getLong( 4 ) };
         diveHeadList.add( entry );
       }
       //
