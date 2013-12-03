@@ -60,7 +60,6 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   private Spinner                     devSpinner                = null;
   private ImageButton                 connButton                = null;
   private TextView                    connectTextView           = null;
-  private SPX42AliasManager           aliasManager              = null;
   protected ProgressDialog            progressDialog            = null;
   private boolean                     runDiscovering            = false;
   private Activity                    runningActivity           = null;
@@ -177,7 +176,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
           {
             String[] entr = new String[BluetoothDeviceArrayAdapter.BT_DEVAR_COUNT];
             if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "paired Device: " + device.getName() );
-            entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = aliasManager.getAliasForMac( device.getAddress(), device.getName() );
+            entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = FragmentCommonActivity.aliasManager.getAliasForMac( device.getAddress(), device.getName() );
             entr[BluetoothDeviceArrayAdapter.BT_DEVAR_MAC] = device.getAddress();
             entr[BluetoothDeviceArrayAdapter.BT_DEVAR_NAME] = device.getName();
             entr[BluetoothDeviceArrayAdapter.BT_DEVAR_DBID] = "0";
@@ -206,38 +205,6 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       btArrayAdapter.add( entr );
     }
     setSpinnerToLastConnected();
-  }
-
-  private void setSpinnerToLastConnected()
-  {
-    //
-    // guck mal, ob da was gespeichert war...
-    //
-    if( ApplicationDEBUG.DEBUG )
-      Log.d( TAG, "fillNewAdapterWithPairedDevices: try set last connected device (" + ( ( lastConnectedDeviceMac == null ) ? "none" : lastConnectedDeviceMac ) + ")" );
-    if( lastConnectedDeviceMac == null )
-    {
-      SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( runningActivity );
-      if( sPref.contains( LAST_CONNECTED_DEVICE_KEY ) )
-      {
-        lastConnectedDeviceMac = sPref.getString( LAST_CONNECTED_DEVICE_KEY, null );
-        if( ApplicationDEBUG.DEBUG )
-          Log.d( TAG, "fillNewAdapterWithPairedDevices: try from preference (" + ( ( lastConnectedDeviceMac == null ) ? "none" : lastConnectedDeviceMac ) + ")" );
-      }
-    }
-    //
-    // so, war da jetzt irgendwie was?
-    //
-    if( lastConnectedDeviceMac != null )
-    {
-      // welcher Index gehört zu dem Gerät?
-      int deviceIndex = btArrayAdapter.getIndexForMac( lastConnectedDeviceMac );
-      if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "set to last connected device MAC:<" + lastConnectedDeviceMac + "> on Index <" + deviceIndex + ">" );
-      if( deviceIndex > -1 )
-      {
-        devSpinner.setSelection( deviceIndex, true );
-      }
-    }
   }
 
   @Override
@@ -290,9 +257,14 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         msgReciveDeviceAliasSet( smsg );
         break;
       // ################################################################
-      // ignoriere...
+      // Wenn Serial dann in die DB
       // ################################################################
       case ProjectConst.MESSAGE_SERIAL_READ:
+        setSerialIfNotExist( FragmentCommonActivity.spxConfig.getConnectedDeviceMac(), FragmentCommonActivity.spxConfig.getSerial() );
+        // ################################################################
+        // ignoriere...
+        // ################################################################
+        break;
       case ProjectConst.MESSAGE_MANUFACTURER_READ:
       case ProjectConst.MESSAGE_FWVERSION_READ:
       case ProjectConst.MESSAGE_LICENSE_STATE_READ:
@@ -349,14 +321,6 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     setSpinnerToConnectedDevice();
     setToggleButtonTextAndStat( ProjectConst.CONN_STATE_CONNECTED );
     writePreferences();
-  }
-
-  private void setAliasForDeviceIfNotExist( String _mac, String _deviceName )
-  {
-    if( aliasManager != null )
-    {
-      aliasManager.setAliasForMacIfNotExist( _mac, _deviceName );
-    }
   }
 
   @Override
@@ -429,7 +393,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         //
         // in der Datenbank verramschen. Seriennummer ist nicht bekannt (bin offline)
         //
-        if( aliasManager.setAliasForMac( parm[2], parm[0], parm[1], null ) )
+        if( FragmentCommonActivity.aliasManager.setAliasForMac( parm[2], parm[0], parm[1], null ) )
         {
           btArrayAdapter.setDevAlias( dIndex, parm[1] );
           // Update erzwingen
@@ -512,7 +476,10 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: open Database..." );
     try
     {
-      aliasManager = new SPX42AliasManager( sqlHelper.getWritableDatabase() );
+      if( FragmentCommonActivity.aliasManager == null )
+      {
+        FragmentCommonActivity.aliasManager = new SPX42AliasManager( sqlHelper.getWritableDatabase() );
+      }
     }
     catch( NoDatabaseException ex )
     {
@@ -552,7 +519,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         default:
           if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onClick: switch connect to ON" );
           //
-          // wenn da noch einer werkelt, anhalten und kompostieren
+          // da soll verbunden werden!
           //
           tb.setImageResource( R.drawable.bluetooth_icon_color );
           String device = ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getMAC( devSpinner.getSelectedItemPosition() );
@@ -657,15 +624,6 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       FragmentCommonActivity.mBtAdapter.cancelDiscovery();
     }
     ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
-    //
-    // Datenbank wieder schliessen
-    //
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onDestroy: close Database..." );
-    if( aliasManager != null )
-    {
-      aliasManager.close();
-      aliasManager = null;
-    }
   }
 
   @Override
@@ -712,6 +670,25 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
 
   /**
    * 
+   * Setze einen Alias für das Gerät, wenn noch keiner gesetzt wurde
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 03.12.2013
+   * 
+   * @param _mac
+   * @param _deviceName
+   */
+  private void setAliasForDeviceIfNotExist( String _mac, String _deviceName )
+  {
+    if( FragmentCommonActivity.aliasManager != null )
+    {
+      FragmentCommonActivity.aliasManager.setAliasForMacIfNotExist( _mac, _deviceName );
+    }
+  }
+
+  /**
+   * 
    * Lasse die Butons nicht mehr bedienen während des Discovering
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
@@ -739,6 +716,25 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       progressDialog.show();
     }
     setToggleButtonTextAndStat( ProjectConst.CONN_STATE_NONE );
+  }
+
+  /**
+   * 
+   * Wenn noch keine Seriennummer für das Gerät eingetragen ist, hole das nach
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 03.12.2013
+   * 
+   * @param _mac
+   * @param _serial
+   */
+  private void setSerialIfNotExist( String _mac, String _serial )
+  {
+    if( FragmentCommonActivity.aliasManager != null )
+    {
+      FragmentCommonActivity.aliasManager.setSerialIfNotExist( _mac, _serial );
+    }
   }
 
   /**
@@ -782,6 +778,38 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       Log.e( TAG, "setSpinnerToConnectedDevice: <" + ex.getLocalizedMessage() + ">" );
       Log.w( TAG, "setSpinnerToConnectedDevice exception: Spinner to 0" );
       devSpinner.setSelection( 0, false );
+    }
+  }
+
+  private void setSpinnerToLastConnected()
+  {
+    //
+    // guck mal, ob da was gespeichert war...
+    //
+    if( ApplicationDEBUG.DEBUG )
+      Log.d( TAG, "fillNewAdapterWithPairedDevices: try set last connected device (" + ( ( lastConnectedDeviceMac == null ) ? "none" : lastConnectedDeviceMac ) + ")" );
+    if( lastConnectedDeviceMac == null )
+    {
+      SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( runningActivity );
+      if( sPref.contains( LAST_CONNECTED_DEVICE_KEY ) )
+      {
+        lastConnectedDeviceMac = sPref.getString( LAST_CONNECTED_DEVICE_KEY, null );
+        if( ApplicationDEBUG.DEBUG )
+          Log.d( TAG, "fillNewAdapterWithPairedDevices: try from preference (" + ( ( lastConnectedDeviceMac == null ) ? "none" : lastConnectedDeviceMac ) + ")" );
+      }
+    }
+    //
+    // so, war da jetzt irgendwie was?
+    //
+    if( lastConnectedDeviceMac != null )
+    {
+      // welcher Index gehört zu dem Gerät?
+      int deviceIndex = btArrayAdapter.getIndexForMac( lastConnectedDeviceMac );
+      if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "set to last connected device MAC:<" + lastConnectedDeviceMac + "> on Index <" + deviceIndex + ">" );
+      if( deviceIndex > -1 )
+      {
+        devSpinner.setSelection( deviceIndex, true );
+      }
     }
   }
 

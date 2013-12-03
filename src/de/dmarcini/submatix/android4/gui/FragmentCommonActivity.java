@@ -47,6 +47,7 @@ import de.dmarcini.submatix.android4.exceptions.FirmwareNotSupportetException;
 import de.dmarcini.submatix.android4.utils.GasUpdateEntity;
 import de.dmarcini.submatix.android4.utils.NoticeDialogListener;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
+import de.dmarcini.submatix.android4.utils.SPX42AliasManager;
 import de.dmarcini.submatix.android4.utils.SPX42Config;
 import de.dmarcini.submatix.android4.utils.UserAlertDialogFragment;
 
@@ -71,6 +72,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   protected static boolean                    mTwoPane           = false;
   protected static SPX42Config                spxConfig          = new SPX42Config();                                   // Da werden SPX-Spezifische Sachen gespeichert
   protected static BluetoothAdapter           mBtAdapter         = null;
+  protected static SPX42AliasManager          aliasManager       = null;
   private BlueThoothComService                mService           = null;
   private LocalBinder                         binder             = null;
   private final ArrayList<IBtServiceListener> serviceListener    = new ArrayList<IBtServiceListener>();
@@ -235,6 +237,28 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     {
       mService.askForConfigFromSPX42();
     }
+  }
+
+  /**
+   * 
+   * erfrage die MAC des verbundenen Gerätes
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 01.12.2013
+   * 
+   * @return MAC oder "0"
+   */
+  public String getConnectedMac()
+  {
+    if( mService != null )
+    {
+      if( mService.getConnectedDevice() != null )
+      {
+        return( mService.getConnectedDevice() );
+      }
+    }
+    return( "0" );
   }
 
   /**
@@ -714,6 +738,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       //
       // wenn das Gerät noch nicht ausgelesen wurde alles abfragen
       //
+      spxConfig.setConnectedDeviceMac( getConnectedDevice() );
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgConnected(): ask for manufacturer number..." );
       askForManufacturer();
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgConnected(): ask for serial number..." );
@@ -1047,6 +1072,11 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
           // TODO: Preferences -> Programmeinstellungen soll das automatisch passieren?
           BluetoothAdapter.getDefaultAdapter().disable();
         }
+        if( aliasManager != null )
+        {
+          aliasManager.close();
+          aliasManager = null;
+        }
         finish();
       }
     }
@@ -1072,6 +1102,11 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
       intent.putExtra( "EXIT", true );
       startActivity( intent );
+      if( aliasManager != null )
+      {
+        aliasManager.close();
+        aliasManager = null;
+      }
       finish();
     }
     // hat sonst irgendwer Verwendung dafür?
