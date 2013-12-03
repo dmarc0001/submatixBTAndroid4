@@ -27,6 +27,7 @@ public class SPX42Config
   protected String                                deviceName = "no name";
   protected String                           firmwareVersion = "0";
   protected String                              serialNumber = "0";
+  protected String                        connectedDeviceMac = "0";
   protected int                                 licenseState = 0;
   protected boolean                            customEnabled = false;
   protected boolean                         hasFahrenheidBug = false;
@@ -69,6 +70,7 @@ public class SPX42Config
   public SPX42Config( SPX42Config cf )
   {
     serialNumber = cf.serialNumber;
+    connectedDeviceMac = cf.connectedDeviceMac;
     deviceName = cf.deviceName;
     firmwareVersion = cf.firmwareVersion;
     licenseState = cf.licenseState;
@@ -113,6 +115,7 @@ public class SPX42Config
     deviceName = "no name";
     firmwareVersion = "0";
     serialNumber = "0";
+    connectedDeviceMac = "0";
     licenseState = 0;
     customEnabled = false;
     hasFahrenheidBug = false;
@@ -141,6 +144,7 @@ public class SPX42Config
     // immer wenn was nicht übereinstimmt ist Übertragung norwendig
     if( !wasCorrectInitialized ) return( false );
     if( !serialNumber.equals( cf.serialNumber ) ) return( false );
+    if( connectedDeviceMac.equals( cf.connectedDeviceMac ) ) return( false );
     if( !deviceName.equals( cf.deviceName ) ) return( false );
     if( !firmwareVersion.equals( cf.firmwareVersion ) ) return( false );
     if( licenseState != cf.licenseState ) return( false );
@@ -302,7 +306,7 @@ public class SPX42Config
   {
     if( !wasCorrectInitialized )
     {
-      if( firmwareVersion != "0" && serialNumber != "0" && deviceName != "no name" && licenseState != 0 )
+      if( firmwareVersion != "0" && serialNumber != "0" && deviceName != "no name" && licenseState != 0 && connectedDeviceMac != "0" )
       {
         wasCorrectInitialized = true;
       }
@@ -541,5 +545,36 @@ public class SPX42Config
   public void setWasInit( boolean wasInit )
   {
     wasCorrectInitialized = wasInit;
+  }
+
+  /**
+   * 
+   * Setze die MAC des verbundenen Devices
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * Stand: 01.12.2013
+   * 
+   * @param mac
+   * 
+   */
+  public void setConnectedDeviceMac( String mac )
+  {
+    connectedDeviceMac = mac;
+  }
+
+  /**
+   * 
+   * erfrage die MAC des verbundenen Gerätes
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * Stand: 01.12.2013
+   * 
+   * @return
+   */
+  public String getConnectedDeviceMac()
+  {
+    return( connectedDeviceMac );
   }
 }
