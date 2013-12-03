@@ -9,10 +9,16 @@
 package de.dmarcini.submatix.android4.gui;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Vector;
 
+import org.joda.time.DateTime;
+
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.Fragment;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -31,7 +38,9 @@ import de.dmarcini.submatix.android4.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.exceptions.NoDatabaseException;
 import de.dmarcini.submatix.android4.utils.DataSQLHelper;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
+import de.dmarcini.submatix.android4.utils.ReadLogItemObj;
 import de.dmarcini.submatix.android4.utils.SPX42LogManager;
+import de.dmarcini.submatix.android4.utils.SPX42ReadLogListArrayAdapter;
 import de.dmarcini.submatix.android4.utils.UserAlertDialogFragment;
 
 /**
@@ -62,7 +71,28 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
   @Override
   public void handleMessages( int what, BtServiceMessage msg )
   {
-    // TODO Automatisch generierter Methodenstub
+    switch ( what )
+    {
+      case ProjectConst.MESSAGE_TICK:
+        break;
+      // ################################################################
+      // JA, Positive Antwort
+      // ################################################################
+      case ProjectConst.MESSAGE_DIALOG_POSITIVE:
+        onDialogPositive( ( DialogFragment )msg.getContainer() );
+        break;
+      // ################################################################
+      // NEIN, negative antwort
+      // ################################################################
+      case ProjectConst.MESSAGE_DIALOG_NEGATIVE:
+        onDialogNegative( ( DialogFragment )msg.getContainer() );
+        break;
+      // ################################################################
+      // DEFAULT
+      // ################################################################
+      default:
+        if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "unknown messsage with id <" + what + "> recived!" );
+    }
   }
 
   /*
@@ -151,8 +181,6 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     try
     {
       mainListView = ( ListView )runningActivity.findViewById( R.id.exportLogsListView );
-      // logListAdapter = new SPX42ReadLogListArrayAdapter( runningActivity, R.layout.read_log_array_adapter_view, FragmentCommonActivity.getAppStyle() );
-      // mainListView.setAdapter( logListAdapter );
     }
     catch( NullPointerException ex )
     {
@@ -195,12 +223,25 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
   public void onClick( View v )
   {
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Click" );
+    if( v instanceof Button )
+    {
+      if( ( Button )v == changeDeviceButton )
+      {
+        // Hier wird dann ein Dialog gebraucht!
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onClick: call changeDeviceDialog!" );
+        SelectDeviceDialogFragment dialog = new SelectDeviceDialogFragment();
+        dialog.setDeviceList( logManager.getDeviceNameIdList() );
+        dialog.show( getFragmentManager(), "SelectDeviceDialogFragment" );
+      }
+    }
+    // TODO wenn Device ausgewählt == getActionBar().setTitle( R.string.export_header );
   }
 
   @Override
   public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
   {
     View rootView = null;
+    String titleString;
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView..." );
     //
@@ -234,10 +275,12 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     //
     // Verbindungsseite via twoPane ausgewählt
     //
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running two pane mode ..." );
     //
     // View aus Resource laden
     //
     rootView = inflater.inflate( R.layout.fragment_export_log, container, false );
+    setTitleString( "?" );
     //
     // Objekte lokalisieren
     //
@@ -250,7 +293,36 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     tv.setText( "TEXTHEADER" );
     mainListView.addHeaderView( tv );
     //
+    String[] values = new String[]
+    { "Android", "iPhone", "WindowsMobile", "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2", "Ubuntu",
+        "Windows7", "Max OS X", "Linux", "OS/2", "Android", "iPhone", "WindowsMobile" };
+    final ArrayList<String> list = new ArrayList<String>();
+    for( int i = 0; i < values.length; ++i )
+    {
+      list.add( values[i] );
+    }
+    final ArrayAdapter<String> adapter = new ArrayAdapter<String>( runningActivity, android.R.layout.simple_list_item_1, list );
+    mainListView.setAdapter( adapter );
+    //
     return( rootView );
+  }
+
+  /**
+   * 
+   * Setze den Titel in der Action Bar mit Test und Name des gelisteten Gerätes
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 01.12.2013
+   * 
+   * @param string
+   */
+  private void setTitleString( String devName )
+  {
+    String titleString;
+    //
+    titleString = String.format( getResources().getString( R.string.export_header_device ), devName );
+    runningActivity.getActionBar().setTitle( titleString );
   }
 
   /*
@@ -294,9 +366,104 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     //
     // Liste füllen
     //
-    selectedDeviceId = -1;
-    Vector<Long[]> diveHeadList = logManager.getDiveListForDevice( selectedDeviceId );
-    Log.d( TAG, "read a list of <" + diveHeadList + "> dive entrys..." );
-    // TODO: hier geht es weiter
+    if( selectedDeviceId > 0 )
+    {
+      fillListAdapter( selectedDeviceId );
+    }
+    // Listener aktivieren
+    ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
+  }
+
+  @Override
+  public void onPause()
+  {
+    super.onPause();
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause..." );
+    // Listener abmelden
+    ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
+  }
+
+  private boolean fillListAdapter( int diveId )
+  {
+    Vector<Long[]> diveList;
+    int diveNr = 0;
+    DateTime startDateTime;
+    SPX42ReadLogListArrayAdapter logListAdapter;
+    Resources res;
+    String detailText;
+    //
+    res = runningActivity.getResources();
+    //
+    // Creiere einen Adapter
+    //
+    logListAdapter = new SPX42ReadLogListArrayAdapter( runningActivity, R.layout.read_log_array_adapter_view, FragmentCommonActivity.getAppStyle() );
+    mainListView.setAdapter( logListAdapter );
+    //
+    // lese eine Liste der Tauchgänge ein
+    //
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "read divelist for deviceId: <" + diveId + ">..." );
+    diveList = logManager.getDiveListForDevice( diveId );
+    Iterator<Long[]> it = diveList.iterator();
+    //
+    // Die Liste in den Adapter implementieren
+    //
+    while( it.hasNext() )
+    {
+      Long[] set = it.next(); // 0: diveID, 1: startTime, 2: diveLength, 3: SPX-DiveNr, 4: MAx Tiefe
+      diveNr = ( int )( 0xffffffff & set[3] );
+      startDateTime = new DateTime( set[1] * 1000 );
+      detailText = String.format( res.getString( R.string.logread_saved_format ), set[4] / 10.0, res.getString( R.string.app_unit_depth_metric ), set[2] / 60, set[2] % 60 );
+      //
+      ReadLogItemObj rlio = new ReadLogItemObj( true, String.format( "#%03d: %s", diveNr, startDateTime.toString( FragmentCommonActivity.localTimeFormatter ) ), "file", detailText );
+      // Eintrag an den Anfang stellen
+      logListAdapter.add( rlio );
+    }
+    return( true );
+  }
+
+  /**
+   * 
+   * Wenn der Dialog Positiv abgeschlossen wurde (OKO oder ähnlich)
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 01.12.2013
+   * 
+   * @param dialog
+   */
+  public void onDialogNegative( DialogFragment dialog )
+  {
+    if( ApplicationDEBUG.DEBUG ) Log.v( TAG, "Negative dialog click!" );
+  }
+
+  /**
+   * 
+   * Wenn der Dialog negativ abgeschlossen wurde (Abbruchg o.ä.)
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 01.12.2013
+   * 
+   * @param dialog
+   */
+  public void onDialogPositive( DialogFragment dialog )
+  {
+    if( ApplicationDEBUG.DEBUG ) Log.v( TAG, "Positive dialog click!" );
+    if( dialog instanceof SelectDeviceDialogFragment )
+    {
+      SelectDeviceDialogFragment deviceDialog = ( SelectDeviceDialogFragment )dialog;
+      selectedDeviceId = deviceDialog.getSelectedDeviceId();
+      if( ApplicationDEBUG.DEBUG )
+        Log.i( TAG, "onDialogNegative: selected Device Alias: <" + deviceDialog.getSelectedDeviceName() + "> Device-ID <" + deviceDialog.getSelectedDeviceId() + ">" );
+      if( selectedDeviceId > 0 )
+      {
+        // Vector<Long[]> diveHeadList = logManager.getDiveListForDevice( selectedDeviceId );
+        fillListAdapter( selectedDeviceId );
+      }
+    }
+    else
+    {
+      Log.i( TAG, "onDialogNegative: UNKNOWN dialog type" );
+    }
   }
 }
