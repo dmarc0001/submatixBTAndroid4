@@ -102,6 +102,88 @@ public class SPX42AliasManager
 
   /**
    * 
+   * Gib eine Liste der Deviceids zurück
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * 
+   * Stand: 28.08.2013
+   * 
+   * @return Liste mit Deviceids
+   */
+  public Vector<Integer> getDeviceIdList()
+  {
+    String sql;
+    Cursor cu;
+    Vector<Integer> lst = new Vector<Integer>();
+    //
+    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getDeviceIdList..." );
+    sql = String.format( "select %s from %s order by %s;", ProjectConst.A_DEVICEID, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_DEVICEID );
+    cu = dBase.rawQuery( sql, null );
+    //
+    try
+    {
+      if( cu.moveToFirst() )
+      {
+        lst.add( cu.getInt( 0 ) );
+        while( cu.moveToNext() )
+        {
+          lst.add( cu.getInt( 0 ) );
+        }
+      }
+      Log.d( TAG, "read <" + lst.size() + "> entrys..." );
+      return( lst );
+    }
+    catch( SQLException ex )
+    {
+      Log.e( TAG, "Error while getDeviceIdList: <" + ex.getLocalizedMessage() + ">" );
+      return( null );
+    }
+  }
+
+  /**
+   * 
+   * Funktion liest eine Liste der gespeicherten Devices aus der Datenbank
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * Stand: 01.12.2013
+   * 
+   * @return
+   */
+  public Vector<Pair<Integer, String>> getDeviceNameIdList()
+  {
+    // Pair<Integer,String> = new Pair<Integer,String>(null, null);
+    String sql;
+    Cursor cu;
+    Vector<Pair<Integer, String>> devList = new Vector<Pair<Integer, String>>();
+    //
+    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getDeviceNameIdList..." );
+    sql = String.format( "select %s,%s from %s order by %s", ProjectConst.A_DEVICEID, ProjectConst.A_ALIAS, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_DEVICEID );
+    cu = dBase.rawQuery( sql, null );
+    //
+    try
+    {
+      if( cu.moveToFirst() )
+      {
+        devList.add( new Pair<Integer, String>( cu.getInt( 0 ), cu.getString( 1 ) ) );
+        while( cu.moveToNext() )
+        {
+          devList.add( new Pair<Integer, String>( cu.getInt( 0 ), cu.getString( 1 ) ) );
+        }
+      }
+      Log.d( TAG, "getDeviceNameIdList: read <" + devList.size() + "> entrys..." );
+      return( devList );
+    }
+    catch( SQLException ex )
+    {
+      Log.e( TAG, "Error while getDeviceNameIdList: <" + ex.getLocalizedMessage() + ">" );
+      return( null );
+    }
+  }
+
+  /**
+   * 
    * Giv die Deviceid zurück
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
@@ -112,7 +194,7 @@ public class SPX42AliasManager
    * @param mac
    * @return Deviceid
    */
-  public int getIdForDevice( String mac )
+  public int getIdForDeviceFromMac( String mac )
   {
     String sql;
     int deviceId = -1;
@@ -133,6 +215,42 @@ public class SPX42AliasManager
       return( deviceId );
     }
     if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getIdForDevice: not found, use default <-1>" );
+    return( -1 );
+  }
+
+  /**
+   * 
+   * Gib die DB-Id für ein Gerät nach Seriennummer
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * Stand: 01.12.2013
+   * 
+   * @param serial
+   * @return
+   */
+  public int getIdForDeviceFromSerial( String serial )
+  {
+    String sql;
+    int deviceId = -1;
+    Cursor cu;
+    //
+    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getIdForDeviceFromSerial..." );
+    sql = String.format( "select %s from %s where %s like '%s';", ProjectConst.A_DEVICEID, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_SERIAL, serial );
+    if( ApplicationDEBUG.DEBUG ) Log.e( TAG, "getIdForDeviceFromSerial: sql <" + sql + ">" );
+    cu = dBase.rawQuery( sql, null );
+    // formatter:on
+    if( cu.moveToFirst() )
+    {
+      deviceId = cu.getInt( 0 );
+      //
+      // Cursor schliessen
+      //
+      cu.close();
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getIdForDeviceFromSerial: found <" + deviceId + ">" );
+      return( deviceId );
+    }
+    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getIdForDeviceFromSerial: not found, use default <-1>" );
     return( -1 );
   }
 
@@ -245,83 +363,52 @@ public class SPX42AliasManager
 
   /**
    * 
-   * Gib eine Liste der Deviceids zurück
+   * Setze die Seriennummer für ein Gerät, wenn die noch nicht geschehen ist
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
+   * Stand: 03.12.2013
    * 
-   * Stand: 28.08.2013
-   * 
-   * @return Liste mit Deviceids
+   * @param _mac
+   * @param _serial
    */
-  public Vector<Integer> getDeviceIdList()
+  public void setSerialIfNotExist( String _mac, String _serial )
   {
     String sql;
     Cursor cu;
-    Vector<Integer> lst = new Vector<Integer>();
+    ContentValues values;
+    String whereString;
     //
-    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getDeviceIdList..." );
-    sql = String.format( "select %s from %s order by %s;", ProjectConst.A_DEVICEID, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_DEVICEID );
+    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "setSerialIfNotExist..." );
+    sql = String.format( "select %s from %s where %s like '%s';", ProjectConst.A_SERIAL, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_MAC, _mac );
     cu = dBase.rawQuery( sql, null );
     //
     try
     {
       if( cu.moveToFirst() )
       {
-        lst.add( cu.getInt( 0 ) );
-        while( cu.moveToNext() )
+        if( cu.getString( 0 ) != null || !cu.getString( 0 ).isEmpty() )
         {
-          lst.add( cu.getInt( 0 ) );
+          //
+          // ja, Seriennummer existiert, erledigt!
+          //
+          cu.close();
+          return;
         }
+        cu.close();
       }
-      Log.d( TAG, "read <" + lst.size() + "> entrys..." );
-      return( lst );
+      //
+      // nein, das existiert noch nicht
+      //
+      values = new ContentValues();
+      values.put( ProjectConst.A_SERIAL, _serial );
+      whereString = String.format( "%s='%s'", ProjectConst.A_MAC, _mac );
+      dBase.update( ProjectConst.A_TABLE_ALIASES, values, whereString, null );
     }
     catch( SQLException ex )
     {
-      Log.e( TAG, "Error while getDeviceIdList: <" + ex.getLocalizedMessage() + ">" );
-      return( null );
-    }
-  }
-
-  /**
-   * 
-   * Funktion liest eine Liste der gespeicherten Devices aus der Datenbank
-   * 
-   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
-   * 
-   * Stand: 01.12.2013
-   * 
-   * @return
-   */
-  public Vector<Pair<Integer, String>> getDeviceNameIdList()
-  {
-    // Pair<Integer,String> = new Pair<Integer,String>(null, null);
-    String sql;
-    Cursor cu;
-    Vector<Pair<Integer, String>> devList = new Vector<Pair<Integer, String>>();
-    //
-    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getDeviceNameIdList..." );
-    sql = String.format( "select %s,%s from %s order by %s", ProjectConst.A_DEVICEID, ProjectConst.A_ALIAS, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_DEVICEID );
-    cu = dBase.rawQuery( sql, null );
-    //
-    try
-    {
-      if( cu.moveToFirst() )
-      {
-        devList.add( new Pair<Integer, String>( cu.getInt( 0 ), cu.getString( 1 ) ) );
-        while( cu.moveToNext() )
-        {
-          devList.add( new Pair<Integer, String>( cu.getInt( 0 ), cu.getString( 1 ) ) );
-        }
-      }
-      Log.d( TAG, "getDeviceNameIdList: read <" + devList.size() + "> entrys..." );
-      return( devList );
-    }
-    catch( SQLException ex )
-    {
-      Log.e( TAG, "Error while getDeviceNameIdList: <" + ex.getLocalizedMessage() + ">" );
-      return( null );
+      Log.e( TAG, "Error while setSerialIfNotExist: <" + ex.getLocalizedMessage() + ">" );
+      return;
     }
   }
 }
