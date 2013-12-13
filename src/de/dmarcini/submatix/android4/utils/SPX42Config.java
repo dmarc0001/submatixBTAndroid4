@@ -397,7 +397,7 @@ public class SPX42Config
 
   /**
    * 
-   * Setze die Firmwareversion und setze Flags
+   * Setze die Firmwareversion und setze Flags (Unterscheide die Firmwareversionen)
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
@@ -431,11 +431,22 @@ public class SPX42Config
     // Versionen NACH 2.7_V
     if( firmwareVersion.matches( "V2\\.7_V.*" ) )
     {
-      hasFahrenheidBug = false;
-      canSetDate = false;
-      hasSixValuesIndividual = false;
-      isFirmwareSupported = true;
       wasCorrectInitialized = true;
+      isFirmwareSupported = true;
+      // Build 198
+      if( ( firmwareVersion.matches( "V2\\.7_V r83.*" ) ) )
+      {
+        hasSixValuesIndividual = true;
+        isNewerDisplayBrightness = true;
+        isSixMetersAutoSetpoint = true;
+        canSetDate = true;
+      }
+      else
+      {
+        hasFahrenheidBug = false;
+        canSetDate = false;
+        hasSixValuesIndividual = false;
+      }
     }
     // Versionen NACH 2.7_H
     if( firmwareVersion.matches( "V2\\.7_H.*" ) )
@@ -446,7 +457,7 @@ public class SPX42Config
       wasCorrectInitialized = true;
       if( firmwareVersion.matches( "V2\\.7_H r83.*" ) )
       {
-        //
+        // Build 197
         // hier kommt bestimmt noch irgendwas nach :-(
         hasSixValuesIndividual = true;
         isNewerDisplayBrightness = true;
