@@ -387,23 +387,20 @@ public class SPX42AliasManager
     {
       if( cu.moveToFirst() )
       {
-        if( cu.getString( 0 ) != null || !cu.getString( 0 ).isEmpty() )
+        if( cu.isNull( 0 ) || cu.getString( 0 ).isEmpty() )
         {
-          //
-          // ja, Seriennummer existiert, erledigt!
-          //
           cu.close();
+          //
+          // nein, das existiert noch nicht
+          //
+          values = new ContentValues();
+          values.put( ProjectConst.A_SERIAL, _serial );
+          whereString = String.format( "%s='%s'", ProjectConst.A_MAC, _mac );
+          dBase.update( ProjectConst.A_TABLE_ALIASES, values, whereString, null );
           return;
         }
-        cu.close();
       }
-      //
-      // nein, das existiert noch nicht
-      //
-      values = new ContentValues();
-      values.put( ProjectConst.A_SERIAL, _serial );
-      whereString = String.format( "%s='%s'", ProjectConst.A_MAC, _mac );
-      dBase.update( ProjectConst.A_TABLE_ALIASES, values, whereString, null );
+      cu.close();
     }
     catch( SQLException ex )
     {

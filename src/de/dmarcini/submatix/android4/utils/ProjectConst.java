@@ -31,10 +31,10 @@ public final class ProjectConst
   public static final String MANUFACTNAME               = "Dirk Marciniak";
   public static final String MANUFACTMAIL               = "dirk_marciniak@arcor.de";
   public static final String MANUFACTHOME               = "http://www.submatix.com";
-  public static final String MANUFACTVERS               = "0.6-BETA";
+  public static final String MANUFACTVERS               = "0.7-BETA";
   public static final String GENYEAR                    = "2013";
-  public static final String GENMONTH                   = "11";
-  public static final String GENDAY                     = "30";
+  public static final String GENMONTH                   = "12";
+  public static final String GENDAY                     = "13";
   public static final boolean CHECK_PHYSICAL_BT         = false; 
 
   // ANDROID: Preferences Version
@@ -61,6 +61,7 @@ public final class ProjectConst
   public static final String FIRMWARE_2_7V              = "V2.7_V";
   public static final String FIRMWARE_2_7H              = "V2.7_H";
   public static final String FIRMWARE_2_7H_R83CE        = "V2.7_H r83 ce";
+  public static final String FIRMWARE_2_7V_R83CE        = "V2.7_V r83 ce";
   
 //  public static final int    FW_NOT_SET                 = -1;
 //  public static final int    FW_2_6_7_7V                = 0;

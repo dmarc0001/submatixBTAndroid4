@@ -7,7 +7,6 @@
 package de.dmarcini.submatix.android4.gui;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 
 import org.joda.time.format.DateTimeFormat;
 
@@ -20,8 +19,9 @@ import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.content.ContentSwitcher;
 import de.dmarcini.submatix.android4.content.ContentSwitcher.ProgItem;
 import de.dmarcini.submatix.android4.utils.BuildVersion;
-import de.dmarcini.submatix.android4.utils.ExtSdCardFinder;
 import de.dmarcini.submatix.android4.utils.ProjectConst;
+import de.jockels.open.Environment2;
+import de.jockels.open.NoSecondaryStorageException;
 
 /**
  * 
@@ -242,12 +242,18 @@ public class AreaListActivity extends FragmentCommonActivity
     //
     try
     {
-      extSdCard = ExtSdCardFinder.findExternStorage();
+      if( Environment2.isSecondaryExternalStorageAvailable() )
+      {
+        extSdCard = Environment2.getSecondaryExternalStorageDirectory();
+      }
+      else
+      {
+        Log.w( TAG, "extern storage not found! fallbsack to internal store!" );
+        extSdCard = Environment2.getCardDirectory();
+      }
     }
-    catch( FileNotFoundException ex )
+    catch( NoSecondaryStorageException ex1 )
     {
-      // war wohl nix
-      Log.e( TAG, "datastore Directory is: NOT FOUND" );
       return( null );
     }
     if( extSdCard.exists() && extSdCard.isDirectory() && extSdCard.canWrite() )
