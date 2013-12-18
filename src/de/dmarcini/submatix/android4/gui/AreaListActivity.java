@@ -253,7 +253,7 @@ public class AreaListActivity extends FragmentCommonActivity
         extSdCard = Environment2.getCardDirectory();
       }
     }
-    catch( NoSecondaryStorageException ex1 )
+    catch( NoSecondaryStorageException ex )
     {
       return( null );
     }
