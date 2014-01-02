@@ -1090,6 +1090,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
         finish();
       }
     }
+    //
+    // soll der ALIAS eines Gerätes bearbeitet werden?
+    //
     else if( dialog instanceof EditAliasDialogFragment )
     {
       Log.i( TAG, "User will edit alias..." );
@@ -1097,6 +1100,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       mHandler.obtainMessage( ProjectConst.MESSAGE_DEVALIAS_SET, new BtServiceMessage( ProjectConst.MESSAGE_DEVALIAS_SET, new String[]
       { editDialog.getDeviceName(), editDialog.getAliasName(), editDialog.getMac() } ) ).sendToTarget();
     }
+    //
+    // Sollte die AP geschlossen werden?
+    //
     else if( dialog instanceof UserAlertDialogFragment )
     {
       Log.e( TAG, "will close app..." );
