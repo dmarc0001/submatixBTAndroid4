@@ -12,6 +12,7 @@ import org.joda.time.format.DateTimeFormat;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import de.dmarcini.submatix.android4.ApplicationDEBUG;
@@ -250,7 +251,8 @@ public class AreaListActivity extends FragmentCommonActivity
       else
       {
         Log.w( TAG, "extern storage not found! fallbsack to internal store!" );
-        extSdCard = Environment2.getCardDirectory();
+        extSdCard = Environment.getExternalStorageDirectory();
+        // extSdCard = Environment2.getCardDirectory();
       }
     }
     catch( NoSecondaryStorageException ex )
