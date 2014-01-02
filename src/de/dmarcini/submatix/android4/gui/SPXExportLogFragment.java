@@ -9,7 +9,6 @@
 package de.dmarcini.submatix.android4.gui;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Vector;
 
@@ -28,10 +27,9 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import de.dmarcini.submatix.android4.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.R;
 import de.dmarcini.submatix.android4.comm.BtServiceMessage;
@@ -234,7 +232,6 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
         dialog.show( getFragmentManager(), "SelectDeviceDialogFragment" );
       }
     }
-    // TODO wenn Device ausgewählt == getActionBar().setTitle( R.string.export_header );
   }
 
   @Override
@@ -265,9 +262,9 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
       changeDeviceButton = ( Button )runningActivity.findViewById( R.id.changeDeviceButton );
       exportLogsButton = ( Button )runningActivity.findViewById( R.id.exportLogsButton );
       //
-      TextView tv = new TextView( runningActivity );
-      tv.setText( "TEXTHEADER" );
-      mainListView.addHeaderView( tv );
+      // TextView tv = new TextView( runningActivity );
+      // tv.setText( "TEXTHEADER" );
+      // mainListView.addHeaderView( tv );
       //
       return( null );
     }
@@ -288,20 +285,9 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     changeDeviceButton = ( Button )rootView.findViewById( R.id.changeDeviceButton );
     exportLogsButton = ( Button )rootView.findViewById( R.id.exportLogsButton );
     //
-    TextView tv = new TextView( runningActivity );
-    tv.setText( "TEXTHEADER" );
-    mainListView.addHeaderView( tv );
-    //
-    String[] values = new String[]
-    { "Android", "iPhone", "WindowsMobile", "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2", "Ubuntu",
-        "Windows7", "Max OS X", "Linux", "OS/2", "Android", "iPhone", "WindowsMobile" };
-    final ArrayList<String> list = new ArrayList<String>();
-    for( int i = 0; i < values.length; ++i )
-    {
-      list.add( values[i] );
-    }
-    final ArrayAdapter<String> adapter = new ArrayAdapter<String>( runningActivity, android.R.layout.simple_list_item_1, list );
-    mainListView.setAdapter( adapter );
+    // TextView tv = new TextView( runningActivity );
+    // tv.setText( "TEXTHEADER2" );
+    // mainListView.addHeaderView( tv );
     //
     return( rootView );
   }
@@ -332,22 +318,37 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
   @Override
   public void onItemClick( AdapterView<?> parent, View clickedView, int position, long id )
   {
+    SPX42ReadLogListArrayAdapter rlAdapter;
+    //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Click on ListView! Pos: <" + position + ">" );
-    // // invertiere die Markierung im Adapter
-    // logListAdapter.setMarked( position, !logListAdapter.getMarked( position ) );
-    // // mache die Markierung auch im View (das wird ja sonst nicht automatisch aktualisiert)
-    // ImageView ivMarked = ( ImageView )clickedView.findViewById( R.id.readLogMarkedIconView );
-    // if( ivMarked != null )
-    // {
-    // if( logListAdapter.getMarked( position ) )
-    // {
-    // ivMarked.setImageResource( R.drawable.circle_full_yellow );
-    // }
-    // else
-    // {
-    // ivMarked.setImageResource( R.drawable.circle_empty_yellow );
-    // }
-    // }
+    if( parent.equals( mainListView ) )
+    {
+      if( ApplicationDEBUG.DEBUG )
+      {
+        rlAdapter = ( SPX42ReadLogListArrayAdapter )mainListView.getAdapter();
+        if( rlAdapter.getMarked( position ) )
+          Log.d( TAG, "View is SELECTED" );
+        else
+          Log.d( TAG, "View is UNSELECTED" );
+        // invertiere die Markierung im Adapter
+        rlAdapter.setMarked( position, !rlAdapter.getMarked( position ) );
+        //
+        // mache die Markierung auch im View (das wird ja sonst nicht automatisch aktualisiert)
+        //
+        ImageView ivMarked = ( ImageView )clickedView.findViewById( R.id.readLogMarkedIconView );
+        if( ivMarked != null )
+        {
+          if( rlAdapter.getMarked( position ) )
+          {
+            ivMarked.setImageResource( R.drawable.circle_full_yellow );
+          }
+          else
+          {
+            ivMarked.setImageResource( R.drawable.circle_empty_yellow );
+          }
+        }
+      }
+    }
   }
 
   @Override
@@ -397,6 +398,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     //
     logListAdapter = new SPX42ReadLogListArrayAdapter( runningActivity, R.layout.read_log_array_adapter_view, FragmentCommonActivity.getAppStyle() );
     mainListView.setAdapter( logListAdapter );
+    mainListView.setChoiceMode( AbsListView.CHOICE_MODE_MULTIPLE );
     //
     // lese eine Liste der Tauchgänge ein
     //
@@ -454,6 +456,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
       selectedDeviceId = deviceDialog.getSelectedDeviceId();
       if( ApplicationDEBUG.DEBUG )
         Log.i( TAG, "onDialogNegative: selected Device Alias: <" + deviceDialog.getSelectedDeviceName() + "> Device-ID <" + deviceDialog.getSelectedDeviceId() + ">" );
+      getActivity().getActionBar().setTitle( String.format( getResources().getString( R.string.export_header_device ), deviceDialog.getSelectedDeviceName() ) );
       if( selectedDeviceId > 0 )
       {
         // Vector<Long[]> diveHeadList = logManager.getDiveListForDevice( selectedDeviceId );
