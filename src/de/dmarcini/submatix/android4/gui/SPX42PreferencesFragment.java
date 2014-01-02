@@ -401,6 +401,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     lP = getListPreference( setpointAuto );
     if( lP == null ) return;
+    ignorePrefChange = true;
     //
     // Autosetpoint (off/tiefe) einstellen
     //
@@ -420,6 +421,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "set highsetpoint value to preference..." );
     lP.setValueIndex( sP );
+    setSetpointSummarys();
+    ignorePrefChange = false;
   }
 
   /**
@@ -563,6 +566,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "set deepStops value to preference..." );
     sp.setChecked( ( deepStops > 0 ) );
+    setDecoSummary();
     ignorePrefChange = false;
   }
 
@@ -678,6 +682,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgReciveDisplay: set display angle value to preference..." );
     lP.setValueIndex( orient );
+    setDisplaySummary();
     ignorePrefChange = false;
   }
 
@@ -851,6 +856,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       lP.setValueIndex( tempStick );
       lP.setSummary( String.format( getResources().getString( R.string.conf_ind_tempstick_header_summary ), lP.getEntry() ) );
     }
+    setIndividualsSummary();
     ignorePrefChange = false;
   }
 
@@ -1862,63 +1868,51 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    */
   private void setAllSummarys()
   {
-    ListPreference lP = null;
-    PreferenceScreen pS = getPreferenceScreen();
-    Resources res = getResources();
     // SharedPreferences shared = getPreferenceManager().getSharedPreferences();
     //
-    // Autoset
-    //
-    lP = ( ListPreference )pS.findPreference( setpointAuto );
-    lP.setSummary( String.format( res.getString( R.string.conf_autoset_summary ), lP.getEntry() ) );
-    //
+    // Autosetpoint
     // High Setpoint
     //
-    lP = ( ListPreference )pS.findPreference( setpointHigh );
-    lP.setSummary( String.format( res.getString( R.string.conf_highset_summary ), lP.getEntry() ) );
+    setSetpointSummarys();
     //
     // Deco gradienten Preset
     //
-    lP = ( ListPreference )pS.findPreference( decoGradientsPreset );
-    lP.setSummary( String.format( res.getString( R.string.conf_deco_presets_summary ), lP.getEntry() ) );
+    setDecoSummary();
     //
     // Deco gradienten
     //
     setDecoGradientsSummary();
     //
     // Displayhelligkeit
-    //
-    lP = ( ListPreference )pS.findPreference( displayLuminance );
-    lP.setSummary( String.format( res.getString( R.string.conf_luminance_header_summary ), lP.getValue() ) );
-    //
     // Display Orientierung
     //
-    lP = ( ListPreference )pS.findPreference( displayOrient );
-    lP.setSummary( String.format( res.getString( R.string.conf_display_orientation_header_summary ), lP.getEntry() ) );
+    setDisplaySummary();
     //
     // das nur bei Individuallizenz
     //
     if( FragmentCommonActivity.spxConfig.getCustomEnabled() == 1 )
     {
-      //
-      // Sensors Count for Warning
-      //
-      lP = ( ListPreference )pS.findPreference( individualCountSensorWarning );
-      lP.setSummary( String.format( res.getString( R.string.conf_ind_count_sensorwarning_header_summary ), lP.getEntry() ) );
-      //
-      // Logintervall
-      //
-      lP = ( ListPreference )pS.findPreference( individualLoginterval );
-      lP.setSummary( String.format( res.getString( R.string.conf_ind_interval_header_summary ), lP.getEntry() ) );
-      //
-      // Tempstick
-      //
-      if( FragmentCommonActivity.spxConfig.hasSixValuesIndividual() )
-      {
-        lP = ( ListPreference )pS.findPreference( individualTempStick );
-        lP.setSummary( String.format( res.getString( R.string.conf_ind_tempstick_header_summary ), lP.getEntry() ) );
-      }
+      setIndividualsSummary();
     }
+  }
+
+  /**
+   * 
+   * Setze Summary für Autosetpoint
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 02.01.2014
+   */
+  private void setSetpointSummarys()
+  {
+    ListPreference lP = null;
+    //
+    lP = ( ListPreference )getPreferenceScreen().findPreference( setpointAuto );
+    lP.setSummary( String.format( getResources().getString( R.string.conf_autoset_summary ), lP.getEntry() ) );
+    //
+    lP = ( ListPreference )getPreferenceScreen().findPreference( setpointHigh );
+    lP.setSummary( String.format( getResources().getString( R.string.conf_highset_summary ), lP.getEntry() ) );
   }
 
   /**
@@ -2082,6 +2076,74 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     if( ApplicationDEBUG.DEBUG )
       Log.d( TAG, String.format( "setDecoGradientsSummary: write \"" + getResources().getString( R.string.conf_deco_gradient_summary ), low, high ) + "\"" );
     getPreferenceScreen().findPreference( decoGradient ).setSummary( String.format( getResources().getString( R.string.conf_deco_gradient_summary ), low, high ) );
+  }
+
+  /**
+   * 
+   * Setze Summary für DECO
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 02.01.2014
+   */
+  private void setDecoSummary()
+  {
+    ListPreference lP = null;
+    //
+    lP = ( ListPreference )getPreferenceScreen().findPreference( decoGradientsPreset );
+    lP.setSummary( String.format( getResources().getString( R.string.conf_deco_presets_summary ), lP.getEntry() ) );
+  }
+
+  /**
+   * 
+   * Zeige Display Einstellungen als Summary
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 02.01.2014
+   */
+  private void setDisplaySummary()
+  {
+    ListPreference lP = null;
+    //
+    lP = ( ListPreference )getPreferenceScreen().findPreference( displayLuminance );
+    lP.setSummary( String.format( getResources().getString( R.string.conf_luminance_header_summary ), lP.getValue() ) );
+    //
+    lP = ( ListPreference )getPreferenceScreen().findPreference( displayOrient );
+    lP.setSummary( String.format( getResources().getString( R.string.conf_display_orientation_header_summary ), lP.getEntry() ) );
+  }
+
+  /**
+   * 
+   * Setze Summary für Individuals
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 02.01.2014
+   */
+  private void setIndividualsSummary()
+  {
+    ListPreference lP = null;
+    PreferenceScreen pS = getPreferenceScreen();
+    Resources res = getResources();
+    //
+    // Sensors Count for Warning
+    //
+    lP = ( ListPreference )pS.findPreference( individualCountSensorWarning );
+    lP.setSummary( String.format( res.getString( R.string.conf_ind_count_sensorwarning_header_summary ), lP.getEntry() ) );
+    //
+    // Logintervall
+    //
+    lP = ( ListPreference )pS.findPreference( individualLoginterval );
+    lP.setSummary( String.format( res.getString( R.string.conf_ind_interval_header_summary ), lP.getEntry() ) );
+    //
+    // Tempstick
+    //
+    if( FragmentCommonActivity.spxConfig.hasSixValuesIndividual() )
+    {
+      lP = ( ListPreference )pS.findPreference( individualTempStick );
+      lP.setSummary( String.format( res.getString( R.string.conf_ind_tempstick_header_summary ), lP.getEntry() ) );
+    }
   }
 
   /**
