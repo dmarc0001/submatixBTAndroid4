@@ -328,4 +328,20 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
     }
     return( lst );
   }
+
+  /**
+   * 
+   * Lösche die Markierungen
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
+   * 
+   * Stand: 04.01.2014
+   */
+  public void clearMaredItems()
+  {
+    for( int i = 0; i < getCount(); i++ )
+    {
+      setMarked( i, false );
+    }
+  }
 }
