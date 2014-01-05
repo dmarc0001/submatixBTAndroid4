@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.dmarcini.submatix.android4"
-    android:versionCode="8"
+    android:versionCode="7"
     android:versionName="1.0 light" android:installLocation="auto">
 
     <uses-sdk
@@ -20,7 +20,7 @@
         android:icon="@drawable/spx42"
         android:label="@string/app_name_light"
         android:theme="@style/AppDarkTheme" 
-        android:description="@string/app_description_light" android:debuggable="true" android:hardwareAccelerated="true">
+        android:description="@string/app_description_light" android:debuggable="false" android:hardwareAccelerated="true">
         
         <!-- Die List/Main activity -->
         <activity
