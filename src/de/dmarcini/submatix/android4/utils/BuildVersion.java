@@ -24,10 +24,10 @@ import de.dmarcini.submatix.android4.gui.FragmentCommonActivity;
  */
 public class BuildVersion
 {
-  private static final long buildNumber = 3001L;
-  private static final long buildDate = 1388688503487L;
+  private static final long buildNumber = 3031L;
+  private static final long buildDate = 1388938518564L;
   @SuppressWarnings( "javadoc" )
-  public static final boolean isLightVersion = false;
+  public static final boolean isLightVersion    = false;
   /**
    * Kennzeichnung für eine Light-Version
    */
@@ -89,7 +89,7 @@ public class BuildVersion
   {
     if( isLightVersion )
     {
-      return( ProjectConst.MANUFACTVERS + "-LIGHT" );
+      return( ProjectConst.MANUFACTVERS_LT );
     }
     return( ProjectConst.MANUFACTVERS );
   }
