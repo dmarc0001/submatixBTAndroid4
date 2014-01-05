@@ -61,6 +61,94 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
   private Button              changeDeviceButton;
   private Button              exportLogsButton;
 
+  /**
+   * 
+   * Exportiere die markierten Einträge, falls welche markiert sind
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 04.01.2014
+   * 
+   * @param markedItems
+   */
+  private void exportSelectedLogItems( Vector<Integer> _markedItems )
+  {
+    Thread exportThread;
+    final Vector<Integer> markedItems = _markedItems;
+    //
+    if( _markedItems.isEmpty() )
+    {
+      Log.i( TAG, "exportSelectedLogItems: not selected items" );
+      return;
+    }
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "exportSelectedLogItems: export %d selected items...", _markedItems.size() ) );
+    exportThread = new Thread() {
+      @Override
+      public void run()
+      {
+        Iterator<Integer> it = markedItems.iterator();
+        int itemIndex;
+        while( it.hasNext() )
+        {
+          itemIndex = it.next();
+          if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "exportThread: export index %d ...", itemIndex ) );
+        }
+      }
+    };
+    exportThread.setName( "export_logs_to_xml_thread" );
+    exportThread.start();
+  }
+
+  /**
+   * 
+   * Fülle den ListAdapter mit den Einträgen für Tauchgänge aus der Datenbank
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 04.01.2014
+   * 
+   * @param diveId
+   * @return
+   */
+  private boolean fillListAdapter( int diveId )
+  {
+    Vector<Long[]> diveList;
+    int diveNr = 0;
+    DateTime startDateTime;
+    SPX42ReadLogListArrayAdapter logListAdapter;
+    Resources res;
+    String detailText;
+    //
+    res = runningActivity.getResources();
+    //
+    // Creiere einen Adapter
+    //
+    logListAdapter = new SPX42ReadLogListArrayAdapter( runningActivity, R.layout.read_log_array_adapter_view, FragmentCommonActivity.getAppStyle() );
+    mainListView.setAdapter( logListAdapter );
+    mainListView.setChoiceMode( AbsListView.CHOICE_MODE_MULTIPLE );
+    //
+    // lese eine Liste der Tauchgänge ein
+    //
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "read divelist for deviceId: <" + diveId + ">..." );
+    diveList = logManager.getDiveListForDevice( diveId );
+    Iterator<Long[]> it = diveList.iterator();
+    //
+    // Die Liste in den Adapter implementieren
+    //
+    while( it.hasNext() )
+    {
+      Long[] set = it.next(); // 0: diveID, 1: startTime, 2: diveLength, 3: SPX-DiveNr, 4: MAx Tiefe
+      diveNr = ( int )( 0xffffffff & set[3] );
+      startDateTime = new DateTime( set[1] * 1000 );
+      detailText = String.format( res.getString( R.string.logread_saved_format ), set[4] / 10.0, res.getString( R.string.app_unit_depth_metric ), set[2] / 60, set[2] % 60 );
+      //
+      ReadLogItemObj rlio = new ReadLogItemObj( true, String.format( "#%03d: %s", diveNr, startDateTime.toString( FragmentCommonActivity.localTimeFormatter ) ), "file", detailText );
+      // Eintrag an den Anfang stellen
+      logListAdapter.add( rlio );
+    }
+    return( true );
+  }
+
   /*
    * (nicht-Javadoc)
    * 
@@ -220,6 +308,8 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
   @Override
   public void onClick( View v )
   {
+    SPX42ReadLogListArrayAdapter rAdapter;
+    //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Click" );
     if( v instanceof Button )
     {
@@ -230,6 +320,18 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
         SelectDeviceDialogFragment dialog = new SelectDeviceDialogFragment();
         dialog.setDeviceList( logManager.getDeviceNameIdList() );
         dialog.show( getFragmentManager(), "SelectDeviceDialogFragment" );
+      }
+      else if( ( Button )v == exportLogsButton )
+      {
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onClick: EXPORT selected Items" );
+        //
+        // exportiere alle markierten Elemente
+        //
+        rAdapter = ( SPX42ReadLogListArrayAdapter )mainListView.getAdapter();
+        exportSelectedLogItems( rAdapter.getMarkedItems() );
+        rAdapter.clearMaredItems();
+        // neu zeichnen der Elemente erzwingen
+        mainListView.setAdapter( rAdapter );
       }
     }
   }
@@ -294,136 +396,6 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
 
   /**
    * 
-   * Setze den Titel in der Action Bar mit Test und Name des gelisteten Gerätes
-   * 
-   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
-   * 
-   * Stand: 01.12.2013
-   * 
-   * @param string
-   */
-  private void setTitleString( String devName )
-  {
-    String titleString;
-    //
-    titleString = String.format( getResources().getString( R.string.export_header_device ), devName );
-    runningActivity.getActionBar().setTitle( titleString );
-  }
-
-  /*
-   * (nicht-Javadoc)
-   * 
-   * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
-   */
-  @Override
-  public void onItemClick( AdapterView<?> parent, View clickedView, int position, long id )
-  {
-    SPX42ReadLogListArrayAdapter rlAdapter;
-    //
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Click on ListView! Pos: <" + position + ">" );
-    if( parent.equals( mainListView ) )
-    {
-      if( ApplicationDEBUG.DEBUG )
-      {
-        rlAdapter = ( SPX42ReadLogListArrayAdapter )mainListView.getAdapter();
-        if( rlAdapter.getMarked( position ) )
-          Log.d( TAG, "View is SELECTED" );
-        else
-          Log.d( TAG, "View is UNSELECTED" );
-        // invertiere die Markierung im Adapter
-        rlAdapter.setMarked( position, !rlAdapter.getMarked( position ) );
-        //
-        // mache die Markierung auch im View (das wird ja sonst nicht automatisch aktualisiert)
-        //
-        ImageView ivMarked = ( ImageView )clickedView.findViewById( R.id.readLogMarkedIconView );
-        if( ivMarked != null )
-        {
-          if( rlAdapter.getMarked( position ) )
-          {
-            ivMarked.setImageResource( R.drawable.circle_full_yellow );
-          }
-          else
-          {
-            ivMarked.setImageResource( R.drawable.circle_empty_yellow );
-          }
-        }
-      }
-    }
-  }
-
-  @Override
-  public synchronized void onResume()
-  {
-    super.onResume();
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
-    // Listener aktivieren
-    ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
-    mainListView.setOnItemClickListener( this );
-    changeDeviceButton = ( Button )runningActivity.findViewById( R.id.changeDeviceButton );
-    changeDeviceButton.setOnClickListener( this );
-    exportLogsButton = ( Button )runningActivity.findViewById( R.id.exportLogsButton );
-    exportLogsButton.setOnClickListener( this );
-    //
-    // Liste füllen
-    //
-    if( selectedDeviceId > 0 )
-    {
-      fillListAdapter( selectedDeviceId );
-    }
-    // Listener aktivieren
-    ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
-  }
-
-  @Override
-  public void onPause()
-  {
-    super.onPause();
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause..." );
-    // Listener abmelden
-    ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
-  }
-
-  private boolean fillListAdapter( int diveId )
-  {
-    Vector<Long[]> diveList;
-    int diveNr = 0;
-    DateTime startDateTime;
-    SPX42ReadLogListArrayAdapter logListAdapter;
-    Resources res;
-    String detailText;
-    //
-    res = runningActivity.getResources();
-    //
-    // Creiere einen Adapter
-    //
-    logListAdapter = new SPX42ReadLogListArrayAdapter( runningActivity, R.layout.read_log_array_adapter_view, FragmentCommonActivity.getAppStyle() );
-    mainListView.setAdapter( logListAdapter );
-    mainListView.setChoiceMode( AbsListView.CHOICE_MODE_MULTIPLE );
-    //
-    // lese eine Liste der Tauchgänge ein
-    //
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "read divelist for deviceId: <" + diveId + ">..." );
-    diveList = logManager.getDiveListForDevice( diveId );
-    Iterator<Long[]> it = diveList.iterator();
-    //
-    // Die Liste in den Adapter implementieren
-    //
-    while( it.hasNext() )
-    {
-      Long[] set = it.next(); // 0: diveID, 1: startTime, 2: diveLength, 3: SPX-DiveNr, 4: MAx Tiefe
-      diveNr = ( int )( 0xffffffff & set[3] );
-      startDateTime = new DateTime( set[1] * 1000 );
-      detailText = String.format( res.getString( R.string.logread_saved_format ), set[4] / 10.0, res.getString( R.string.app_unit_depth_metric ), set[2] / 60, set[2] % 60 );
-      //
-      ReadLogItemObj rlio = new ReadLogItemObj( true, String.format( "#%03d: %s", diveNr, startDateTime.toString( FragmentCommonActivity.localTimeFormatter ) ), "file", detailText );
-      // Eintrag an den Anfang stellen
-      logListAdapter.add( rlio );
-    }
-    return( true );
-  }
-
-  /**
-   * 
    * Wenn der Dialog Positiv abgeschlossen wurde (OKO oder ähnlich)
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
@@ -467,5 +439,98 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     {
       Log.i( TAG, "onDialogNegative: UNKNOWN dialog type" );
     }
+  }
+
+  /*
+   * (nicht-Javadoc)
+   * 
+   * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
+   */
+  @Override
+  public void onItemClick( AdapterView<?> parent, View clickedView, int position, long id )
+  {
+    SPX42ReadLogListArrayAdapter rlAdapter = null;
+    //
+    if( parent.equals( mainListView ) )
+    {
+      rlAdapter = ( SPX42ReadLogListArrayAdapter )mainListView.getAdapter();
+      if( ApplicationDEBUG.DEBUG )
+      {
+        Log.d( TAG, "Click on mainListView! Pos: <" + position + ">" );
+        if( rlAdapter.getMarked( position ) )
+          Log.d( TAG, "View was SELECTED" );
+        else
+          Log.d( TAG, "View was UNSELECTED" );
+      }
+      //
+      // invertiere die Markierung im Adapter
+      //
+      rlAdapter.setMarked( position, !rlAdapter.getMarked( position ) );
+      //
+      // mache die Markierung auch im View (das wird ja sonst nicht automatisch aktualisiert)
+      //
+      ImageView ivMarked = ( ImageView )clickedView.findViewById( R.id.readLogMarkedIconView );
+      if( ivMarked != null )
+      {
+        if( rlAdapter.getMarked( position ) )
+        {
+          ivMarked.setImageResource( R.drawable.circle_full_yellow );
+        }
+        else
+        {
+          ivMarked.setImageResource( R.drawable.circle_empty_yellow );
+        }
+      }
+    }
+  }
+
+  @Override
+  public void onPause()
+  {
+    super.onPause();
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause..." );
+    // Listener abmelden
+    ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
+  }
+
+  @Override
+  public synchronized void onResume()
+  {
+    super.onResume();
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
+    // Listener aktivieren
+    ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
+    mainListView.setOnItemClickListener( this );
+    changeDeviceButton = ( Button )runningActivity.findViewById( R.id.changeDeviceButton );
+    changeDeviceButton.setOnClickListener( this );
+    exportLogsButton = ( Button )runningActivity.findViewById( R.id.exportLogsButton );
+    exportLogsButton.setOnClickListener( this );
+    //
+    // Liste füllen
+    //
+    if( selectedDeviceId > 0 )
+    {
+      fillListAdapter( selectedDeviceId );
+    }
+    // Listener aktivieren
+    ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
+  }
+
+  /**
+   * 
+   * Setze den Titel in der Action Bar mit Test und Name des gelisteten Gerätes
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 01.12.2013
+   * 
+   * @param string
+   */
+  private void setTitleString( String devName )
+  {
+    String titleString;
+    //
+    titleString = String.format( getResources().getString( R.string.export_header_device ), devName );
+    runningActivity.getActionBar().setTitle( titleString );
   }
 }
