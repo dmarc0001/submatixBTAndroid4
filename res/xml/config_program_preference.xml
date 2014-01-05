@@ -3,7 +3,7 @@
     android:id="@+id/conf_prog_preferencescreen"
     android:title="@string/conf_prog_headline" >
 
-    <de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory
+    <de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory
         android:key="keyProgUnitViews"
         android:title="@string/conf_prog_units_head" >
         <ListPreference
@@ -14,8 +14,8 @@
             android:summary="@string/conf_prog_temp_units_summary" 
             android:defaultValue="@string/conf_prog_temp_units_default"/>
             
-    </de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory>
-    <de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory
+    </de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory>
+    <de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory
         android:key="keyProgData"
         android:title="@string/conf_prog_filesystem" >
         <EditTextPreference
@@ -31,8 +31,8 @@
             android:switchTextOff="@string/conf_prog_showall_off"
             android:switchTextOn="@string/conf_prog_showall_on"
             android:title="@string/conf_prog_showall_header" />
-    </de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory>
-    <de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory
+    </de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory>
+    <de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory
         android:key="keyProgMail"
         android:title="@string/conf_prog_mail_header" >
         <EditTextPreference
@@ -48,8 +48,8 @@
             android:summaryOff="@string/conf_prog_mail_compressed_off_summary"
             android:summaryOn="@string/conf_prog_mail_compressed_on_summary"
             android:title="@string/conf_prog_mail_compressed_header" />
-    </de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory>
-    <de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory
+    </de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory>
+    <de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory
         android:key="keyProgOthers"
         android:title="@string/conf_prog_others_header" >
         <SwitchPreference
@@ -60,6 +60,6 @@
             android:switchTextOff="@string/conf_prog_others_off_light"
             android:switchTextOn="@string/conf_prog_others_on_dark"
             android:title="@string/conf_prog_others_theme_header" />
-    </de.dmarcini.submatix.android4.utils.ColorizedPreferenceCategory>
+    </de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory>
 
 </PreferenceScreen>
