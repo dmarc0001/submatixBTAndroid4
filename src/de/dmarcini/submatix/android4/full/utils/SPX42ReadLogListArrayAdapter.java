@@ -103,7 +103,6 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
     //
     // verorte die Objekte
     //
-    ImageView ivSaved = ( ImageView )cView.findViewById( R.id.readLogListIconView );
     ImageView ivMarked = ( ImageView )cView.findViewById( R.id.readLogMarkedIconView );
     TextView tvName = ( TextView )cView.findViewById( R.id.readLogNameListTextView );
     TextView tvDetail = ( TextView )cView.findViewById( R.id.readLogDetailsTextView );
@@ -114,33 +113,6 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
       //
       tvName.setText( rlio.itemName );
       tvDetail.setText( rlio.itemDetail );
-      //
-      // Icon setzen
-      //
-      if( rlio.isSaved )
-      {
-        ivSaved.setImageResource( R.drawable.saved_log );
-        if( themeId == R.style.AppDarkTheme )
-        {
-          tvDetail.setTextColor( cView.getResources().getColor( R.color.logReadDark_savedColor ) );
-        }
-        else
-        {
-          tvDetail.setTextColor( cView.getResources().getColor( R.color.logReadLight_savedColor ) );
-        }
-      }
-      else
-      {
-        ivSaved.setImageResource( R.drawable.unsaved_log );
-        if( themeId == R.style.AppDarkTheme )
-        {
-          tvDetail.setTextColor( cView.getResources().getColor( R.color.logReadDark_notSavedColor ) );
-        }
-        else
-        {
-          tvDetail.setTextColor( cView.getResources().getColor( R.color.logReadLight_notSavedColor ) );
-        }
-      }
       if( rlio.isMarked )
       {
         ivMarked.setImageResource( R.drawable.circle_full_yellow );
