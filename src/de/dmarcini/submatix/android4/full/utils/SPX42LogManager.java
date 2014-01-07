@@ -3,13 +3,18 @@
 import java.io.File;
 import java.util.Vector;
 
+import org.joda.time.DateTime;
+
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
+import de.dmarcini.submatix.android4.full.gui.FragmentCommonActivity;
 
 /**
  * 
@@ -99,7 +104,7 @@ public class SPX42LogManager extends SPX42AliasManager
     values = new ContentValues();
     values.put( ProjectConst.H_FILEONMOBILE, diveHeader.xmlFile.getAbsolutePath() );
     values.put( ProjectConst.H_DEVICEID, diveHeader.deviceId );
-    values.put( ProjectConst.H_DIVENUMBERONSPX, String.format( "%d", diveHeader.diveNumberOnSPX ) );
+    values.put( ProjectConst.H_DIVENUMBERONSPX, diveHeader.diveNumberOnSPX );
     values.put( ProjectConst.H_DEVICESERIAL, diveHeader.deviceSerialNumber );
     values.put( ProjectConst.H_STARTTIME, diveHeader.startTime ); // TODO: prüfe, ob das so hinkommt
     values.put( ProjectConst.H_FILEONSPX, diveHeader.fileNameOnSpx );
@@ -201,11 +206,11 @@ public class SPX42LogManager extends SPX42AliasManager
    * @return Vector mit Werten tauchid,Startzeit,Länge,spx-Nummer,max-Tiefe
    */
   @SuppressLint( "DefaultLocale" )
-  public Vector<Long[]> getDiveListForDevice( int _deviceId )
+  public Vector<ReadLogItemObj> getDiveListForDevice( int _deviceId, Resources res )
   {
     String sql;
     Cursor cu;
-    Vector<Long[]> diveHeadList = new Vector<Long[]>();
+    Vector<ReadLogItemObj> diveHeadList = new Vector<ReadLogItemObj>();
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getDiveListForDevice..." );
     if( _deviceId < 0 )
@@ -221,15 +226,16 @@ public class SPX42LogManager extends SPX42AliasManager
       }
     }
     // @formatter:off
-    sql = String.format( "select %s,%s,%s,%s,%s from %s where %s=%d order by %s;", 
+    sql = String.format( "select %s,%s,%s,%s,%s,%s from %s where %s=%d order by %s;", 
             ProjectConst.H_DIVEID,                     // 
             ProjectConst.H_STARTTIME,                  // 
             ProjectConst.H_DIVELENGTH,                 // 
             ProjectConst.H_DIVENUMBERONSPX,
             ProjectConst.H_MAXDEPTH,
+            ProjectConst.H_FILEONMOBILE,
             ProjectConst.H_TABLE_DIVELOGS,             // Tabelle
             ProjectConst.H_DEVICEID, _deviceId,        // nur Gerätenummer
-            ProjectConst.H_DIVEID);                    // Ordne nach Tauchlog-Nummer
+            ProjectConst.H_DIVENUMBERONSPX);           // Ordne nach Tauchlog-Nummer auf SPX
     // @formatter:on
     cu = dBase.rawQuery( sql, null );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getDiveListForDevice had <" + cu.getCount() + "> results." );
@@ -237,8 +243,11 @@ public class SPX42LogManager extends SPX42AliasManager
     {
       while( cu.moveToNext() )
       {
-        Long[] entry = new Long[]
-        { cu.getLong( 0 ), cu.getLong( 1 ), cu.getLong( 2 ), cu.getLong( 3 ), cu.getLong( 4 ) };
+        DateTime startDateTime = new DateTime( cu.getLong( 1 ) * 1000 );
+        String detailText = String.format( res.getString( R.string.logread_saved_format ), cu.getInt( 4 ) / 10.0, res.getString( R.string.app_unit_depth_metric ),
+                cu.getInt( 2 ) / 60, cu.getInt( 2 ) % 60 );
+        String itemName = String.format( "#%03d: %s", cu.getInt( 3 ), startDateTime.toString( FragmentCommonActivity.localTimeFormatter ) );
+        ReadLogItemObj entry = new ReadLogItemObj( true, itemName, cu.getString( 5 ), detailText, cu.getInt( 0 ), cu.getInt( 3 ) );
         diveHeadList.add( entry );
       }
       //

@@ -80,54 +80,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
       return;
     }
     // Main-Tabelle
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "create table " + ProjectConst.H_TABLE_DIVELOGS + "..." );
-    sql = "create table  " + ProjectConst.H_TABLE_DIVELOGS + " ";
-    sql += "(";
-    sql += ProjectConst.H_DIVEID + " integer primary key autoincrement, \n";
-    sql += ProjectConst.H_DEVICEID + " integer not null, \n";
-    sql += ProjectConst.H_FILEONMOBILE + " text not null, \n";
-    sql += ProjectConst.H_DIVENUMBERONSPX + " text not null, \n";
-    sql += ProjectConst.H_DEVICESERIAL + " text not null, \n";
-    sql += ProjectConst.H_STARTTIME + " integer not null, \n";
-    sql += ProjectConst.H_HADSEND + " interger, \n";
-    sql += ProjectConst.H_FILEONSPX + " text not null, \n";
-    sql += ProjectConst.H_FIRSTTEMP + " real, \n";
-    sql += ProjectConst.H_LOWTEMP + " real, \n";
-    sql += ProjectConst.H_MAXDEPTH + " integer, \n";
-    sql += ProjectConst.H_SAMPLES + " integer, \n";
-    sql += ProjectConst.H_DIVELENGTH + " integer, \n";
-    sql += ProjectConst.H_UNITS + " text not null, \n";
-    sql += ProjectConst.H_NOTES + " text, \n";
-    sql += ProjectConst.H_GEO_LON + " text, \n";
-    sql += ProjectConst.H_GEO_LAT + " text \n";
-    sql += ");";
-    try
-    {
-      db.execSQL( sql );
-    }
-    catch( SQLException ex )
-    {
-      Log.e( TAG, ex.getLocalizedMessage() );
-      Toast.makeText( cx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT ).show();
-      return;
-    }
-    // Erzeuge index
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "create INDEX  on Table " + ProjectConst.H_TABLE_DIVELOGS + "..." );
-    try
-    {
-      sql = "create INDEX  idx_" + ProjectConst.H_TABLE_DIVELOGS + "_" + ProjectConst.H_STARTTIME;
-      sql += " ON " + ProjectConst.H_TABLE_DIVELOGS + "(" + ProjectConst.H_STARTTIME + " ASC);";
-      db.execSQL( sql );
-      sql = "create INDEX  idx_" + ProjectConst.H_DEVICEID;
-      sql += " ON " + ProjectConst.H_TABLE_DIVELOGS + "(" + ProjectConst.H_DEVICEID + " ASC);";
-      db.execSQL( sql );
-    }
-    catch( SQLException ex )
-    {
-      Log.e( TAG, ex.getLocalizedMessage() );
-      Toast.makeText( cx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT ).show();
-      return;
-    }
+    createMainTable( db );
     Log.i( TAG, "createTables...OK" );
   }
 
@@ -320,6 +273,11 @@ public class DataSQLHelper extends SQLiteOpenHelper
       createMainTable( db );
       db.setVersion( newVersion );
     }
+    if( oldVersion == 4 && newVersion == 5 )
+    {
+      upgradeV4ToV5( db );
+      db.setVersion( newVersion );
+    }
     else
     {
       dropTables( db );
@@ -327,6 +285,33 @@ public class DataSQLHelper extends SQLiteOpenHelper
       db.setVersion( newVersion );
       db.close();
       Log.i( TAG, "onUpgrade...OK" );
+    }
+  }
+
+  private void upgradeV4ToV5( SQLiteDatabase db )
+  {
+    Log.i( TAG, "upgrade db from version 4 to 5..." );
+    String sql;
+    try
+    {
+      // indizi loeschen
+      sql = "drop index idx_" + ProjectConst.H_TABLE_DIVELOGS + "_" + ProjectConst.H_STARTTIME + ";";
+      db.execSQL( sql );
+      sql = "drop index idx_" + ProjectConst.H_DIVEID + ";";
+      db.execSQL( sql );
+      // Tabelle umbenennen
+      sql = "alter table " + ProjectConst.H_TABLE_DIVELOGS + " to " + ProjectConst.H_TABLE_DIVELOGS + "_old;";
+      db.execSQL( sql );
+      //
+      // tabelle neu anlegen
+      //
+      createMainTable( db );
+    }
+    catch( SQLException ex )
+    {
+      Log.e( TAG, ex.getLocalizedMessage() );
+      Toast.makeText( cx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT ).show();
+      return;
     }
   }
 
@@ -349,9 +334,11 @@ public class DataSQLHelper extends SQLiteOpenHelper
     sql = "create table  " + ProjectConst.H_TABLE_DIVELOGS + " ";
     sql += "(";
     sql += ProjectConst.H_DIVEID + " integer primary key autoincrement, \n";
-    sql += ProjectConst.H_DIVENUMBERONSPX + " text not null, \n";
+    sql += ProjectConst.H_DEVICEID + " integer not null, \n";
+    sql += ProjectConst.H_FILEONMOBILE + " text not null, \n";
+    sql += ProjectConst.H_DIVENUMBERONSPX + " integer not null, \n";
     sql += ProjectConst.H_DEVICESERIAL + " text not null, \n";
-    sql += ProjectConst.H_STARTTIME + " text not null, \n";
+    sql += ProjectConst.H_STARTTIME + " integer not null, \n";
     sql += ProjectConst.H_HADSEND + " interger, \n";
     sql += ProjectConst.H_FILEONSPX + " text not null, \n";
     sql += ProjectConst.H_FIRSTTEMP + " real, \n";
@@ -376,10 +363,13 @@ public class DataSQLHelper extends SQLiteOpenHelper
     }
     // Erzeuge index
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "create INDEX  on Table " + ProjectConst.H_TABLE_DIVELOGS + "..." );
-    sql = "create INDEX  idx_" + ProjectConst.H_TABLE_DIVELOGS + "_" + ProjectConst.H_STARTTIME;
-    sql += " ON " + ProjectConst.H_TABLE_DIVELOGS + "(" + ProjectConst.H_STARTTIME + " ASC);";
     try
     {
+      sql = "create INDEX  idx_" + ProjectConst.H_TABLE_DIVELOGS + "_" + ProjectConst.H_STARTTIME;
+      sql += " ON " + ProjectConst.H_TABLE_DIVELOGS + "(" + ProjectConst.H_STARTTIME + " ASC);";
+      db.execSQL( sql );
+      sql = "create INDEX  idx_" + ProjectConst.H_DEVICEID;
+      sql += " ON " + ProjectConst.H_TABLE_DIVELOGS + "(" + ProjectConst.H_DEVICEID + " ASC);";
       db.execSQL( sql );
     }
     catch( SQLException ex )
