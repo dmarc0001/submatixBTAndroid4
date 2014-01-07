@@ -4,7 +4,7 @@
     Einfachs Hohzählen des Builds
   </description>
   
-  <property name="versionFile" value="${basedir}\src\de\dmarcini\submatix\android4\utils\BuildVersion.java"/>
+  <property name="versionFile" value="${basedir}\src\de\dmarcini\submatix\android4\full\utils\BuildVersion.java"/>
 	<property name="counterExec" value="${basedir}\utils\buildCounter.jar" /> 
 	<property name="manifestLightSrc" value="${basedir}\utils\AndroidManifest_light.xml" />
   <property name="manifestFullSrc" value="${basedir}\utils\AndroidManifest_full.xml" />
