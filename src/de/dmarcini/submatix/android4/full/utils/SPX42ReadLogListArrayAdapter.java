@@ -27,6 +27,7 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
 {
   @SuppressWarnings( "unused" )
   private static final String TAG     = SPX42ReadLogListArrayAdapter.class.getSimpleName();
+  @SuppressWarnings( "unused" )
   private int                 themeId = R.style.AppDarkTheme;
 
   /**
