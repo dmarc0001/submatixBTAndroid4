@@ -34,7 +34,6 @@
     <string name="toast_exit">"Verlasse App"</string>
     <string name="toast_exit_nobt">"Verlasse App KEIN BT ADAPTER!"</string>
     <string name="toast_bt_enabled">"Bluethooth aktiviert!"</string>
-    <string name="toast_cant_bt_connect">Kann nicht mit BT Gerät verbinden: </string>
     <string name="toast_dummy">kommuniziere</string>
     <string name="toast_comm_timeout">Kommunikation Zeit abgelaufen!</string>
     <string name="toast_comm_set_autosetpoint">Sende O2 Partialdruck soll</string>
@@ -57,6 +56,9 @@
     <string name="toast_comm_set_gas_count" formatted="false">Sende Gas #%02d von #%02d</string>
     <string name="toast_comm_set_gas_alert">Sende Gaseinstellung: FEHLER</string>
     <string name="toast_read_logdir_no_selected_entrys">Noch keine Einträge selektiert!</string>
+    <string name="toast_connect_connected">Verbunden mit \"%s\"</string>
+    <string name="toast_connect_disconnected">Verbindung getrennt</string>
+    <string name="toast_connect_cant_bt_connect">Kann nicht mit \"%s}" verbinden</string>
     
     <!-- Dialogboxen  -->
     <string name="dialog_sure_exit">"Sind Sie sicher?"</string>

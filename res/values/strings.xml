@@ -34,7 +34,6 @@
     <string name="toast_exit">exiting app</string>
     <string name="toast_exit_nobt">exiting app NO BT ADAPTER!</string>
     <string name="toast_bt_enabled">bluethooth enabled!</string>
-    <string name="toast_cant_bt_connect">can not connect bt device </string>
     <string name="toast_dummy">communicate</string>
     <string name="toast_comm_timeout">communication timeout!</string>
     <string name="toast_comm_set_autosetpoint">send O2 setpoint</string>
@@ -57,6 +56,9 @@
     <string name="toast_comm_set_gas_ok">send gas setup: OK</string>
     <string name="toast_comm_set_gas_alert">send gas setup: ERROR</string>
     <string name="toast_read_logdir_no_selected_entrys">Not entrys selected yet!</string>
+    <string name="toast_connect_connected">connected to \"%s\"</string>
+    <string name="toast_connect_disconnected">connection disconnected</string>
+    <string name="toast_cant_bt_connect">can not connect to \"%s\"</string>
     
     <!-- Dialogboxen  -->
     <string name="dialog_sure_exit">are you sure?</string>
