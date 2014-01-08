@@ -28,12 +28,12 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
 import de.dmarcini.submatix.android4.full.utils.BluetoothDeviceArrayAdapter;
+import de.dmarcini.submatix.android4.full.utils.CommToast;
 import de.dmarcini.submatix.android4.full.utils.DataSQLHelper;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 import de.dmarcini.submatix.android4.full.utils.SPX42AliasManager;
@@ -64,6 +64,8 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   protected ProgressDialog            progressDialog            = null;
   private boolean                     runDiscovering            = false;
   private Activity                    runningActivity           = null;
+  private CommToast                   theToast                  = null;
+  private boolean                     showCommToast             = false;
   //
   // der Broadcast Empfänger der Nachrichten über gefundene BT Geräte findet
   //
@@ -319,6 +321,13 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   public void msgConnected( BtServiceMessage msg )
   {
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgConnected..." );
+    if( showCommToast )
+    {
+      String deviceName = ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getAlias( devSpinner.getSelectedItemPosition() );
+      String connStringFormat = getResources().getString( R.string.toast_connect_connected );
+      theToast.showConnectionToast( String.format( connStringFormat, deviceName ), false );
+      showCommToast = false;
+    }
     setSpinnerToConnectedDevice();
     setToggleButtonTextAndStat( ProjectConst.CONN_STATE_CONNECTED );
     writePreferences();
@@ -327,10 +336,9 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   @Override
   public void msgConnectError( BtServiceMessage msg )
   {
-    Toast.makeText(
-            runningActivity.getApplicationContext(),
-            runningActivity.getString( R.string.toast_cant_bt_connect )
-                    + ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getAlias( devSpinner.getSelectedItemPosition() ), Toast.LENGTH_LONG ).show();
+    String deviceName = ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getAlias( devSpinner.getSelectedItemPosition() );
+    String connStringFormat = getResources().getString( R.string.toast_connect_cant_bt_connect );
+    theToast.showConnectionToastAlert( String.format( connStringFormat, deviceName ) );
   }
 
   @Override
@@ -351,6 +359,11 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     // Update erzwingen
     devSpinner.setAdapter( btArrayAdapter );
     devSpinner.setSelection( index, true );
+    if( showCommToast )
+    {
+      theToast.showConnectionToast( getResources().getString( R.string.toast_connect_disconnected ), false );
+      showCommToast = false;
+    }
   }
 
   @Override
@@ -522,6 +535,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
           //
           // da soll verbunden werden!
           //
+          showCommToast = true;
           tb.setImageResource( R.drawable.bluetooth_icon_color );
           String device = ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getMAC( devSpinner.getSelectedItemPosition() );
           String deviceName = ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getDevName( devSpinner.getSelectedItemPosition() );
@@ -536,6 +550,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
           //
           // wenn da noch einer werkelt, anhalten und kompostieren
           //
+          showCommToast = true;
           ( ( FragmentCommonActivity )runningActivity ).doDisconnectBtDevice();
           break;
       }
@@ -582,6 +597,8 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   {
     super.onCreate( savedInstanceState );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
+    theToast = new CommToast( getActivity() );
+    showCommToast = false;
   }
 
   /**
