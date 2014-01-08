@@ -23,8 +23,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
 import de.dmarcini.submatix.android4.full.exceptions.XMLFileCreatorException;
@@ -727,6 +727,9 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
         rlo.dbId = diveHeader.diveId;
         rlo.isMarked = false;
         rlo.isSaved = true;
+        //
+        // optisch mitarbeiten
+        //
         int firstPos = mainListView.getFirstVisiblePosition();
         mainListView.setAdapter( logListAdapter );
         View v = mainListView.getChildAt( currPositionOnItems );

@@ -24,8 +24,8 @@ import de.dmarcini.submatix.android4.full.gui.FragmentCommonActivity;
  */
 public class BuildVersion
 {
-  private static final long buildNumber = 3070L;
-  private static final long buildDate = 1389176513951L;
+  private static final long buildNumber = 3089L;
+  private static final long buildDate = 1389221766922L;
   @SuppressWarnings( "javadoc" )
   public static final boolean isLightVersion = false;
   /**
