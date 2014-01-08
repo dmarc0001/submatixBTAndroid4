@@ -227,13 +227,23 @@ public class SPX42LogManager extends SPX42AliasManager
       }
     }
     // @formatter:off
-    sql = String.format( "select %s,%s,%s,%s,%s,%s from %s where %s=%d order by %s;", 
-            ProjectConst.H_DIVEID,                     // 
-            ProjectConst.H_STARTTIME,                  // 
-            ProjectConst.H_DIVELENGTH,                 // 
-            ProjectConst.H_DIVENUMBERONSPX,
-            ProjectConst.H_MAXDEPTH,
-            ProjectConst.H_FILEONMOBILE,
+    sql = String.format( "select %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s from %s where %s=%d order by %s;", 
+            ProjectConst.H_DIVEID,                     // 0 
+            ProjectConst.H_FILEONMOBILE,               // 1
+            ProjectConst.H_DIVENUMBERONSPX,            // 2
+            ProjectConst.H_FILEONSPX,                  // 3
+            ProjectConst.H_DEVICESERIAL,               // 4
+            ProjectConst.H_STARTTIME,                  // 5
+            ProjectConst.H_HADSEND,                    // 6
+            ProjectConst.H_FIRSTTEMP,                  // 7
+            ProjectConst.H_LOWTEMP,                    // 8
+            ProjectConst.H_MAXDEPTH,                   // 9
+            ProjectConst.H_SAMPLES,                    // 10
+            ProjectConst.H_DIVELENGTH,                 // 11
+            ProjectConst.H_UNITS,                      // 12
+            ProjectConst.H_NOTES,                      // 13
+            ProjectConst.H_GEO_LON,                    // 14
+            ProjectConst.H_GEO_LAT,                    // 15
             ProjectConst.H_TABLE_DIVELOGS,             // Tabelle
             ProjectConst.H_DEVICEID, _deviceId,        // nur Gerätenummer
             ProjectConst.H_DIVENUMBERONSPX);           // Ordne nach Tauchlog-Nummer auf SPX
@@ -244,12 +254,36 @@ public class SPX42LogManager extends SPX42AliasManager
     {
       while( cu.moveToNext() )
       {
-        DateTime startDateTime = new DateTime( cu.getLong( 1 ) * 1000 );
-        String detailText = String.format( res.getString( R.string.logread_saved_format ), cu.getInt( 4 ) / 10.0, res.getString( R.string.app_unit_depth_metric ),
-                cu.getInt( 2 ) / 60, cu.getInt( 2 ) % 60 );
-        String itemName = String.format( "#%03d: %s", cu.getInt( 3 ), startDateTime.toString( FragmentCommonActivity.localTimeFormatter ) );
-        ReadLogItemObj entry = new ReadLogItemObj( true, itemName, cu.getString( 5 ), detailText, cu.getInt( 0 ), cu.getInt( 3 ) );
-        diveHeadList.add( entry );
+        long startTm = cu.getLong( 5 );
+        DateTime startDateTime = new DateTime( startTm );
+        String detailText = String.format( res.getString( R.string.logread_saved_format ), cu.getInt( 9 ) / 10.0, res.getString( R.string.app_unit_depth_metric ),
+                cu.getInt( 11 ) / 60, cu.getInt( 11 ) % 60 );
+        String itemName = String.format( "#%03d: %s", cu.getInt( 2 ), startDateTime.toString( FragmentCommonActivity.localTimeFormatter ) );
+        ReadLogItemObj rlo = new ReadLogItemObj();
+        rlo.isSaved = true;
+        rlo.itemName = itemName;
+        rlo.itemNameOnSPX = cu.getString( 3 );
+        rlo.itemDetail = detailText;
+        rlo.dbId = cu.getInt( 0 );
+        rlo.numberOnSPX = cu.getInt( 2 );
+        rlo.startTimeMilis = startTm;
+        rlo.isMarked = false;
+        rlo.tagId = -1;
+        rlo.fileOnMobile = cu.getString( 1 );
+        rlo.firstTemp = cu.getFloat( 7 );
+        rlo.lowTemp = cu.getFloat( 8 );
+        rlo.maxDepth = cu.getInt( 9 );
+        rlo.countSamples = cu.getInt( 10 );
+        rlo.diveLen = cu.getInt( 11 );
+        rlo.units = cu.getString( 12 );
+        rlo.notes = cu.getString( 13 );
+        rlo.geoLon = cu.getString( 14 );
+        rlo.geoLat = cu.getString( 15 );
+        if( rlo.notes == null || rlo.notes.isEmpty() )
+        {
+          rlo.notes = " ";
+        }
+        diveHeadList.add( rlo );
       }
       //
       // Cursor schliessen
