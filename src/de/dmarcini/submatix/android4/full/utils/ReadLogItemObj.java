@@ -10,24 +10,28 @@
  * 
  *         Stand: 10.11.2013
  */
+@SuppressWarnings( "javadoc" )
 public class ReadLogItemObj
 {
-  @SuppressWarnings( "javadoc" )
-  public boolean isSaved;
-  @SuppressWarnings( "javadoc" )
-  public String  itemName;
-  @SuppressWarnings( "javadoc" )
-  public String  itemNameOnSPX;
-  @SuppressWarnings( "javadoc" )
-  public String  itemDetail;
-  @SuppressWarnings( "javadoc" )
-  public int     dbId;
-  @SuppressWarnings( "javadoc" )
-  public int     numberOnSPX;
-  @SuppressWarnings( "javadoc" )
-  public long    startTimeMilis;
-  @SuppressWarnings( "javadoc" )
-  public boolean isMarked = false;
+  public boolean isSaved        = false;
+  public String  itemName       = null;
+  public String  itemNameOnSPX  = null;
+  public String  itemDetail     = null;
+  public int     dbId           = -1;
+  public int     numberOnSPX    = -1;
+  public long    startTimeMilis = -1;
+  public boolean isMarked       = false;
+  public int     tagId          = -1;
+  public String  fileOnMobile   = null;
+  public float   firstTemp      = 0.0F;
+  public float   lowTemp        = 0.0F;
+  public int     maxDepth       = -1;
+  public int     countSamples   = 0;
+  public int     diveLen        = 0;
+  public String  units          = "m";
+  public String  notes          = null;
+  public String  geoLon         = null;
+  public Object  geoLat         = null;
 
   /**
    * 
@@ -49,9 +53,6 @@ public class ReadLogItemObj
     this.itemName = _itemName;
     this.itemNameOnSPX = _itemNameOnSpx;
     this.itemDetail = _itemDetail;
-    this.dbId = -1;
-    this.numberOnSPX = -1;
-    this.startTimeMilis = 0L;
   }
 
   /**
@@ -76,8 +77,6 @@ public class ReadLogItemObj
     this.itemNameOnSPX = _itemNameOnSpx;
     this.itemDetail = _itemDetail;
     this.dbId = _dbid;
-    this.numberOnSPX = -1;
-    this.startTimeMilis = 0L;
   }
 
   /**
@@ -104,7 +103,6 @@ public class ReadLogItemObj
     this.itemDetail = _itemDetail;
     this.dbId = _dbid;
     this.numberOnSPX = _numOnSpx;
-    this.startTimeMilis = 0L;
   }
 
   /**
@@ -135,7 +133,14 @@ public class ReadLogItemObj
     this.startTimeMilis = _milis;
   }
 
-  @SuppressWarnings( "unused" )
-  private ReadLogItemObj()
+  /**
+   * 
+   * Der Nackte Konstruktor
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
+   * 
+   * Stand: 08.01.2014
+   */
+  public ReadLogItemObj()
   {}
 }
