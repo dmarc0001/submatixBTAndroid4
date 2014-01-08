@@ -111,7 +111,7 @@ public class AreaListActivity extends FragmentCommonActivity
     //
     // Verzeichnis für Datenbanken etc
     //
-    databaseDir = new File( sPref.getString( "keyProgDataDirectory", getdatabaseDir().getAbsolutePath() ) );
+    databaseDir = new File( sPref.getString( "keyProgDataDirectory", getDatabaseDir().getAbsolutePath() ) );
     if( databaseDir != null )
     {
       if( !databaseDir.exists() )
@@ -210,7 +210,7 @@ public class AreaListActivity extends FragmentCommonActivity
     //
     // external Storage eintragen
     //
-    databaseDir = getdatabaseDir();
+    databaseDir = getDatabaseDir();
     editor.putString( "keyProgDataDirectory", databaseDir.getAbsolutePath() );
     //
     // alles in die Propertys
@@ -237,7 +237,7 @@ public class AreaListActivity extends FragmentCommonActivity
    * 
    * @return Das Datenbankverzeichnis
    */
-  private File getdatabaseDir()
+  private File getDatabaseDir()
   {
     File extSdCard;
     File dataBaseRoot;
