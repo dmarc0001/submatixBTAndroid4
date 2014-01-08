@@ -61,7 +61,7 @@ public class ReadLogItemObj
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
    * 
-   * Stand: 06.08.2013
+   * Stand: 06.01.2014
    * 
    * @param _isSaved
    * @param _itemName

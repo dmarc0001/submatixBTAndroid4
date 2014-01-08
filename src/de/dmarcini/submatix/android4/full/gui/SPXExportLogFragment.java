@@ -12,8 +12,6 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.joda.time.DateTime;
-
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
@@ -30,8 +28,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
 import de.dmarcini.submatix.android4.full.utils.DataSQLHelper;
@@ -71,27 +69,44 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
    * 
    * @param markedItems
    */
-  private void exportSelectedLogItems( Vector<Integer> _markedItems )
+  private void exportSelectedLogItems( SPX42ReadLogListArrayAdapter rAdapter )
   {
     Thread exportThread;
-    final Vector<Integer> markedItems = _markedItems;
+    int itemIndex = 0;
+    final Vector<ReadLogItemObj> lItems = new Vector<ReadLogItemObj>();
     //
-    if( _markedItems.isEmpty() )
+    if( rAdapter.getMarkedItems().isEmpty() )
     {
       Log.i( TAG, "exportSelectedLogItems: not selected items" );
       return;
     }
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "exportSelectedLogItems: export %d selected items...", _markedItems.size() ) );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "exportSelectedLogItems: export %d selected items...", rAdapter.getMarkedItems().size() ) );
+    // die LogObjekte in den Vector kopieren
+    Iterator<Integer> it = rAdapter.getMarkedItems().iterator();
+    while( it.hasNext() )
+    {
+      // den ersten index bitteschön!
+      itemIndex = it.next();
+      // das Objekt kopiern
+      lItems.add( rAdapter.getItem( itemIndex ) );
+    }
+    //
+    // da das etwadauern kann, mach das in einem Thread
+    //
     exportThread = new Thread() {
       @Override
       public void run()
       {
-        Iterator<Integer> it = markedItems.iterator();
-        int itemIndex;
+        // gib mir mal einen Iterator für die Einträge
+        Iterator<ReadLogItemObj> it = lItems.iterator();
+        int diveDbID;
         while( it.hasNext() )
         {
-          itemIndex = it.next();
-          if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "exportThread: export index %d ...", itemIndex ) );
+          // den ersten index bitteschön!
+          ReadLogItemObj rlo = it.next();
+          // erzeuge die XML...
+          diveDbID = rlo.dbId;
+          if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "exportThread: export dive %d db-id: %d...", rlo.numberOnSPX, rlo.dbId ) );
         }
       }
     };
@@ -112,12 +127,9 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
    */
   private boolean fillListAdapter( int diveId )
   {
-    Vector<Long[]> diveList;
-    int diveNr = 0;
-    DateTime startDateTime;
+    Vector<ReadLogItemObj> diveList;
     SPX42ReadLogListArrayAdapter logListAdapter;
     Resources res;
-    String detailText;
     //
     res = runningActivity.getResources();
     //
@@ -129,22 +141,17 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     //
     // lese eine Liste der Tauchgänge ein
     //
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "read divelist for deviceId: <" + diveId + ">..." );
-    diveList = logManager.getDiveListForDevice( diveId );
-    Iterator<Long[]> it = diveList.iterator();
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "read divelist for dbId: <" + diveId + ">..." );
+    diveList = logManager.getDiveListForDevice( diveId, res );
+    Iterator<ReadLogItemObj> it = diveList.iterator();
     //
     // Die Liste in den Adapter implementieren
     //
     while( it.hasNext() )
     {
-      Long[] set = it.next(); // 0: diveID, 1: startTime, 2: diveLength, 3: SPX-DiveNr, 4: MAx Tiefe
-      diveNr = ( int )( 0xffffffff & set[3] );
-      startDateTime = new DateTime( set[1] * 1000 );
-      detailText = String.format( res.getString( R.string.logread_saved_format ), set[4] / 10.0, res.getString( R.string.app_unit_depth_metric ), set[2] / 60, set[2] % 60 );
-      //
-      ReadLogItemObj rlio = new ReadLogItemObj( true, String.format( "#%03d: %s", diveNr, startDateTime.toString( FragmentCommonActivity.localTimeFormatter ) ), "file", detailText );
-      // Eintrag an den Anfang stellen
-      logListAdapter.add( rlio );
+      ReadLogItemObj rlo = it.next();
+      // Eintrag einbauen
+      logListAdapter.add( rlo );
     }
     return( true );
   }
@@ -328,10 +335,10 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
         // exportiere alle markierten Elemente
         //
         rAdapter = ( SPX42ReadLogListArrayAdapter )mainListView.getAdapter();
-        exportSelectedLogItems( rAdapter.getMarkedItems() );
-        rAdapter.clearMaredItems();
+        exportSelectedLogItems( rAdapter );
+        // rAdapter.clearMaredItems();
         // neu zeichnen der Elemente erzwingen
-        mainListView.setAdapter( rAdapter );
+        // mainListView.setAdapter( rAdapter );
       }
     }
   }

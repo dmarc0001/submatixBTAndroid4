@@ -297,15 +297,18 @@ public class DataSQLHelper extends SQLiteOpenHelper
       // indizi loeschen
       sql = "drop index idx_" + ProjectConst.H_TABLE_DIVELOGS + "_" + ProjectConst.H_STARTTIME + ";";
       db.execSQL( sql );
-      sql = "drop index idx_" + ProjectConst.H_DIVEID + ";";
+      sql = "drop index idx_" + ProjectConst.H_DEVICEID + ";";
       db.execSQL( sql );
       // Tabelle umbenennen
-      sql = "alter table " + ProjectConst.H_TABLE_DIVELOGS + " to " + ProjectConst.H_TABLE_DIVELOGS + "_old;";
+      sql = "alter table " + ProjectConst.H_TABLE_DIVELOGS + " rename to " + ProjectConst.H_TABLE_DIVELOGS + "_old;";
       db.execSQL( sql );
       //
       // tabelle neu anlegen
       //
       createMainTable( db );
+      //
+      // Daten in neue Tablelle übernehmen
+      // TODO
     }
     catch( SQLException ex )
     {
