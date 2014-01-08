@@ -136,6 +136,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     // Creiere einen Adapter
     //
     logListAdapter = new SPX42ReadLogListArrayAdapter( runningActivity, R.layout.read_log_array_adapter_view, FragmentCommonActivity.getAppStyle() );
+    logListAdapter.setShowSavedStatus( false );
     mainListView.setAdapter( logListAdapter );
     mainListView.setChoiceMode( AbsListView.CHOICE_MODE_MULTIPLE );
     //
