@@ -200,35 +200,6 @@ public final class ProjectConst
   public static final int    MESSAGE_LOGENTRY_LINE      = ActionEvent.RESERVED_ID_MAX + 31;
   public static final int    MESSAGE_LOGENTRY_STOP      = ActionEvent.RESERVED_ID_MAX + 32;
   
-  //
-//  public static final int    MESSAGE_STATE_CHANGE       = ActionEvent.RESERVED_ID_MAX + 2;
-//  public static final int    MESSAGE_READ               = ActionEvent.RESERVED_ID_MAX + 3;
-//  public static final int    MESSAGE_WRITE              = ActionEvent.RESERVED_ID_MAX + 4;
-//  public static final int    MESSAGE_DEVICE_NAME        = ActionEvent.RESERVED_ID_MAX + 5;
-//  public static final int    MESSAGE_TOAST              = ActionEvent.RESERVED_ID_MAX + 6;
-//  public static final int    MESSAGE_KDO45_READ         = ActionEvent.RESERVED_ID_MAX + 13;
-//  public static final int    MESSAGE_LOGDIRFROMCACHE    = ActionEvent.RESERVED_ID_MAX + 20;
-//  public static final int    MESSAGE_DB_SUCCESS         = ActionEvent.RESERVED_ID_MAX + 21;
-//  public static final int    MESSAGE_DB_FAIL            = ActionEvent.RESERVED_ID_MAX + 22;
-//  public static final int    MESSAGE_DB_WRITE_WAIT      = ActionEvent.RESERVED_ID_MAX + 23;
-//  public static final int    MESSAGE_DB_DELETE_WAIT     = ActionEvent.RESERVED_ID_MAX + 24;
-//  public static final int    MESSAGE_BTWAITFOR          = ActionEvent.RESERVED_ID_MAX + 34;
-//  public static final int    MESSAGE_BTNODEVCONN        = ActionEvent.RESERVED_ID_MAX + 35;
-//  public static final int    MESSAGE_BTAUTHREQEST       = ActionEvent.RESERVED_ID_MAX + 36;
-//  public static final int    MESSAGE_BTMESSAGE          = ActionEvent.RESERVED_ID_MAX + 37;
-//  public static final int    MESSAGE_PROCESS_NEXT       = ActionEvent.RESERVED_ID_MAX + 39;
-//  public static final int    MESSAGE_PROCESS_END        = ActionEvent.RESERVED_ID_MAX + 40;
-//  public static final int    MESSAGE_SYCSTAT_OFF        = ActionEvent.RESERVED_ID_MAX + 41;
-//  public static final int    MESSAGE_FWNOTSUPPORTED     = ActionEvent.RESERVED_ID_MAX + 44;
-  
-  
-//  // Interne Messages
-//  private static final int   INT_MESSAGE_OFFSET         = 100;
-//  public static final int    INT_MESSAGE_READ           = INT_MESSAGE_OFFSET + 1;
-//  public static final int    INT_LOGENTRY_LINE          = INT_MESSAGE_OFFSET + 2;
-//  public static final int    INT_STARTWAITDIAL          = INT_MESSAGE_OFFSET + 3;
-//  public static final int    INT_STOPTWAITDIAL          = INT_MESSAGE_OFFSET + 4;
-//  public static final int    INT_SETTITLEDIAL           = INT_MESSAGE_OFFSET + 5;
 
   // DATENBANK
   // Datenbanktabellen
