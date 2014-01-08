@@ -288,6 +288,16 @@ public class DataSQLHelper extends SQLiteOpenHelper
     }
   }
 
+  /**
+   * 
+   * Tabelle konvertiere3n (Feld für Nummer auf SPX nach INT konvertieren)
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
+   * 
+   * Stand: 08.01.2014
+   * 
+   * @param db
+   */
   private void upgradeV4ToV5( SQLiteDatabase db )
   {
     Log.i( TAG, "upgrade db from version 4 to 5..." );
@@ -295,20 +305,25 @@ public class DataSQLHelper extends SQLiteOpenHelper
     try
     {
       // indizi loeschen
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "drop old indizies..." );
       sql = "drop index idx_" + ProjectConst.H_TABLE_DIVELOGS + "_" + ProjectConst.H_STARTTIME + ";";
       db.execSQL( sql );
       sql = "drop index idx_" + ProjectConst.H_DEVICEID + ";";
       db.execSQL( sql );
       // Tabelle umbenennen
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "rename old table..." );
       sql = "alter table " + ProjectConst.H_TABLE_DIVELOGS + " rename to " + ProjectConst.H_TABLE_DIVELOGS + "_old;";
       db.execSQL( sql );
-      //
       // tabelle neu anlegen
-      //
       createMainTable( db );
-      //
       // Daten in neue Tablelle übernehmen
-      // TODO
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "convert data..." );
+      sql = "insert into " + ProjectConst.H_TABLE_DIVELOGS + " select * from " + ProjectConst.H_TABLE_DIVELOGS + "_old;";
+      db.execSQL( sql );
+      // alte Tabelle entfernen
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "drop old table..." );
+      sql = "drop table " + ProjectConst.H_TABLE_DIVELOGS + "_old;";
+      db.execSQL( sql );
     }
     catch( SQLException ex )
     {
