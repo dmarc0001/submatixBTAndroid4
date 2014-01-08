@@ -203,7 +203,8 @@ public class SPX42LogManager extends SPX42AliasManager
    * Stand: 28.08.2013
    * 
    * @param _deviceId
-   * @return Vector mit Werten tauchid,Startzeit,Länge,spx-Nummer,max-Tiefe
+   * @param res
+   * @return Vector mit ReadLogItemObj
    */
   @SuppressLint( "DefaultLocale" )
   public Vector<ReadLogItemObj> getDiveListForDevice( int _deviceId, Resources res )
