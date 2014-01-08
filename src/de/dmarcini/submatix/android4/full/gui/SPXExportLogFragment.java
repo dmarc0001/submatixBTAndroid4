@@ -32,6 +32,7 @@ import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
+import de.dmarcini.submatix.android4.full.utils.CommToast;
 import de.dmarcini.submatix.android4.full.utils.DataSQLHelper;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 import de.dmarcini.submatix.android4.full.utils.ReadLogItemObj;
@@ -58,6 +59,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
   private int                 selectedDeviceId = -1;
   private Button              changeDeviceButton;
   private Button              exportLogsButton;
+  private CommToast           theToast         = null;
 
   /**
    * 
@@ -100,13 +102,60 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
         // gib mir mal einen Iterator für die Einträge
         Iterator<ReadLogItemObj> it = lItems.iterator();
         int diveDbID;
+        File tempDir;
+        //
+        // temporaeres verzeichnis für die zu exportierenden Dateien
+        //
+        tempDir = new File( FragmentCommonActivity.databaseDir.getAbsolutePath() + File.separator + "temp" );
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "temporary path: " + tempDir.getAbsolutePath() );
+        //
+        // stelle sicher, dass ein exportverzeichnis existiert
+        //
+        if( !tempDir.exists() || !tempDir.isDirectory() )
+        {
+          if( !tempDir.mkdirs() )
+          {
+            theToast.showConnectionToastAlert( String.format( getResources().getString( R.string.toast_export_cant_create_dir ), tempDir.getAbsolutePath() ) );
+            return;
+          }
+        }
         while( it.hasNext() )
         {
-          // den ersten index bitteschön!
+          // den ersten Index bitteschön!
           ReadLogItemObj rlo = it.next();
           // erzeuge die XML...
           diveDbID = rlo.dbId;
           if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "exportThread: export dive %d db-id: %d...", rlo.numberOnSPX, rlo.dbId ) );
+        }
+        //
+        // TODO: Mail versenden
+        //
+        {}
+        //
+        // Aufräumen
+        //
+        DeleteRecursive( tempDir );
+      }
+
+      /**
+       * 
+       * vernichte rekursiv den Ordner mit allen Dateien darin
+       * 
+       * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+       * 
+       * Stand: 08.01.2014
+       * 
+       * @param fileOrDirectory
+       */
+      private void DeleteRecursive( File fileOrDirectory )
+      {
+        if( fileOrDirectory.isDirectory() )
+        {
+          for( File child : fileOrDirectory.listFiles() )
+          {
+            DeleteRecursive( child );
+          }
+          fileOrDirectory.delete();
         }
       }
     };
@@ -350,6 +399,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     View rootView = null;
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView..." );
+    theToast = new CommToast( getActivity() );
     //
     // wenn kein Container vorhanden ist, dann gibts auch keinen View
     //
