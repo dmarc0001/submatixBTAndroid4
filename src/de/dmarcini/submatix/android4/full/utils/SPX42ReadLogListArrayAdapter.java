@@ -26,9 +26,9 @@ import de.dmarcini.submatix.android4.full.R;
 public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
 {
   @SuppressWarnings( "unused" )
-  private static final String TAG     = SPX42ReadLogListArrayAdapter.class.getSimpleName();
-  @SuppressWarnings( "unused" )
-  private int                 themeId = R.style.AppDarkTheme;
+  private static final String TAG             = SPX42ReadLogListArrayAdapter.class.getSimpleName();
+  private int                 themeId         = R.style.AppDarkTheme;
+  private boolean             showSavedStatus = true;
 
   /**
    * 
@@ -120,7 +120,14 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
       //
       if( rlio.isSaved )
       {
-        ivSaved.setImageResource( R.drawable.saved_log );
+        if( showSavedStatus )
+        {
+          ivSaved.setImageResource( R.drawable.saved_log );
+        }
+        else
+        {
+          ivSaved.setImageResource( R.drawable.unsaved_log );
+        }
         if( themeId == R.style.AppDarkTheme )
         {
           tvDetail.setTextColor( cView.getResources().getColor( R.color.logReadDark_savedColor ) );
@@ -344,5 +351,22 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
     {
       setMarked( i, false );
     }
+  }
+
+  /**
+   * @return showSavedStatus
+   */
+  public boolean isShowSavedStatus()
+  {
+    return showSavedStatus;
+  }
+
+  /**
+   * @param showSavedStatus
+   *          das zu setzende Objekt showSavedStatus
+   */
+  public void setShowSavedStatus( boolean showSavedStatus )
+  {
+    this.showSavedStatus = showSavedStatus;
   }
 }
