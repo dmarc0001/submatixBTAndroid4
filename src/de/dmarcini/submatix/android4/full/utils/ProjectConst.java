@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Klasse als Container für Programmkonstanten Bluethooth service
  */
 package de.dmarcini.submatix.android4.full.utils;
@@ -29,13 +29,13 @@ public final class ProjectConst
   public static final String CREATORPROGRAM             = "SUBMATIX SPX42 Manager";
   public static final String CREATORNAME                = "SPX42";
   public static final String MANUFACTNAME               = "Dirk Marciniak";
-  public static final String MANUFACTMAIL               = "dirk_marciniak@arcor.de";
+  public static final String MANUFACTMAIL               = "dirk_marciniak@online.de";
   public static final String MANUFACTHOME               = "http://www.submatix.com";
   public static final String MANUFACTVERS_LT            = "1.0 LIGHT";
   public static final String MANUFACTVERS               = "0.9-BETA";
   public static final String GENYEAR                    = "2014";
   public static final String GENMONTH                   = "01";
-  public static final String GENDAY                     = "08";
+  public static final String GENDAY                     = "09";
   public static final boolean CHECK_PHYSICAL_BT         = false; 
 
   // ANDROID: Preferences Version
@@ -199,6 +199,8 @@ public final class ProjectConst
   public static final int    MESSAGE_LOGENTRY_START     = ActionEvent.RESERVED_ID_MAX + 30;
   public static final int    MESSAGE_LOGENTRY_LINE      = ActionEvent.RESERVED_ID_MAX + 31;
   public static final int    MESSAGE_LOGENTRY_STOP      = ActionEvent.RESERVED_ID_MAX + 32;
+  public static final int    MESSAGE_LOCAL_LOGEXPORTED  = ActionEvent.RESERVED_ID_MAX + 33;
+  public static final int    MESSAGE_LOCAL_EXPORTERR    = ActionEvent.RESERVED_ID_MAX + 34;
   
 
   // DATENBANK
@@ -238,43 +240,6 @@ public final class ProjectConst
   public static final String H_NOTES                    = "notes";
   public static final String H_GEO_LON                  = "longitude";
   public static final String H_GEO_LAT                  = "latitude";
-  
-//  //
-//  // Tabelle für die relevanten Daten des Tauchganges
-//  // Tabelle logdata
-//  public static final String D_TABLE_DIVEDETAIL         = "logdata";
-//  public static final String D_DBID                     = "id";
-//  public static final String D_DIVEID                   = "dive_id";
-//  public static final String D_DEPTH                    = "depth";
-//  public static final String D_TEMPERATURE              = "temperature";
-//  public static final String D_PPO                      = "ppo";
-//  public static final String D_PPO_1                    = "ppo1";
-//  public static final String D_PPO_2                    = "ppo2";
-//  public static final String D_PPO_3                    = "ppo3";
-//  public static final String D_SETPOINT                 = "setpoint";
-//  public static final String D_N2                       = "n2";
-//  public static final String D_HE                       = "he";
-//  public static final String D_NULLTIME                 = "nulltime";
-//  public static final String D_DELTATIME                = "deltatime";
-//  public static final String D_PRESURE                  = "presure";
-//  public static final String D_ACKU                     = "acku";
-//  //
-//  // Tabelle für Gas-Presets
-//  // Tabelle presets
-//  public static final String P_TABLE_PRESETS            = "presets";
-//  public static final String P_DBID                     = "id";
-//  public static final String P_SETNAME                  = "setname";
-//  //
-//  // Tablelle preset_details
-//  public static final String PD_TABLE_PRESETDETAIL      = "presets_details";
-//  public static final String PD_DBID                    = "id";
-//  public static final String PD_SETID                   = "setid";
-//  public static final String PD_GASNR                   = "gasnr";
-//  public static final String PD_O2                      = "o2";
-//  public static final String PD_HE                      = "he";
-//  public static final String PD_DILUENT1                = "dil1";
-//  public static final String PD_DILUENT2                = "dil2";
-//  public static final String PD_BAILOUT                 = "bailout";
   
   //
   // ANDROID: XML-Dateiversion

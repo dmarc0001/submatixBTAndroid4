@@ -25,6 +25,8 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,16 +64,123 @@ import de.dmarcini.submatix.android4.full.utils.UserAlertDialogFragment;
  */
 public class SPXExportLogFragment extends Fragment implements IBtServiceListener, OnItemClickListener, OnClickListener
 {
-  private static final String        TAG              = SPXExportLogFragment.class.getSimpleName();
-  private Activity                   runningActivity  = null;
-  private ListView                   mainListView     = null;
-  private SPX42LogManager            logManager       = null;
-  private int                        selectedDeviceId = -1;
-  private Button                     changeDeviceButton;
-  private Button                     exportLogsButton;
-  private CommToast                  theToast         = null;
-  private final boolean              isFileZipped     = false;
-  private WaitProgressFragmentDialog pd               = null;
+  private static final String          TAG              = SPXExportLogFragment.class.getSimpleName();
+  private Activity                     runningActivity  = null;
+  private ListView                     mainListView     = null;
+  private SPX42LogManager              logManager       = null;
+  private int                          selectedDeviceId = -1;
+  private Button                       changeDeviceButton;
+  private Button                       exportLogsButton;
+  private CommToast                    theToast         = null;
+  private final boolean                isFileZipped     = false;
+  private final Vector<ReadLogItemObj> lItems           = new Vector<ReadLogItemObj>();
+  private WaitProgressFragmentDialog   pd               = null;
+  private File                         tempDir          = null;
+  private final Handler                mHandler         = new Handler() {
+                                                          @Override
+                                                          public void handleMessage( Message msg )
+                                                          {
+                                                            if( !( msg.obj instanceof BtServiceMessage ) )
+                                                            {
+                                                              Log.e( TAG, "Handler::handleMessage: Recived Message is NOT type of BtServiceMessage!" );
+                                                              return;
+                                                            }
+                                                            BtServiceMessage smsg = ( BtServiceMessage )msg.obj;
+                                                            handleMessages( msg.what, smsg );
+                                                          }
+                                                        };
+
+  /**
+   * 
+   * vernichte rekursiv den Ordner mit allen Dateien darin
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 08.01.2014
+   * 
+   * @param fileOrDirectory
+   */
+  private void deleteRecursive( File fileOrDirectory )
+  {
+    if( fileOrDirectory.isDirectory() )
+    {
+      for( File child : fileOrDirectory.listFiles() )
+      {
+        deleteRecursive( child );
+      }
+      fileOrDirectory.delete();
+    }
+  }
+
+  /**
+   * 
+   * Exportiere einen Eintrag in eigenem Thread
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 09.01.2014
+   * 
+   * @param rlo
+   */
+  private void exportOneLogItem( ReadLogItemObj _rlo, File _tempDir )
+  {
+    final ReadLogItemObj rlo = _rlo;
+    final File tempDir = _tempDir;
+    Thread exportThread = null;
+    //
+    exportThread = new Thread() {
+      @Override
+      public void run()
+      {
+        UDDFFileCreateClass uddfClass = null;
+        String uddfFileName = null;
+        //
+        try
+        {
+          // erzeuge eine Klasse zum generieren der Exort-UDDF-Files
+          uddfClass = new UDDFFileCreateClass( logManager );
+        }
+        catch( ParserConfigurationException ex )
+        {
+          theToast.showConnectionToastAlert( ex.getLocalizedMessage() );
+          Log.e( TAG, ex.getLocalizedMessage() );
+          mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, rlo ) ).sendToTarget();
+          return;
+        }
+        catch( TransformerException ex )
+        {
+          theToast.showConnectionToastAlert( ex.getLocalizedMessage() );
+          Log.e( TAG, ex.getLocalizedMessage() );
+          mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, rlo ) ).sendToTarget();
+          return;
+        }
+        catch( TransformerFactoryConfigurationError ex )
+        {
+          theToast.showConnectionToastAlert( ex.getLocalizedMessage() );
+          Log.e( TAG, ex.getLocalizedMessage() );
+          mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, rlo ) ).sendToTarget();
+          return;
+        }
+        catch( XMLFileCreatorException ex )
+        {
+          theToast.showConnectionToastAlert( ex.getLocalizedMessage() );
+          Log.e( TAG, ex.getLocalizedMessage() );
+          mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, rlo ) ).sendToTarget();
+          return;
+        }
+        // erzeuge die XML...
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "exportThread: export dive %d db-id: %d...", rlo.numberOnSPX, rlo.dbId ) );
+        DateTime st = new DateTime( rlo.startTimeMilis );
+        uddfFileName = String.format( Locale.ENGLISH, "%s%sdive_%07d_at_%04d%02d%02d%02d%02d%02d.uddf", tempDir.getAbsolutePath(), File.separator, rlo.numberOnSPX, st.getYear(),
+                st.getMonthOfYear(), st.getDayOfMonth(), st.getHourOfDay(), st.getMinuteOfHour(), st.getSecondOfMinute() );
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "create uddf-file: <" + uddfFileName + ">" );
+        uddfClass.createXML( new File( uddfFileName ), rlo, isFileZipped );
+        mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_LOGEXPORTED, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_LOGEXPORTED, rlo ) ).sendToTarget();
+      }
+    };
+    exportThread.setName( "log_export_thread" );
+    exportThread.start();
+  }
 
   /**
    * 
@@ -83,15 +192,10 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
    * 
    * @param markedItems
    * 
-   *          TODO: Mach das mit Nachrichten, damit die Oberfläche nicht einfiert
    */
   private void exportSelectedLogItems( SPX42ReadLogListArrayAdapter rAdapter )
   {
     int itemIndex = 0;
-    final Vector<ReadLogItemObj> lItems = new Vector<ReadLogItemObj>();
-    File tempDir;
-    UDDFFileCreateClass uddfClass = null;
-    String xmlFileName;
     //
     if( rAdapter.getMarkedItems().isEmpty() )
     {
@@ -100,6 +204,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     }
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "exportSelectedLogItems: export %d selected items...", rAdapter.getMarkedItems().size() ) );
     // die LogObjekte in den Vector kopieren
+    lItems.clear();
     Iterator<Integer> it = rAdapter.getMarkedItems().iterator();
     while( it.hasNext() )
     {
@@ -111,94 +216,44 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
       rlo.tagId = itemIndex;
       lItems.add( rlo );
     }
-    // gib mir mal einen Iterator für die Einträge
-    Iterator<ReadLogItemObj> rloIt = lItems.iterator();
     //
-    try
-    {
-      // erzeuge eine Klasse zum generieren der Exort-UDDF-Files
-      uddfClass = new UDDFFileCreateClass( logManager );
-    }
-    catch( ParserConfigurationException ex )
-    {
-      theToast.showConnectionToastAlert( ex.getLocalizedMessage() );
-      Log.e( TAG, ex.getLocalizedMessage() );
-      return;
-    }
-    catch( TransformerException ex )
-    {
-      theToast.showConnectionToastAlert( ex.getLocalizedMessage() );
-      Log.e( TAG, ex.getLocalizedMessage() );
-      return;
-    }
-    catch( TransformerFactoryConfigurationError ex )
-    {
-      theToast.showConnectionToastAlert( ex.getLocalizedMessage() );
-      Log.e( TAG, ex.getLocalizedMessage() );
-      return;
-    }
-    catch( XMLFileCreatorException ex )
-    {
-      theToast.showConnectionToastAlert( ex.getLocalizedMessage() );
-      Log.e( TAG, ex.getLocalizedMessage() );
-      return;
-    }
+    // so, jetzt hab ich die infrage kommenden Einträge
+    // jetz starte ich den Thread für den ersten Eintrag
     //
-    // temporaeres verzeichnis für die zu exportierenden Dateien
-    //
-    tempDir = new File( FragmentCommonActivity.databaseDir.getAbsolutePath() + File.separator + "temp" );
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "temporary path: " + tempDir.getAbsolutePath() );
-    //
-    // stelle sicher, dass ein exportverzeichnis existiert
-    //
-    if( !tempDir.exists() || !tempDir.isDirectory() )
+    if( !lItems.isEmpty() )
     {
-      if( !tempDir.mkdirs() )
-      {
-        theToast.showConnectionToastAlert( String.format( getResources().getString( R.string.toast_export_cant_create_dir ), tempDir.getAbsolutePath() ) );
-        return;
-      }
-    }
-    openWaitDial( lItems.size(), "..." );
-    while( rloIt.hasNext() )
-    {
-      // den ersten Index bitteschön!
-      ReadLogItemObj rlo = rloIt.next();
-      // erzeuge die XML...
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "exportThread: export dive %d db-id: %d...", rlo.numberOnSPX, rlo.dbId ) );
-      if( pd != null )
-      {
-        pd.setSubMessage( String.format( "file nr %d", rlo.numberOnSPX ) );
-        Thread.yield();
-      }
-      DateTime st = new DateTime( rlo.startTimeMilis );
-      xmlFileName = String.format( Locale.ENGLISH, "%s%sdive_%07d_at_%04d%02d%02d%02d%02d%02d.uddf", tempDir.getAbsolutePath(), File.separator, rlo.numberOnSPX, st.getYear(),
-              st.getMonthOfYear(), st.getDayOfMonth(), st.getHourOfDay(), st.getMinuteOfHour(), st.getSecondOfMinute() );
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "create uddf-file: <" + xmlFileName + ">" );
-      uddfClass.createXML( new File( xmlFileName ), rlo, isFileZipped );
+      // das erste Element entfernen und exportieren
+      ReadLogItemObj rlo = lItems.remove( 0 );
       //
       // die Markierung umkehren
-      // geht nicht im Thread!
-      // rlo.isMarked = false;
-      // int firstPos = mainListView.getFirstVisiblePosition();
-      // mainListView.setAdapter( mainListView.getAdapter() );
-      // View v = mainListView.getChildAt( rlo.tagId );
-      // int top = ( v == null ) ? 0 : v.getTop();
-      // mainListView.setSelectionFromTop( firstPos, top );
+      //
+      rlo.isMarked = false;
+      int firstPos = mainListView.getFirstVisiblePosition();
+      mainListView.setAdapter( mainListView.getAdapter() );
+      View v = mainListView.getChildAt( rlo.tagId );
+      int top = ( v == null ) ? 0 : v.getTop();
+      mainListView.setSelectionFromTop( firstPos, top );
+      //
+      // temporaeres Verzeichnis für die zu exportierenden Dateien
+      //
+      tempDir = new File( FragmentCommonActivity.databaseDir.getAbsolutePath() + File.separator + "temp" );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "temporary path: " + tempDir.getAbsolutePath() );
+      // alte Elemente vernichten, falls vorhanden
+      if( tempDir.exists() ) deleteRecursive( tempDir );
+      //
+      // stelle sicher, dass ein exportverzeichnis existiert
+      //
+      if( !tempDir.exists() || !tempDir.isDirectory() )
+      {
+        if( !tempDir.mkdirs() )
+        {
+          theToast.showConnectionToastAlert( String.format( getResources().getString( R.string.toast_export_cant_create_dir ), tempDir.getAbsolutePath() ) );
+          return;
+        }
+      }
+      openWaitDial( lItems.size(), String.format( "file nr %d", rlo.numberOnSPX ) );
+      exportOneLogItem( rlo, tempDir );
     }
-    if( pd != null )
-    {
-      pd.dismiss();
-      pd = null;
-    }
-    //
-    // TODO: Mail versenden
-    //
-    {}
-    //
-    // Aufräumen
-    //
-    // deleteRecursive( tempDir );
   }
 
   /**
@@ -269,6 +324,18 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
         onDialogNegative( ( DialogFragment )msg.getContainer() );
         break;
       // ################################################################
+      // Logeintrag erfolgreich exportiert
+      // ################################################################
+      case ProjectConst.MESSAGE_LOCAL_LOGEXPORTED:
+        msgExportOk( msg );
+        break;
+      // ################################################################
+      // Logeintrag erfolgreich exportiert
+      // ################################################################
+      case ProjectConst.MESSAGE_LOCAL_EXPORTERR:
+        msgExportError( msg );
+        break;
+      // ################################################################
       // DEFAULT
       // ################################################################
       default:
@@ -318,6 +385,104 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
   public void msgDisconnected( BtServiceMessage msg )
   {
     // TODO Automatisch generierter Methodenstub
+  }
+
+  /**
+   * 
+   * Wenn der Export schief ging, Ende und aufräumen
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 09.01.2014
+   * 
+   * @param msg
+   */
+  private void msgExportError( BtServiceMessage msg )
+  {
+    // Messagebox verschwinden lassen
+    if( pd != null )
+    {
+      pd.dismiss();
+      pd = null;
+    }
+    //
+    // Aufräumen
+    //
+    if( tempDir != null )
+    {
+      deleteRecursive( tempDir );
+      tempDir = null;
+    }
+  }
+
+  /**
+   * 
+   * Export Ok, nächster Export oder Mail senden?
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 09.01.2014
+   * 
+   * @param msg
+   */
+  private void msgExportOk( BtServiceMessage msg )
+  {
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "export ok, check next entry..." );
+    //
+    if( !lItems.isEmpty() )
+    {
+      //
+      // es sind noch Elemente zu exportieren
+      // das erste Element entfernen und exportieren
+      //
+      ReadLogItemObj rlo = lItems.remove( 0 );
+      //
+      // die Markierung umkehren
+      //
+      rlo.isMarked = false;
+      int firstPos = mainListView.getFirstVisiblePosition();
+      mainListView.setAdapter( mainListView.getAdapter() );
+      View v = mainListView.getChildAt( rlo.tagId );
+      int top = ( v == null ) ? 0 : v.getTop();
+      mainListView.setSelectionFromTop( firstPos, top );
+      //
+      // stelle sicher, dass ein exportverzeichnis existiert
+      //
+      if( !tempDir.exists() || !tempDir.isDirectory() )
+      {
+        if( !tempDir.mkdirs() )
+        {
+          theToast.showConnectionToastAlert( String.format( getResources().getString( R.string.toast_export_cant_create_dir ), tempDir.getAbsolutePath() ) );
+          return;
+        }
+      }
+      if( pd != null )
+      {
+        pd.setSubMessage( String.format( "file nr %d", rlo.numberOnSPX ) );
+      }
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "next entry..." );
+      exportOneLogItem( rlo, tempDir );
+    }
+    else
+    {
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "send message..." );
+      //
+      // alle Elemente exortiert, jetzt bitte Mail fertig machen und versenden
+      // TODO: Mail machen
+      //
+      // Aufräumen
+      //
+      if( pd != null )
+      {
+        pd.dismiss();
+        pd = null;
+      }
+      if( tempDir != null )
+      {
+        deleteRecursive( tempDir );
+        tempDir = null;
+      }
+    }
   }
 
   /*
@@ -424,9 +589,6 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
         //
         rAdapter = ( SPX42ReadLogListArrayAdapter )mainListView.getAdapter();
         exportSelectedLogItems( rAdapter );
-        // rAdapter.clearMaredItems();
-        // neu zeichnen der Elemente erzwingen
-        // mainListView.setAdapter( rAdapter );
       }
     }
   }
@@ -614,46 +776,6 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
 
   /**
    * 
-   * Setze den Titel in der Action Bar mit Test und Name des gelisteten Gerätes
-   * 
-   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
-   * 
-   * Stand: 01.12.2013
-   * 
-   * @param string
-   */
-  private void setTitleString( String devName )
-  {
-    String titleString;
-    //
-    titleString = String.format( getResources().getString( R.string.export_header_device ), devName );
-    runningActivity.getActionBar().setTitle( titleString );
-  }
-
-  /**
-   * 
-   * vernichte rekursiv den Ordner mit allen Dateien darin
-   * 
-   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
-   * 
-   * Stand: 08.01.2014
-   * 
-   * @param fileOrDirectory
-   */
-  private void deleteRecursive( File fileOrDirectory )
-  {
-    if( fileOrDirectory.isDirectory() )
-    {
-      for( File child : fileOrDirectory.listFiles() )
-      {
-        deleteRecursive( child );
-      }
-      fileOrDirectory.delete();
-    }
-  }
-
-  /**
-   * 
    * Öffne einen wartedialog
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
@@ -686,5 +808,23 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     pd.setProgress( 0 );
     ft.addToBackStack( null );
     pd.show( ft, "dialog" );
+  }
+
+  /**
+   * 
+   * Setze den Titel in der Action Bar mit Test und Name des gelisteten Gerätes
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 01.12.2013
+   * 
+   * @param string
+   */
+  private void setTitleString( String devName )
+  {
+    String titleString;
+    //
+    titleString = String.format( getResources().getString( R.string.export_header_device ), devName );
+    runningActivity.getActionBar().setTitle( titleString );
   }
 }
