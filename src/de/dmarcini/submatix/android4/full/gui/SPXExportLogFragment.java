@@ -9,6 +9,7 @@
 package de.dmarcini.submatix.android4.full.gui;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Vector;
@@ -25,8 +26,10 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -68,33 +71,34 @@ import de.dmarcini.submatix.android4.full.utils.UserAlertDialogFragment;
  */
 public class SPXExportLogFragment extends Fragment implements IBtServiceListener, OnItemClickListener, OnClickListener
 {
-  private static final String          TAG              = SPXExportLogFragment.class.getSimpleName();
-  private final Pattern                mailPattern      = Pattern.compile( ProjectConst.PATTERN_EMAIL );
-  private Activity                     runningActivity  = null;
-  private ListView                     mainListView     = null;
-  private SPX42LogManager              logManager       = null;
-  private int                          selectedDeviceId = -1;
+  private static final String          TAG                 = SPXExportLogFragment.class.getSimpleName();
+  private final Pattern                mailPattern         = Pattern.compile( ProjectConst.PATTERN_EMAIL );
+  private Activity                     runningActivity     = null;
+  private ListView                     mainListView        = null;
+  private SPX42LogManager              logManager          = null;
+  private int                          selectedDeviceId    = -1;
+  private String                       selectedDeviceAlias = null;
   private Button                       changeDeviceButton;
   private Button                       exportLogsButton;
-  private CommToast                    theToast         = null;
-  private final boolean                isFileZipped     = false;
-  private final Vector<ReadLogItemObj> lItems           = new Vector<ReadLogItemObj>();
-  private WaitProgressFragmentDialog   pd               = null;
-  private File                         tempDir          = null;
-  private String                       mailMainAddr     = null;
-  private final Handler                mHandler         = new Handler() {
-                                                          @Override
-                                                          public void handleMessage( Message msg )
-                                                          {
-                                                            if( !( msg.obj instanceof BtServiceMessage ) )
-                                                            {
-                                                              Log.e( TAG, "Handler::handleMessage: Recived Message is NOT type of BtServiceMessage!" );
-                                                              return;
-                                                            }
-                                                            BtServiceMessage smsg = ( BtServiceMessage )msg.obj;
-                                                            handleMessages( msg.what, smsg );
-                                                          }
-                                                        };
+  private CommToast                    theToast            = null;
+  private final boolean                isFileZipped        = false;
+  private final Vector<ReadLogItemObj> lItems              = new Vector<ReadLogItemObj>();
+  private WaitProgressFragmentDialog   pd                  = null;
+  private File                         tempDir             = null;
+  private String                       mailMainAddr        = null;
+  private final Handler                mHandler            = new Handler() {
+                                                             @Override
+                                                             public void handleMessage( Message msg )
+                                                             {
+                                                               if( !( msg.obj instanceof BtServiceMessage ) )
+                                                               {
+                                                                 Log.e( TAG, "Handler::handleMessage: Recived Message is NOT type of BtServiceMessage!" );
+                                                                 return;
+                                                               }
+                                                               BtServiceMessage smsg = ( BtServiceMessage )msg.obj;
+                                                               handleMessages( msg.what, smsg );
+                                                             }
+                                                           };
 
   /**
    * 
@@ -106,15 +110,19 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
    * 
    * @param fileOrDirectory
    */
-  private void deleteRecursive( File fileOrDirectory )
+  private void deleteDir( File fileOrDirectory )
   {
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "deleteDir <" + fileOrDirectory.getAbsolutePath() );
     if( fileOrDirectory.isDirectory() )
     {
       for( File child : fileOrDirectory.listFiles() )
       {
-        deleteRecursive( child );
+        if( child.isFile() )
+        {
+          if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "delete file <" + child.getAbsolutePath() );
+          child.delete();
+        }
       }
-      fileOrDirectory.delete();
     }
   }
 
@@ -196,6 +204,8 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
    * 
    * Stand: 04.01.2014
    * 
+   * @param devAlias
+   * 
    * @param markedItems
    * 
    */
@@ -248,7 +258,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
       tempDir = new File( FragmentCommonActivity.databaseDir.getAbsolutePath() + File.separator + "temp" );
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "temporary path: " + tempDir.getAbsolutePath() );
       // alte Elemente vernichten, falls vorhanden
-      if( tempDir.exists() ) deleteRecursive( tempDir );
+      if( tempDir.exists() && tempDir.isDirectory() ) deleteDir( tempDir );
       //
       // stelle sicher, dass ein exportverzeichnis existiert
       //
@@ -306,6 +316,49 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
       logListAdapter.add( rlo );
     }
     return( true );
+  }
+
+  /**
+   * 
+   * Lese die Mailadresse aus den Preferences
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 10.01.2014
+   * 
+   * @return
+   */
+  private String getMainMailFromPrefs()
+  {
+    String mailAddr = null;
+    boolean isMailError = false;
+    //
+    // ist eine Zieladresse zum Versand vorgesehen?
+    //
+    SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( runningActivity );
+    if( !sPref.contains( "keyProgMailMain" ) )
+    {
+      // Das wird nix, keine Mail angegeben
+      isMailError = true;
+      Log.w( TAG, "there is not preference key für mailadress!" );
+    }
+    if( !isMailError )
+    {
+      // der Schlüssel ist da, ist da auch eine Mailadresse hinterlegt?
+      mailAddr = sPref.getString( "keyProgMailMain", "" );
+      Matcher m = mailPattern.matcher( mailAddr );
+      if( !m.find() )
+      {
+        // Das wird nix, keine Mail angegeben
+        isMailError = true;
+        Log.w( TAG, "there is not an valid mailadress! saved was :<" + mailAddr + ">" );
+      }
+      else
+      {
+        return( mailAddr );
+      }
+    }
+    return( null );
   }
 
   /*
@@ -419,7 +472,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     //
     if( tempDir != null )
     {
-      deleteRecursive( tempDir );
+      deleteDir( tempDir );
       tempDir = null;
     }
   }
@@ -467,7 +520,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
       }
       if( pd != null )
       {
-        pd.setSubMessage( String.format( "file nr %d", rlo.numberOnSPX ) );
+        pd.setMessage( String.format( getResources().getString( R.string.logread_file_message ), rlo.numberOnSPX ) );
       }
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "next entry..." );
       exportOneLogItem( rlo, tempDir );
@@ -477,7 +530,9 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "send message..." );
       //
       // alle Elemente exortiert, jetzt bitte Mail fertig machen und versenden
-      // TODO: Mail machen
+      //
+      sendMailToAddr( tempDir, new String[]
+      { mailMainAddr }, selectedDeviceAlias );
       //
       // Aufräumen
       //
@@ -485,11 +540,6 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
       {
         pd.dismiss();
         pd = null;
-      }
-      if( tempDir != null )
-      {
-        deleteRecursive( tempDir );
-        tempDir = null;
       }
     }
   }
@@ -588,7 +638,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     {
       // Das wird nix, keine Mail angegeben
       if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "not valid mail -> note to user" );
-      UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_not_mail_exist_hesader ), runningActivity.getResources()
+      UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_not_mail_exist_header ), runningActivity.getResources()
               .getString( R.string.dialog_not_mail_exist ) );
       uad.show( getFragmentManager(), "noMailaddrWarning" );
       return;
@@ -609,6 +659,12 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
         //
         // exportiere alle markierten Elemente
         //
+        // Mail-Activity erledigt...
+        if( tempDir != null )
+        {
+          deleteDir( tempDir );
+          tempDir = null;
+        }
         rAdapter = ( SPX42ReadLogListArrayAdapter )mainListView.getAdapter();
         exportSelectedLogItems( rAdapter );
       }
@@ -706,12 +762,12 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     {
       SelectDeviceDialogFragment deviceDialog = ( SelectDeviceDialogFragment )dialog;
       selectedDeviceId = deviceDialog.getSelectedDeviceId();
+      selectedDeviceAlias = logManager.getAliasForId( selectedDeviceId );
       if( ApplicationDEBUG.DEBUG )
         Log.i( TAG, "onDialogNegative: selected Device Alias: <" + deviceDialog.getSelectedDeviceName() + "> Device-ID <" + deviceDialog.getSelectedDeviceId() + ">" );
       getActivity().getActionBar().setTitle( String.format( getResources().getString( R.string.export_header_device ), deviceDialog.getSelectedDeviceName() ) );
       if( selectedDeviceId > 0 )
       {
-        // Vector<Long[]> diveHeadList = logManager.getDiveListForDevice( selectedDeviceId );
         fillListAdapter( selectedDeviceId );
       }
     }
@@ -719,49 +775,6 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     {
       Log.i( TAG, "onDialogNegative: UNKNOWN dialog type" );
     }
-  }
-
-  /**
-   * 
-   * Lese die Mailadresse aus den Preferences
-   * 
-   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
-   * 
-   * Stand: 10.01.2014
-   * 
-   * @return
-   */
-  private String getMainMailFromPrefs()
-  {
-    String mailAddr = null;
-    boolean isMailError = false;
-    //
-    // ist eine Zieladresse zum Versand vorgesehen?
-    //
-    SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( runningActivity );
-    if( !sPref.contains( "keyProgMailMain" ) )
-    {
-      // Das wird nix, keine Mail angegeben
-      isMailError = true;
-      Log.w( TAG, "there is not preference key für mailadress!" );
-    }
-    if( !isMailError )
-    {
-      // der Schlüssel ist da, ist da auch eine Mailadresse hinterlegt?
-      mailAddr = sPref.getString( "keyProgMailMain", "" );
-      Matcher m = mailPattern.matcher( mailAddr );
-      if( !m.find() )
-      {
-        // Das wird nix, keine Mail angegeben
-        isMailError = true;
-        Log.w( TAG, "there is not an valid mailadress! saved was :<" + mailAddr + ">" );
-      }
-      else
-      {
-        return( mailAddr );
-      }
-    }
-    return( null );
   }
 
   /*
@@ -780,7 +793,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     {
       // Das wird nix, keine Mail angegeben
       if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "not valid mail -> note to user" );
-      UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_not_mail_exist_hesader ), runningActivity.getResources()
+      UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_not_mail_exist_header ), runningActivity.getResources()
               .getString( R.string.dialog_not_mail_exist ) );
       uad.show( getFragmentManager(), "noMailaddrWarning" );
       return;
@@ -846,6 +859,10 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     {
       fillListAdapter( selectedDeviceId );
     }
+    else
+    {
+      selectedDeviceAlias = null;
+    }
     // Listener aktivieren
     ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
   }
@@ -888,6 +905,87 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
 
   /**
    * 
+   * Sende die UDDF-Files an den geneigten Benutzer
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 10.01.2014
+   * 
+   * @param uddfDir
+   * @param deviceAlias
+   * @param mailAddr1
+   */
+  private void sendMailToAddr( final File uddfDir, final String[] mailAddr, String deviceAlias )
+  {
+    // String diveTime = null;
+    String diveMessage;
+    ArrayList<Uri> uddfURIs = new ArrayList<Uri>();
+    // ArrayList<CharSequence> mailBody = new ArrayList<CharSequence>();
+    //
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "send logs via mail..." );
+    //
+    // Dateien zusammensuchen
+    // OHNE Unterverzeichnisse
+    //
+    if( uddfDir.exists() && uddfDir.canRead() && uddfDir.isDirectory() )
+    {
+      Log.i( TAG, "uddf-directory exist und is readable..." );
+    }
+    else
+    {
+      UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_no_uddfdir_header ), runningActivity.getResources()
+              .getString( R.string.dialog_no_uddfdir ) );
+      uad.show( getFragmentManager(), "noUddfDirectory" );
+      return;
+    }
+    File[] fileArray = uddfDir.listFiles();
+    if( fileArray.length <= 0 )
+    {
+      Log.e( TAG, "uddf-directory is empty..." );
+      return;
+    }
+    //
+    // Mailabsicht kundtun als INTEND
+    //
+    Intent emailIntent = new Intent( android.content.Intent.ACTION_SEND );
+    // die Anhänge sind gezippt/nicht gezippt
+    if( isFileZipped )
+    {
+      emailIntent.setType( "application/x-gzip" );
+    }
+    else
+    {
+      emailIntent.setType( "text/xml" );
+    }
+    //
+    // URIS der Dateien in das Array tun
+    //
+    for( File fl : fileArray )
+    {
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "append file <" + fl.getAbsoluteFile() + "> " );
+      uddfURIs.add( Uri.parse( "file://" + fl.getAbsoluteFile() ) );
+    }
+    // mailBody.add( getResources().getString( R.string.export_mail_bodytext ) );
+    // mailBody.add( getResources().getString( R.string.app_name ) );
+    diveMessage = getResources().getString( R.string.export_mail_bodytext ) + "\n\n" + getResources().getString( R.string.app_name );
+    emailIntent.putExtra( android.content.Intent.EXTRA_EMAIL, mailAddr );
+    emailIntent.putExtra( android.content.Intent.EXTRA_SUBJECT, "Divelog (" + deviceAlias + ")" );
+    emailIntent.putExtra( android.content.Intent.EXTRA_TEXT, diveMessage );
+    if( fileArray.length == 1 )
+    {
+      emailIntent.setAction( Intent.ACTION_SEND );
+      emailIntent.putExtra( Intent.EXTRA_STREAM, uddfURIs.get( 0 ) );
+    }
+    else
+    {
+      emailIntent.setAction( Intent.ACTION_SEND_MULTIPLE );
+      emailIntent.putParcelableArrayListExtra( Intent.EXTRA_STREAM, uddfURIs );
+    }
+    startActivityForResult( Intent.createChooser( emailIntent, "Send mail..." ), ProjectConst.REQUEST_SEND_MAIL );
+  }
+
+  /**
+   * 
    * Setze den Titel in der Action Bar mit Test und Name des gelisteten Gerätes
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
@@ -902,5 +1000,19 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     //
     titleString = String.format( getResources().getString( R.string.export_header_device ), devName );
     runningActivity.getActionBar().setTitle( titleString );
+  }
+
+  @Override
+  public void onActivityResult( int requestCode, int resultCode, Intent data )
+  {
+    Log.v( TAG, "onActivityResult()... " );
+    switch ( requestCode )
+    {
+      case ProjectConst.REQUEST_SEND_MAIL:
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "send logs via mail...OK" );
+        break;
+      default:
+        Log.e( TAG, "unknown activity result..." );
+    }
   }
 }
