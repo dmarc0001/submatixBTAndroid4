@@ -11,7 +11,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_margin="@dimen/standart_margin"
         android:gravity="center_horizontal"
-        android:text="@string/device_select_title"
+        android:text="@string/dialog_device_select_title"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Spinner
