@@ -12,6 +12,8 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -23,10 +25,12 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +69,7 @@ import de.dmarcini.submatix.android4.full.utils.UserAlertDialogFragment;
 public class SPXExportLogFragment extends Fragment implements IBtServiceListener, OnItemClickListener, OnClickListener
 {
   private static final String          TAG              = SPXExportLogFragment.class.getSimpleName();
+  private final Pattern                mailPattern      = Pattern.compile( ProjectConst.PATTERN_EMAIL );
   private Activity                     runningActivity  = null;
   private ListView                     mainListView     = null;
   private SPX42LogManager              logManager       = null;
@@ -556,7 +561,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
       Log.e( TAG, "NoDatabaseException: <" + ex.getLocalizedMessage() + ">" );
       UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_sqlite_error_header ), runningActivity.getResources()
               .getString( R.string.dialog_sqlite_nodatabase_error ) );
-      uad.show( getFragmentManager(), "UserAlertDialogFragment" );
+      uad.show( getFragmentManager(), "abortProgram" );
     }
   }
 
@@ -708,7 +713,39 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
   public void onItemClick( AdapterView<?> parent, View clickedView, int position, long id )
   {
     SPX42ReadLogListArrayAdapter rlAdapter = null;
+    String mailMainAddr = null;
+    boolean isMailError = false;
     //
+    // ist eine Zieladresse zum Versand vorgesehen?
+    //
+    SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( runningActivity );
+    if( !sPref.contains( "keyProgMailMain" ) )
+    {
+      // Das wird nix, keine Mail angegeben
+      isMailError = true;
+      Log.w( TAG, "there is not preference key für mailadress!" );
+    }
+    if( !isMailError )
+    {
+      // der Schlüssel ist da, ist da auch eine Mailadresse hinterlegt?
+      mailMainAddr = sPref.getString( "keyProgMailMain", "" );
+      Matcher m = mailPattern.matcher( mailMainAddr );
+      if( !m.find() )
+      {
+        // Das wird nix, keine Mail angegeben
+        isMailError = true;
+        Log.w( TAG, "there is not an valid mailadress! saved was :<" + mailMainAddr + ">" );
+      }
+    }
+    if( isMailError )
+    {
+      // Das wird nix, keine Mail angegeben
+      if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "not valid mail -> note to user" );
+      UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_not_mail_exist_hesader ), runningActivity.getResources()
+              .getString( R.string.dialog_not_mail_exist ) );
+      uad.show( getFragmentManager(), "noMailaddrWarning" );
+      return;
+    }
     if( parent.equals( mainListView ) )
     {
       rlAdapter = ( SPX42ReadLogListArrayAdapter )mainListView.getAdapter();

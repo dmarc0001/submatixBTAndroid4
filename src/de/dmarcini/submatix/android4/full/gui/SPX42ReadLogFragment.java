@@ -469,7 +469,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
       Log.e( TAG, "NoDatabaseException: <" + ex.getLocalizedMessage() + ">" );
       UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_sqlite_error_header ), runningActivity.getResources()
               .getString( R.string.dialog_sqlite_nodatabase_error ) );
-      uad.show( getFragmentManager(), "UserAlertDialogFragment" );
+      uad.show( getFragmentManager(), "abortProgram" );
     }
   }
 

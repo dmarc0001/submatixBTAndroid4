@@ -264,7 +264,10 @@ public final class ProjectConst
   public static int          GRAPH_DEPTH_ACOLOR         = 0x4775FF;
   public static int          GRAPH_DEPTH_RCOLOR         = 0x4775FF;
   
-  
+  //
+  // globale Pattern
+  //
+  public static final String PATTERN_EMAIL              = "[\\w|-]+@\\w[\\w|-]*\\.[a-z]{2,3}";
 
   //@formatter:on
 }
