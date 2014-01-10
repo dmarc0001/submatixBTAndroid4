@@ -81,6 +81,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
   private final Vector<ReadLogItemObj> lItems           = new Vector<ReadLogItemObj>();
   private WaitProgressFragmentDialog   pd               = null;
   private File                         tempDir          = null;
+  private String                       mailMainAddr     = null;
   private final Handler                mHandler         = new Handler() {
                                                           @Override
                                                           public void handleMessage( Message msg )
@@ -143,7 +144,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
         try
         {
           // erzeuge eine Klasse zum generieren der Exort-UDDF-Files
-          uddfClass = new UDDFFileCreateClass( logManager );
+          uddfClass = new UDDFFileCreateClass();
         }
         catch( ParserConfigurationException ex )
         {
@@ -205,6 +206,9 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     if( rAdapter.getMarkedItems().isEmpty() )
     {
       Log.i( TAG, "exportSelectedLogItems: not selected items" );
+      UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_not_selected_items_header ), runningActivity
+              .getResources().getString( R.string.dialog_not_selected_items ) );
+      uad.show( getFragmentManager(), "noSelectedLogitems" );
       return;
     }
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "exportSelectedLogItems: export %d selected items...", rAdapter.getMarkedItems().size() ) );
@@ -546,6 +550,10 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     runningActivity = activity;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
     //
+    // die Haupt-Mailadresse holen, wenn vorhanden
+    //
+    mailMainAddr = getMainMailFromPrefs();
+    //
     // die Datenbank öffnen
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create SQLite helper..." );
@@ -576,6 +584,15 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     SPX42ReadLogListArrayAdapter rAdapter;
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Click" );
+    if( mailMainAddr == null )
+    {
+      // Das wird nix, keine Mail angegeben
+      if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "not valid mail -> note to user" );
+      UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_not_mail_exist_hesader ), runningActivity.getResources()
+              .getString( R.string.dialog_not_mail_exist ) );
+      uad.show( getFragmentManager(), "noMailaddrWarning" );
+      return;
+    }
     if( v instanceof Button )
     {
       if( ( Button )v == changeDeviceButton )
@@ -704,16 +721,19 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     }
   }
 
-  /*
-   * (nicht-Javadoc)
+  /**
    * 
-   * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
+   * Lese die Mailadresse aus den Preferences
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 10.01.2014
+   * 
+   * @return
    */
-  @Override
-  public void onItemClick( AdapterView<?> parent, View clickedView, int position, long id )
+  private String getMainMailFromPrefs()
   {
-    SPX42ReadLogListArrayAdapter rlAdapter = null;
-    String mailMainAddr = null;
+    String mailAddr = null;
     boolean isMailError = false;
     //
     // ist eine Zieladresse zum Versand vorgesehen?
@@ -728,16 +748,35 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     if( !isMailError )
     {
       // der Schlüssel ist da, ist da auch eine Mailadresse hinterlegt?
-      mailMainAddr = sPref.getString( "keyProgMailMain", "" );
-      Matcher m = mailPattern.matcher( mailMainAddr );
+      mailAddr = sPref.getString( "keyProgMailMain", "" );
+      Matcher m = mailPattern.matcher( mailAddr );
       if( !m.find() )
       {
         // Das wird nix, keine Mail angegeben
         isMailError = true;
-        Log.w( TAG, "there is not an valid mailadress! saved was :<" + mailMainAddr + ">" );
+        Log.w( TAG, "there is not an valid mailadress! saved was :<" + mailAddr + ">" );
+      }
+      else
+      {
+        return( mailAddr );
       }
     }
-    if( isMailError )
+    return( null );
+  }
+
+  /*
+   * (nicht-Javadoc)
+   * 
+   * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView, android.view.View, int, long)
+   */
+  @Override
+  public void onItemClick( AdapterView<?> parent, View clickedView, int position, long id )
+  {
+    SPX42ReadLogListArrayAdapter rlAdapter = null;
+    //
+    // ist eine Zieladresse zum Versand vorgesehen?
+    //
+    if( mailMainAddr == null )
     {
       // Das wird nix, keine Mail angegeben
       if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "not valid mail -> note to user" );
