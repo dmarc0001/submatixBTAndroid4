@@ -72,11 +72,13 @@
     <string name="dialog_sqlite_error_header">Datenbsank FEHLER</string>
     <string name="dialog_sqlite_nodatabase_error">Keine Datenbank gefunden oder\nDatenbank kann nicht erzeugt/geöffnet werden.\nProgramm muss beendet werden!</string>
     <string name="dialog_device_select_title">Gerät für Exporte wählen</string>
-    <string name="dialog_not_mail_exist_hesader">Keine Mailadressse</string>
+    <string name="dialog_not_mail_exist_header">Keine Mailadressse</string>
     <string name="dialog_not_mail_exist">Entschuldige, es ist keine Mail\nin den Einstellungen eingetragen!\nEintragung in den Programmeinstellungen.</string>
     <string name="dialog_not_selected_items_header">Nichts markiert</string>    
     <string name="dialog_not_selected_items">Keine Einträge zum exportieren markiert!</string>
-        
+    <string name="dialog_no_uddfdir_header">Kein UDDF-Verzeichnis</string>
+    <string name="dialog_no_uddfdir">Es existiert kein Verzeichnis mit UDDF-Dateien\noder das Verzeichnis ist nicht lesbar.</string>
+    
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title" formatted="false">Suche BT Geräte...</string>
     <string name="progress_wait_for_discover_message_start" formatted="false">noch kein Gerät gefunden...</string>
@@ -305,6 +307,7 @@
     <string name="logread_not_saved_yet_msg">Protokoll noch nicht gesichert</string>
     <string name="logread_saved_format" formatted="false">Tg. Tiefe: %02.1f %s Länge: %d:%02d</string>
     <string name="logread_please_patient">Etwas Geduld bitte</string>
+    <string name="logread_file_message">Lese Protokoll %d aus Datenbank...</string>
     
     <!-- Fragment SPXExportLogFragment -->
     <string name="export_header">Exportiere Protokolle vom Gerät</string>
@@ -312,6 +315,7 @@
     <string name="export_subheader" formatted="false">Gerät: %s</string>
     <string name="export_change_drive_button">Gerät...</string>
     <string name="export_do_export">Export!</string>
+     <string name="export_mail_bodytext">Hier sind Deine Tauchprotokolle im Anhang der Mail\n\nGrüße von Deinem ANDROID-Gerät\n\n</string>
     
     
     <!-- sonstig  -->

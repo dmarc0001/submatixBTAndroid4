@@ -72,10 +72,12 @@
     <string name="dialog_sqlite_error_header">Database ERROR</string>
     <string name="dialog_sqlite_nodatabase_error">no database found or\ndatabase can not open/create!\nprogram must abort!</string>
     <string name="dialog_device_select_title">Select Device for exports</string>
-    <string name="dialog_not_mail_exist_hesader">No Mail in prefs</string>
+    <string name="dialog_not_mail_exist_header">No Mail in prefs</string>
     <string name="dialog_not_mail_exist">Sorry, not Mail in preferences,\nPlease enter valid mailaddress\nin program preferences!</string>
     <string name="dialog_not_selected_items_header">nothing selected</string>    
     <string name="dialog_not_selected_items">noting selelected to export!</string>
+    <string name="dialog_no_uddfdir_header">not UDDF-directory</string>
+    <string name="dialog_no_uddfdir">there ist not an directory with UDDF-Files\nor the directory is not readable.</string>
     
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title" formatted="false">Searching BT Devices..</string>
@@ -302,7 +304,8 @@
     <string name="logread_please_wait_dialog_count_items" formatted="false">line %03d readet</string>
     <string name="logread_not_saved_yet_msg">log not saved yet</string>
     <string name="logread_saved_format" formatted="false">dive depth: %02.1f %s length: %d:%02d </string>
-    <string name="logread_please_patient">Please patience</string>
+    <string name="logread_please_patient">Please patient</string>
+    <string name="logread_file_message">read log nr %d from database</string>
     
     <!-- Fragment SPXExportLogFragment -->
     <string name="export_header">Export logs from device</string>
@@ -310,6 +313,7 @@
     <string name="export_subheader" formatted="false">Device: %s</string>
     <string name="export_change_drive_button">Device...</string>
     <string name="export_do_export">Export!</string>
+    <string name="export_mail_bodytext">Here your divelogs in attachement from this mail!\n\nRegards, your ANDROID Device\n\n</string>
     
     <!-- sonstig  -->
     <string name="no_device">- no device -</string>
