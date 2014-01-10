@@ -10,7 +10,9 @@ import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
@@ -58,7 +60,6 @@ public class UDDFFileCreateClass
   @SuppressWarnings( "javadoc" )
   public static final String TAG             = UDDFFileCreateClass.class.getSimpleName();
   private Document           uddfDoc         = null;
-  private SPX42LogManager    logManager      = null;
   private Transformer        transformer     = null;
   private DocumentBuilder    builder         = null;
   private ArrayList<String>  gases           = null;
@@ -73,19 +74,16 @@ public class UDDFFileCreateClass
    * 
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 08.01.2014
-   * @param lm
-   *          geöffnete Datenbank
+   *         Stand: 10.01.2014
    * @throws ParserConfigurationException
    * @throws TransformerException
    * @throws TransformerFactoryConfigurationError
    * @throws XMLFileCreatorException
    */
-  public UDDFFileCreateClass( final SPX42LogManager lm ) throws ParserConfigurationException, TransformerException, TransformerFactoryConfigurationError, XMLFileCreatorException
+  public UDDFFileCreateClass() throws ParserConfigurationException, TransformerException, TransformerFactoryConfigurationError, XMLFileCreatorException
   {
     // initialisiere die Klasse
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate()..." );
-    logManager = lm;
     try
     {
       // So den XML-Erzeuger Creieren
@@ -126,7 +124,7 @@ public class UDDFFileCreateClass
    * 
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * 
-   *         Stand: 08.01.2014
+   *         Stand: 10.01.2014
    * @param file
    *          Datei, in die das Ergebnis nachher kommt
    * @param rlo
@@ -139,7 +137,11 @@ public class UDDFFileCreateClass
     Element rootNode = null;
     String msg = null;
     File retFile = file;
+    Node profileNode = null;
+    //
     Log.v( TAG, "createXML()..." );
+    if( gases == null ) gases = new ArrayList<String>();
+    gases.clear();
     // Erzeuge Dokument neu
     uddfDoc = builder.newDocument();
     // Root-Element erzeugen
@@ -151,12 +153,21 @@ public class UDDFFileCreateClass
     // Appliziere Generator
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "generator node..." );
     rootNode.appendChild( makeGeneratorNode( uddfDoc ) );
+    // erzeuge den profilknoten, berechne dabei die Gasliste
+    profileNode = makeProfilesData( uddfDoc, rlo );
+    //
+    // Gasliste Unique machen
+    //
+    Set<String> uniqueSet = new HashSet<String>( gases );
+    gases.clear();
+    gases.addAll( uniqueSet );
+    //
     // appliziere Gasdefinitionen
-    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG,"gasdefinitions node...");
-    // TODO: rootNode.appendChild( makeGasdefinitions( uddfDoc, rlo ) );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "gasdefinitions node..." );
+    rootNode.appendChild( makeGasdefinitions( uddfDoc, rlo ) );
     // appliziere profiledata
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "profiles node..." );
-    rootNode.appendChild( makeProfilesData( uddfDoc, rlo ) );
+    rootNode.appendChild( profileNode );
     uddfDoc.normalizeDocument();
     try
     {
@@ -512,6 +523,8 @@ public class UDDFFileCreateClass
             {
               entry.gasswitch = true;
               gasSample = entry.gasSample;
+              // Gas nach dem Wechsel in die Liste
+              gases.add( gasSample );
             }
             if( entry.setpoint != setpoint )
             {
@@ -730,8 +743,6 @@ public class UDDFFileCreateClass
     Element gasNode, mixNode, nameNode, o2Node, n2Node, heNode, arNode, h2Node;
     String gasName;
     String[] fields;
-    // gases füllen mit stringliste a'la O2:N2:HE:AR:H2 als Strings "%.3f"
-    makeGasListForDive( dive );
     // # gasdefinitions
     gasNode = doc.createElement( "gasdefinitions" );
     if( gases == null )
@@ -897,32 +908,5 @@ public class UDDFFileCreateClass
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "domToString()...ok " );
       return( file );
     }
-  }
-
-  /**
-   * 
-   * Erzeuge die Gasliste für diesen Tauchgang
-   * 
-   * Project: SubmatixXMLTest Package: de.dmarcini.bluethooth.submatix.xml
-   * 
-   * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   * 
-   *         Stand: 27.10.2011
-   * @param dive
-   *          Nummer des Logs in der Datenbank
-   * 
-   *          TODO: Gasliste erzeugen
-   */
-  private void makeGasListForDive( ReadLogItemObj dive )
-  {
-    int n2, he, o2;
-    String entry;
-    Log.v( TAG, "makeGasListForDive()..." );
-    // keine Datenbank, nix zu tun
-    if( logManager == null ) return;
-    if( gases == null ) gases = new ArrayList<String>( 1 );
-    gases.clear();
-    Log.v( TAG, "makeGasListForDive()...execute SQL..." );
-    // versuchen wir es...
   }
 }
