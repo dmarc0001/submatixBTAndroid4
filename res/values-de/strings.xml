@@ -71,8 +71,10 @@
     <string name="dialog_save_button">Sichern</string>
     <string name="dialog_sqlite_error_header">Datenbsank FEHLER</string>
     <string name="dialog_sqlite_nodatabase_error">Keine Datenbank gefunden oder\nDatenbank kann nicht erzeugt/geöffnet werden.\nProgramm muss beendet werden!</string>
-    <string name="device_select_title">Gerät für Exporte wählen</string>
-                  
+    <string name="dialog_device_select_title">Gerät für Exporte wählen</string>
+    <string name="dialog_not_mail_exist_hesader">Keine Mailadressse</string>
+    <string name="dialog_not_mail_exist">Entschuldige, es ist keine Mail\nin den Einstellungen eingetragen!\nEintragung in den Programmeinstellungen.</string>
+    
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title" formatted="false">Suche BT Geräte...</string>
     <string name="progress_wait_for_discover_message_start" formatted="false">noch kein Gerät gefunden...</string>
