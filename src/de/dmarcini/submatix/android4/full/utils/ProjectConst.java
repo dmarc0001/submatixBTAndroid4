@@ -159,6 +159,7 @@ public final class ProjectConst
   // Android: ID für Intentrequests
   public static final int REQUEST_ENABLE_BT             = 1;
   public static final int REQUEST_SPX_PREFS             = 2;
+  public static final int REQUEST_SEND_MAIL             = 3;
   
   // Android (für PC MUSS die Klasse auskommentiert werden )
   public static final class ActionEvent

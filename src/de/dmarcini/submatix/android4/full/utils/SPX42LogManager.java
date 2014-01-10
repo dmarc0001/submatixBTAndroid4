@@ -294,4 +294,49 @@ public class SPX42LogManager extends SPX42AliasManager
     }
     return( null );
   }
+
+  /**
+   * 
+   * Gib den Geräatalias für eine GeräteID zurück
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
+   * 
+   * Stand: 10.01.2014
+   * 
+   * @param _deviceId
+   * @return
+   */
+  public String getAliasForId( int _deviceId )
+  {
+    String sql;
+    Cursor cu;
+    //
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getAliasForId..." );
+    if( _deviceId < 0 )
+    {
+      return( null );
+    }
+    // @formatter:off
+    sql = String.format( "select %s from %s where %s=%d;", 
+            ProjectConst.A_ALIAS, 
+            ProjectConst.A_TABLE_ALIASES,
+            ProjectConst.A_DEVICEID,
+            _deviceId);
+    // @formatter:on
+    cu = dBase.rawQuery( sql, null );
+    if( cu.moveToFirst() )
+    {
+      sql = cu.getString( 0 );
+    }
+    else
+    {
+      sql = null;
+    }
+    //
+    // Cursor schliessen
+    //
+    cu.close();
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getDiveListForDevice: OK" );
+    return( sql );
+  }
 }
