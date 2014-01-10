@@ -1105,25 +1105,33 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     //
     else if( dialog instanceof UserAlertDialogFragment )
     {
-      Log.e( TAG, "will close app..." );
-      Toast.makeText( this, R.string.toast_exit, Toast.LENGTH_SHORT ).show();
-      if( BluetoothAdapter.getDefaultAdapter() != null )
+      if( dialog.getTag().matches( "noMailaddrWarning" ) )
       {
-        // TODO: Preferences -> Programmeinstellungen soll das automatisch passieren?
-        BluetoothAdapter.getDefaultAdapter().disable();
+        // Warung wegen fehlender Mailadresse, einfach diese Meldung ignorieren
+        return;
       }
-      // nach stackoverflow
-      Intent intent = new Intent( Intent.ACTION_MAIN );
-      intent.addCategory( Intent.CATEGORY_HOME );
-      intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
-      intent.putExtra( "EXIT", true );
-      startActivity( intent );
-      if( aliasManager != null )
+      if( dialog.getTag().matches( "abortProgram" ) )
       {
-        aliasManager.close();
-        aliasManager = null;
+        Log.e( TAG, "will close app..." );
+        Toast.makeText( this, R.string.toast_exit, Toast.LENGTH_SHORT ).show();
+        if( BluetoothAdapter.getDefaultAdapter() != null )
+        {
+          // TODO: Preferences -> Programmeinstellungen soll das automatisch passieren?
+          BluetoothAdapter.getDefaultAdapter().disable();
+        }
+        // nach stackoverflow
+        Intent intent = new Intent( Intent.ACTION_MAIN );
+        intent.addCategory( Intent.CATEGORY_HOME );
+        intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
+        intent.putExtra( "EXIT", true );
+        startActivity( intent );
+        if( aliasManager != null )
+        {
+          aliasManager.close();
+          aliasManager = null;
+        }
+        finish();
       }
-      finish();
     }
     // hat sonst irgendwer Verwendung dafür?
     mHandler.obtainMessage( ProjectConst.MESSAGE_DIALOG_POSITIVE, new BtServiceMessage( ProjectConst.MESSAGE_DIALOG_POSITIVE, dialog ) ).sendToTarget();
