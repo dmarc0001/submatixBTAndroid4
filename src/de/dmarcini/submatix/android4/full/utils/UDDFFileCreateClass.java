@@ -280,7 +280,7 @@ public class UDDFFileCreateClass
     greatestdepth = String.format( Locale.ENGLISH, "%.1f", rlo.maxDepth / 10.0f );
     density = "1034.0";
     diveNode = doc.createElement( "dive" );
-    diveNode.setAttribute( "id", String.valueOf( rlo ) );
+    diveNode.setAttribute( "id", String.format( "%d", rlo.numberOnSPX ) );
     // # date
     dateNode = doc.createElement( "date" );
     // ## date -> year
@@ -309,7 +309,7 @@ public class UDDFFileCreateClass
     diveNode.appendChild( timeNode );
     // # divenumber
     dnNode = doc.createElement( "divenumber" );
-    dnNode.appendChild( doc.createTextNode( String.valueOf( rlo ) ) );
+    dnNode.appendChild( doc.createTextNode( String.format( "%d", rlo.numberOnSPX ) ) );
     diveNode.appendChild( dnNode );
     // # airtemp
     atNode = doc.createElement( "airtemperature" );
