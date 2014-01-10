@@ -74,6 +74,8 @@
     <string name="dialog_device_select_title">Select Device for exports</string>
     <string name="dialog_not_mail_exist_hesader">No Mail in prefs</string>
     <string name="dialog_not_mail_exist">Sorry, not Mail in preferences,\nPlease enter valid mailaddress\nin program preferences!</string>
+    <string name="dialog_not_selected_items_header">nothing selected</string>    
+    <string name="dialog_not_selected_items">noting selelected to export!</string>
     
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title" formatted="false">Searching BT Devices..</string>
