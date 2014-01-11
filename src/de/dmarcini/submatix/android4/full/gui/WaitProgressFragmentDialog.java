@@ -40,23 +40,6 @@ public class WaitProgressFragmentDialog extends DialogFragment
   private int         progress     = 0;
 
   /**
-   * 
-   * Ein eigener Konstruktor
-   * 
-   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
-   * 
-   * Stand: 03.12.2013
-   * 
-   * @param title
-   * @param msg
-   */
-  // @SuppressLint( "ValidFragment" )
-  // public WaitProgressFragmentDialog( final String title, final String msg )
-  // {
-  // this.vMessage = msg;
-  // this.messageTitle = title;
-  // }
-  /**
    * der Konstruktor als Default
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
