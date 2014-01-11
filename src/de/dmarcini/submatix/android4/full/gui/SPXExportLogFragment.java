@@ -895,7 +895,9 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     {
       pd.dismiss();
     }
-    pd = new WaitProgressFragmentDialog( runningActivity.getResources().getString( R.string.logread_please_patient ), msg );
+    pd = new WaitProgressFragmentDialog();
+    pd.setTitle( runningActivity.getResources().getString( R.string.logread_please_patient ) );
+    pd.setMessage( msg );
     pd.setCancelable( true );
     pd.setMax( maxevents );
     pd.setProgress( 0 );

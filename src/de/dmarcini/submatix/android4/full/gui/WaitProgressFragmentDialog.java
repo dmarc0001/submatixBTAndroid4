@@ -8,12 +8,12 @@
  */
 package de.dmarcini.submatix.android4.full.gui;
 
-import android.annotation.SuppressLint;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import de.dmarcini.submatix.android4.full.R;
@@ -50,11 +50,34 @@ public class WaitProgressFragmentDialog extends DialogFragment
    * @param title
    * @param msg
    */
-  @SuppressLint( "ValidFragment" )
-  public WaitProgressFragmentDialog( final String title, final String msg )
+  // @SuppressLint( "ValidFragment" )
+  // public WaitProgressFragmentDialog( final String title, final String msg )
+  // {
+  // this.vMessage = msg;
+  // this.messageTitle = title;
+  // }
+  /**
+   * der Konstruktor als Default
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 11.01.2014
+   */
+  public WaitProgressFragmentDialog()
+  {}
+
+  @Override
+  public void onStart()
   {
-    this.vMessage = msg;
-    this.messageTitle = title;
+    // Keinen Bildschirmschoner zulassen
+    getActivity().getWindow().addFlags( WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON );
+  }
+
+  @Override
+  public void onStop()
+  {
+    // Bildschirmschoner wieder zulassen
+    getActivity().getWindow().clearFlags( WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON );
   }
 
   //
