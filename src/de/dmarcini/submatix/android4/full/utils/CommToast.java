@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.gui.FragmentCommonActivity;
 import de.dmarcini.submatix.android4.full.gui.WaitProgressFragmentDialog;
 
@@ -217,8 +217,9 @@ public class CommToast
     {
       pd.dismiss();
     }
-    pd = new WaitProgressFragmentDialog( title, msg );
-    ;
+    pd = new WaitProgressFragmentDialog();
+    pd.setTitle( title );
+    pd.setMessage( msg );
     pd.setCancelable( true );
     pd.setMax( maxevents );
     pd.setProgress( 4 );
@@ -239,6 +240,7 @@ public class CommToast
   {
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "dismissDial()..." );
     FragmentTransaction ft = act.getFragmentManager().beginTransaction();
+    ft.commit();
     Fragment prev = act.getFragmentManager().findFragmentByTag( "dialog" );
     if( prev != null )
     {

@@ -637,6 +637,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     {
       pd.dismiss();
     }
+    pd = new WaitProgressFragmentDialog();
     pd.setTitle( runningActivity.getResources().getString( R.string.logread_please_patient ) );
     pd.setMessage( msg );
     pd.setCancelable( true );

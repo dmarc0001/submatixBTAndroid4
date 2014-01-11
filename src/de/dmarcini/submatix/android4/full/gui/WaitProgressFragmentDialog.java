@@ -8,6 +8,7 @@
  */
 package de.dmarcini.submatix.android4.full.gui;
 
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -50,19 +51,28 @@ public class WaitProgressFragmentDialog extends DialogFragment
   {}
 
   @Override
-  public void onStart()
+  public void onAttach( Activity activity )
   {
+    super.onAttach( activity );
     // Keinen Bildschirmschoner zulassen
-    getActivity().getWindow().addFlags( WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON );
+    activity.getWindow().addFlags( WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON );
   }
 
   @Override
-  public void onStop()
+  public void onDetach()
   {
+    super.onDetach();
     // Bildschirmschoner wieder zulassen
     getActivity().getWindow().clearFlags( WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON );
   }
 
+  // @Override
+  // public void dismiss()
+  // {
+  // super.dismiss();
+  // // Bildschirmschoner wieder zulassen
+  // getActivity().getWindow().clearFlags( WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON );
+  // }
   //
   @Override
   public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
