@@ -302,10 +302,13 @@
     <string name="logread_doit_button">Read!</string>
     <string name="logread_please_wait_dialog_header" formatted="false">Read log #%02d</string>
     <string name="logread_please_wait_dialog_count_items" formatted="false">line %03d readet</string>
+    <string name="logread_please_wait_dialog_directory" formatted="false">Lese Verzeichniseintrag %03d</string>
     <string name="logread_not_saved_yet_msg">log not saved yet</string>
     <string name="logread_saved_format" formatted="false">dive depth: %02.1f %s length: %d:%02d </string>
     <string name="logread_please_patient">Please patient</string>
     <string name="logread_file_message">read log nr %d from database</string>
+    <string name="logread_show_not_all_header">only new logs</string>
+    <string name="logread_show_not_all_footer">end of new logs</string>
     
     <!-- Fragment SPXExportLogFragment -->
     <string name="export_header">Export logs from device</string>

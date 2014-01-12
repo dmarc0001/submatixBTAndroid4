@@ -304,10 +304,14 @@
     <string name="logread_doit_button">Lese!</string>
     <string name="logread_please_wait_dialog_header" formatted="false">Lese Protokoll #%02d</string>
     <string name="logread_please_wait_dialog_count_items" formatted="false">Zeile %03d gelesen</string>
+    <string name="logread_please_wait_dialog_directory" formatted="false">Lese Verzeichniseintrag %03d</string>
     <string name="logread_not_saved_yet_msg">Protokoll noch nicht gesichert</string>
     <string name="logread_saved_format" formatted="false">Tg. Tiefe: %02.1f %s Länge: %d:%02d</string>
     <string name="logread_please_patient">Etwas Geduld bitte</string>
     <string name="logread_file_message">Lese Protokoll %d aus Datenbank...</string>
+    <string name="logread_show_not_all_header">Nur neue Protokolle</string>
+    <string name="logread_show_not_all_footer">Ende neue Protokolle</string>
+    
     
     <!-- Fragment SPXExportLogFragment -->
     <string name="export_header">Exportiere Protokolle vom Gerät</string>
