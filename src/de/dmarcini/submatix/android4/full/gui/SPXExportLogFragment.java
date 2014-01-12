@@ -342,7 +342,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     {
       // Das wird nix, keine Mail angegeben
       isMailError = true;
-      Log.w( TAG, "there is not preference key für mailadress!" );
+      Log.w( TAG, "there is not preference key for mailadress!" );
     }
     if( !isMailError )
     {
