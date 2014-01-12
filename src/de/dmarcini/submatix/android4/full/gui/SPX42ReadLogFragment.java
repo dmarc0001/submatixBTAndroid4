@@ -10,8 +10,10 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -68,6 +70,8 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   private CommToast                    theToast            = null;
   private static final Pattern         fieldPatternUnderln = Pattern.compile( "[_.]" );
   private boolean                      isUnitImperial      = false;
+  private boolean                      showAllLogEntrys    = true;
+  private int                          countDirEntrys      = 0;
 
   /**
    * 
@@ -118,7 +122,15 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
       return;
     }
     // Alles gelesen: Fertich
-    if( number == max ) return;
+    if( number == max )
+    {
+      countDirEntrys = 0;
+      if( pd != null )
+      {
+        pd.dismiss();
+      }
+      return;
+    }
     fileName = fields[1];
     // verwandle die Dateiangabe in eine lesbare Datumsangabe
     // Format des Strings ist ja
@@ -150,21 +162,39 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     isSaved = logManager.isLogInDatabase( FragmentCommonActivity.spxConfig.getSerial(), fileName );
     if( isSaved )
     {
-      SPX42DiveHeadData diveHead = logManager.getDiveHeader( FragmentCommonActivity.spxConfig.getSerial(), fileName );
-      detailText = makeDetailText( diveHead );
-      dbId = diveHead.diveId;
+      if( showAllLogEntrys )
+      {
+        SPX42DiveHeadData diveHead = logManager.getDiveHeader( FragmentCommonActivity.spxConfig.getSerial(), fileName );
+        detailText = makeDetailText( diveHead );
+        dbId = diveHead.diveId;
+        //
+        // jetzt eintagen in die Anzeige
+        //
+        ReadLogItemObj rlio = new ReadLogItemObj( isSaved, String.format( "#%03d: %s", number, tm.toString( FragmentCommonActivity.localTimeFormatter ) ), fileName, detailText,
+                dbId, number, tm.getMillis() );
+        // Eintrag an den Anfang stellen
+        logListAdapter.insert( rlio, 0 );
+      }
+      else
+      {
+        if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "ignore saved log while \"show all logitems\" is not set..." );
+      }
     }
     else
     {
       detailText = res.getString( R.string.logread_not_saved_yet_msg );
+      //
+      // jetzt eintagen in die Anzeige
+      //
+      ReadLogItemObj rlio = new ReadLogItemObj( isSaved, String.format( "#%03d: %s", number, tm.toString( FragmentCommonActivity.localTimeFormatter ) ), fileName, detailText,
+              dbId, number, tm.getMillis() );
+      // Eintrag an den Anfang stellen
+      logListAdapter.insert( rlio, 0 );
     }
-    //
-    // jetzt eintagen in die Anzeige
-    //
-    ReadLogItemObj rlio = new ReadLogItemObj( isSaved, String.format( "#%03d: %s", number, tm.toString( FragmentCommonActivity.localTimeFormatter ) ), fileName, detailText, dbId,
-            number, tm.getMillis() );
-    // Eintrag an den Anfang stellen
-    logListAdapter.insert( rlio, 0 );
+    if( pd != null )
+    {
+      pd.setMessage( String.format( runningActivity.getResources().getString( R.string.logread_please_wait_dialog_directory ), ++countDirEntrys ) );
+    }
   }
 
   /**
@@ -189,6 +219,36 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
         pd.setSubMessage( String.format( runningActivity.getResources().getString( R.string.logread_please_wait_dialog_count_items ), logLineCount ) );
       }
     }
+  }
+
+  /**
+   * 
+   * Aus dem Preferenzen lesen, ob alle Logeinträge gezeigt werden sollen
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 12.01.2014
+   * 
+   * @return
+   */
+  private boolean getShowAllEntrysFromPrefs()
+  {
+    boolean showAll = true;
+    //
+    // Sollen alle Einträge angezeigt werden oder nur bisher unbekannte?
+    //
+    SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( runningActivity );
+    if( !sPref.contains( "keyProgShowAllLogentrys" ) )
+    {
+      // Das wird nix, Voreinstellunge ist ALLE ANZEIGEN
+      showAll = true;
+      Log.w( TAG, "there is not preference key for showAllLogEntrys!" );
+      return( showAll );
+    }
+    // der Schlüssel ist da, ist da auch eine Mailadresse hinterlegt?
+    showAll = sPref.getBoolean( "keyProgShowAllLogentrys", true );
+    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "show all logentrys is <" + showAll + ">" );
+    return( showAll );
   }
 
   @Override
@@ -316,6 +376,34 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     return( detailText );
   }
 
+  /**
+   * 
+   * Lese Voreinstellung aus Preference und setzte bei BEdarf einen Header in die Liste
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 12.01.2014
+   */
+  private void makeShowEntryPreferences()
+  {
+    //
+    // Einstellung(en) lesen
+    //
+    showAllLogEntrys = getShowAllEntrysFromPrefs();
+    //
+    // Anpassen der ListView, wenn erforderlich)
+    //
+    if( !showAllLogEntrys )
+    {
+      // TextView tv = new TextView( getActivity().getApplicationContext() );
+      LayoutInflater mInflater = ( LayoutInflater )getActivity().getApplicationContext().getSystemService( Activity.LAYOUT_INFLATER_SERVICE );
+      View headerView = mInflater.inflate( R.layout.read_log_show_not_all_view_header, null, false );
+      View footerView = mInflater.inflate( R.layout.read_log_show_not_all_view_footer, null, false );
+      mainListView.addHeaderView( headerView );
+      mainListView.addFooterView( footerView );
+    }
+  }
+
   @Override
   public void msgConnected( BtServiceMessage msg )
   {
@@ -326,6 +414,12 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     // Logdirectory lesen
     ( ( FragmentCommonActivity )runningActivity ).aksForUnitsFromSPX42();
     ( ( FragmentCommonActivity )runningActivity ).askForLogDirectoryFromSPX();
+    openWaitDial( 0, String.format( runningActivity.getResources().getString( R.string.logread_please_wait_dialog_header ), 1 ) );
+    countDirEntrys = 0;
+    if( pd != null )
+    {
+      pd.setMessage( String.format( runningActivity.getResources().getString( R.string.logread_please_wait_dialog_directory ), 0 ) );
+    }
   }
 
   @Override
@@ -539,6 +633,11 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
       mainListView = ( ListView )runningActivity.findViewById( R.id.readLogDirListView );
       mainListView.setChoiceMode( AbsListView.CHOICE_MODE_MULTIPLE );
       readDirButton = ( Button )runningActivity.findViewById( R.id.readLogDirButton );
+      //
+      // Einstellung(en) lesen und Oberfläche einstellen
+      //
+      makeShowEntryPreferences();
+      showAllLogEntrys = getShowAllEntrysFromPrefs();
       return( null );
     }
     //
@@ -554,6 +653,10 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     mainListView = ( ListView )rootView.findViewById( R.id.readLogDirListView );
     mainListView.setChoiceMode( AbsListView.CHOICE_MODE_MULTIPLE );
     readDirButton = ( Button )rootView.findViewById( R.id.readLogDirButton );
+    //
+    // Einstellung(en) lesen und Oberfläche einstellen
+    //
+    makeShowEntryPreferences();
     return( rootView );
   }
 
