@@ -433,6 +433,7 @@ public class SPX42Config
     {
       wasCorrectInitialized = true;
       isFirmwareSupported = true;
+      hasFahrenheidBug = false;
       // Build 198
       if( ( firmwareVersion.matches( "V2\\.7_V r83.*" ) ) )
       {
@@ -443,7 +444,6 @@ public class SPX42Config
       }
       else
       {
-        hasFahrenheidBug = false;
         canSetDate = false;
         hasSixValuesIndividual = false;
       }
