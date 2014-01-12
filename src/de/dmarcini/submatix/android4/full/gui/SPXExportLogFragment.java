@@ -22,6 +22,7 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.joda.time.DateTime;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
@@ -86,6 +87,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
   private WaitProgressFragmentDialog   pd                  = null;
   private File                         tempDir             = null;
   private String                       mailMainAddr        = null;
+  @SuppressLint( "HandlerLeak" )
   private final Handler                mHandler            = new Handler() {
                                                              @Override
                                                              public void handleMessage( Message msg )
@@ -304,7 +306,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     // lese eine Liste der Tauchgänge ein
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "read divelist for dbId: <" + diveId + ">..." );
-    diveList = logManager.getDiveListForDevice( diveId, res );
+    diveList = logManager.getDiveListForDevice( diveId, res, true );
     Iterator<ReadLogItemObj> it = diveList.iterator();
     //
     // Die Liste in den Adapter implementieren

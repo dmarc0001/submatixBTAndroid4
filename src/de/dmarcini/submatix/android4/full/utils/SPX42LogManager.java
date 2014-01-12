@@ -204,13 +204,16 @@ public class SPX42LogManager extends SPX42AliasManager
    * 
    * @param _deviceId
    * @param res
+   * @param descOrder
+   *          Absteigende Sortierung?
    * @return Vector mit ReadLogItemObj
    */
   @SuppressLint( "DefaultLocale" )
-  public Vector<ReadLogItemObj> getDiveListForDevice( int _deviceId, Resources res )
+  public Vector<ReadLogItemObj> getDiveListForDevice( int _deviceId, Resources res, boolean descOrder )
   {
     String sql;
     Cursor cu;
+    String orderPhrase = " ";
     Vector<ReadLogItemObj> diveHeadList = new Vector<ReadLogItemObj>();
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getDiveListForDevice..." );
@@ -226,8 +229,12 @@ public class SPX42LogManager extends SPX42AliasManager
         return( null );
       }
     }
+    if( descOrder )
+    {
+      orderPhrase = "desc";
+    }
     // @formatter:off
-    sql = String.format( "select %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s from %s where %s=%d order by %s;", 
+    sql = String.format( "select %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s from %s where %s=%d order by %s %s;", 
             ProjectConst.H_DIVEID,                     // 0 
             ProjectConst.H_FILEONMOBILE,               // 1
             ProjectConst.H_DIVENUMBERONSPX,            // 2
@@ -246,7 +253,8 @@ public class SPX42LogManager extends SPX42AliasManager
             ProjectConst.H_GEO_LAT,                    // 15
             ProjectConst.H_TABLE_DIVELOGS,             // Tabelle
             ProjectConst.H_DEVICEID, _deviceId,        // nur Gerätenummer
-            ProjectConst.H_DIVENUMBERONSPX);           // Ordne nach Tauchlog-Nummer auf SPX
+            ProjectConst.H_DIVENUMBERONSPX,            // Ordne nach Tauchlog-Nummer auf SPX
+            orderPhrase);           
     // @formatter:on
     cu = dBase.rawQuery( sql, null );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getDiveListForDevice had <" + cu.getCount() + "> results." );
