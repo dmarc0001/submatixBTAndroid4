@@ -409,6 +409,10 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         //
         if( FragmentCommonActivity.aliasManager.setAliasForMac( parm[2], parm[0], parm[1], null ) )
         {
+          if( 0 == btArrayAdapter.getCount() )
+          {
+            fillNewAdapterWithPairedDevices();
+          }
           btArrayAdapter.setDevAlias( dIndex, parm[1] );
           // Update erzwingen
           devSpinner.setAdapter( btArrayAdapter );
