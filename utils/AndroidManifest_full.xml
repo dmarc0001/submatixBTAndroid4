@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.dmarcini.submatix.android4.full"
-    android:versionCode="5"
-    android:versionName="0.12beta" android:installLocation="auto">
+    android:versionCode="6"
+    android:versionName="0.13beta" android:installLocation="auto">
 
     <uses-sdk
         android:minSdkVersion="15"
