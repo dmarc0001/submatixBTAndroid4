@@ -32,10 +32,10 @@ public final class ProjectConst
   public static final String MANUFACTMAIL               = "dirk_marciniak@online.de";
   public static final String MANUFACTHOME               = "http://www.submatix.com";
   public static final String MANUFACTVERS_LT            = "1.0 LIGHT";
-  public static final String MANUFACTVERS               = "0.12-BETA";
+  public static final String MANUFACTVERS               = "0.13-BETA";
   public static final String GENYEAR                    = "2014";
   public static final String GENMONTH                   = "01";
-  public static final String GENDAY                     = "12";
+  public static final String GENDAY                     = "20";
   public static final boolean CHECK_PHYSICAL_BT         = false; 
 
   // ANDROID: Preferences Version
@@ -200,8 +200,9 @@ public final class ProjectConst
   public static final int    MESSAGE_LOGENTRY_START     = ActionEvent.RESERVED_ID_MAX + 30;
   public static final int    MESSAGE_LOGENTRY_LINE      = ActionEvent.RESERVED_ID_MAX + 31;
   public static final int    MESSAGE_LOGENTRY_STOP      = ActionEvent.RESERVED_ID_MAX + 32;
-  public static final int    MESSAGE_LOCAL_LOGEXPORTED  = ActionEvent.RESERVED_ID_MAX + 33;
-  public static final int    MESSAGE_LOCAL_EXPORTERR    = ActionEvent.RESERVED_ID_MAX + 34;
+  public static final int    MESSAGE_LOCAL_ONE_PROTO_OK = ActionEvent.RESERVED_ID_MAX + 33;
+  public static final int    MESSAGE_LOCAL_LOGEXPORTED  = ActionEvent.RESERVED_ID_MAX + 34;
+  public static final int    MESSAGE_LOCAL_EXPORTERR    = ActionEvent.RESERVED_ID_MAX + 35;
   
 
   // DATENBANK
