@@ -316,6 +316,7 @@
     <string name="export_header_device" formatted="false" >Export logs from device %lt;%s&gt;</string>
     <string name="export_subheader" formatted="false">Device: %s</string>
     <string name="export_change_drive_button">Device...</string>
+    <string name="export_delete_button">DELETE</string>
     <string name="export_do_export">Export!</string>
     <string name="export_mail_bodytext">Here your divelogs in attachement from this mail!\n\nRegards, your ANDROID Device\n\n</string>
     

@@ -319,6 +319,7 @@
     <string name="export_header_device" formatted="false" >Exportiere Protokolle vom Gerät &lt;%s&gt;</string>
     <string name="export_subheader" formatted="false">Gerät: %s</string>
     <string name="export_change_drive_button">Gerät...</string>
+    <string name="export_delete_button">LÖSCH</string>
     <string name="export_do_export">Export!</string>
      <string name="export_mail_bodytext">Hier sind Deine Tauchprotokolle im Anhang der Mail\n\nGrüße von Deinem ANDROID-Gerät\n\n</string>
     

@@ -29,4 +29,5 @@
   <color name="aboutHeadlineColor">#6720B3</color>
   <color name="exportDeviceButton.textColor">#1B9617</color>
   <color name="exportLogsButton.textColor">#0554FF</color>
+  <color name="exportDeleteButton.textColor">#E60000</color>
 </resources>
