@@ -82,7 +82,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
   private Button                     changeDeviceButton;
   private Button                     exportLogsButton;
   private CommToast                  theToast            = null;
-  private final boolean              isFileZipped        = false;
+  private boolean                    isFileZipped        = false;
   // private final Vector<ReadLogItemObj> lItems = new Vector<ReadLogItemObj>();
   private WaitProgressFragmentDialog pd                  = null;
   private File                       tempDir             = null;
@@ -352,7 +352,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
   private String getMainMailFromPrefs()
   {
     String mailAddr = null;
-    boolean isMailError = false;
+    boolean isPrefError = false;
     //
     // ist eine Zieladresse zum Versand vorgesehen?
     //
@@ -360,10 +360,10 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     if( !sPref.contains( "keyProgMailMain" ) )
     {
       // Das wird nix, keine Mail angegeben
-      isMailError = true;
+      isPrefError = true;
       Log.w( TAG, "there is not preference key for mailadress!" );
     }
-    if( !isMailError )
+    if( !isPrefError )
     {
       // der Schlüssel ist da, ist da auch eine Mailadresse hinterlegt?
       mailAddr = sPref.getString( "keyProgMailMain", "" );
@@ -371,7 +371,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
       if( !m.find() )
       {
         // Das wird nix, keine Mail angegeben
-        isMailError = true;
+        isPrefError = true;
         Log.w( TAG, "there is not an valid mailadress! saved was :<" + mailAddr + ">" );
       }
       else
@@ -380,6 +380,38 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
       }
     }
     return( null );
+  }
+
+  /**
+   * 
+   * Ist in den Prefs Komprimierung eingestellt?
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 20.01.2014
+   * 
+   * @return koprimiert oder nicht
+   */
+  private boolean shouldMailComressed()
+  {
+    boolean isMailCompressed = false;
+    boolean isPrefError = false;
+    //
+    // ist eine Zieladresse zum Versand vorgesehen?
+    //
+    SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( runningActivity );
+    if( !sPref.contains( "keyProgMailCompressed" ) )
+    {
+      // Das wird nix, keine Mail angegeben
+      isPrefError = true;
+      Log.w( TAG, "there is not preference key for mailadress!" );
+    }
+    if( !isPrefError )
+    {
+      // der Schlüssel ist da, ist da auch eine Mailadresse hinterlegt?
+      isMailCompressed = sPref.getBoolean( "keyProgMailCompressed", false );
+    }
+    return( isMailCompressed );
   }
 
   /*
@@ -640,6 +672,10 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     // die Haupt-Mailadresse holen, wenn vorhanden
     //
     mailMainAddr = getMainMailFromPrefs();
+    //
+    // soll die Mail komprimiert übertreagen werden?
+    //
+    isFileZipped = shouldMailComressed();
     //
     // die Datenbank öffnen
     //
