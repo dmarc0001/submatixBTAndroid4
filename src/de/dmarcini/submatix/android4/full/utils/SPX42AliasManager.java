@@ -275,6 +275,7 @@ public class SPX42AliasManager
     String sql;
     Cursor cu;
     ContentValues values;
+    int retVal = -1;
     //
     if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "setAliasForMac..." );
     sql = String.format( "select %s from %s where %s like '%s';", ProjectConst.A_ALIAS, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_MAC, mac );
@@ -294,7 +295,8 @@ public class SPX42AliasManager
         values.put( ProjectConst.A_DEVNAME, devName );
         if( serial != null ) values.put( ProjectConst.A_SERIAL, serial );
         // Ausführen mit on-the-fly whereklausel
-        return( 0 > dBase.update( ProjectConst.A_TABLE_ALIASES, values, String.format( "%s like '%s'", ProjectConst.A_MAC, mac ), null ) );
+        if( 0 < dBase.update( ProjectConst.A_TABLE_ALIASES, values, String.format( "%s like '%s'", ProjectConst.A_MAC, mac ), null ) ) return( true );
+        return( false );
       }
       //
       // nein, das existiert noch nicht
@@ -304,7 +306,8 @@ public class SPX42AliasManager
       values.put( ProjectConst.A_DEVNAME, devName );
       values.put( ProjectConst.A_ALIAS, alias );
       if( serial != null ) values.put( ProjectConst.A_SERIAL, serial );
-      return( -1 < dBase.insertOrThrow( ProjectConst.A_TABLE_ALIASES, null, values ) );
+      if( -1 == dBase.insertOrThrow( ProjectConst.A_TABLE_ALIASES, null, values ) ) return( false );
+      return( true );
     }
     catch( SQLException ex )
     {
