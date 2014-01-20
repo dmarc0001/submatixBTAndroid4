@@ -79,8 +79,9 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
   private SPX42LogManager            logManager          = null;
   private int                        selectedDeviceId    = -1;
   private String                     selectedDeviceAlias = null;
-  private Button                     changeDeviceButton;
-  private Button                     exportLogsButton;
+  private Button                     changeDeviceButton  = null;
+  private Button                     exportLogsButton    = null;
+  private Button                     exportDeleteButton  = null;
   private CommToast                  theToast            = null;
   private boolean                    isFileZipped        = false;
   // private final Vector<ReadLogItemObj> lItems = new Vector<ReadLogItemObj>();
@@ -471,9 +472,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
    */
   @Override
   public void msgConnected( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   /*
    * (nicht-Javadoc)
@@ -482,9 +481,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
    */
   @Override
   public void msgConnectError( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   /*
    * (nicht-Javadoc)
@@ -493,9 +490,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
    */
   @Override
   public void msgConnecting( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   /*
    * (nicht-Javadoc)
@@ -504,9 +499,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
    */
   @Override
   public void msgDisconnected( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   /**
    * 
@@ -620,9 +613,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
    */
   @Override
   public void msgRecivedAlive( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   /*
    * (nicht-Javadoc)
@@ -631,9 +622,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
    */
   @Override
   public void msgRecivedTick( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   /*
    * (nicht-Javadoc)
@@ -642,9 +631,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
    */
   @Override
   public void msgReciveWriteTmeout( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   @Override
   public void onActivityCreated( Bundle bundle )
@@ -741,6 +728,13 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
         rAdapter = ( SPX42ReadLogListArrayAdapter )mainListView.getAdapter();
         exportSelectedLogItems( rAdapter );
       }
+      else if( ( Button )v == exportDeleteButton )
+      {
+        //
+        // hier will der User eindeutig was löschen naja, vermutlich)
+        // Darum hier eine "willstDuDasWirklich-Box"
+        //
+      }
     }
   }
 
@@ -772,11 +766,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
       mainListView.setChoiceMode( AbsListView.CHOICE_MODE_MULTIPLE );
       changeDeviceButton = ( Button )runningActivity.findViewById( R.id.changeDeviceButton );
       exportLogsButton = ( Button )runningActivity.findViewById( R.id.exportLogsButton );
-      //
-      // TextView tv = new TextView( runningActivity );
-      // tv.setText( "TEXTHEADER" );
-      // mainListView.addHeaderView( tv );
-      //
+      exportDeleteButton = ( Button )runningActivity.findViewById( R.id.exportDeleteButton );
       return( null );
     }
     //
@@ -795,11 +785,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     mainListView.setChoiceMode( AbsListView.CHOICE_MODE_MULTIPLE );
     changeDeviceButton = ( Button )rootView.findViewById( R.id.changeDeviceButton );
     exportLogsButton = ( Button )rootView.findViewById( R.id.exportLogsButton );
-    //
-    // TextView tv = new TextView( runningActivity );
-    // tv.setText( "TEXTHEADER2" );
-    // mainListView.addHeaderView( tv );
-    //
+    exportDeleteButton = ( Button )runningActivity.findViewById( R.id.exportDeleteButton );
     return( rootView );
   }
 
@@ -925,6 +911,8 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     changeDeviceButton.setOnClickListener( this );
     exportLogsButton = ( Button )runningActivity.findViewById( R.id.exportLogsButton );
     exportLogsButton.setOnClickListener( this );
+    exportDeleteButton = ( Button )runningActivity.findViewById( R.id.exportDeleteButton );
+    exportDeleteButton.setOnClickListener( this );
     //
     // Liste füllen
     //
