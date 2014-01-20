@@ -3,6 +3,7 @@
  */
 package de.dmarcini.submatix.android4.full.utils;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,7 +17,8 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.Vector;
 import java.util.regex.Pattern;
-import java.util.zip.GZIPOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -923,18 +925,31 @@ public class UDDFFileCreateClass
     // nun zur Frage: gezippt oder nicht
     if( zipped )
     {
+      // File zipFile = new File( file.getAbsoluteFile() + ".zip" );
+      File zipFile = new File( file.getAbsolutePath().replace( "uddf", "zip" ) );
       // gezipptes File erzeugen
-      Log.i( TAG, "write to zipped file... " );
-      file = new File( file.getAbsoluteFile() + ".gz" );
+      Log.i( TAG, "write to zipped file <" + zipFile.getName() + ">... " );
       if( file.exists() )
       {
         // Datei ist da, ich will sie ueberschreiben
         file.delete();
       }
-      OutputStream fos = new FileOutputStream( file );
-      OutputStream zipOut = new GZIPOutputStream( fos );
-      zipOut.write( writer.toString().getBytes() );
-      zipOut.close();
+      OutputStream fos = new FileOutputStream( zipFile );
+      ZipOutputStream zos = new ZipOutputStream( new BufferedOutputStream( fos ) );
+      try
+      {
+        // for (int i = 0; i < fileCount; ++i)
+        // {
+        ZipEntry entry = new ZipEntry( file.getName() );
+        zos.putNextEntry( entry );
+        zos.write( writer.toString().getBytes() );
+        zos.closeEntry();
+        // }
+      }
+      finally
+      {
+        zos.close();
+      }
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "domToString()...ok " );
       return( file );
     }
