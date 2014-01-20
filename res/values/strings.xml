@@ -307,6 +307,7 @@
     <string name="logread_saved_format" formatted="false">dive depth: %02.1f %s length: %d:%02d </string>
     <string name="logread_please_patient">Please patient</string>
     <string name="logread_file_message">read log nr %d from database</string>
+    <string name="logread_file_message_empty">read next log from database</string>
     <string name="logread_show_not_all_header">only new logs</string>
     <string name="logread_show_not_all_footer">end of new logs</string>
     
