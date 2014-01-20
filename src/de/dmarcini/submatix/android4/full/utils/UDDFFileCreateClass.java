@@ -11,8 +11,10 @@ import java.io.RandomAccessFile;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
+import java.util.Vector;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPOutputStream;
 
@@ -41,8 +43,10 @@ import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
+import android.os.Handler;
 import android.util.Log;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.exceptions.XMLFileCreatorException;
 
 /**
@@ -65,6 +69,7 @@ public class UDDFFileCreateClass
   private ArrayList<String>  gases           = null;
   private final Pattern      fieldPatternDp  = Pattern.compile( ":" );
   private int                diveTimeCurrent = 0;
+  private Handler            mHandler        = null;
 
   /**
    * 
@@ -118,6 +123,30 @@ public class UDDFFileCreateClass
 
   /**
    * 
+   * Erzeuge File für nur einen TG
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
+   * 
+   * Stand: 16.01.2014
+   * 
+   * @param file
+   *          die erzeugte Datei
+   * @param _mHandler
+   * @param rlo
+   *          ein ReadLogItem Objekt
+   * @param zipped
+   *          soll die DAtei gezippt werden?
+   * @return Die Datei
+   */
+  public File createXML( File file, Handler _mHandler, ReadLogItemObj rlo, boolean zipped )
+  {
+    Vector<ReadLogItemObj> rlos = new Vector<ReadLogItemObj>();
+    //
+    return( createXML( file, _mHandler, rlos, zipped ) );
+  }
+
+  /**
+   * 
    * Erzeuge die XML-Datei für einen Logeintrag
    * 
    * Project: SubmatixXMLTest Package: de.dmarcini.bluethooth.submatix.xml
@@ -127,12 +156,13 @@ public class UDDFFileCreateClass
    *         Stand: 10.01.2014
    * @param file
    *          Datei, in die das Ergebnis nachher kommt
-   * @param rlo
+   * @param _mHandler
+   * @param rlos
    * @param zipped
    *          Komprimieren?
    * @return true oder false
    */
-  public File createXML( File file, ReadLogItemObj rlo, boolean zipped )
+  public File createXML( File file, Handler _mHandler, Vector<ReadLogItemObj> rlos, boolean zipped )
   {
     Element rootNode = null;
     String msg = null;
@@ -140,6 +170,8 @@ public class UDDFFileCreateClass
     Node profileNode = null;
     //
     Log.v( TAG, "createXML()..." );
+    // Handler für Nachrichten übernehmen
+    mHandler = _mHandler;
     if( gases == null ) gases = new ArrayList<String>();
     gases.clear();
     // Erzeuge Dokument neu
@@ -148,13 +180,13 @@ public class UDDFFileCreateClass
     rootNode = uddfDoc.createElement( "uddf" );
     rootNode.setAttribute( "version", ProjectConst.UDDFVERSION );
     uddfDoc.appendChild( rootNode );
-    // Kommentiere mal TODO: Programmname einfügen
-    rootNode.appendChild( uddfDoc.createComment( "Genereted von: SubmatixBluethoothLogger" ) );
+    // Programmname einfügen
+    rootNode.appendChild( uddfDoc.createComment( ProjectConst.CREATORPROGRAM ) );
     // Appliziere Generator
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "generator node..." );
     rootNode.appendChild( makeGeneratorNode( uddfDoc ) );
     // erzeuge den profilknoten, berechne dabei die Gasliste
-    profileNode = makeProfilesData( uddfDoc, rlo );
+    profileNode = makeProfilesData( uddfDoc, rlos );
     //
     // Gasliste Unique machen
     //
@@ -164,7 +196,7 @@ public class UDDFFileCreateClass
     //
     // appliziere Gasdefinitionen
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "gasdefinitions node..." );
-    rootNode.appendChild( makeGasdefinitions( uddfDoc, rlo ) );
+    rootNode.appendChild( makeGasdefinitions( uddfDoc ) );
     // appliziere profiledata
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "profiles node..." );
     rootNode.appendChild( profileNode );
@@ -177,18 +209,21 @@ public class UDDFFileCreateClass
     {
       msg = "transformer Exception " + ex.getLocalizedMessage();
       Log.e( TAG, "createXML: <" + msg + ">" );
+      mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR ) ).sendToTarget();
       return( null );
     }
     catch( IOException ex )
     {
       msg = "IOException " + ex.getLocalizedMessage();
       Log.e( TAG, "createXML: <" + msg + ">" );
+      mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR ) ).sendToTarget();
       return( null );
     }
     catch( Exception ex )
     {
       msg = "allgemeine Exception " + ex.getLocalizedMessage();
       Log.e( TAG, "createXML: <" + msg + ">" );
+      mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR ) ).sendToTarget();
       return( null );
     }
     return( retFile );
@@ -207,12 +242,22 @@ public class UDDFFileCreateClass
    *          Dokument Objekt
    * @return Teilbam -Rootelement
    */
-  private Node makeProfilesData( Document doc, ReadLogItemObj rlo )
+  private Node makeProfilesData( Document doc, Vector<ReadLogItemObj> rlos )
   {
     Element profileNode;
-    int repNumber = 1;
+    int repNumber = 0;
+    //
     profileNode = doc.createElement( "profiledata" );
-    profileNode.appendChild( makeRepetitiongroup( doc, repNumber, rlo ) );
+    //
+    // Alle Logeinträge durch
+    //
+    Iterator<ReadLogItemObj> it = rlos.iterator();
+    while( it.hasNext() )
+    {
+      ReadLogItemObj rlo = it.next();
+      profileNode.appendChild( makeRepetitiongroup( doc, ++repNumber, rlo ) );
+      mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_ONE_PROTO_OK, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_ONE_PROTO_OK, rlo ) ).sendToTarget();
+    }
     return( profileNode );
   }
 
@@ -244,7 +289,7 @@ public class UDDFFileCreateClass
 
   /**
    * 
-   * Tauchgang Teibaum bauen
+   * Tauchgang Teilbaum bauen
    * 
    * Project: SubmatixXMLTest Package: de.dmarcini.bluethooth.submatix.xml
    * 
@@ -736,9 +781,9 @@ public class UDDFFileCreateClass
    * @param doc
    *          Document Objekt
    * @param diveAttrs
-   * @return Teilbaum f�r Gasdefinitionen in diesem Tauchgang
+   * @return Teilbaum für Gasdefinitionen in diesem Tauchgang
    */
-  private Node makeGasdefinitions( Document doc, ReadLogItemObj dive )
+  private Node makeGasdefinitions( Document doc )
   {
     Element gasNode, mixNode, nameNode, o2Node, n2Node, heNode, arNode, h2Node;
     String gasName;

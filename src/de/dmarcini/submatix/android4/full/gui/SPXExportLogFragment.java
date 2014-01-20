@@ -72,35 +72,35 @@ import de.dmarcini.submatix.android4.full.utils.UserAlertDialogFragment;
  */
 public class SPXExportLogFragment extends Fragment implements IBtServiceListener, OnItemClickListener, OnClickListener
 {
-  private static final String          TAG                 = SPXExportLogFragment.class.getSimpleName();
-  private final Pattern                mailPattern         = Pattern.compile( ProjectConst.PATTERN_EMAIL );
-  private Activity                     runningActivity     = null;
-  private ListView                     mainListView        = null;
-  private SPX42LogManager              logManager          = null;
-  private int                          selectedDeviceId    = -1;
-  private String                       selectedDeviceAlias = null;
-  private Button                       changeDeviceButton;
-  private Button                       exportLogsButton;
-  private CommToast                    theToast            = null;
-  private final boolean                isFileZipped        = false;
-  private final Vector<ReadLogItemObj> lItems              = new Vector<ReadLogItemObj>();
-  private WaitProgressFragmentDialog   pd                  = null;
-  private File                         tempDir             = null;
-  private String                       mailMainAddr        = null;
+  private static final String        TAG                 = SPXExportLogFragment.class.getSimpleName();
+  private final Pattern              mailPattern         = Pattern.compile( ProjectConst.PATTERN_EMAIL );
+  private Activity                   runningActivity     = null;
+  private ListView                   mainListView        = null;
+  private SPX42LogManager            logManager          = null;
+  private int                        selectedDeviceId    = -1;
+  private String                     selectedDeviceAlias = null;
+  private Button                     changeDeviceButton;
+  private Button                     exportLogsButton;
+  private CommToast                  theToast            = null;
+  private final boolean              isFileZipped        = false;
+  // private final Vector<ReadLogItemObj> lItems = new Vector<ReadLogItemObj>();
+  private WaitProgressFragmentDialog pd                  = null;
+  private File                       tempDir             = null;
+  private String                     mailMainAddr        = null;
   @SuppressLint( "HandlerLeak" )
-  private final Handler                mHandler            = new Handler() {
-                                                             @Override
-                                                             public void handleMessage( Message msg )
+  private final Handler              mHandler            = new Handler() {
+                                                           @Override
+                                                           public void handleMessage( Message msg )
+                                                           {
+                                                             if( !( msg.obj instanceof BtServiceMessage ) )
                                                              {
-                                                               if( !( msg.obj instanceof BtServiceMessage ) )
-                                                               {
-                                                                 Log.e( TAG, "Handler::handleMessage: Recived Message is NOT type of BtServiceMessage!" );
-                                                                 return;
-                                                               }
-                                                               BtServiceMessage smsg = ( BtServiceMessage )msg.obj;
-                                                               handleMessages( msg.what, smsg );
+                                                               Log.e( TAG, "Handler::handleMessage: Recived Message is NOT type of BtServiceMessage!" );
+                                                               return;
                                                              }
-                                                           };
+                                                             BtServiceMessage smsg = ( BtServiceMessage )msg.obj;
+                                                             handleMessages( msg.what, smsg );
+                                                           }
+                                                         };
 
   /**
    * 
@@ -138,9 +138,9 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
    * 
    * @param rlo
    */
-  private void exportOneLogItem( ReadLogItemObj _rlo, File _tempDir )
+  private void exportLogItemsAsThread( Vector<ReadLogItemObj> lItems, File _tempDir )
   {
-    final ReadLogItemObj rlo = _rlo;
+    final Vector<ReadLogItemObj> rlos = lItems;
     final File tempDir = _tempDir;
     Thread exportThread = null;
     //
@@ -160,38 +160,57 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
         {
           theToast.showConnectionToastAlert( ex.getLocalizedMessage() );
           Log.e( TAG, ex.getLocalizedMessage() );
-          mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, rlo ) ).sendToTarget();
+          mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR ) ).sendToTarget();
           return;
         }
         catch( TransformerException ex )
         {
           theToast.showConnectionToastAlert( ex.getLocalizedMessage() );
           Log.e( TAG, ex.getLocalizedMessage() );
-          mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, rlo ) ).sendToTarget();
+          mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR ) ).sendToTarget();
           return;
         }
         catch( TransformerFactoryConfigurationError ex )
         {
           theToast.showConnectionToastAlert( ex.getLocalizedMessage() );
           Log.e( TAG, ex.getLocalizedMessage() );
-          mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, rlo ) ).sendToTarget();
+          mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR ) ).sendToTarget();
           return;
         }
         catch( XMLFileCreatorException ex )
         {
           theToast.showConnectionToastAlert( ex.getLocalizedMessage() );
           Log.e( TAG, ex.getLocalizedMessage() );
-          mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, rlo ) ).sendToTarget();
+          mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR ) ).sendToTarget();
           return;
         }
+        //
+        // Lass dir einen Namen einfallen
+        //
+        if( rlos.size() == 1 )
+        {
+          if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "exportThread: export dive %d db-id: %d...", rlos.firstElement().numberOnSPX, rlos.firstElement().dbId ) );
+          DateTime st = new DateTime( rlos.firstElement().startTimeMilis );
+          uddfFileName = String.format( Locale.ENGLISH, "%s%sdive_%07d_at_%04d%02d%02d%02d%02d%02d.uddf", tempDir.getAbsolutePath(), File.separator,
+                  rlos.firstElement().numberOnSPX, st.getYear(), st.getMonthOfYear(), st.getDayOfMonth(), st.getHourOfDay(), st.getMinuteOfHour(), st.getSecondOfMinute() );
+        }
+        else
+        {
+          if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "exportThread: export %d dives ...", rlos.size() ) );
+          DateTime st = new DateTime( rlos.firstElement().startTimeMilis );
+          uddfFileName = String.format( Locale.ENGLISH, "%s%sdive_%07d_at_%04d%02d%02d%02d%02d%02d-plus-%03d.uddf", tempDir.getAbsolutePath(), File.separator,
+                  rlos.firstElement().numberOnSPX, st.getYear(), st.getMonthOfYear(), st.getDayOfMonth(), st.getHourOfDay(), st.getMinuteOfHour(), st.getSecondOfMinute(),
+                  rlos.size() );
+        }
+        //
         // erzeuge die XML...
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "exportThread: export dive %d db-id: %d...", rlo.numberOnSPX, rlo.dbId ) );
-        DateTime st = new DateTime( rlo.startTimeMilis );
-        uddfFileName = String.format( Locale.ENGLISH, "%s%sdive_%07d_at_%04d%02d%02d%02d%02d%02d.uddf", tempDir.getAbsolutePath(), File.separator, rlo.numberOnSPX, st.getYear(),
-                st.getMonthOfYear(), st.getDayOfMonth(), st.getHourOfDay(), st.getMinuteOfHour(), st.getSecondOfMinute() );
+        //
         if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "create uddf-file: <" + uddfFileName + ">" );
-        uddfClass.createXML( new File( uddfFileName ), rlo, isFileZipped );
-        mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_LOGEXPORTED, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_LOGEXPORTED, rlo ) ).sendToTarget();
+        uddfClass.createXML( new File( uddfFileName ), mHandler, rlos, isFileZipped );
+        //
+        // melde das Ende an den UI-Thread
+        //
+        mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_LOGEXPORTED, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_LOGEXPORTED ) ).sendToTarget();
       }
     };
     exportThread.setName( "log_export_thread" );
@@ -214,6 +233,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
   private void exportSelectedLogItems( SPX42ReadLogListArrayAdapter rAdapter )
   {
     int itemIndex = 0;
+    Vector<ReadLogItemObj> lItems = new Vector<ReadLogItemObj>();
     //
     if( rAdapter.getMarkedItems().isEmpty() )
     {
@@ -225,7 +245,6 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     }
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "exportSelectedLogItems: export %d selected items...", rAdapter.getMarkedItems().size() ) );
     // die LogObjekte in den Vector kopieren
-    lItems.clear();
     Iterator<Integer> it = rAdapter.getMarkedItems().iterator();
     while( it.hasNext() )
     {
@@ -273,7 +292,7 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
         }
       }
       openWaitDial( lItems.size(), String.format( "file nr %d", rlo.numberOnSPX ) );
-      exportOneLogItem( rlo, tempDir );
+      exportLogItemsAsThread( lItems, tempDir );
     }
   }
 
@@ -390,6 +409,12 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
       // ################################################################
       // Logeintrag erfolgreich exportiert
       // ################################################################
+      case ProjectConst.MESSAGE_LOCAL_ONE_PROTO_OK:
+        msgExportOneProtocolOk( msg );
+        break;
+      // ################################################################
+      // Alle Logeinträge erfolgreich exportiert
+      // ################################################################
       case ProjectConst.MESSAGE_LOCAL_LOGEXPORTED:
         msgExportOk( msg );
         break;
@@ -481,25 +506,25 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
 
   /**
    * 
-   * Export Ok, nächster Export oder Mail senden?
+   * Nachricht vom Thread, dass wieder einmal ein Protokoll exportiert ist
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
    * 
-   * Stand: 09.01.2014
+   * Stand: 16.01.2014
    * 
    * @param msg
    */
-  private void msgExportOk( BtServiceMessage msg )
+  private void msgExportOneProtocolOk( BtServiceMessage msg )
   {
+    ReadLogItemObj rlo;
+    //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "export ok, check next entry..." );
     //
-    if( !lItems.isEmpty() )
+    // es sind noch Elemente zu exportieren
+    //
+    if( msg.getContainer() != null && ( msg.getContainer() instanceof ReadLogItemObj ) )
     {
-      //
-      // es sind noch Elemente zu exportieren
-      // das erste Element entfernen und exportieren
-      //
-      ReadLogItemObj rlo = lItems.remove( 0 );
+      rlo = ( ReadLogItemObj )msg.getContainer();
       //
       // die Markierung umkehren
       //
@@ -509,40 +534,50 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
       View v = mainListView.getChildAt( rlo.tagId );
       int top = ( v == null ) ? 0 : v.getTop();
       mainListView.setSelectionFromTop( firstPos, top );
-      //
-      // stelle sicher, dass ein exportverzeichnis existiert
-      //
-      if( !tempDir.exists() || !tempDir.isDirectory() )
-      {
-        if( !tempDir.mkdirs() )
-        {
-          theToast.showConnectionToastAlert( String.format( getResources().getString( R.string.toast_export_cant_create_dir ), tempDir.getAbsolutePath() ) );
-          return;
-        }
-      }
       if( pd != null )
       {
         pd.setMessage( String.format( getResources().getString( R.string.logread_file_message ), rlo.numberOnSPX ) );
       }
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "next entry..." );
-      exportOneLogItem( rlo, tempDir );
     }
     else
     {
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "send message..." );
       //
-      // alle Elemente exortiert, jetzt bitte Mail fertig machen und versenden
-      //
-      sendMailToAddr( tempDir, new String[]
-      { mailMainAddr }, selectedDeviceAlias );
-      //
-      // Aufräumen
+      // da ist ein Missgeschick passiert, kein ReadLogItemObj mitgesendet!
       //
       if( pd != null )
       {
-        pd.dismiss();
-        pd = null;
+        pd.setMessage( getResources().getString( R.string.logread_file_message_empty ) );
       }
+    }
+  }
+
+  /**
+   * 
+   * Export Ok, Mail senden?
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 09.01.2014
+   * 
+   * @param msg
+   */
+  private void msgExportOk( BtServiceMessage msg )
+  {
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "export ok" );
+    //
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "send message..." );
+    //
+    // alle Elemente exortiert, jetzt bitte Mail fertig machen und versenden
+    //
+    sendMailToAddr( tempDir, new String[]
+    { mailMainAddr }, selectedDeviceAlias );
+    //
+    // Aufräumen
+    //
+    if( pd != null )
+    {
+      pd.dismiss();
+      pd = null;
     }
   }
 
@@ -969,8 +1004,6 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "append file <" + fl.getAbsoluteFile() + "> " );
       uddfURIs.add( Uri.parse( "file://" + fl.getAbsoluteFile() ) );
     }
-    // mailBody.add( getResources().getString( R.string.export_mail_bodytext ) );
-    // mailBody.add( getResources().getString( R.string.app_name ) );
     diveMessage = getResources().getString( R.string.export_mail_bodytext ) + "\n\n" + getResources().getString( R.string.app_name );
     emailIntent.putExtra( android.content.Intent.EXTRA_EMAIL, mailAddr );
     emailIntent.putExtra( android.content.Intent.EXTRA_SUBJECT, "Divelog (" + deviceAlias + ")" );
