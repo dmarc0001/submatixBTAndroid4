@@ -27,7 +27,7 @@
         <Button
             android:id="@+id/changeDeviceButton"
             android:layout_width="140dp"
-            android:layout_height="68dp"
+            android:layout_height="58dp"
             android:layout_marginRight="@dimen/icon_margin_left"
             android:layout_marginTop="@dimen/icon_margin_left"
             android:hapticFeedbackEnabled="true"
@@ -37,13 +37,23 @@
         <Button
             android:id="@+id/exportLogsButton"
             android:layout_width="140dp"
-            android:layout_height="68dp"
-            android:layout_marginBottom="@dimen/icon_margin_left"
+            android:layout_height="58dp"
             android:layout_marginRight="@dimen/icon_margin_left"
             android:layout_marginTop="@dimen/icon_margin_left"
             android:hapticFeedbackEnabled="true"
             android:text="@string/export_do_export"
             android:textColor="@color/exportLogsButton.textColor" />
-    </LinearLayout>
+        
+        <Button
+            android:id="@+id/exportDeleteButton"
+            android:layout_width="140dp"
+            android:layout_height="58dp"
+            android:layout_marginRight="@dimen/icon_margin_left"
+            android:layout_marginTop="@dimen/icon_margin_left"
+            android:layout_marginBottom="@dimen/icon_margin_left"
+            android:hapticFeedbackEnabled="true"
+            android:text="@string/export_delete_button"
+            android:textColor="@color/exportDeleteButton.textColor" />
+        </LinearLayout>
 
 </LinearLayout>
