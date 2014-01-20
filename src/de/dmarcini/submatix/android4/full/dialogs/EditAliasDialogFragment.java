@@ -1,4 +1,4 @@
-﻿package de.dmarcini.submatix.android4.full.gui;
+﻿package de.dmarcini.submatix.android4.full.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;

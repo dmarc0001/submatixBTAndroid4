@@ -31,13 +31,14 @@ import android.widget.TextView;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
+import de.dmarcini.submatix.android4.full.dialogs.EditAliasDialogFragment;
+import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
 import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
 import de.dmarcini.submatix.android4.full.utils.BluetoothDeviceArrayAdapter;
 import de.dmarcini.submatix.android4.full.utils.CommToast;
 import de.dmarcini.submatix.android4.full.utils.DataSQLHelper;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 import de.dmarcini.submatix.android4.full.utils.SPX42AliasManager;
-import de.dmarcini.submatix.android4.full.utils.UserAlertDialogFragment;
 
 /**
  * 

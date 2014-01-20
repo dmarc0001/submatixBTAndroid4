@@ -49,6 +49,9 @@ import android.widget.ListView;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
+import de.dmarcini.submatix.android4.full.dialogs.SelectDeviceDialogFragment;
+import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
+import de.dmarcini.submatix.android4.full.dialogs.WaitProgressFragmentDialog;
 import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
 import de.dmarcini.submatix.android4.full.exceptions.XMLFileCreatorException;
 import de.dmarcini.submatix.android4.full.utils.CommToast;
@@ -58,7 +61,6 @@ import de.dmarcini.submatix.android4.full.utils.ReadLogItemObj;
 import de.dmarcini.submatix.android4.full.utils.SPX42LogManager;
 import de.dmarcini.submatix.android4.full.utils.SPX42ReadLogListArrayAdapter;
 import de.dmarcini.submatix.android4.full.utils.UDDFFileCreateClass;
-import de.dmarcini.submatix.android4.full.utils.UserAlertDialogFragment;
 
 /**
  * 

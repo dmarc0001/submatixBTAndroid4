@@ -43,13 +43,15 @@ import de.dmarcini.submatix.android4.full.comm.BlueThoothComService;
 import de.dmarcini.submatix.android4.full.comm.BlueThoothComService.LocalBinder;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.content.ContentSwitcher;
+import de.dmarcini.submatix.android4.full.dialogs.AreYouSureDialogFragment;
+import de.dmarcini.submatix.android4.full.dialogs.EditAliasDialogFragment;
+import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
 import de.dmarcini.submatix.android4.full.exceptions.FirmwareNotSupportetException;
 import de.dmarcini.submatix.android4.full.utils.GasUpdateEntity;
 import de.dmarcini.submatix.android4.full.utils.NoticeDialogListener;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 import de.dmarcini.submatix.android4.full.utils.SPX42AliasManager;
 import de.dmarcini.submatix.android4.full.utils.SPX42Config;
-import de.dmarcini.submatix.android4.full.utils.UserAlertDialogFragment;
 
 /**
  * 
@@ -1038,7 +1040,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   /**
    * Wird ein Dialog negativ beendet (nein oder Abbruch)
    * 
-   * @see de.dmarcini.submatix.android4.full.utils.AreYouSureDialogFragment.NoticeDialogListener#onDialogNegative(android.app.DialogFragment)
+   * @see de.dmarcini.submatix.android4.full.dialogs.AreYouSureDialogFragment.NoticeDialogListener#onDialogNegative(android.app.DialogFragment)
    * @param dialog
    */
   @SuppressWarnings( "javadoc" )
@@ -1052,7 +1054,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   /**
    * Wird ein dialog Positiv beendet (ja oder Ok...)
    * 
-   * @see de.dmarcini.submatix.android4.full.utils.AreYouSureDialogFragment.NoticeDialogListener#onDialogPositive(android.app.DialogFragment)
+   * @see de.dmarcini.submatix.android4.full.dialogs.AreYouSureDialogFragment.NoticeDialogListener#onDialogPositive(android.app.DialogFragment)
    * @param dialog
    */
   @SuppressWarnings( "javadoc" )

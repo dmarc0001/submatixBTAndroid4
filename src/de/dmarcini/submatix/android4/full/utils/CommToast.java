@@ -12,8 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
+import de.dmarcini.submatix.android4.full.dialogs.WaitProgressFragmentDialog;
 import de.dmarcini.submatix.android4.full.gui.FragmentCommonActivity;
-import de.dmarcini.submatix.android4.full.gui.WaitProgressFragmentDialog;
 
 /**
  * 
