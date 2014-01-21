@@ -179,7 +179,7 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    */
   public boolean isSaved( int position )
   {
-    if( position > getCount() ) return( false );
+    if( position >= getCount() ) return( false );
     return( getItem( position ).isSaved );
   }
 
@@ -197,7 +197,7 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    */
   public void setSaved( int position, boolean isSaved )
   {
-    if( position > getCount() ) return;
+    if( position >= getCount() ) return;
     getItem( position ).isSaved = isSaved;
     if( !isSaved )
     {
@@ -220,7 +220,7 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    */
   public void setSaved( int position, boolean isSaved, int dbId )
   {
-    if( position > getCount() ) return;
+    if( position >= getCount() ) return;
     getItem( position ).isSaved = isSaved;
     getItem( position ).dbId = dbId;
   }
@@ -239,7 +239,7 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    */
   public String getName( int position )
   {
-    if( position > getCount() ) return( null );
+    if( position >= getCount() ) return( null );
     return( getItem( position ).itemName );
   }
 
@@ -257,7 +257,7 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    */
   public int getNumberOnSPX( int position )
   {
-    if( position > getCount() ) return( -1 );
+    if( position >= getCount() ) return( -1 );
     return( getItem( position ).numberOnSPX );
   }
 
@@ -275,7 +275,7 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    */
   public String getNameOnSPX( int position )
   {
-    if( position > getCount() ) return( null );
+    if( position >= getCount() ) return( null );
     return( getItem( position ).itemNameOnSPX );
   }
 
@@ -293,8 +293,11 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    */
   public void setMarked( int position, boolean marked )
   {
-    if( position > getCount() ) return;
-    getItem( position ).isMarked = marked;
+    if( position >= getCount() ) return;
+    if( getItem( position ) instanceof ReadLogItemObj )
+    {
+      getItem( position ).isMarked = marked;
+    }
   }
 
   /**
@@ -311,8 +314,12 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    */
   public boolean getMarked( int position )
   {
-    if( position > getCount() ) return( false );
-    return( getItem( position ).isMarked );
+    if( position >= getCount() ) return( false );
+    if( getItem( position ) instanceof ReadLogItemObj )
+    {
+      return( getItem( position ).isMarked );
+    }
+    return( false );
   }
 
   /**

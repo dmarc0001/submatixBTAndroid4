@@ -79,6 +79,7 @@ public class SPX42LogManager extends SPX42AliasManager
       while( it.hasNext() )
       {
         File toDelFile = it.next();
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "deleteAllDataForDevice: File: <" + toDelFile.getName() + ">..." );
         toDelFile.delete();
       }
     }
@@ -91,6 +92,7 @@ public class SPX42LogManager extends SPX42AliasManager
     //
     // Punkt 4: Alias löschen
     //
+    deleteAlias( deviceId );
     return( true );
   }
 
@@ -142,7 +144,7 @@ public class SPX42LogManager extends SPX42AliasManager
     }
     // @formatter:off
     sql = String.format( Locale.ENGLISH, "select %s from %s where %s=%d;", 
-            ProjectConst.H_DEVICEID, 
+            ProjectConst.H_FILEONMOBILE, 
             ProjectConst.H_TABLE_DIVELOGS,
             ProjectConst.H_DEVICEID,
             deviceId);

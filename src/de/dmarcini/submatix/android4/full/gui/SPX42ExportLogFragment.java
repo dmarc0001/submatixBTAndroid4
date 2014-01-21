@@ -916,7 +916,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
         // ALLE Daten des Gerätes (einschliesslich ALIAS und Datendateien) löschen
         //
         if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "DELETE ALL Data for device: <" + selectedDeviceAlias + "..." );
-        // TODO: das LÖSCHEN
+        logManager.deleteAllDataForDevice( selectedDeviceId );
         //
         // Alle Daten verschwinden lassen
         //
