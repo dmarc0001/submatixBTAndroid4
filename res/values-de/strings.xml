@@ -82,6 +82,8 @@
     <string name="dialog_no_device_selected">Es wurde kein Gerät ausgewählt</string>
     <string name="dialog_not_log_entrys_header">Protokolleinträge</string>
     <string name="dialog_not_log_entrys">Es gibt keine Protokolle in der Datenbank\nfür dieses Gerät</string>
+    <string name="dialog_delete_header">LÖSCHEN</string>
+    <string name="dialog_delete_nothing_selected">Nichts zum löschen ausgewählt</string>
     
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title" formatted="false">Suche BT Geräte...</string>

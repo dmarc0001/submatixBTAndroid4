@@ -82,6 +82,8 @@
     <string name="dialog_no_device_selected">there is not an device selected</string>
     <string name="dialog_not_log_entrys_header">log entrys</string>
     <string name="dialog_not_log_entrys">there are not logs in \ndatabase for this device</string>
+    <string name="dialog_delete_header">DELETE</string>
+    <string name="dialog_delete_nothing_selected">nothing selected to delete</string>
     
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title" formatted="false">Searching BT Devices..</string>
