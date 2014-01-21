@@ -238,7 +238,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     int itemIndex = 0;
     Vector<ReadLogItemObj> lItems = new Vector<ReadLogItemObj>();
     //
-    if( rAdapter.getMarkedItems().isEmpty() )
+    if( rAdapter == null || rAdapter.getMarkedItems().isEmpty() )
     {
       Log.i( TAG, "exportSelectedLogItems: not selected items" );
       UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_not_selected_items_header ), runningActivity
@@ -697,20 +697,19 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
   public void onClick( View v )
   {
     SPX42ReadLogListArrayAdapter rAdapter;
+    Button button = null;
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Click" );
-    if( mailMainAddr == null )
-    {
-      // Das wird nix, keine Mail angegeben
-      if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "not valid mail -> note to user" );
-      UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_not_mail_exist_header ), runningActivity.getResources()
-              .getString( R.string.dialog_not_mail_exist ) );
-      uad.show( getFragmentManager(), "noMailaddrWarning" );
-      return;
-    }
+    //
+    // Wurde ein Button geklickt?
+    //
     if( v instanceof Button )
     {
-      if( ( Button )v == changeDeviceButton )
+      button = ( Button )v;
+      //
+      // soll das angezeigte Gerät gewechselt werden?
+      //
+      if( button == changeDeviceButton )
       {
         // Hier wird dann ein Dialog gebraucht!
         if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onClick: call changeDeviceDialog!" );
@@ -718,9 +717,24 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
         dialog.setDeviceList( logManager.getDeviceNameIdList() );
         dialog.show( getFragmentManager(), "SelectDeviceDialogFragment" );
       }
-      else if( ( Button )v == exportLogsButton )
+      //
+      // oder sollen Daten exportiert werden?
+      //
+      else if( button == exportLogsButton )
       {
         if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onClick: EXPORT selected Items" );
+        //
+        // wenn keine Mailadresse da ist, hat das eh keinen Zweck
+        //
+        if( mailMainAddr == null )
+        {
+          // Das wird nix, keine Mail angegeben
+          if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "not valid mail -> note to user" );
+          UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_not_mail_exist_header ), runningActivity
+                  .getResources().getString( R.string.dialog_not_mail_exist ) );
+          uad.show( getFragmentManager(), "noMailaddrWarning" );
+          return;
+        }
         //
         // exportiere alle markierten Elemente
         //
@@ -733,6 +747,9 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
         rAdapter = ( SPX42ReadLogListArrayAdapter )mainListView.getAdapter();
         exportSelectedLogItems( rAdapter );
       }
+      //
+      // oder sollen Daten aus der Datenbank gelöscht werden?
+      //
       else if( ( Button )v == exportDeleteButton )
       {
         //
