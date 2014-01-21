@@ -339,6 +339,26 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
 
   /**
    * 
+   * Gib die Anzahl markierter Einträge zurück
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
+   * 
+   * Stand: 21.01.2014
+   * 
+   * @return Anzahl markierter Einträge
+   */
+  public int getCountMarkedItems()
+  {
+    int count = 0;
+    for( int i = 0; i < getCount(); i++ )
+    {
+      if( getItem( i ).isMarked ) count++;
+    }
+    return( count );
+  }
+
+  /**
+   * 
    * Lösche die Markierungen
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
