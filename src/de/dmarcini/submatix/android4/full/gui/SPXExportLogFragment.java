@@ -830,6 +830,9 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
       if( ApplicationDEBUG.DEBUG )
         Log.i( TAG, "onDialogNegative: selected Device Alias: <" + deviceDialog.getSelectedDeviceName() + "> Device-ID <" + deviceDialog.getSelectedDeviceId() + ">" );
       getActivity().getActionBar().setTitle( String.format( getResources().getString( R.string.export_header_device ), deviceDialog.getSelectedDeviceName() ) );
+      //
+      // ist eigentlich ein Gerät ausgewählt?
+      //
       if( selectedDeviceId > 0 )
       {
         fillListAdapter( selectedDeviceId );
@@ -843,6 +846,9 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
         uad.show( getFragmentManager(), "noSelectedDevice" );
         return;
       }
+      //
+      // Wenn keine Einträge in der Datenbank waren
+      //
       if( mainListView.getAdapter().isEmpty() )
       {
         // Das wird auch nix, Keine Einträge in der Datenbank
