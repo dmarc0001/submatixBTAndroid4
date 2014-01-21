@@ -949,7 +949,7 @@ public class BlueThoothComService extends Service
   }
 
   private static final String  TAG                         = BlueThoothComService.class.getSimpleName();
-  private static final long    msToEndService              = 6000L;
+  private static final long    msToEndService              = 35000L;                                    // Zeit, bis der Service ohne Verbindung Selbstmord begeht
   // private static final Pattern fieldPattern0x09 = Pattern.compile( ProjectConst.LOGSELECTOR );
   private static final Pattern fieldPatternDp              = Pattern.compile( ":" );
   private static final Pattern fieldPatternTab             = Pattern.compile( "\t" );
