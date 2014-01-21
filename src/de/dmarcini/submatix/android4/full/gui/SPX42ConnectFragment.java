@@ -550,18 +550,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
           String device = ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getMAC( devSpinner.getSelectedItemPosition() );
           String deviceName = ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getDevName( devSpinner.getSelectedItemPosition() );
           setAliasForDeviceIfNotExist( device, deviceName );
-          //
-          // noch schnell checken, ob das Gerät gepaart ist
-          // TODO:
-          // BluetoothDevice remoteDevice = FragmentCommonActivity.mBtAdapter.getRemoteDevice( device );
-          // if( remoteDevice != null )
-          // {
-          // if( remoteDevice.getBondState() == BluetoothDevice.BOND_NONE )
-          // {
-          // // remoteDevive.setPin()
-          // }
-          // }
-          ( ( FragmentCommonActivity )runningActivity ).doConnectBtDevice( device );
+        ( ( FragmentCommonActivity )runningActivity ).doConnectBtDevice( device );
           break;
         case ProjectConst.CONN_STATE_CONNECTING:
           Log.i( TAG, "cancel connecting.." );
