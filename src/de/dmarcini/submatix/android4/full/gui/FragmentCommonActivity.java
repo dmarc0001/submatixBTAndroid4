@@ -67,7 +67,8 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
 {
   private static final String                 TAG                = FragmentCommonActivity.class.getSimpleName();
   private static final String                 SERVICENAME        = BlueThoothComService.class.getCanonicalName();
-  private static final String                 PACKAGENAME        = "de.dmarcini.submatix.android4";
+  private static final String                 PACKAGENAME        = BlueThoothComService.class.getPackage().getName();
+  // private static final String PACKAGENAME = "de.dmarcini.submatix.android4";
   @SuppressWarnings( "javadoc" )
   public static DateTimeFormatter             localTimeFormatter = DateTimeFormat.forPattern( "yyyy-MM-dd - HH:mm:ss" );
   protected static File                       databaseDir        = null;
@@ -462,7 +463,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     }
     if( !isServiceFound )
     {
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Starting Service..." );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Starting Service (package:<" + PACKAGENAME + ">)..." );
       Intent service = new Intent( this, BlueThoothComService.class );
       startService( service );
     }
