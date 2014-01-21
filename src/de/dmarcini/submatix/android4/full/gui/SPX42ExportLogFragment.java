@@ -389,38 +389,6 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     return( null );
   }
 
-  /**
-   * 
-   * Ist in den Prefs Komprimierung eingestellt?
-   * 
-   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
-   * 
-   * Stand: 20.01.2014
-   * 
-   * @return koprimiert oder nicht
-   */
-  private boolean shouldMailComressed()
-  {
-    boolean isMailCompressed = false;
-    boolean isPrefError = false;
-    //
-    // ist eine Zieladresse zum Versand vorgesehen?
-    //
-    SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( runningActivity );
-    if( !sPref.contains( "keyProgMailCompressed" ) )
-    {
-      // Das wird nix, keine Mail angegeben
-      isPrefError = true;
-      Log.w( TAG, "there is not preference key for mailadress!" );
-    }
-    if( !isPrefError )
-    {
-      // der Schlüssel ist da, ist da auch eine Mailadresse hinterlegt?
-      isMailCompressed = sPref.getBoolean( "keyProgMailCompressed", false );
-    }
-    return( isMailCompressed );
-  }
-
   /*
    * (nicht-Javadoc)
    * 
@@ -537,6 +505,36 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
 
   /**
    * 
+   * Export Ok, Mail senden?
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 09.01.2014
+   * 
+   * @param msg
+   */
+  private void msgExportOk( BtServiceMessage msg )
+  {
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "export ok" );
+    //
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "send message..." );
+    //
+    // alle Elemente exortiert, jetzt bitte Mail fertig machen und versenden
+    //
+    sendMailToAddr( tempDir, new String[]
+    { mailMainAddr }, selectedDeviceAlias );
+    //
+    // Aufräumen
+    //
+    if( pd != null )
+    {
+      pd.dismiss();
+      pd = null;
+    }
+  }
+
+  /**
+   * 
    * Nachricht vom Thread, dass wieder einmal ein Protokoll exportiert ist
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
@@ -582,36 +580,6 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     }
   }
 
-  /**
-   * 
-   * Export Ok, Mail senden?
-   * 
-   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
-   * 
-   * Stand: 09.01.2014
-   * 
-   * @param msg
-   */
-  private void msgExportOk( BtServiceMessage msg )
-  {
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "export ok" );
-    //
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "send message..." );
-    //
-    // alle Elemente exortiert, jetzt bitte Mail fertig machen und versenden
-    //
-    sendMailToAddr( tempDir, new String[]
-    { mailMainAddr }, selectedDeviceAlias );
-    //
-    // Aufräumen
-    //
-    if( pd != null )
-    {
-      pd.dismiss();
-      pd = null;
-    }
-  }
-
   /*
    * (nicht-Javadoc)
    * 
@@ -652,6 +620,20 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     catch( NullPointerException ex )
     {
       Log.e( TAG, "onActivityCreated: gui objects not allocated!" );
+    }
+  }
+
+  @Override
+  public void onActivityResult( int requestCode, int resultCode, Intent data )
+  {
+    Log.v( TAG, "onActivityResult()... " );
+    switch ( requestCode )
+    {
+      case ProjectConst.REQUEST_SEND_MAIL:
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "send logs via mail...OK" );
+        break;
+      default:
+        Log.e( TAG, "unknown activity result..." );
     }
   }
 
@@ -930,7 +912,28 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
         // Selektierte Daten aus der Datenbank und die entsprechenden Dateien löschen
         //
         if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "DELETE selectred logs..." );
-        // TODO: Das LÖSCHEN
+        //
+        // die markierten Einträge suchen
+        //
+        SPX42ReadLogListArrayAdapter rAdapter = ( SPX42ReadLogListArrayAdapter )mainListView.getAdapter();
+        if( rAdapter != null && selectedDeviceId > 0 )
+        {
+          // gibt es Einträge?
+          if( rAdapter.getCountMarkedItems() > 0 )
+          {
+            Vector<Integer> markedItems = rAdapter.getMarkedItems();
+            //
+            // hier sinnvoll löschen
+            //
+            Iterator<Integer> it = markedItems.iterator();
+            while( it.hasNext() )
+            {
+              int idx = it.next();
+              int dbId = rAdapter.getItem( idx ).dbId;
+              logManager.deleteDataForDevice( dbId );
+            }
+          }
+        }
         //
         // und dann die Liste wieder neu füllen
         //
@@ -1170,17 +1173,35 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     runningActivity.getActionBar().setTitle( titleString );
   }
 
-  @Override
-  public void onActivityResult( int requestCode, int resultCode, Intent data )
+  /**
+   * 
+   * Ist in den Prefs Komprimierung eingestellt?
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 20.01.2014
+   * 
+   * @return koprimiert oder nicht
+   */
+  private boolean shouldMailComressed()
   {
-    Log.v( TAG, "onActivityResult()... " );
-    switch ( requestCode )
+    boolean isMailCompressed = false;
+    boolean isPrefError = false;
+    //
+    // ist eine Zieladresse zum Versand vorgesehen?
+    //
+    SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( runningActivity );
+    if( !sPref.contains( "keyProgMailCompressed" ) )
     {
-      case ProjectConst.REQUEST_SEND_MAIL:
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "send logs via mail...OK" );
-        break;
-      default:
-        Log.e( TAG, "unknown activity result..." );
+      // Das wird nix, keine Mail angegeben
+      isPrefError = true;
+      Log.w( TAG, "there is not preference key for mailadress!" );
     }
+    if( !isPrefError )
+    {
+      // der Schlüssel ist da, ist da auch eine Mailadresse hinterlegt?
+      isMailCompressed = sPref.getBoolean( "keyProgMailCompressed", false );
+    }
+    return( isMailCompressed );
   }
 }
