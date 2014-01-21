@@ -49,6 +49,7 @@ import android.widget.ListView;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
+import de.dmarcini.submatix.android4.full.dialogs.AreYouuSureToDelete;
 import de.dmarcini.submatix.android4.full.dialogs.SelectDeviceDialogFragment;
 import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
 import de.dmarcini.submatix.android4.full.dialogs.WaitProgressFragmentDialog;
@@ -752,10 +753,38 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
       //
       else if( ( Button )v == exportDeleteButton )
       {
+        rAdapter = ( SPX42ReadLogListArrayAdapter )mainListView.getAdapter();
         //
-        // hier will der User eindeutig was löschen naja, vermutlich)
-        // Darum hier eine "willstDuDasWirklich-Box"
+        // wenn der Adapter nicht existiert, gibt es keine Auswahl
         //
+        if( rAdapter == null )
+        {
+          // Das wird nix, kein Gerät ausgewählt
+          if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "not valid mail -> note to user" );
+          UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_delete_header ), runningActivity.getResources()
+                  .getString( R.string.dialog_delete_nothing_selected ) );
+          uad.show( getFragmentManager(), "nothingSelectedToDelete" );
+          return;
+        }
+        //
+        // wenn keine Logs ausgewählt sind, könnte noch ALLES gemeint sein
+        //
+        if( rAdapter.getCountMarkedItems() <= 0 )
+        {
+          //
+          // Meinst Du das wirklich?
+          //
+          String msg = String.format( runningActivity.getResources().getString( R.string.dialog_delete_device ), selectedDeviceAlias );
+          AreYouuSureToDelete sureToDeleteDialog = new AreYouuSureToDelete( msg );
+          sureToDeleteDialog.show( getFragmentManager().beginTransaction(), "sureToDeleteDeviceData" );
+          return;
+        }
+        //
+        // Also meint der die selektierten Logs?
+        //
+        String msg = runningActivity.getResources().getString( R.string.dialog_delete_selected_logs );
+        AreYouuSureToDelete sureToDeleteDialog = new AreYouuSureToDelete( msg );
+        sureToDeleteDialog.show( getFragmentManager().beginTransaction(), "sureToDeleteSelectedLogs" );
       }
     }
   }
@@ -874,6 +903,38 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
                 .getResources().getString( R.string.dialog_not_log_entrys ) );
         uad.show( getFragmentManager(), "noLogsForDevice" );
         return;
+      }
+    }
+    //
+    // ist das der Bist-Du-Sicher Dialog gewesen?
+    //
+    else if( dialog instanceof AreYouuSureToDelete )
+    {
+      if( dialog.getTag().matches( "sureToDeleteDeviceData" ) )
+      {
+        //
+        // ALLE Daten des Gerätes (einschliesslich ALIAS und Datendateien) löschen
+        //
+        if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "DELETE ALL Data for device: <" + selectedDeviceAlias + "..." );
+        // TODO: das LÖSCHEN
+        //
+        // Alle Daten verschwinden lassen
+        //
+        selectedDeviceAlias = null;
+        selectedDeviceId = -1;
+        mainListView.setAdapter( null );
+      }
+      else if( dialog.getTag().matches( "sureToDeleteSelectedLogs" ) )
+      {
+        //
+        // Selektierte Daten aus der Datenbank und die entsprechenden Dateien löschen
+        //
+        if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "DELETE selectred logs..." );
+        // TODO: Das LÖSCHEN
+        //
+        // und dann die Liste wieder neu füllen
+        //
+        fillListAdapter( selectedDeviceId );
       }
     }
     else
