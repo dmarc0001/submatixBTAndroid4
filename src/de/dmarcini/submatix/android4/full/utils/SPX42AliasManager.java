@@ -66,6 +66,71 @@ public class SPX42AliasManager
 
   /**
    * 
+   * Lösche einen Aliaseintrag für ein Gerät
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
+   * 
+   * Stand: 21.01.2014
+   * 
+   * @param deviceId
+   */
+  public void deleteAlias( int deviceId )
+  {
+    int count = 0;
+    //
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "deleteAlias..." );
+    if( deviceId < 0 )
+    {
+      return;
+    }
+    count = dBase.delete( ProjectConst.A_TABLE_ALIASES, String.format( "%s=%d", ProjectConst.A_DEVICEID, deviceId ), null );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "deleteAlias: <" + count + "> aliases deleted: OK" );
+    return;
+  }
+
+  /**
+   * 
+   * Existiert ein Device mit der ID
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
+   * 
+   * Stand: 21.01.2014
+   * 
+   * @param deviceId
+   * @return Existiert das Gerät in der Datenbank?
+   */
+  public boolean existDeviceId( int deviceId )
+  {
+    String sql;
+    Cursor cu;
+    boolean retVal = false;
+    //
+    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getDeviceIdList..." );
+    sql = String.format( "select count(*) from %s where %s=%d;", ProjectConst.A_TABLE_ALIASES, ProjectConst.A_DEVICEID, deviceId );
+    cu = dBase.rawQuery( sql, null );
+    //
+    try
+    {
+      if( cu.moveToFirst() )
+      {
+        if( cu.getInt( 0 ) > 0 )
+        {
+          retVal = true;
+        }
+      }
+      cu.close();
+      Log.d( TAG, "exist Devive <" + deviceId + "> : " + retVal );
+      return( retVal );
+    }
+    catch( SQLException ex )
+    {
+      Log.e( TAG, "Error while existDeviceId: <" + ex.getLocalizedMessage() + ">" );
+      return( false );
+    }
+  }
+
+  /**
+   * 
    * Gib den Alias oder den Default zurück
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
@@ -139,47 +204,6 @@ public class SPX42AliasManager
     {
       Log.e( TAG, "Error while getDeviceIdList: <" + ex.getLocalizedMessage() + ">" );
       return( null );
-    }
-  }
-
-  /**
-   * 
-   * Existiert ein Device mit der ID
-   * 
-   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
-   * 
-   * Stand: 21.01.2014
-   * 
-   * @param deviceId
-   * @return Existiert das Gerät in der Datenbank?
-   */
-  public boolean existDeviceId( int deviceId )
-  {
-    String sql;
-    Cursor cu;
-    boolean retVal = false;
-    //
-    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getDeviceIdList..." );
-    sql = String.format( "select count(*) from %s where %s=%d;", ProjectConst.A_TABLE_ALIASES, ProjectConst.A_DEVICEID, deviceId );
-    cu = dBase.rawQuery( sql, null );
-    //
-    try
-    {
-      if( cu.moveToFirst() )
-      {
-        if( cu.getInt( 0 ) > 0 )
-        {
-          retVal = true;
-        }
-      }
-      cu.close();
-      Log.d( TAG, "exist Devive <" + deviceId + "> : " + retVal );
-      return( retVal );
-    }
-    catch( SQLException ex )
-    {
-      Log.e( TAG, "Error while existDeviceId: <" + ex.getLocalizedMessage() + ">" );
-      return( false );
     }
   }
 
