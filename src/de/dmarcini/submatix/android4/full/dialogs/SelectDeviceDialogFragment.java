@@ -109,7 +109,7 @@ public class SelectDeviceDialogFragment extends DialogFragment
     //
     builder.setView( rootView );
     // Buttons erzeugen
-    builder.setPositiveButton( R.string.dialog_save_button, new DialogInterface.OnClickListener() {
+    builder.setPositiveButton( R.string.dialog_device_select_button, new DialogInterface.OnClickListener() {
       @SuppressWarnings( "unchecked" )
       @Override
       public void onClick( DialogInterface dialog, int id )
