@@ -84,6 +84,9 @@
     <string name="dialog_not_log_entrys">there are not logs in \ndatabase for this device</string>
     <string name="dialog_delete_header">DELETE</string>
     <string name="dialog_delete_nothing_selected">nothing selected to delete</string>
+    <string name="dialog_delete_are_you_sure_header">are you sure?</string>
+    <string name="dialog_delete_device">delete ALL data from device\n\"%s\"</string>
+    <string name="dialog_delete_selected_logs">delete the selected Logs</string>
     
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title" formatted="false">Searching BT Devices..</string>
