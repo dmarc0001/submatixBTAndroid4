@@ -49,7 +49,7 @@ import android.widget.ListView;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
-import de.dmarcini.submatix.android4.full.dialogs.AreYouuSureToDelete;
+import de.dmarcini.submatix.android4.full.dialogs.AreYouSureToDeleteFragment;
 import de.dmarcini.submatix.android4.full.dialogs.SelectDeviceDialogFragment;
 import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
 import de.dmarcini.submatix.android4.full.dialogs.WaitProgressFragmentDialog;
@@ -775,7 +775,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
           // Meinst Du das wirklich?
           //
           String msg = String.format( runningActivity.getResources().getString( R.string.dialog_delete_device ), selectedDeviceAlias );
-          AreYouuSureToDelete sureToDeleteDialog = new AreYouuSureToDelete( msg );
+          AreYouSureToDeleteFragment sureToDeleteDialog = new AreYouSureToDeleteFragment( msg );
           sureToDeleteDialog.show( getFragmentManager().beginTransaction(), "sureToDeleteDeviceData" );
           return;
         }
@@ -783,7 +783,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
         // Also meint der die selektierten Logs?
         //
         String msg = runningActivity.getResources().getString( R.string.dialog_delete_selected_logs );
-        AreYouuSureToDelete sureToDeleteDialog = new AreYouuSureToDelete( msg );
+        AreYouSureToDeleteFragment sureToDeleteDialog = new AreYouSureToDeleteFragment( msg );
         sureToDeleteDialog.show( getFragmentManager().beginTransaction(), "sureToDeleteSelectedLogs" );
       }
     }
@@ -908,7 +908,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     //
     // ist das der Bist-Du-Sicher Dialog gewesen?
     //
-    else if( dialog instanceof AreYouuSureToDelete )
+    else if( dialog instanceof AreYouSureToDeleteFragment )
     {
       if( dialog.getTag().matches( "sureToDeleteDeviceData" ) )
       {
