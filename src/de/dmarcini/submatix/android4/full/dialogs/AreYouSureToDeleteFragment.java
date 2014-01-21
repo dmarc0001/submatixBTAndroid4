@@ -24,16 +24,16 @@ import de.dmarcini.submatix.android4.full.utils.NoticeDialogListener;
  * 
  *         Stand: 10.11.2013
  */
-public class AreYouuSureToDelete extends DialogFragment
+public class AreYouSureToDeleteFragment extends DialogFragment
 {
-  private static final String  TAG       = AreYouuSureToDelete.class.getSimpleName();
+  private static final String  TAG       = AreYouSureToDeleteFragment.class.getSimpleName();
   private View                 rootView;
   private String               msg       = "?";
   // Use this instance of the interface to deliver action events
   private NoticeDialogListener mListener = null;
 
   @SuppressWarnings( "unused" )
-  private AreYouuSureToDelete()
+  private AreYouSureToDeleteFragment()
   {}
 
   /**
@@ -46,7 +46,7 @@ public class AreYouuSureToDelete extends DialogFragment
    * 
    * @param msg
    */
-  public AreYouuSureToDelete( String msg )
+  public AreYouSureToDeleteFragment( String msg )
   {
     super();
     this.msg = msg;
@@ -91,12 +91,12 @@ public class AreYouuSureToDelete extends DialogFragment
     //
     builder.setView( rootView );
     // Buttons erzeugen
-    builder.setPositiveButton( R.string.dialog_save_button, new DialogInterface.OnClickListener() {
+    builder.setPositiveButton( R.string.dialog_delete_button, new DialogInterface.OnClickListener() {
       @Override
       public void onClick( DialogInterface dialog, int id )
       {
         // Alles OK
-        mListener.onDialogPositiveClick( AreYouuSureToDelete.this );
+        mListener.onDialogPositiveClick( AreYouSureToDeleteFragment.this );
       }
     } );
     builder.setNegativeButton( R.string.dialog_cancel_button, new DialogInterface.OnClickListener() {
@@ -104,7 +104,7 @@ public class AreYouuSureToDelete extends DialogFragment
       public void onClick( DialogInterface dialog, int id )
       {
         // Abbruch!
-        mListener.onDialogNegativeClick( AreYouuSureToDelete.this );
+        mListener.onDialogNegativeClick( AreYouSureToDeleteFragment.this );
       }
     } );
     // Create the AlertDialog object and return it
