@@ -97,7 +97,9 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
                                                                                 runningActivity.getResources().getString( R.string.progress_wait_for_discover_message_continue ),
                                                                                 dispStr ) );
                                                                       }
-                                                                      // If it's already paired, skip it, because it's been listed already
+                                                                      //
+                                                                      // Ist das gerät bereits gepaart, überspringe es, da es bereits gelistet ist
+                                                                      //
                                                                       if( ( device.getBondState() != BluetoothDevice.BOND_BONDED ) && ( device.getName() != null )
                                                                               && ( device.getBluetoothClass().getMajorDeviceClass() == ProjectConst.SPX_BTDEVICE_CLASS ) )
                                                                       {
@@ -109,15 +111,17 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
                                                                         // Feld 2 = Geräte-Name
                                                                         // Feld 3 = Datenbank-Id (wenn vorhanden) sonst 0
                                                                         // Feld 4 = Gerät gepart?
+                                                                        String devAlias = FragmentCommonActivity.aliasManager
+                                                                                .getAliasForMac( device.getAddress(), device.getName() );
                                                                         String[] entr = new String[BluetoothDeviceArrayAdapter.BT_DEVAR_COUNT];
-                                                                        entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = device.getName();
+                                                                        entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = devAlias;
                                                                         entr[BluetoothDeviceArrayAdapter.BT_DEVAR_MAC] = device.getAddress();
                                                                         entr[BluetoothDeviceArrayAdapter.BT_DEVAR_NAME] = device.getName();
                                                                         entr[BluetoothDeviceArrayAdapter.BT_DEVAR_DBID] = "0";
                                                                         entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISPAIRED] = "false";
                                                                         entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISONLINE] = "true";
                                                                         // add oder Update Datensatz, wenn nicht schon vorhanden
-                                                                        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "Add <%s> to adapter...", device.getName() ) );
+                                                                        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "Add <%s> to adapter...", devAlias ) );
                                                                         ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).addOrUpdate( entr );
                                                                       }
                                                                       else
@@ -515,7 +519,8 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   {
     int connState = ( ( FragmentCommonActivity )runningActivity ).getConnectionStatus();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onClick: ON CLICK!" );
-    // btArrayAdapter = ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter();
+    //
+    // Wenn das der CONNECT Button war
     //
     if( cView instanceof ImageButton )
     {
@@ -545,6 +550,17 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
           String device = ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getMAC( devSpinner.getSelectedItemPosition() );
           String deviceName = ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getDevName( devSpinner.getSelectedItemPosition() );
           setAliasForDeviceIfNotExist( device, deviceName );
+          //
+          // noch schnell checken, ob das Gerät gepaart ist
+          // TODO:
+          // BluetoothDevice remoteDevice = FragmentCommonActivity.mBtAdapter.getRemoteDevice( device );
+          // if( remoteDevice != null )
+          // {
+          // if( remoteDevice.getBondState() == BluetoothDevice.BOND_NONE )
+          // {
+          // // remoteDevive.setPin()
+          // }
+          // }
           ( ( FragmentCommonActivity )runningActivity ).doConnectBtDevice( device );
           break;
         case ProjectConst.CONN_STATE_CONNECTING:
@@ -561,8 +577,13 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       }
     }
     //
+    // es war ein anderer Button?
+    //
     else if( cView instanceof Button )
     {
+      //
+      // es war der Geräte-Such-Button
+      //
       if( ( Button )cView == discoverButton )
       {
         Log.i( TAG, "onClick: start discovering for BT Devices..." );
@@ -576,6 +597,9 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         startDiscoverBt();
         return;
       }
+      //
+      // es war der EDIT-Alias Button
+      //
       else if( ( Button )cView == aliasEditButton )
       {
         Log.i( TAG, "onClick: start edit current alias..." );
