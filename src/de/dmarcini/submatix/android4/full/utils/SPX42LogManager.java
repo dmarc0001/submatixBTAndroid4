@@ -98,6 +98,38 @@ public class SPX42LogManager extends SPX42AliasManager
 
   /**
    * 
+   * Daten für einen Logeintrag (Tauchgang) löschen
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
+   * 
+   * Stand: 22.01.2014
+   * 
+   * @param dbId
+   * @return hat es geklappt?
+   */
+  public boolean deleteDataForDevice( int dbId )
+  {
+    //
+    // Punkt 1: Datei finden, die dem Gerät und dem Tauchgang gehören und löschen
+    //
+    File dataFile = getDatafileForDbId( dbId );
+    if( dataFile == null )
+    {
+      Log.e( TAG, "can't find the XML-file for dive!" );
+    }
+    else
+    {
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "deleteDataForDevice: File: <" + dataFile.getName() + ">..." );
+      dataFile.delete();
+    }
+    //
+    // Punkt 2: Eintrag u sder Datenbank löschen
+    //
+    return( deleteOneDiveLog( dbId ) );
+  }
+
+  /**
+   * 
    * Lösche alle Datern eines Gerätes aus der Datenbank
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
@@ -118,6 +150,73 @@ public class SPX42LogManager extends SPX42AliasManager
     count = dBase.delete( ProjectConst.H_TABLE_DIVELOGS, String.format( "%s=%d", ProjectConst.H_DEVICEID, deviceId ), null );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "deleteDivesForDevice: <" + count + "> sets deleted: OK" );
     return;
+  }
+
+  /**
+   * 
+   * Lösche einen Logeintrag aus der Datenbank
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
+   * 
+   * Stand: 22.01.2014
+   * 
+   * @param dbId
+   * @return
+   */
+  private boolean deleteOneDiveLog( int dbId )
+  {
+    int count = 0;
+    //
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "deleteOneDiveLog..." );
+    if( dbId < 0 )
+    {
+      return( false );
+    }
+    count = dBase.delete( ProjectConst.H_TABLE_DIVELOGS, String.format( "%s=%d", ProjectConst.H_DIVEID, dbId ), null );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "deleteOneDiveLog: <" + count + "> sets deleted: OK" );
+    return( true );
+  }
+
+  /**
+   * 
+   * Suche die XML-Datei für einen Logeintrag
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
+   * 
+   * Stand: 22.01.2014
+   * 
+   * @param dbId
+   * @return Die Datei oder null
+   */
+  private File getDatafileForDbId( int dbId )
+  {
+    String sql;
+    Cursor cu;
+    File dataFile = null;
+    //
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getDatafileForDbId..." );
+    if( dbId < 0 )
+    {
+      return( dataFile );
+    }
+    // @formatter:off
+    sql = String.format( Locale.ENGLISH, "select %s from %s where %s=%d;", 
+            ProjectConst.H_FILEONMOBILE, 
+            ProjectConst.H_TABLE_DIVELOGS,
+            ProjectConst.H_DIVEID,
+            dbId);
+    // @formatter:on
+    cu = dBase.rawQuery( sql, null );
+    if( cu.moveToFirst() )
+    {
+      dataFile = new File( cu.getString( 0 ) );
+    }
+    //
+    // Cursor schliessen
+    //
+    cu.close();
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getDatafileForDbId: OK" );
+    return( dataFile );
   }
 
   /**
