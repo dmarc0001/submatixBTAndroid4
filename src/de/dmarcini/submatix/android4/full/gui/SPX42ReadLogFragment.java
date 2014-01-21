@@ -667,7 +667,8 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   @Override
   public void onItemClick( AdapterView<?> parent, View clickedView, int position, long id )
   {
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Click on ListView! Pos: <" + position + ">" );
+    if( !showAllLogEntrys ) position--;
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Click on ListView! Pos: <" + position + "> Nr SPX: <" + logListAdapter.getNumberOnSPX( position ) + ">" );
     // invertiere die Markierung im Adapter
     logListAdapter.setMarked( position, !logListAdapter.getMarked( position ) );
     // mache die Markierung auch im View (das wird ja sonst nicht automatisch aktualisiert)
