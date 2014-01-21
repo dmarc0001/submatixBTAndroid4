@@ -72,6 +72,7 @@
     <string name="dialog_sqlite_error_header">Database ERROR</string>
     <string name="dialog_sqlite_nodatabase_error">no database found or\ndatabase can not open/create!\nprogram must abort!</string>
     <string name="dialog_device_select_title">Select Device for exports</string>
+    <string name="dialog_device_select_button">Select</string>
     <string name="dialog_not_mail_exist_header">No Mail in prefs</string>
     <string name="dialog_not_mail_exist">Sorry, not Mail in preferences,\nPlease enter valid mailaddress\nin program preferences!</string>
     <string name="dialog_not_selected_items_header">nothing selected</string>    
@@ -87,6 +88,7 @@
     <string name="dialog_delete_are_you_sure_header">are you sure?</string>
     <string name="dialog_delete_device">delete ALL data from device\n\"%s\"</string>
     <string name="dialog_delete_selected_logs">delete the selected Logs</string>
+    <string name="dialog_delete_button">DELETE!</string>
     
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title" formatted="false">Searching BT Devices..</string>

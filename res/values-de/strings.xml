@@ -72,6 +72,7 @@
     <string name="dialog_sqlite_error_header">Datenbsank FEHLER</string>
     <string name="dialog_sqlite_nodatabase_error">Keine Datenbank gefunden oder\nDatenbank kann nicht erzeugt/geöffnet werden.\nProgramm muss beendet werden!</string>
     <string name="dialog_device_select_title">Gerät für Exporte wählen</string>
+    <string name="dialog_device_select_button">Auswahl</string>
     <string name="dialog_not_mail_exist_header">Keine Mailadressse</string>
     <string name="dialog_not_mail_exist">Entschuldige, es ist keine Mail\nin den Einstellungen eingetragen!\nEintragung in den Programmeinstellungen.</string>
     <string name="dialog_not_selected_items_header">Nichts markiert</string>    
@@ -87,6 +88,7 @@
     <string name="dialog_delete_are_you_sure_header">SICHER?</string>
     <string name="dialog_delete_device">lösche ALLE Daten für Gerät\n\"%s\"</string>
     <string name="dialog_delete_selected_logs">lösche alle markierten Protokolle</string>
+    <string name="dialog_delete_button">LÖSCHEN!</string>
     
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title" formatted="false">Suche BT Geräte...</string>
