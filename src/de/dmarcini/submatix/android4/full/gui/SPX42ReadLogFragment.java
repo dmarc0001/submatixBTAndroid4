@@ -85,7 +85,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
    * 
    * @param msg
    */
-  private void computeDirentry( BtServiceMessage msg )
+  private void msgComputeDirentry( BtServiceMessage msg )
   {
     // Fields
     // 0 => Nummer
@@ -274,7 +274,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
       // Verzeichniseintrag gefunden
       // ################################################################
       case ProjectConst.MESSAGE_DIRENTRY_READ:
-        computeDirentry( msg );
+        msgComputeDirentry( msg );
         break;
       // ################################################################
       // Verzeichnis zuende
@@ -667,6 +667,9 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   @Override
   public void onItemClick( AdapterView<?> parent, View clickedView, int position, long id )
   {
+    //
+    // wenn nicht alle Einträge angezeigt werden, ist ein View extra oben und unten. Daher Listenindex korrigieren
+    //
     if( !showAllLogEntrys ) position--;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Click on ListView! Pos: <" + position + "> Nr SPX: <" + logListAdapter.getNumberOnSPX( position ) + ">" );
     // invertiere die Markierung im Adapter

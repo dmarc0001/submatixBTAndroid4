@@ -76,6 +76,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   protected static SPX42Config                spxConfig          = new SPX42Config();                                   // Da werden SPX-Spezifische Sachen gespeichert
   protected static BluetoothAdapter           mBtAdapter         = null;
   protected static SPX42AliasManager          aliasManager       = null;
+  private static Vector<String[]>             dirEntryCache      = new Vector<String[]>();
+  private static boolean                      dirCacheIsFilling  = true;
+  private static String[]                     deviceUnis         = null;
   private BlueThoothComService                mService           = null;
   private LocalBinder                         binder             = null;
   private final ArrayList<IBtServiceListener> serviceListener    = new ArrayList<IBtServiceListener>();
@@ -216,7 +219,16 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   {
     if( mService != null )
     {
-      mService.aksForUnitsFromSPX42();
+      if( deviceUnis != null )
+      {
+        if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "read units from cache..." );
+        BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_UNITS_READ, deviceUnis );
+        mHandler.obtainMessage( ProjectConst.MESSAGE_UNITS_READ, msg ).sendToTarget();
+      }
+      else
+      {
+        mService.aksForUnitsFromSPX42();
+      }
     }
   }
 
@@ -372,9 +384,30 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    */
   public void askForLogDirectoryFromSPX()
   {
+    BtServiceMessage msg;
+    //
     if( mService != null )
     {
-      mService.askForLogDirectoryFromSPX();
+      // der SPX ist verbunden, wenn Daten im Cache sind
+      // und das Flag sagt, der Cach muss gefüllt werden
+      if( dirEntryCache.isEmpty() && dirCacheIsFilling )
+      {
+        mService.askForLogDirectoryFromSPX();
+      }
+      else
+      {
+        if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "read directory from cache..." );
+        // hole Daten aus dem Cache
+        // und sende diese dann in die Queue
+        Iterator<String[]> it = dirEntryCache.iterator();
+        while( it.hasNext() )
+        {
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_DIRENTRY_READ, it.next() );
+          mHandler.obtainMessage( ProjectConst.MESSAGE_DIRENTRY_READ, msg ).sendToTarget();
+        }
+        msg = new BtServiceMessage( ProjectConst.MESSAGE_DIRENTRY_END );
+        mHandler.obtainMessage( ProjectConst.MESSAGE_DIRENTRY_END, msg ).sendToTarget();
+      }
     }
   }
 
@@ -494,6 +527,10 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     {
       mService.connect( device );
     }
+    // Cache für Directory leeren!
+    dirEntryCache.clear();
+    dirCacheIsFilling = true;
+    deviceUnis = null;
   }
 
   /**
@@ -512,6 +549,10 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     {
       mService.disconnect();
     }
+    // Cache für Directory leeren!
+    dirEntryCache.clear();
+    dirCacheIsFilling = true;
+    deviceUnis = null;
   }
 
   /**
@@ -706,11 +747,65 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
         msgReciveLicenseState( smsg );
         break;
       // ################################################################
+      // Units vom SPX emnpfangen
+      // ################################################################
+      case ProjectConst.MESSAGE_UNITS_READ:
+        if( deviceUnis == null )
+        {
+          if( smsg.getContainer() instanceof String[] )
+          {
+            // auch cachen...
+            deviceUnis = ( String[] )smsg.getContainer();
+          }
+        }
+        break;
+      // ################################################################
+      // Verzeichniseintrag gefunden
+      // ################################################################
+      case ProjectConst.MESSAGE_DIRENTRY_READ:
+        if( dirCacheIsFilling )
+        {
+          // nur, wenn die Daten vom SPX kommen
+          msgComputeDirentry( smsg );
+        }
+        break;
+      // ################################################################
+      // Verzeichnis zuende
+      // ################################################################
+      case ProjectConst.MESSAGE_DIRENTRY_END:
+        dirCacheIsFilling = false;
+        break;
+      // ################################################################
       // Sonst....
       // ################################################################
       default:
         if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "unknown message with id <" + smsg.getId() + "> recived!" );
     }
+  }
+
+  /**
+   * 
+   * Wenn die Daten vom SPX kommen auch erst einmal cachen, die ändern sich nicht während der verbunden ist
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 21.01.2014
+   * 
+   * @param smsg
+   */
+  private void msgComputeDirentry( BtServiceMessage smsg )
+  {
+    //
+    // ist das Objekt ein StringArray?
+    //
+    if( !( smsg.getContainer() instanceof String[] ) )
+    {
+      return;
+    }
+    //
+    // Ein Stringarray kommt in den DIR-Cache
+    //
+    dirEntryCache.add( ( String[] )smsg.getContainer() );
   }
 
   /**
@@ -767,6 +862,10 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   public void msgConnectError( BtServiceMessage msg )
   {
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "connection error (device not online?)" );
+    // Cache für Directory leeren!
+    dirEntryCache.clear();
+    dirCacheIsFilling = true;
+    deviceUnis = null;
   }
 
   /**
@@ -803,6 +902,10 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   {
     Log.v( TAG, "disconnected..." );
     spxConfig.clear();
+    // Cache für Directory leeren!
+    dirEntryCache.clear();
+    dirCacheIsFilling = true;
+    deviceUnis = null;
   }
 
   @Override
