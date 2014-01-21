@@ -78,6 +78,10 @@
     <string name="dialog_not_selected_items">noting selelected to export!</string>
     <string name="dialog_no_uddfdir_header">not UDDF-directory</string>
     <string name="dialog_no_uddfdir">there ist not an directory with UDDF-Files\nor the directory is not readable.</string>
+    <string name="dialog_no_device_selected_header">select device</string>
+    <string name="dialog_no_device_selected">there is not an device selected</string>
+    <string name="dialog_not_log_entrys_header">log entrys</string>
+    <string name="dialog_not_log_entrys">there are not logs in \ndatabase for this device</string>
     
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title" formatted="false">Searching BT Devices..</string>

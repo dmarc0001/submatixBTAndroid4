@@ -78,6 +78,10 @@
     <string name="dialog_not_selected_items">Keine Einträge zum exportieren markiert!</string>
     <string name="dialog_no_uddfdir_header">Kein UDDF-Verzeichnis</string>
     <string name="dialog_no_uddfdir">Es existiert kein Verzeichnis mit UDDF-Dateien\noder das Verzeichnis ist nicht lesbar.</string>
+    <string name="dialog_no_device_selected_header">Wähle Gerät</string>
+    <string name="dialog_no_device_selected">Es wurde kein Gerät ausgewählt</string>
+    <string name="dialog_not_log_entrys_header">Protokolleinträge</string>
+    <string name="dialog_not_log_entrys">Es gibt keine Protokolle in der Datenbank\nfür dieses Gerät</string>
     
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title" formatted="false">Suche BT Geräte...</string>

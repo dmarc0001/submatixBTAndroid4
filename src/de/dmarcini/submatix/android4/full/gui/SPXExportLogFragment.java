@@ -329,15 +329,18 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "read divelist for dbId: <" + diveId + ">..." );
     diveList = logManager.getDiveListForDevice( diveId, res, true );
-    Iterator<ReadLogItemObj> it = diveList.iterator();
-    //
-    // Die Liste in den Adapter implementieren
-    //
-    while( it.hasNext() )
+    if( diveList != null && diveList.size() > 0 )
     {
-      ReadLogItemObj rlo = it.next();
-      // Eintrag einbauen
-      logListAdapter.add( rlo );
+      Iterator<ReadLogItemObj> it = diveList.iterator();
+      //
+      // Die Liste in den Adapter implementieren
+      //
+      while( it.hasNext() )
+      {
+        ReadLogItemObj rlo = it.next();
+        // Eintrag einbauen
+        logListAdapter.add( rlo );
+      }
     }
     return( true );
   }
@@ -830,6 +833,24 @@ public class SPXExportLogFragment extends Fragment implements IBtServiceListener
       if( selectedDeviceId > 0 )
       {
         fillListAdapter( selectedDeviceId );
+      }
+      else
+      {
+        // Das wird nix, kein Gerät ausgewählt
+        if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "no device selected -> note to user" );
+        UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_no_device_selected_header ), runningActivity
+                .getResources().getString( R.string.dialog_no_device_selected ) );
+        uad.show( getFragmentManager(), "noSelectedDevice" );
+        return;
+      }
+      if( mainListView.getAdapter().isEmpty() )
+      {
+        // Das wird auch nix, Keine Einträge in der Datenbank
+        if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "no logs foir device -> note to user" );
+        UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_not_log_entrys_header ), runningActivity
+                .getResources().getString( R.string.dialog_not_log_entrys ) );
+        uad.show( getFragmentManager(), "noLogsForDevice" );
+        return;
       }
     }
     else
