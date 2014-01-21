@@ -30,4 +30,6 @@
   <color name="exportDeviceButton.textColor">#1B9617</color>
   <color name="exportLogsButton.textColor">#0554FF</color>
   <color name="exportDeleteButton.textColor">#E60000</color>
+  <color name="areYopuSureDialogHeaderColor">#CC0000</color>
+  <color name="areYourSureDialogMsgColor">#FF3300</color>
 </resources>
