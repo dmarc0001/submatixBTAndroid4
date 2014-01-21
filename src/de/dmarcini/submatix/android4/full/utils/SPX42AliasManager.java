@@ -107,7 +107,7 @@ public class SPX42AliasManager
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
    * 
-   * Stand: 28.08.2013
+   * Stand: 21.01.2014
    * 
    * @return Liste mit Deviceids
    */
@@ -125,12 +125,13 @@ public class SPX42AliasManager
     {
       if( cu.moveToFirst() )
       {
-        lst.add( cu.getInt( 0 ) );
-        while( cu.moveToNext() )
+        do
         {
           lst.add( cu.getInt( 0 ) );
         }
+        while( cu.moveToNext() );
       }
+      cu.close();
       Log.d( TAG, "read <" + lst.size() + "> entrys..." );
       return( lst );
     }
@@ -138,6 +139,47 @@ public class SPX42AliasManager
     {
       Log.e( TAG, "Error while getDeviceIdList: <" + ex.getLocalizedMessage() + ">" );
       return( null );
+    }
+  }
+
+  /**
+   * 
+   * Existiert ein Device mit der ID
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
+   * 
+   * Stand: 21.01.2014
+   * 
+   * @param deviceId
+   * @return Existiert das Gerät in der Datenbank?
+   */
+  public boolean existDeviceId( int deviceId )
+  {
+    String sql;
+    Cursor cu;
+    boolean retVal = false;
+    //
+    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getDeviceIdList..." );
+    sql = String.format( "select count(*) from %s where %s=%d;", ProjectConst.A_TABLE_ALIASES, ProjectConst.A_DEVICEID, deviceId );
+    cu = dBase.rawQuery( sql, null );
+    //
+    try
+    {
+      if( cu.moveToFirst() )
+      {
+        if( cu.getInt( 0 ) > 0 )
+        {
+          retVal = true;
+        }
+      }
+      cu.close();
+      Log.d( TAG, "exist Devive <" + deviceId + "> : " + retVal );
+      return( retVal );
+    }
+    catch( SQLException ex )
+    {
+      Log.e( TAG, "Error while existDeviceId: <" + ex.getLocalizedMessage() + ">" );
+      return( false );
     }
   }
 
@@ -166,13 +208,14 @@ public class SPX42AliasManager
     {
       if( cu.moveToFirst() )
       {
-        devList.add( new Pair<Integer, String>( cu.getInt( 0 ), cu.getString( 1 ) ) );
-        while( cu.moveToNext() )
+        do
         {
           devList.add( new Pair<Integer, String>( cu.getInt( 0 ), cu.getString( 1 ) ) );
         }
+        while( cu.moveToNext() );
       }
       Log.d( TAG, "getDeviceNameIdList: read <" + devList.size() + "> entrys..." );
+      cu.close();
       return( devList );
     }
     catch( SQLException ex )
