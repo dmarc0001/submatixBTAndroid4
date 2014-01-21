@@ -1,6 +1,8 @@
 ﻿package de.dmarcini.submatix.android4.full.utils;
 
 import java.io.File;
+import java.util.Iterator;
+import java.util.Locale;
 import java.util.Vector;
 
 import org.joda.time.DateTime;
@@ -32,7 +34,7 @@ public class SPX42LogManager extends SPX42AliasManager
 
   /**
    * 
-   * Konstriuktor
+   * Konstruktor
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * 
@@ -48,76 +50,118 @@ public class SPX42LogManager extends SPX42AliasManager
 
   /**
    * 
-   * Ist dieses Protokoll schon in der Datenbank enthalten?
+   * Lösche ALLE Daten eines Gerätes, einschliesslich Alias
    * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
    * 
+   * Stand: 21.01.2014
    * 
-   * Stand: 09.08.2013
-   * 
-   * @param devSerial
-   * @param fileOnSPX
-   * @return Schon da oder nicht
+   * @param deviceId
+   * @return Erfolgreich?
    */
-  public boolean isLogInDatabase( final String devSerial, final String fileOnSPX )
+  public boolean deleteAllDataForDevice( int deviceId )
   {
-    String sql;
-    int count = 0;
-    Cursor cu;
+    Vector<File> dataFiles;
     //
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "isLogInDatabase..." );
-    sql = String.format( "select count(*) from %s where %s like '%s' and %s like '%s';", ProjectConst.H_TABLE_DIVELOGS, ProjectConst.H_DEVICESERIAL, devSerial,
-            ProjectConst.H_FILEONSPX, fileOnSPX );
-    cu = dBase.rawQuery( sql, null );
-    // formatter:on
-    if( cu.moveToFirst() )
+    // Punkt 1: gibt es das Gerät in der DB?
+    //
+    if( !existDeviceId( deviceId ) ) return( false );
+    //
+    // Punkt 2: Alle Dateien finden, die dem Gerät gehören
+    //
+    dataFiles = getDatafilesForDevice( deviceId );
+    if( !dataFiles.isEmpty() )
     {
-      count = cu.getInt( 0 );
       //
-      // Cursor schliessen
+      // entferne die Datendateien aus dem Verzeichnis
       //
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "isLogInDatabase: found <" + count + ">" );
+      Iterator<File> it = dataFiles.iterator();
+      while( it.hasNext() )
+      {
+        File toDelFile = it.next();
+        toDelFile.delete();
+      }
     }
-    cu.close();
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "isLogInDatabase... datasets is <" + count + ">" );
-    return( ( count == 0 ) ? false : true );
+    dataFiles.clear();
+    dataFiles = null;
+    //
+    // Punkt 3: Daten in der Datentabelle löschen
+    //
+    deleteDivesForDevice( deviceId );
+    //
+    // Punkt 4: Alias löschen
+    //
+    return( true );
   }
 
   /**
    * 
-   * Den Tauchgang nach erfolgter Erstellung der XML-Datei in die DB eintragen
+   * Lösche alle Datern eines Gerätes aus der Datenbank
    * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
    * 
+   * Stand: 21.01.2014
    * 
-   * Stand: 13.08.2013
-   * 
-   * @param diveHeader
-   * @return Hat geklappt oder nicht
+   * @param deviceId
    */
-  public boolean saveDive( SPX42DiveHeadData diveHeader )
+  public void deleteDivesForDevice( int deviceId )
   {
-    ContentValues values;
+    int count = 0;
     //
-    // nein, das existiert noch nicht
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "deleteDivesForDevice..." );
+    if( deviceId < 0 )
+    {
+      return;
+    }
+    count = dBase.delete( ProjectConst.H_TABLE_DIVELOGS, String.format( "%s=%d", ProjectConst.H_DEVICEID, deviceId ), null );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "deleteDivesForDevice: <" + count + "> sets deleted: OK" );
+    return;
+  }
+
+  /**
+   * 
+   * Gib eine Liste mit den Datendateien zurück
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
+   * 
+   * Stand: 21.01.2014
+   * 
+   * @param deviceId
+   * @return Liste mit Datendateien
+   */
+  public Vector<File> getDatafilesForDevice( int deviceId )
+  {
+    String sql;
+    Cursor cu;
+    Vector<File> dataFiles = new Vector<File>();
     //
-    values = new ContentValues();
-    values.put( ProjectConst.H_FILEONMOBILE, diveHeader.xmlFile.getAbsolutePath() );
-    values.put( ProjectConst.H_DEVICEID, diveHeader.deviceId );
-    values.put( ProjectConst.H_DIVENUMBERONSPX, diveHeader.diveNumberOnSPX );
-    values.put( ProjectConst.H_DEVICESERIAL, diveHeader.deviceSerialNumber );
-    values.put( ProjectConst.H_STARTTIME, diveHeader.startTime ); // TODO: prüfe, ob das so hinkommt
-    values.put( ProjectConst.H_FILEONSPX, diveHeader.fileNameOnSpx );
-    values.put( ProjectConst.H_LOWTEMP, diveHeader.lowestTemp );
-    values.put( ProjectConst.H_MAXDEPTH, diveHeader.maxDepth );
-    values.put( ProjectConst.H_SAMPLES, diveHeader.countSamples );
-    values.put( ProjectConst.H_UNITS, diveHeader.units );
-    values.put( ProjectConst.H_GEO_LON, diveHeader.longgitude );
-    values.put( ProjectConst.H_GEO_LAT, diveHeader.latitude );
-    values.put( ProjectConst.H_FIRSTTEMP, diveHeader.airTemp );
-    values.put( ProjectConst.H_DIVELENGTH, diveHeader.diveLength );
-    values.put( ProjectConst.H_HADSEND, 0 );
-    return( -1 < dBase.insertOrThrow( ProjectConst.H_TABLE_DIVELOGS, null, values ) );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getDatafilesForDevice..." );
+    if( deviceId < 0 )
+    {
+      return( dataFiles );
+    }
+    // @formatter:off
+    sql = String.format( Locale.ENGLISH, "select %s from %s where %s=%d;", 
+            ProjectConst.H_DEVICEID, 
+            ProjectConst.H_TABLE_DIVELOGS,
+            ProjectConst.H_DEVICEID,
+            deviceId);
+    // @formatter:on
+    cu = dBase.rawQuery( sql, null );
+    if( cu.moveToFirst() )
+    {
+      do
+      {
+        dataFiles.add( new File( cu.getString( 0 ) ) );
+      }
+      while( cu.moveToNext() );
+    }
+    //
+    // Cursor schliessen
+    //
+    cu.close();
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getDatafilesForDevice: OK" );
+    return( dataFiles );
   }
 
   /**
@@ -260,7 +304,7 @@ public class SPX42LogManager extends SPX42AliasManager
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getDiveListForDevice had <" + cu.getCount() + "> results." );
     if( cu.moveToFirst() )
     {
-      while( cu.moveToNext() )
+      do
       {
         long startTm = cu.getLong( 5 );
         DateTime startDateTime = new DateTime( startTm );
@@ -293,6 +337,7 @@ public class SPX42LogManager extends SPX42AliasManager
         }
         diveHeadList.add( rlo );
       }
+      while( cu.moveToNext() );
       //
       // Cursor schliessen
       //
@@ -305,46 +350,75 @@ public class SPX42LogManager extends SPX42AliasManager
 
   /**
    * 
-   * Gib den Geräatalias für eine GeräteID zurück
+   * Ist dieses Protokoll schon in der Datenbank enthalten?
    * 
-   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
-   * Stand: 10.01.2014
    * 
-   * @param _deviceId
-   * @return
+   * Stand: 09.08.2013
+   * 
+   * @param devSerial
+   * @param fileOnSPX
+   * @return Schon da oder nicht
    */
-  public String getAliasForId( int _deviceId )
+  public boolean isLogInDatabase( final String devSerial, final String fileOnSPX )
   {
     String sql;
+    int count = 0;
     Cursor cu;
     //
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getAliasForId..." );
-    if( _deviceId < 0 )
-    {
-      return( null );
-    }
-    // @formatter:off
-    sql = String.format( "select %s from %s where %s=%d;", 
-            ProjectConst.A_ALIAS, 
-            ProjectConst.A_TABLE_ALIASES,
-            ProjectConst.A_DEVICEID,
-            _deviceId);
-    // @formatter:on
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "isLogInDatabase..." );
+    sql = String.format( Locale.ENGLISH, "select count(*) from %s where %s like '%s' and %s like '%s';", ProjectConst.H_TABLE_DIVELOGS, ProjectConst.H_DEVICESERIAL, devSerial,
+            ProjectConst.H_FILEONSPX, fileOnSPX );
     cu = dBase.rawQuery( sql, null );
+    // formatter:on
     if( cu.moveToFirst() )
     {
-      sql = cu.getString( 0 );
+      count = cu.getInt( 0 );
+      //
+      // Cursor schliessen
+      //
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "isLogInDatabase: found <" + count + ">" );
     }
-    else
-    {
-      sql = null;
-    }
-    //
-    // Cursor schliessen
-    //
     cu.close();
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getDiveListForDevice: OK" );
-    return( sql );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "isLogInDatabase... datasets is <" + count + ">" );
+    return( ( count == 0 ) ? false : true );
+  }
+
+  /**
+   * 
+   * Den Tauchgang nach erfolgter Erstellung der XML-Datei in die DB eintragen
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
+   * 
+   * 
+   * Stand: 13.08.2013
+   * 
+   * @param diveHeader
+   * @return Hat geklappt oder nicht
+   */
+  public boolean saveDive( SPX42DiveHeadData diveHeader )
+  {
+    ContentValues values;
+    //
+    // nein, das existiert noch nicht
+    //
+    values = new ContentValues();
+    values.put( ProjectConst.H_FILEONMOBILE, diveHeader.xmlFile.getAbsolutePath() );
+    values.put( ProjectConst.H_DEVICEID, diveHeader.deviceId );
+    values.put( ProjectConst.H_DIVENUMBERONSPX, diveHeader.diveNumberOnSPX );
+    values.put( ProjectConst.H_DEVICESERIAL, diveHeader.deviceSerialNumber );
+    values.put( ProjectConst.H_STARTTIME, diveHeader.startTime ); // TODO: prüfe, ob das so hinkommt
+    values.put( ProjectConst.H_FILEONSPX, diveHeader.fileNameOnSpx );
+    values.put( ProjectConst.H_LOWTEMP, diveHeader.lowestTemp );
+    values.put( ProjectConst.H_MAXDEPTH, diveHeader.maxDepth );
+    values.put( ProjectConst.H_SAMPLES, diveHeader.countSamples );
+    values.put( ProjectConst.H_UNITS, diveHeader.units );
+    values.put( ProjectConst.H_GEO_LON, diveHeader.longgitude );
+    values.put( ProjectConst.H_GEO_LAT, diveHeader.latitude );
+    values.put( ProjectConst.H_FIRSTTEMP, diveHeader.airTemp );
+    values.put( ProjectConst.H_DIVELENGTH, diveHeader.diveLength );
+    values.put( ProjectConst.H_HADSEND, 0 );
+    return( -1 < dBase.insertOrThrow( ProjectConst.H_TABLE_DIVELOGS, null, values ) );
   }
 }

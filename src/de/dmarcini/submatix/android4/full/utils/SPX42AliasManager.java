@@ -1,5 +1,6 @@
 ﻿package de.dmarcini.submatix.android4.full.utils;
 
+import java.util.Locale;
 import java.util.Vector;
 
 import android.content.ContentValues;
@@ -106,7 +107,7 @@ public class SPX42AliasManager
     boolean retVal = false;
     //
     if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getDeviceIdList..." );
-    sql = String.format( "select count(*) from %s where %s=%d;", ProjectConst.A_TABLE_ALIASES, ProjectConst.A_DEVICEID, deviceId );
+    sql = String.format( Locale.ENGLISH, "select count(*) from %s where %s=%d;", ProjectConst.A_TABLE_ALIASES, ProjectConst.A_DEVICEID, deviceId );
     cu = dBase.rawQuery( sql, null );
     //
     try
@@ -127,6 +128,51 @@ public class SPX42AliasManager
       Log.e( TAG, "Error while existDeviceId: <" + ex.getLocalizedMessage() + ">" );
       return( false );
     }
+  }
+
+  /**
+   * 
+   * Gib den Gerätelias für eine GeräteID zurück
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
+   * 
+   * Stand: 10.01.2014
+   * 
+   * @param _deviceId
+   * @return Alias für Geräteid
+   */
+  public String getAliasForId( int _deviceId )
+  {
+    String sql;
+    Cursor cu;
+    //
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getAliasForId..." );
+    if( _deviceId < 0 )
+    {
+      return( null );
+    }
+    // @formatter:off
+    sql = String.format( Locale.ENGLISH, "select %s from %s where %s=%d;", 
+            ProjectConst.A_ALIAS, 
+            ProjectConst.A_TABLE_ALIASES,
+            ProjectConst.A_DEVICEID,
+            _deviceId);
+    // @formatter:on
+    cu = dBase.rawQuery( sql, null );
+    if( cu.moveToFirst() )
+    {
+      sql = cu.getString( 0 );
+    }
+    else
+    {
+      sql = null;
+    }
+    //
+    // Cursor schliessen
+    //
+    cu.close();
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getDiveListForDevice: OK" );
+    return( sql );
   }
 
   /**
@@ -342,7 +388,6 @@ public class SPX42AliasManager
     String sql;
     Cursor cu;
     ContentValues values;
-    int retVal = -1;
     //
     if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "setAliasForMac..." );
     sql = String.format( "select %s from %s where %s like '%s';", ProjectConst.A_ALIAS, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_MAC, mac );
