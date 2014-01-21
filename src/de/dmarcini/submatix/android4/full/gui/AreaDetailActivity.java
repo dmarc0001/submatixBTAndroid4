@@ -150,7 +150,7 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
             if( !BuildVersion.isLightVersion )
             {
               Log.i( TAG, "onCreate: start export Page..." );
-              currFragment = ( new SPXExportLogFragment() );
+              currFragment = ( new SPX42ExportLogFragment() );
               setContentView( R.layout.fragment_export_log );
               getActionBar().setTitle( R.string.export_header );
               getActionBar().setLogo( mItem.resIdOffline );

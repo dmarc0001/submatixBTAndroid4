@@ -72,9 +72,9 @@ import de.dmarcini.submatix.android4.full.utils.UDDFFileCreateClass;
  * 
  *         Stand: 10.11.2013
  */
-public class SPXExportLogFragment extends Fragment implements IBtServiceListener, OnItemClickListener, OnClickListener
+public class SPX42ExportLogFragment extends Fragment implements IBtServiceListener, OnItemClickListener, OnClickListener
 {
-  private static final String        TAG                 = SPXExportLogFragment.class.getSimpleName();
+  private static final String        TAG                 = SPX42ExportLogFragment.class.getSimpleName();
   private final Pattern              mailPattern         = Pattern.compile( ProjectConst.PATTERN_EMAIL );
   private Activity                   runningActivity     = null;
   private ListView                   mainListView        = null;

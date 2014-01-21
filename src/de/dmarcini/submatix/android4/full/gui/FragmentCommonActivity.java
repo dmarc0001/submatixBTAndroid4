@@ -1263,7 +1263,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
             break;
           case R.string.progitem_export:
             Log.i( TAG, "onListItemClick: startSPXExportLogFragment..." );
-            SPXExportLogFragment elf = new SPXExportLogFragment();
+            SPX42ExportLogFragment elf = new SPX42ExportLogFragment();
             elf.setArguments( arguments );
             getActionBar().setTitle( R.string.export_header );
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, elf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
@@ -1330,7 +1330,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
           //
           case R.string.progitem_export:
             Log.i( TAG, "onListItemClick: startSPXExportLogFragment..." );
-            SPXExportLogFragment elf = new SPXExportLogFragment();
+            SPX42ExportLogFragment elf = new SPX42ExportLogFragment();
             elf.setArguments( arguments );
             getActionBar().setTitle( R.string.export_header );
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, elf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
