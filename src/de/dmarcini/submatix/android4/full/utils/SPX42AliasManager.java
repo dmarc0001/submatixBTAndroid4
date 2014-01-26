@@ -350,7 +350,7 @@ public class SPX42AliasManager
     //
     if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getIdForDeviceFromSerial..." );
     sql = String.format( "select %s from %s where %s like '%s';", ProjectConst.A_DEVICEID, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_SERIAL, serial );
-    if( ApplicationDEBUG.DEBUG ) Log.e( TAG, "getIdForDeviceFromSerial: sql <" + sql + ">" );
+    // if( ApplicationDEBUG.DEBUG ) Log.e( TAG, "getIdForDeviceFromSerial: sql <" + sql + ">" );
     cu = dBase.rawQuery( sql, null );
     // formatter:on
     if( cu.moveToFirst() )
