@@ -60,6 +60,8 @@
     <string name="toast_connect_disconnected">Verbindung getrennt</string>
     <string name="toast_connect_cant_bt_connect">Kann nicht mit &lt;%s&gt; verbinden</string>
     <string name="toast_export_cant_create_dir">Kann Verzeichnis &lt;%s&gt; nicht anlegen</string>
+    <string name="toast_export_cant_find_xmldata">Kann XML-Datendatei nicht finden</string>
+    <string name="toast_export_internal_xml_error">Interner XML-DOM-Fehler!</string>
     
     <!-- Dialogboxen  -->
     <string name="dialog_sure_exit">"Sind Sie sicher?"</string>

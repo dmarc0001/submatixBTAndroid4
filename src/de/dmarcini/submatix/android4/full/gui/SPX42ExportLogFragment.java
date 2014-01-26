@@ -21,6 +21,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.joda.time.DateTime;
+import org.w3c.dom.DOMException;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -54,6 +55,7 @@ import de.dmarcini.submatix.android4.full.dialogs.SelectDeviceDialogFragment;
 import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
 import de.dmarcini.submatix.android4.full.dialogs.WaitProgressFragmentDialog;
 import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
+import de.dmarcini.submatix.android4.full.exceptions.NoXMLDataFileFoundException;
 import de.dmarcini.submatix.android4.full.exceptions.XMLFileCreatorException;
 import de.dmarcini.submatix.android4.full.utils.CommToast;
 import de.dmarcini.submatix.android4.full.utils.DataSQLHelper;
@@ -159,6 +161,39 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
         {
           // erzeuge eine Klasse zum generieren der Exort-UDDF-Files
           uddfClass = new UDDFFileCreateClass();
+          //
+          // Lass dir einen Namen einfallen
+          //
+          if( rlos.size() == 0 )
+          {
+            Log.e( TAG, "exportThread: not selected divelog in parameters found! ABORT EXPORT!" );
+            mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR ) ).sendToTarget();
+            return;
+          }
+          if( rlos.size() == 1 )
+          {
+            if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "exportThread: export dive %d db-id: %d...", rlos.firstElement().numberOnSPX, rlos.firstElement().dbId ) );
+            DateTime st = new DateTime( rlos.firstElement().startTimeMilis );
+            uddfFileName = String.format( Locale.ENGLISH, "%s%sdive_%07d_at_%04d%02d%02d%02d%02d%02d.uddf", tempDir.getAbsolutePath(), File.separator,
+                    rlos.firstElement().numberOnSPX, st.getYear(), st.getMonthOfYear(), st.getDayOfMonth(), st.getHourOfDay(), st.getMinuteOfHour(), st.getSecondOfMinute() );
+          }
+          else
+          {
+            if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "exportThread: export %d dives ...", rlos.size() ) );
+            DateTime st = new DateTime( rlos.firstElement().startTimeMilis );
+            uddfFileName = String.format( Locale.ENGLISH, "%s%sdive_%07d_at_%04d%02d%02d%02d%02d%02d-plus-%03d.uddf", tempDir.getAbsolutePath(), File.separator,
+                    rlos.firstElement().numberOnSPX, st.getYear(), st.getMonthOfYear(), st.getDayOfMonth(), st.getHourOfDay(), st.getMinuteOfHour(), st.getSecondOfMinute(),
+                    rlos.size() );
+          }
+          //
+          // erzeuge die XML...
+          //
+          if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "create uddf-file: <" + uddfFileName + ">" );
+          uddfClass.createXML( new File( uddfFileName ), mHandler, rlos, isFileZipped );
+          //
+          // melde das Ende an den UI-Thread
+          //
+          mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_LOGEXPORTED, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_LOGEXPORTED ) ).sendToTarget();
         }
         catch( ParserConfigurationException ex )
         {
@@ -188,33 +223,20 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
           mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR ) ).sendToTarget();
           return;
         }
-        //
-        // Lass dir einen Namen einfallen
-        //
-        if( rlos.size() == 1 )
+        catch( DOMException ex )
         {
-          if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "exportThread: export dive %d db-id: %d...", rlos.firstElement().numberOnSPX, rlos.firstElement().dbId ) );
-          DateTime st = new DateTime( rlos.firstElement().startTimeMilis );
-          uddfFileName = String.format( Locale.ENGLISH, "%s%sdive_%07d_at_%04d%02d%02d%02d%02d%02d.uddf", tempDir.getAbsolutePath(), File.separator,
-                  rlos.firstElement().numberOnSPX, st.getYear(), st.getMonthOfYear(), st.getDayOfMonth(), st.getHourOfDay(), st.getMinuteOfHour(), st.getSecondOfMinute() );
+          theToast.showConnectionToastAlert( runningActivity.getResources().getString( R.string.toast_export_internal_xml_error ) );
+          Log.e( TAG, ex.getLocalizedMessage() );
+          mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR ) ).sendToTarget();
+          return;
         }
-        else
+        catch( NoXMLDataFileFoundException ex )
         {
-          if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "exportThread: export %d dives ...", rlos.size() ) );
-          DateTime st = new DateTime( rlos.firstElement().startTimeMilis );
-          uddfFileName = String.format( Locale.ENGLISH, "%s%sdive_%07d_at_%04d%02d%02d%02d%02d%02d-plus-%03d.uddf", tempDir.getAbsolutePath(), File.separator,
-                  rlos.firstElement().numberOnSPX, st.getYear(), st.getMonthOfYear(), st.getDayOfMonth(), st.getHourOfDay(), st.getMinuteOfHour(), st.getSecondOfMinute(),
-                  rlos.size() );
+          theToast.showConnectionToastAlert( runningActivity.getResources().getString( R.string.toast_export_cant_find_xmldata ) );
+          Log.e( TAG, ex.getLocalizedMessage() );
+          mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_EXPORTERR ) ).sendToTarget();
+          return;
         }
-        //
-        // erzeuge die XML...
-        //
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "create uddf-file: <" + uddfFileName + ">" );
-        uddfClass.createXML( new File( uddfFileName ), mHandler, rlos, isFileZipped );
-        //
-        // melde das Ende an den UI-Thread
-        //
-        mHandler.obtainMessage( ProjectConst.MESSAGE_LOCAL_LOGEXPORTED, new BtServiceMessage( ProjectConst.MESSAGE_LOCAL_LOGEXPORTED ) ).sendToTarget();
       }
     };
     exportThread.setName( "log_export_thread" );
