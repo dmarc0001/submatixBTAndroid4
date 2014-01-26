@@ -35,6 +35,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.joda.time.DateTime;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -49,6 +50,7 @@ import android.os.Handler;
 import android.util.Log;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
+import de.dmarcini.submatix.android4.full.exceptions.NoXMLDataFileFoundException;
 import de.dmarcini.submatix.android4.full.exceptions.XMLFileCreatorException;
 
 /**
@@ -139,8 +141,10 @@ public class UDDFFileCreateClass
    * @param zipped
    *          soll die DAtei gezippt werden?
    * @return Die Datei
+   * @throws NoXMLDataFileFoundException
+   * @throws DOMException
    */
-  public File createXML( File file, Handler _mHandler, ReadLogItemObj rlo, boolean zipped )
+  public File createXML( File file, Handler _mHandler, ReadLogItemObj rlo, boolean zipped ) throws DOMException, NoXMLDataFileFoundException
   {
     Vector<ReadLogItemObj> rlos = new Vector<ReadLogItemObj>();
     //
@@ -163,8 +167,10 @@ public class UDDFFileCreateClass
    * @param zipped
    *          Komprimieren?
    * @return true oder false
+   * @throws NoXMLDataFileFoundException
+   * @throws DOMException
    */
-  public File createXML( File file, Handler _mHandler, Vector<ReadLogItemObj> rlos, boolean zipped )
+  public File createXML( File file, Handler _mHandler, Vector<ReadLogItemObj> rlos, boolean zipped ) throws DOMException, NoXMLDataFileFoundException
   {
     Element rootNode = null;
     String msg = null;
@@ -243,8 +249,10 @@ public class UDDFFileCreateClass
    * @param doc
    *          Dokument Objekt
    * @return Teilbam -Rootelement
+   * @throws NoXMLDataFileFoundException
+   * @throws DOMException
    */
-  private Node makeProfilesData( Document doc, Vector<ReadLogItemObj> rlos )
+  private Node makeProfilesData( Document doc, Vector<ReadLogItemObj> rlos ) throws DOMException, NoXMLDataFileFoundException
   {
     Element profileNode;
     int repNumber = 0;
@@ -279,8 +287,10 @@ public class UDDFFileCreateClass
    * @param number
    *          Nummer des Logs in der Datenbank
    * @return Teilbaum Repetitiongroup
+   * @throws NoXMLDataFileFoundException
+   * @throws DOMException
    */
-  private Node makeRepetitiongroup( Document doc, int repNumber, ReadLogItemObj rlo )
+  private Node makeRepetitiongroup( Document doc, int repNumber, ReadLogItemObj rlo ) throws DOMException, NoXMLDataFileFoundException
   {
     Element repNode;
     repNode = doc.createElement( "repetitiongroup" );
@@ -305,8 +315,10 @@ public class UDDFFileCreateClass
    * @return Teilbaum Tauchgang
    * 
    *         TODO Süßwasser/Salzwasser Dichte eintragen (Datenbankfeld einrichten)
+   * @throws NoXMLDataFileFoundException
+   * @throws DOMException
    */
-  private Node makeDiveNode( Document doc, ReadLogItemObj rlo )
+  private Node makeDiveNode( Document doc, ReadLogItemObj rlo ) throws DOMException, NoXMLDataFileFoundException
   {
     Element diveNode, dateNode, yNode, mNode, dNode;
     Element timeNode, hNode, minNode;
@@ -400,8 +412,9 @@ public class UDDFFileCreateClass
    * @param dAttr
    *          Objekt für Tauchgangseigenschaften
    * @return Teilbaum für das Tauchprofil
+   * @throws NoXMLDataFileFoundException
    */
-  private Node makeSamplesForDive( final Document doc, ReadLogItemObj rlo )
+  private Node makeSamplesForDive( final Document doc, ReadLogItemObj rlo ) throws NoXMLDataFileFoundException
   {
     SAXParserFactory spf = null;
     SAXParser sp = null;
@@ -415,6 +428,11 @@ public class UDDFFileCreateClass
     diveSamples = rlo.countSamples;
     if( diveSamples == 0 ) return( sampleNode );
     xmlFile = new File( rlo.fileOnMobile );
+    if( !xmlFile.exists() || !xmlFile.canRead() )
+    {
+      // Da ist weas RICHTIG faul, Ausnahme werfen!
+      throw new NoXMLDataFileFoundException( "Cant found data-XML-File: <" + xmlFile.getFreeSpace() + ">" );
+    }
     // Liste des Tauchganges machen
     Log.v( TAG, "getDiveList()...scan XML..." );
     // versuchen wir es...

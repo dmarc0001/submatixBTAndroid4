@@ -144,9 +144,9 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
    * 
    * @param rlo
    */
-  private void exportLogItemsAsThread( Vector<ReadLogItemObj> lItems, File _tempDir )
+  private void exportLogItemsAsThread( final Vector<ReadLogItemObj> lItems, File _tempDir )
   {
-    final Vector<ReadLogItemObj> rlos = lItems;
+    final Vector<ReadLogItemObj> rlos = new Vector<ReadLogItemObj>( lItems );
     final File tempDir = _tempDir;
     Thread exportThread = null;
     //
@@ -172,14 +172,14 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
           }
           if( rlos.size() == 1 )
           {
-            if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "exportThread: export dive %d db-id: %d...", rlos.firstElement().numberOnSPX, rlos.firstElement().dbId ) );
+            if( ApplicationDEBUG.DEBUG ) Log.i( TAG, String.format( "exportThread: export dive %d db-id: %d...", rlos.firstElement().numberOnSPX, rlos.firstElement().dbId ) );
             DateTime st = new DateTime( rlos.firstElement().startTimeMilis );
             uddfFileName = String.format( Locale.ENGLISH, "%s%sdive_%07d_at_%04d%02d%02d%02d%02d%02d.uddf", tempDir.getAbsolutePath(), File.separator,
                     rlos.firstElement().numberOnSPX, st.getYear(), st.getMonthOfYear(), st.getDayOfMonth(), st.getHourOfDay(), st.getMinuteOfHour(), st.getSecondOfMinute() );
           }
           else
           {
-            if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "exportThread: export %d dives ...", rlos.size() ) );
+            if( ApplicationDEBUG.DEBUG ) Log.i( TAG, String.format( "exportThread: export %d dives ...", rlos.size() ) );
             DateTime st = new DateTime( rlos.firstElement().startTimeMilis );
             uddfFileName = String.format( Locale.ENGLISH, "%s%sdive_%07d_at_%04d%02d%02d%02d%02d%02d-plus-%03d.uddf", tempDir.getAbsolutePath(), File.separator,
                     rlos.firstElement().numberOnSPX, st.getYear(), st.getMonthOfYear(), st.getDayOfMonth(), st.getHourOfDay(), st.getMinuteOfHour(), st.getSecondOfMinute(),
@@ -282,23 +282,13 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
       rlo.tagId = itemIndex;
       lItems.add( rlo );
     }
+    lItems.trimToSize();
     //
     // so, jetzt hab ich die infrage kommenden Einträge
     // jetz starte ich den Thread für den ersten Eintrag
     //
     if( !lItems.isEmpty() )
     {
-      // das erste Element entfernen und exportieren
-      ReadLogItemObj rlo = lItems.remove( 0 );
-      //
-      // die Markierung umkehren
-      //
-      rlo.isMarked = false;
-      int firstPos = mainListView.getFirstVisiblePosition();
-      mainListView.setAdapter( mainListView.getAdapter() );
-      View v = mainListView.getChildAt( rlo.tagId );
-      int top = ( v == null ) ? 0 : v.getTop();
-      mainListView.setSelectionFromTop( firstPos, top );
       //
       // temporaeres Verzeichnis für die zu exportierenden Dateien
       //
@@ -317,7 +307,11 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
           return;
         }
       }
-      openWaitDial( lItems.size(), String.format( "file nr %d", rlo.numberOnSPX ) );
+      //
+      // den warten.Dialog zeigen
+      //
+      openWaitDial( lItems.size(), String.format( "file nr %d", lItems.firstElement().numberOnSPX ) );
+      // export!
       exportLogItemsAsThread( lItems, tempDir );
     }
   }
