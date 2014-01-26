@@ -67,69 +67,56 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
             //
             // SPX42 Konfiguration starten
             //
-            Log.v( TAG, "onCreate: create config PreferenceActivity..." );
+            Log.i( TAG, "onCreate: create config PreferenceActivity..." );
             getActionBar().setTitle( R.string.conf_headline );
             getActionBar().setLogo( mItem.resIdOffline );
-            Log.v( TAG, "onCreate: set layout..." );
             setContentView( R.layout.activity_area_detail );
-            Log.v( TAG, "onCreate: begin replace view..." );
             currFragment = ( new SPX42PreferencesFragment() );
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, currFragment ).commit();
-            Log.v( TAG, "onCreate: begin replace view...OK" );
             break;
           //
           case R.string.progitem_progpref:
             //
-            // Programmconfiguration starten
+            // ProgrammKonfiguration starten
             //
-            Log.v( TAG, "onCreate: create program PreferenceActivity..." );
+            Log.i( TAG, "onCreate: create program PreferenceActivity..." );
             getActionBar().setTitle( R.string.conf_prog_headline );
             getActionBar().setLogo( mItem.resIdOffline );
-            Log.v( TAG, "onCreate: set layout..." );
             setContentView( R.layout.activity_area_detail );
-            Log.v( TAG, "onCreate: begin replace view..." );
             currFragment = ( new ProgramPreferencesFragment() );
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, currFragment ).commit();
-            Log.v( TAG, "onCreate: begin replace view...OK" );
             break;
           //
           case R.string.progitem_gaslist:
             //
             // gaslist edit Activity erzeugen
             //
-            Log.w( TAG, "onCreate: create galsist preference activity..." );
+            Log.i( TAG, "onCreate: create galsist preference activity..." );
             getActionBar().setTitle( R.string.gaslist_headline );
             getActionBar().setLogo( mItem.resIdOffline );
-            Log.v( TAG, "onCreate: set layout..." );
             setContentView( R.layout.activity_area_detail );
-            Log.v( TAG, "onCreate: begin replace view..." );
             currFragment = ( new SPX42GaslistPreferencesFragment() );
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, currFragment ).commit();
-            Log.v( TAG, "onCreate: begin replace view...OK" );
             break;
           //
           case R.string.progitem_about:
-            Log.v( TAG, "onCreate: create ProgramAboutActivity..." );
+            Log.i( TAG, "onCreate: create ProgramAboutActivity..." );
             currFragment = ( new ProgramAboutFragment() );
             setContentView( R.layout.fragment_about );
             getActionBar().setTitle( R.string.about_headline );
             getActionBar().setLogo( mItem.resIdOffline );
-            Log.v( TAG, "onCreate: beginTransaction..." );
             getFragmentManager().beginTransaction().replace( R.id.aboutOuterLayout, currFragment ).commit();
-            Log.v( TAG, "onCreate: add transaction...OK" );
             break;
           //
           case R.string.progitem_logging:
             if( !BuildVersion.isLightVersion )
             {
-              Log.v( TAG, "onCreate: start SPX42ReadLogFragment..." );
+              Log.i( TAG, "onCreate: start SPX42ReadLogFragment..." );
               currFragment = ( new SPX42ReadLogFragment() );
               setContentView( R.layout.fragment_read_log );
               getActionBar().setTitle( R.string.logread_headline );
               getActionBar().setLogo( mItem.resIdOffline );
-              Log.v( TAG, "onCreate: beginTransaction..." );
               getFragmentManager().beginTransaction().replace( R.id.readLogOuterLayout, currFragment ).commit();
-              Log.v( TAG, "onCreate: add transaction...OK" );
             }
             break;
           //
@@ -141,9 +128,7 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
               setContentView( R.layout.fragment_in_progress );
               getActionBar().setTitle( R.string.in_progress_header );
               getActionBar().setLogo( mItem.resIdOffline );
-              Log.v( TAG, "onCreate: beginTransaction..." );
               getFragmentManager().beginTransaction().replace( R.id.inProgressOuterLayout, currFragment ).commit();
-              Log.v( TAG, "onCreate: add transaction...OK" );
             }
             break;
           case R.string.progitem_export:
@@ -154,10 +139,18 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
               setContentView( R.layout.fragment_export_log );
               getActionBar().setTitle( R.string.export_header );
               getActionBar().setLogo( mItem.resIdOffline );
-              Log.v( TAG, "onCreate: beginTransaction..." );
               getFragmentManager().beginTransaction().replace( R.id.exportLogOuterLayout, currFragment ).commit();
-              Log.v( TAG, "onCreate: add transaction...OK" );
             }
+            break;
+          case R.string.progitem_spx_status:
+            //
+            // Eine Statussetie des SPX anzeigen
+            //
+            Log.i( TAG, "onCreate: start spx health page..." );
+            currFragment = ( new SPX42HealthFragment() );
+            getActionBar().setTitle( R.string.health_header );
+            getActionBar().setLogo( mItem.resIdOffline );
+            getFragmentManager().beginTransaction().replace( R.id.healthLogOuterLayout, currFragment ).commit();
             break;
           default:
             Log.w( TAG, "onCreate: Not programitem found for <" + showId + ">" );
@@ -170,9 +163,7 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
             setContentView( R.layout.fragment_connect );
             getActionBar().setTitle( R.string.connect_headline );
             getActionBar().setLogo( mItem.resIdOffline );
-            Log.v( TAG, "onCreate: beginTransaction..." );
             getFragmentManager().beginTransaction().replace( R.id.connectOuterLayout, currFragment ).commit();
-            Log.v( TAG, "onCreate: add transaction...OK" );
         }
       }
     }

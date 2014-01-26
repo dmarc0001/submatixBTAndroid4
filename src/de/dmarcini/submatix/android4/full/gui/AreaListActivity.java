@@ -15,8 +15,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.content.ContentSwitcher;
 import de.dmarcini.submatix.android4.full.content.ContentSwitcher.ProgItem;
 import de.dmarcini.submatix.android4.full.utils.BuildVersion;
@@ -54,6 +54,8 @@ public class AreaListActivity extends FragmentCommonActivity
     //
     ContentSwitcher
             .addItem( new ProgItem( R.string.progitem_connect, R.drawable.bluetooth_icon_bw, R.drawable.bluetooth_icon_color, getString( R.string.progitem_connect ), true ) );
+    ContentSwitcher
+            .addItem( new ProgItem( R.string.progitem_spx_status, R.drawable.spx_health_icon, R.drawable.spx_health_icon, getString( R.string.progitem_spx_status ), false ) );
     ContentSwitcher.addItem( new ProgItem( R.string.progitem_config, R.drawable.spx_toolbox_offline, R.drawable.spx_toolbox_online, getString( R.string.progitem_config ), false ) );
     ContentSwitcher.addItem( new ProgItem( R.string.progitem_gaslist, R.drawable.gasedit_offline, R.drawable.gasedit_online, getString( R.string.progitem_gaslist ), false ) );
     if( !BuildVersion.isLightVersion )

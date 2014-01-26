@@ -1315,7 +1315,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
             //
             // Der Benutzer wählt den Konfigurationseintrag für den SPX
             //
-            Log.v( TAG, "onListItemClick: create SPX42PreferencesFragment..." );
+            Log.i( TAG, "onListItemClick: create SPX42PreferencesFragment..." );
             SPX42PreferencesFragment cFragment = new SPX42PreferencesFragment();
             cFragment.setArguments( arguments );
             getActionBar().setTitle( R.string.conf_headline );
@@ -1326,7 +1326,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
             //
             // der Benutzer will Programmeinstellungen setzen
             //
-            Log.v( TAG, "onListItemClick: set program preferences..." );
+            Log.i( TAG, "onListItemClick: set program preferences..." );
             ProgramPreferencesFragment ppFragment = new ProgramPreferencesFragment();
             ppFragment.setArguments( arguments );
             getActionBar().setTitle( R.string.conf_prog_headline );
@@ -1336,7 +1336,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
             //
             // der Benutzer wählt den Gaslisten Editmode
             //
-            Log.v( TAG, "onListItemClick: set gas preferences..." );
+            Log.i( TAG, "onListItemClick: set gas preferences..." );
             SPX42GaslistPreferencesFragment glFragment = new SPX42GaslistPreferencesFragment();
             glFragment.setArguments( arguments );
             getActionBar().setTitle( R.string.gaslist_headline );
@@ -1344,20 +1344,29 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
             break;
           //
           case R.string.progitem_about:
-            Log.v( TAG, "onListItemClick: startAboutFragment..." );
+            //
+            // Das ÜBER das Programm-Ding
+            //
+            Log.i( TAG, "onListItemClick: startAboutFragment..." );
             ProgramAboutFragment aboutFragment = new ProgramAboutFragment();
             getActionBar().setTitle( R.string.about_headline );
             aboutFragment.setArguments( arguments );
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, aboutFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
             break;
           case R.string.progitem_logging:
-            Log.v( TAG, "onListItemClick: startReadLogFragment..." );
+            //
+            // Log vom SPX-lesen
+            //
+            Log.i( TAG, "onListItemClick: startReadLogFragment..." );
             SPX42ReadLogFragment readLogFragment = ( new SPX42ReadLogFragment() );
             getActionBar().setTitle( R.string.logread_headline );
             readLogFragment.setArguments( arguments );
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, readLogFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
             break;
           case R.string.progitem_loggraph:
+            //
+            // Logs grafisch darstellen
+            //
             Log.i( TAG, "the called page is in progress..." );
             WorkInProgressFragment ipf = new WorkInProgressFragment();
             ipf.setArguments( arguments );
@@ -1365,11 +1374,24 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, ipf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
             break;
           case R.string.progitem_export:
+            //
+            // Logs exportieren
+            //
             Log.i( TAG, "onListItemClick: startSPXExportLogFragment..." );
             SPX42ExportLogFragment elf = new SPX42ExportLogFragment();
             elf.setArguments( arguments );
             getActionBar().setTitle( R.string.export_header );
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, elf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+            break;
+          case R.string.progitem_spx_status:
+            //
+            // Eine Statussetie des SPX anzeigen
+            //
+            Log.i( TAG, "onListItemClick: start spx health page..." );
+            SPX42HealthFragment hef = new SPX42HealthFragment();
+            hef.setArguments( arguments );
+            getActionBar().setTitle( R.string.health_header );
+            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, hef ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
             break;
           default:
             Log.w( TAG, "Not programitem found for <" + mItem.nId + ">" );
