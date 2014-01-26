@@ -76,6 +76,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   protected static SPX42Config                spxConfig          = new SPX42Config();                                   // Da werden SPX-Spezifische Sachen gespeichert
   protected static BluetoothAdapter           mBtAdapter         = null;
   protected static SPX42AliasManager          aliasManager       = null;
+  protected static float                      ackuValue          = 0.0F;
   private static Vector<String[]>             dirEntryCache      = new Vector<String[]>();
   private static boolean                      dirCacheIsFilling  = true;
   private static String[]                     deviceUnis         = null;
@@ -906,17 +907,46 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     dirEntryCache.clear();
     dirCacheIsFilling = true;
     deviceUnis = null;
+    ackuValue = 0.0F;
   }
 
   @Override
   public void msgRecivedAlive( BtServiceMessage msg )
   {
-    // TODO Automatisch generierter Methodenstub
+    String amsg;
+    int val = 0;
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "message alive with acku voltage recived" );
+    //
+    // Ist die Nachricht ein String?
+    //
+    if( msg.getContainer() instanceof String )
+    {
+      //
+      // Ja, ein String, der beinhaltete die aktuelle Ackuspannung
+      //
+      amsg = ( String )msg.getContainer();
+      try
+      {
+        val = Integer.parseInt( amsg, 16 );
+      }
+      catch( NumberFormatException ex )
+      {
+        Log.e( TAG, "Acku-Value not an Number: <" + ex.getLocalizedMessage() + ">" );
+        val = 0;
+      }
+      ackuValue = ( float )( val / 100.0 );
+      // Hauptfenster
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "Acku value: %02.02f", ackuValue ) );
+    }
+    else
+    {
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Acku value was not an STRING" );
+    }
   }
 
   /**
    * 
-   * Nachricht über did Firmwareversion wurde empfangen
+   * Nachricht über die Firmwareversion wurde empfangen
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
    * 
@@ -997,13 +1027,13 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       Log.d( TAG, "SPX License INDIVIDUAL: <" + spxConfig.getCustomEnabled() + ">" );
       switch ( spxConfig.getLicenseState() )
       {
-        case 0:
+        case ProjectConst.SPX_LICENSE_NITROX:
           Log.d( TAG, "SPX MIX License : NITROX" );
           break;
-        case 1:
+        case ProjectConst.SPX_LICENSE_NORMOXICTX:
           Log.d( TAG, "SPX MIX License : NORMOXIX TRIMIX" );
           break;
-        case 2:
+        case ProjectConst.SPX_LICENSE_FULLTX:
           Log.d( TAG, "SPX MIX License : FULL TRIMIX" );
           break;
         default:

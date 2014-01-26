@@ -148,9 +148,10 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
             //
             Log.i( TAG, "onCreate: start spx health page..." );
             currFragment = ( new SPX42HealthFragment() );
+            setContentView( R.layout.fragment_spx42_health );
             getActionBar().setTitle( R.string.health_header );
             getActionBar().setLogo( mItem.resIdOffline );
-            getFragmentManager().beginTransaction().replace( R.id.healthLogOuterLayout, currFragment ).commit();
+            getFragmentManager().beginTransaction().replace( R.id.healthOuterLayout, currFragment ).commit();
             break;
           default:
             Log.w( TAG, "onCreate: Not programitem found for <" + showId + ">" );

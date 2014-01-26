@@ -336,7 +336,17 @@
     
     <!--  Fragment SPX Gesundheit  -->
     <string name="health_header">status/health SPX42</string>
-    
+    <string name="health_serial_number_label">SPX42 serial number</string>
+    <string name="health_firmware_version_label">SPX42 firmware version</string>
+    <string name="health_license_label">SPX42 license</string>
+    <string name="health_license_enable">licensed</string>
+    <string name="health_license_disable">not licensed</string>
+    <string name="health_license_nitrox_label">nitrox</string>
+    <string name="health_license_normoxic_trimix_label">normoxic TMX</string>
+    <string name="health_license_full_trimix_label">full TMX</string>
+    <string name="health_license_individual_label">individual</string>
+    <string name="health_acku_volatage_label">Acku voltage:</string>
+    <string name="health_acku_volatage" formatted="false">%02.02f volts</string>
     
     <!-- sonstig  -->
     <string name="no_device">- no device -</string>

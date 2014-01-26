@@ -32,4 +32,9 @@
   <color name="exportDeleteButton.textColor">#E60000</color>
   <color name="areYopuSureDialogHeaderColor">#CC0000</color>
   <color name="areYourSureDialogMsgColor">#FF3300</color>
+  <color name="licenseEnabled">#009900</color>
+  <color name="licenseDisabled">#FF0066</color>
+  <color name="acku_good_value">#197519</color>
+  <color name="acku_mid_value">#E6B800</color>
+  <color name="acku_low_value">#FF0000</color>
 </resources>
