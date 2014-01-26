@@ -21,6 +21,7 @@
     
     <!-- Liste der Programmaktivitäten -->
     <string name="progitem_connect">"Verbindung"</string>
+    <string name="progitem_spx_status">SPX42 Status</string>
     <string name="progitem_config">"SPX42 Konfiguration"</string>
     <string name="progitem_gaslist">"Gase bearbeiten"</string>
     <string name="progitem_logging">"Protokolle lesen"</string>
@@ -334,9 +335,11 @@
     <string name="export_change_drive_button">Gerät...</string>
     <string name="export_delete_button">LÖSCH</string>
     <string name="export_do_export">Export!</string>
-     <string name="export_mail_bodytext">Hier sind Deine Tauchprotokolle im Anhang der Mail\n\nGrüße von Deinem ANDROID-Gerät\n\n</string>
+    <string name="export_mail_bodytext">Hier sind Deine Tauchprotokolle im Anhang der Mail\n\nGrüße von Deinem ANDROID-Gerät\n\n</string>
     
-    
+    <!--  Fragment SPX Gesundheit  -->
+    <string name="health_header">status/health SPX42</string>
+     
     <!-- sonstig  -->
     <string name="no_device">"- Kein Gerät -"</string>
     <string name="array_with_pic_adapter_dummy">"PROGRAMITEM"</string>

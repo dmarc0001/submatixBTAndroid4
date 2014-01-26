@@ -21,6 +21,7 @@
     
     <!-- Liste der Programmaktivitäten -->
     <string name="progitem_connect">Connection</string>
+    <string name="progitem_spx_status">SPX42 Status</string>
     <string name="progitem_config">SPX42 Config</string>
     <string name="progitem_gaslist">Gases editing</string>
     <string name="progitem_logging">Logfiles read</string>
@@ -332,6 +333,10 @@
     <string name="export_delete_button">DELETE</string>
     <string name="export_do_export">Export!</string>
     <string name="export_mail_bodytext">Here your divelogs in attachement from this mail!\n\nRegards, your ANDROID Device\n\n</string>
+    
+    <!--  Fragment SPX Gesundheit  -->
+    <string name="health_header">status/health SPX42</string>
+    
     
     <!-- sonstig  -->
     <string name="no_device">- no device -</string>
