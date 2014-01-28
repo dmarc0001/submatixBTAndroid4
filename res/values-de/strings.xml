@@ -348,7 +348,7 @@
     <string name="health_license_normoxic_trimix_label">Normoxic TMX</string>
     <string name="health_license_full_trimix_label">Voll TMX</string>
     <string name="health_license_individual_label">Individual</string>
-    <string name="health_acku_volatage_label">Ackuspannung:</string>
+    <string name="health_acku_volatage_label">Akkuspannung:</string>
     <string name="health_acku_volatage" formatted="false">%02.02f Volt</string>
     
     <!-- sonstig  -->
