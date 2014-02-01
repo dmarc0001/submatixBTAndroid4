@@ -15,4 +15,5 @@
     <item name="read_log_array_adapter_view" type="layout">@layout/read_log_array_adapter_view_big</item>
     <item name="fragment_export_log" type="layout">@layout/fragment_export_log_big</item>
     <item name="fragment_spx42_health" type="layout">@layout/fragment_spx42_health_mid</item>
+    <item name="fragment_log_protocol" type="layout">@layout/fragment_log_protocol_big</item>
 </resources>
