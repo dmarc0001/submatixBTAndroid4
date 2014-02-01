@@ -9,10 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
@@ -21,7 +18,7 @@ import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
 import de.dmarcini.submatix.android4.full.utils.CommToast;
 import de.dmarcini.submatix.android4.full.utils.DataSQLHelper;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
-import de.dmarcini.submatix.android4.full.utils.SPX42AliasManager;
+import de.dmarcini.submatix.android4.full.utils.SPX42LogManager;
 
 /**
  * 
@@ -33,13 +30,16 @@ import de.dmarcini.submatix.android4.full.utils.SPX42AliasManager;
  * 
  *         Stand: 01.02.2014
  */
-public class SPX42LogGraphFragment extends Fragment implements IBtServiceListener, OnItemSelectedListener, OnClickListener
+public class SPX42LogGraphFragment extends Fragment implements IBtServiceListener
 {
-  public static final String  TAG                       = SPX42LogGraphFragment.class.getSimpleName();
-  private static final String LAST_CONNECTED_DEVICE_KEY = "keyLastConnectedDevice";
-  protected ProgressDialog    progressDialog            = null;
-  private CommToast           theToast                  = null;
-  private Activity            runningActivity;
+  public static final String TAG                 = SPX42LogGraphFragment.class.getSimpleName();
+  protected ProgressDialog   progressDialog      = null;
+  private CommToast          theToast            = null;
+  private SPX42LogManager    logManager          = null;
+  private final int          selectedDeviceId    = -1;
+  private final String       selectedDeviceAlias = null;
+  private Activity           runningActivity     = null;
+  private int                dbId                = -1;
 
   @Override
   public void handleMessages( int what, BtServiceMessage smsg )
@@ -82,13 +82,13 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
       // Sonst....
       // ################################################################
       default:
-        if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "handleMessages: unhadled message message with id <" + smsg.getId() + "> recived!" );
+        if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "handleMessages: unhandled message message with id <" + smsg.getId() + "> recived!" );
     }
   }
 
   /**
    * 
-   * Die Anzeige der Verbunden/trennen Seite
+   * Die Anzeige der Seite
    * 
    * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.gui
    * 
@@ -99,7 +99,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
    * @param container
    * @return
    */
-  private View makeConnectionView( LayoutInflater inflater, ViewGroup container )
+  private View makeGraphView( LayoutInflater inflater, ViewGroup container )
   {
     View rootView;
     //
@@ -107,11 +107,14 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     //
     // View aus Resource laden
     //
-    rootView = inflater.inflate( R.layout.fragment_log_protocol, container, false );
+    rootView = inflater.inflate( R.layout.fragment_log_protocol_graph, container, false );
     //
     // Objekte lokalisieren
     //
-    // if( discoverButton == null || devSpinner == null || connButton == null )
+    // changeGraphDeviceButton = ( Button )runningActivity.findViewById( R.id.changeGraphDeviceButton );
+    // graphLogsButton = ( Button )runningActivity.findViewById( R.id.graphLogsButton );
+    // graphLogsListView = ( ListView )runningActivity.findViewById( R.id.graphLogsListView );
+    // if( changeGraphDeviceButton == null || graphLogsButton == null || graphLogsListView == null )
     // {
     // throw new NullPointerException( "makeConnectionView: can't init GUI (not found an Element)" );
     // }
@@ -163,7 +166,9 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
       //
       // auch die Objekte lokalisieren
       //
-      // discoverButton = ( Button )runningActivity.findViewById( R.id.connectDiscoverButton );
+      // changeGraphDeviceButton = ( Button )runningActivity.findViewById( R.id.changeGraphDeviceButton );
+      // graphLogsButton = ( Button )runningActivity.findViewById( R.id.graphLogsButton );
+      // graphLogsListView = ( ListView )runningActivity.findViewById( R.id.graphLogsListView );
     }
     catch( NullPointerException ex )
     {
@@ -180,16 +185,13 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     //
     // die Datenbank öffnen
     //
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create SQLite helper..." );
-    DataSQLHelper sqlHelper = new DataSQLHelper( getActivity().getApplicationContext(), FragmentCommonActivity.databaseDir.getAbsolutePath() + File.separator
-            + ProjectConst.DATABASE_NAME );
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: open Database..." );
     try
     {
-      if( FragmentCommonActivity.aliasManager == null )
-      {
-        FragmentCommonActivity.aliasManager = new SPX42AliasManager( sqlHelper.getWritableDatabase() );
-      }
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create SQLite helper..." );
+      DataSQLHelper sqlHelper = new DataSQLHelper( getActivity().getApplicationContext(), FragmentCommonActivity.databaseDir.getAbsolutePath() + File.separator
+              + ProjectConst.DATABASE_NAME );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create logManager helper..." );
+      logManager = new SPX42LogManager( sqlHelper.getWritableDatabase() );
     }
     catch( NoDatabaseException ex )
     {
@@ -198,13 +200,6 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
               .getString( R.string.dialog_sqlite_nodatabase_error ) );
       uad.show( getFragmentManager(), "abortProgram" );
     }
-  }
-
-  @Override
-  public void onClick( View cView )
-  {
-    int connState = ( ( FragmentCommonActivity )runningActivity ).getConnectionStatus();
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onClick: ON CLICK!" );
   }
 
   /**
@@ -216,6 +211,8 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     super.onCreate( savedInstanceState );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
     theToast = new CommToast( getActivity() );
+    dbId = getActivity().getIntent().getIntExtra( ProjectConst.ARG_ITEM_DBID, -1 );
+    if( ApplicationDEBUG.DEBUG ) Log.e( TAG, "onCreate... DBID=<" + dbId + ">" );
   }
 
   /**
@@ -245,7 +242,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     //
     // Verbindungsseite via twoPane ausgewählt
     //
-    rootView = makeConnectionView( inflater, container );
+    rootView = makeGraphView( inflater, container );
     return rootView;
   }
 
@@ -257,25 +254,11 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
   }
 
   @Override
-  public void onItemSelected( AdapterView<?> arg0, View arg1, int arg2, long arg3 )
-  {
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onItemSelected: ITEM Selected!" );
-  }
-
-  @Override
-  public void onNothingSelected( AdapterView<?> arg0 )
-  {
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onItemSelected: ITEM NOT Selected!" );
-  }
-
-  @Override
   public void onPause()
   {
     super.onPause();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause..." );
-    //
-    // die abgeleiteten Objekte führen das auch aus
-    //
+    // handler loeschen
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
     ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
   }
@@ -288,7 +271,17 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
   {
     super.onResume();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
+    //
+    // Objekte initialisieren
+    //
+    // changeGraphDeviceButton.setOnClickListener( this );
+    // graphLogsButton = ( Button )runningActivity.findViewById( R.id.graphLogsButton );
+    // graphLogsButton.setOnClickListener( this );
+    // graphLogsListView = ( ListView )runningActivity.findViewById( R.id.graphLogsListView );
+    // graphLogsListView.setOnItemClickListener( this );
+    //
+    // Service Listener setzen
+    //
     ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
-    // wenn zu diesem Zeitpunkt das Array noch nicht gefüllt ist, dann mach das nun
   }
 }
