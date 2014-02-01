@@ -350,6 +350,8 @@
     
     <!-- Fragment Logs grafisch darstellen  -->
     <string name="graphlog_header">logs graphial</string>
+    <string name="graphlog_do_view">Show!</string>
+    <string name="graphlog_change_drive_button">Device...</string>
     
     <!-- sonstig  -->
     <string name="no_device">- no device -</string>
