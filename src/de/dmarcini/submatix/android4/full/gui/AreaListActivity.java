@@ -81,7 +81,7 @@ public class AreaListActivity extends FragmentCommonActivity
   public void onCreate( Bundle savedInstanceState )
   {
     super.onCreate( savedInstanceState );
-    Log.v( TAG, "onCreate..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
     //
     // wurden jemals Preferences gesetzt?
     //
