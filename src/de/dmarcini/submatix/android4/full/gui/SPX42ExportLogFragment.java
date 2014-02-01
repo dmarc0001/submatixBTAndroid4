@@ -986,14 +986,6 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     if( parent.equals( mainListView ) )
     {
       rlAdapter = ( SPX42ReadLogListArrayAdapter )mainListView.getAdapter();
-      if( ApplicationDEBUG.DEBUG )
-      {
-        Log.d( TAG, "Click on mainListView! Pos: <" + position + ">" );
-        if( rlAdapter.getMarked( position ) )
-          Log.d( TAG, "View was SELECTED" );
-        else
-          Log.d( TAG, "View was UNSELECTED" );
-      }
       //
       // invertiere die Markierung im Adapter
       //
