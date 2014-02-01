@@ -1,4 +1,4 @@
-package de.dmarcini.submatix.android4.full.gui;
+package de.dmarcini.submatix.android4.full.utils;
 
 import java.util.Iterator;
 import java.util.Vector;
@@ -18,7 +18,6 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import de.dmarcini.submatix.android4.full.R;
-import de.dmarcini.submatix.android4.full.utils.SPX42diveSamplesReader;
 
 public class LogGraphView extends View implements OnTouchListener
 {

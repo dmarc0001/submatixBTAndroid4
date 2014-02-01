@@ -1,6 +1,7 @@
 package de.dmarcini.submatix.android4.full.gui;
 
 import java.io.File;
+import java.util.Vector;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -15,9 +16,13 @@ import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
 import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
+import de.dmarcini.submatix.android4.full.exceptions.NoXMLDataFileFoundException;
 import de.dmarcini.submatix.android4.full.utils.CommToast;
 import de.dmarcini.submatix.android4.full.utils.DataSQLHelper;
+import de.dmarcini.submatix.android4.full.utils.LogGraphView;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
+import de.dmarcini.submatix.android4.full.utils.ReadLogItemObj;
+import de.dmarcini.submatix.android4.full.utils.SPX42DiveSampleClass;
 import de.dmarcini.submatix.android4.full.utils.SPX42LogManager;
 
 /**
@@ -40,6 +45,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
   private final String       selectedDeviceAlias = null;
   private Activity           runningActivity     = null;
   private int                dbId                = -1;
+  private LogGraphView       logGraphView        = null;
 
   @Override
   public void handleMessages( int what, BtServiceMessage smsg )
@@ -84,41 +90,6 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
       default:
         if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "handleMessages: unhandled message message with id <" + smsg.getId() + "> recived!" );
     }
-  }
-
-  /**
-   * 
-   * Die Anzeige der Seite
-   * 
-   * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.gui
-   * 
-   * 
-   * Stand: 04.11.2012
-   * 
-   * @param inflater
-   * @param container
-   * @return
-   */
-  private View makeGraphView( LayoutInflater inflater, ViewGroup container )
-  {
-    View rootView;
-    //
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "makeConnectionView..." );
-    //
-    // View aus Resource laden
-    //
-    rootView = inflater.inflate( R.layout.fragment_log_protocol_graph, container, false );
-    //
-    // Objekte lokalisieren
-    //
-    // changeGraphDeviceButton = ( Button )runningActivity.findViewById( R.id.changeGraphDeviceButton );
-    // graphLogsButton = ( Button )runningActivity.findViewById( R.id.graphLogsButton );
-    // graphLogsListView = ( ListView )runningActivity.findViewById( R.id.graphLogsListView );
-    // if( changeGraphDeviceButton == null || graphLogsButton == null || graphLogsListView == null )
-    // {
-    // throw new NullPointerException( "makeConnectionView: can't init GUI (not found an Element)" );
-    // }
-    return( rootView );
   }
 
   @Override
@@ -234,15 +205,16 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     //
     // wenn die laufende Activity eine AreaDetailActivity ist, dann gibts das View schon
     //
-    if( runningActivity instanceof AreaDetailActivity )
-    {
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
-      return( null );
-    }
+    // if( runningActivity instanceof AreaDetailGraphActivity )
+    // {
+    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
+    // return( null );
+    // }
     //
     // Verbindungsseite via twoPane ausgewählt
     //
-    rootView = makeGraphView( inflater, container );
+    logGraphView = new LogGraphView( getActivity().getApplication().getApplicationContext() );
+    rootView = logGraphView;
     return rootView;
   }
 
@@ -283,5 +255,30 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     // Service Listener setzen
     //
     ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
+    makeGraphForDive();
+  }
+
+  private void makeGraphForDive()
+  {
+    LogGraphView lgv;
+    Vector<float[]> sampleVector;
+    View logContentView = null;
+    //
+    ReadLogItemObj rlo = logManager.getLogObjForDbId( dbId, getActivity().getResources() );
+    if( rlo != null )
+    {
+      try
+      {
+        sampleVector = SPX42DiveSampleClass.makeSamples( rlo );
+        logGraphView.setDiveData( sampleVector );
+        logGraphView.invalidate();
+      }
+      catch( NoXMLDataFileFoundException ex )
+      {
+        Log.e( TAG, "can't create diveLog samples : <" + ex.getLocalizedMessage() + ">" );
+        // TODO: User benachrichtigen
+        return;
+      }
+    }
   }
 }

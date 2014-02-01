@@ -32,10 +32,10 @@ public final class ProjectConst
   public static final String MANUFACTMAIL               = "dirk_marciniak@online.de";
   public static final String MANUFACTHOME               = "http://www.submatix.com";
   public static final String MANUFACTVERS_LT            = "1.0 LIGHT";
-  public static final String MANUFACTVERS               = "0.16-BETA";
+  public static final String MANUFACTVERS               = "0.17-BETA";
   public static final String GENYEAR                    = "2014";
-  public static final String GENMONTH                   = "01";
-  public static final String GENDAY                     = "26";
+  public static final String GENMONTH                   = "02";
+  public static final String GENDAY                     = "01";
   public static final boolean CHECK_PHYSICAL_BT         = false; 
 
   // ANDROID: Preferences Version
@@ -155,6 +155,8 @@ public final class ProjectConst
   // Android: Parameterbezeichnug für Programmmenü-Id
   public static final String ARG_ITEM_ID                = "de.dmarcini.submatix.progitem_item_id";
   public static final String ARG_ITEM_CONTENT           = "de.dmarcini.submatix.progitem_item_content";
+  public static final String ARG_ITEM_GRAPHEXTRA        = "de.dmarcini.submatix.progitem_item_graphextra";
+  public static final String ARG_ITEM_DBID              = "de.dmarcini.submatix.progitem_item_dbid";
   
   // Android: ID für Intentrequests
   public static final int REQUEST_ENABLE_BT             = 1;

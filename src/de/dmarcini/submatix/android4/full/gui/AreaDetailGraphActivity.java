@@ -9,6 +9,7 @@ package de.dmarcini.submatix.android4.full.gui;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.WindowManager;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
@@ -33,12 +34,17 @@ public class AreaDetailGraphActivity extends FragmentCommonActivity
   @Override
   public void onCreate( Bundle savedInstanceState )
   {
+    // requestWindowFeature( Window.FEATURE_NO_TITLE );
     //
     super.onCreate( savedInstanceState );
     if( ApplicationDEBUG.DEBUG ) Log.v( TAG, "onCreate:..." );
     // Aktiviere Zurückfunktion via Actionbar Home
-    getActionBar().setHomeButtonEnabled( true );
-    getActionBar().setDisplayHomeAsUpEnabled( true );
+    if( getActionBar() != null )
+    {
+      getActionBar().setHomeButtonEnabled( true );
+      getActionBar().setDisplayHomeAsUpEnabled( true );
+    }
+    getWindow().setFlags( WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN );
     //
     // was soll ich anzeigen?
     //
@@ -52,8 +58,11 @@ public class AreaDetailGraphActivity extends FragmentCommonActivity
       currFragment = new SPX42LogGraphFragment();
       currFragment.setArguments( getIntent().getExtras() );
       setContentView( R.layout.fragment_log_protocol_graph );
-      getActionBar().setTitle( R.string.graphlog_header );
-      getActionBar().setLogo( R.drawable.graphsbar_online );
+      if( getActionBar() != null )
+      {
+        getActionBar().setTitle( R.string.graphlog_header );
+        getActionBar().setLogo( R.drawable.graphsbar_online );
+      }
       getFragmentManager().beginTransaction().replace( R.id.logGraphOuterLayout, currFragment ).commit();
     }
     else
@@ -64,8 +73,11 @@ public class AreaDetailGraphActivity extends FragmentCommonActivity
       Log.i( TAG, "onCreate: start SPX42LogGraphSelectFragment..." );
       currFragment = ( new SPX42LogGraphSelectFragment() );
       setContentView( R.layout.fragment_log_protocol );
-      getActionBar().setTitle( R.string.graphlog_header );
-      getActionBar().setLogo( R.drawable.graphsbar_online );
+      if( getActionBar() != null )
+      {
+        getActionBar().setTitle( R.string.graphlog_header );
+        getActionBar().setLogo( R.drawable.graphsbar_online );
+      }
       getFragmentManager().beginTransaction().replace( R.id.logGraphOuterLayout, currFragment ).commit();
     }
   }
