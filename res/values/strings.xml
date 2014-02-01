@@ -348,6 +348,9 @@
     <string name="health_acku_volatage_label">Acku voltage:</string>
     <string name="health_acku_volatage" formatted="false">%02.02f volts</string>
     
+    <!-- Fragment Logs grafisch darstellen  -->
+    <string name="graphlog_header">logs graphial</string>
+    
     <!-- sonstig  -->
     <string name="no_device">- no device -</string>
     <string name="array_with_pic_adapter_dummy">PROGRAMITEM</string>

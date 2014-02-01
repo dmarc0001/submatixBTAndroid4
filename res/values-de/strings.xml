@@ -351,6 +351,9 @@
     <string name="health_acku_volatage_label">Akkuspannung:</string>
     <string name="health_acku_volatage" formatted="false">%02.02f Volt</string>
     
+    <!-- Fragment Logs grafisch darstellen  -->
+    <string name="graphlog_header">Protokolle grafisch</string>
+    
     <!-- sonstig  -->
     <string name="no_device">"- Kein Gerät -"</string>
     <string name="array_with_pic_adapter_dummy">"PROGRAMITEM"</string>
