@@ -124,11 +124,12 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
             if( !BuildVersion.isLightVersion )
             {
               Log.i( TAG, "onCreate: the called page is in progress..." );
-              currFragment = ( new WorkInProgressFragment() );
-              setContentView( R.layout.fragment_in_progress );
-              getActionBar().setTitle( R.string.in_progress_header );
+              currFragment = ( new SPX42LogGraphFragment() );
+              setContentView( R.layout.fragment_log_protocol );
+              // TODO: hir ausgestalten
+              getActionBar().setTitle( R.string.graphlog_header );
               getActionBar().setLogo( mItem.resIdOffline );
-              getFragmentManager().beginTransaction().replace( R.id.inProgressOuterLayout, currFragment ).commit();
+              getFragmentManager().beginTransaction().replace( R.id.logGraphOuterLayout, currFragment ).commit();
             }
             break;
           case R.string.progitem_export:

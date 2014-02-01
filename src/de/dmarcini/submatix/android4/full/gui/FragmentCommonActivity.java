@@ -1060,9 +1060,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
 
   @Override
   public void msgReciveWriteTmeout( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   @Override
   public void onActivityResult( int requestCode, int resultCode, Intent data )
@@ -1398,10 +1396,10 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
             // Logs grafisch darstellen
             //
             Log.i( TAG, "the called page is in progress..." );
-            WorkInProgressFragment ipf = new WorkInProgressFragment();
-            ipf.setArguments( arguments );
-            getActionBar().setTitle( R.string.in_progress_header );
-            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, ipf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+            SPX42LogGraphFragment lgf = new SPX42LogGraphFragment();
+            lgf.setArguments( arguments );
+            getActionBar().setTitle( R.string.graphlog_header );
+            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, lgf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
             break;
           case R.string.progitem_export:
             //
