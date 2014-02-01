@@ -1110,7 +1110,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   public void onCreate( Bundle savedInstanceState )
   {
     super.onCreate( savedInstanceState );
-    Log.v( TAG, "onCreate..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
     if( getIntent().getBooleanExtra( "EXIT", false ) )
     {
       finish();
@@ -1119,7 +1119,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     serviceListener.add( this );
     // den defaultadapter lesen
     mBtAdapter = BluetoothAdapter.getDefaultAdapter();
-    Log.v( TAG, "onCreate: setContentView..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate: setContentView..." );
     //
     // Das gewünschte Thema setzen
     //
@@ -1298,6 +1298,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     }
     arguments.putString( ProjectConst.ARG_ITEM_CONTENT, mItem.content );
     arguments.putInt( ProjectConst.ARG_ITEM_ID, mItem.nId );
+    arguments.putBoolean( ProjectConst.ARG_ITEM_GRAPHEXTRA, false );
     Log.v( TAG, "onListItemClick: item content was: " + mItem.content );
     Log.v( TAG, "onListItemClick: item id was: " + mItem.nId );
     //
@@ -1396,7 +1397,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
             // Logs grafisch darstellen
             //
             Log.i( TAG, "the called page is in progress..." );
-            SPX42LogGraphFragment lgf = new SPX42LogGraphFragment();
+            SPX42LogGraphSelectFragment lgf = new SPX42LogGraphSelectFragment();
             lgf.setArguments( arguments );
             getActionBar().setTitle( R.string.graphlog_header );
             getFragmentManager().beginTransaction().replace( R.id.area_detail_container, lgf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
