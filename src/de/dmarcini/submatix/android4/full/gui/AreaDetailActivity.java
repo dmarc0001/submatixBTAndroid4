@@ -53,9 +53,6 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
     if( showId != 0 )
     {
       Log.v( TAG, "onCreate: SowId found: <" + showId + ">" );
-      // argumente basteln
-      Bundle arguments = new Bundle();
-      arguments.putInt( ProjectConst.ARG_ITEM_ID, showId );
       // Welcher Programmmenüpunkt war denn das?
       mItem = ContentSwitcher.getProgItemForId( showId );
       // hab ich einen Eintrag vorrätig?
@@ -67,7 +64,7 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
             //
             // SPX42 Konfiguration starten
             //
-            Log.i( TAG, "onCreate: create config PreferenceActivity..." );
+            Log.i( TAG, "onCreate: start SPX42PreferencesFragment..." );
             getActionBar().setTitle( R.string.conf_headline );
             getActionBar().setLogo( mItem.resIdOffline );
             setContentView( R.layout.activity_area_detail );
@@ -79,7 +76,7 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
             //
             // ProgrammKonfiguration starten
             //
-            Log.i( TAG, "onCreate: create program PreferenceActivity..." );
+            Log.i( TAG, "onCreate: start ProgramPreferencesFragment..." );
             getActionBar().setTitle( R.string.conf_prog_headline );
             getActionBar().setLogo( mItem.resIdOffline );
             setContentView( R.layout.activity_area_detail );
@@ -91,7 +88,7 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
             //
             // gaslist edit Activity erzeugen
             //
-            Log.i( TAG, "onCreate: create galsist preference activity..." );
+            Log.i( TAG, "onCreate: start SPX42GaslistPreferencesFragment..." );
             getActionBar().setTitle( R.string.gaslist_headline );
             getActionBar().setLogo( mItem.resIdOffline );
             setContentView( R.layout.activity_area_detail );
@@ -100,7 +97,7 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
             break;
           //
           case R.string.progitem_about:
-            Log.i( TAG, "onCreate: create ProgramAboutActivity..." );
+            Log.i( TAG, "onCreate: start ProgramAboutFragment..." );
             currFragment = ( new ProgramAboutFragment() );
             setContentView( R.layout.fragment_about );
             getActionBar().setTitle( R.string.about_headline );
@@ -123,19 +120,38 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
           case R.string.progitem_loggraph:
             if( !BuildVersion.isLightVersion )
             {
-              Log.i( TAG, "onCreate: the called page is in progress..." );
-              currFragment = ( new SPX42LogGraphFragment() );
-              setContentView( R.layout.fragment_log_protocol );
-              // TODO: hir ausgestalten
-              getActionBar().setTitle( R.string.graphlog_header );
-              getActionBar().setLogo( mItem.resIdOffline );
-              getFragmentManager().beginTransaction().replace( R.id.logGraphOuterLayout, currFragment ).commit();
+              if( getIntent().getBooleanExtra( ProjectConst.ARG_ITEM_GRAPHEXTRA, false ) && ( getIntent().getIntExtra( ProjectConst.ARG_ITEM_DBID, -1 ) > 0 ) )
+              {
+                //
+                // Ist als EXTRA die Logid und das Flag für das EXTRA gesetzt
+                // übergib die Extras gleich wieder an das neue Element
+                //
+                Log.i( TAG, "onCreate: start SPX42LogGraphFragment..." );
+                currFragment = new SPX42LogGraphFragment();
+                currFragment.setArguments( getIntent().getExtras() );
+                setContentView( R.layout.fragment_log_protocol_graph );
+                getActionBar().setTitle( R.string.graphlog_header );
+                getActionBar().setLogo( mItem.resIdOffline );
+                getFragmentManager().beginTransaction().replace( R.id.logGraphOuterLayout, currFragment ).commit();
+              }
+              else
+              {
+                //
+                // Seite zum selektieren zeigen
+                //
+                Log.i( TAG, "onCreate: start SPX42LogGraphSelectFragment..." );
+                currFragment = ( new SPX42LogGraphSelectFragment() );
+                setContentView( R.layout.fragment_log_protocol );
+                getActionBar().setTitle( R.string.graphlog_header );
+                getActionBar().setLogo( mItem.resIdOffline );
+                getFragmentManager().beginTransaction().replace( R.id.logGraphOuterLayout, currFragment ).commit();
+              }
             }
             break;
           case R.string.progitem_export:
             if( !BuildVersion.isLightVersion )
             {
-              Log.i( TAG, "onCreate: start export Page..." );
+              Log.i( TAG, "onCreate: SPX42ExportLogFragment..." );
               currFragment = ( new SPX42ExportLogFragment() );
               setContentView( R.layout.fragment_export_log );
               getActionBar().setTitle( R.string.export_header );
@@ -147,7 +163,7 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
             //
             // Eine Statussetie des SPX anzeigen
             //
-            Log.i( TAG, "onCreate: start spx health page..." );
+            Log.i( TAG, "onCreate: start SPX42HealthFragment..." );
             currFragment = ( new SPX42HealthFragment() );
             setContentView( R.layout.fragment_spx42_health );
             getActionBar().setTitle( R.string.health_header );
@@ -160,7 +176,7 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
             //
             // erzeuge die Connect fragmentActivity, auch wenn nix passendes gefunden
             //
-            Log.v( TAG, "onCreate: create connect fragmentActivity..." );
+            Log.v( TAG, "onCreate: start SPX42ConnectFragment..." );
             currFragment = ( new SPX42ConnectFragment() );
             setContentView( R.layout.fragment_connect );
             getActionBar().setTitle( R.string.connect_headline );
