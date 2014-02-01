@@ -327,7 +327,7 @@
     
     <!-- Fragment SPXExportLogFragment -->
     <string name="export_header">Export logs from device</string>
-    <string name="export_header_device" formatted="false" >Export logs from device %lt;%s&gt;</string>
+    <string name="export_header_device" formatted="false" >Export logs from device &lt;%s&gt;</string>
     <string name="export_subheader" formatted="false">Device: %s</string>
     <string name="export_change_drive_button">Device...</string>
     <string name="export_delete_button">DELETE</string>
@@ -349,7 +349,9 @@
     <string name="health_acku_volatage" formatted="false">%02.02f volts</string>
     
     <!-- Fragment Logs grafisch darstellen  -->
+    <string name="graphlog_title">logs graphial</string>
     <string name="graphlog_header">logs graphial</string>
+    <string name="graphlog_header_device" formatted="false" >view logs from device &lt;%s&gt;</string>
     <string name="graphlog_do_view">Show!</string>
     <string name="graphlog_change_drive_button">Device...</string>
     
