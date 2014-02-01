@@ -120,32 +120,15 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
           case R.string.progitem_loggraph:
             if( !BuildVersion.isLightVersion )
             {
-              if( getIntent().getBooleanExtra( ProjectConst.ARG_ITEM_GRAPHEXTRA, false ) && ( getIntent().getIntExtra( ProjectConst.ARG_ITEM_DBID, -1 ) > 0 ) )
-              {
-                //
-                // Ist als EXTRA die Logid und das Flag für das EXTRA gesetzt
-                // übergib die Extras gleich wieder an das neue Element
-                //
-                Log.i( TAG, "onCreate: start SPX42LogGraphFragment..." );
-                currFragment = new SPX42LogGraphFragment();
-                currFragment.setArguments( getIntent().getExtras() );
-                setContentView( R.layout.fragment_log_protocol_graph );
-                getActionBar().setTitle( R.string.graphlog_header );
-                getActionBar().setLogo( mItem.resIdOffline );
-                getFragmentManager().beginTransaction().replace( R.id.logGraphOuterLayout, currFragment ).commit();
-              }
-              else
-              {
-                //
-                // Seite zum selektieren zeigen
-                //
-                Log.i( TAG, "onCreate: start SPX42LogGraphSelectFragment..." );
-                currFragment = ( new SPX42LogGraphSelectFragment() );
-                setContentView( R.layout.fragment_log_protocol );
-                getActionBar().setTitle( R.string.graphlog_header );
-                getActionBar().setLogo( mItem.resIdOffline );
-                getFragmentManager().beginTransaction().replace( R.id.logGraphOuterLayout, currFragment ).commit();
-              }
+              //
+              // Seite zum selektieren zeigen
+              //
+              Log.i( TAG, "onCreate: start SPX42LogGraphSelectFragment..." );
+              currFragment = ( new SPX42LogGraphSelectFragment() );
+              setContentView( R.layout.fragment_log_protocol );
+              getActionBar().setTitle( R.string.graphlog_header );
+              getActionBar().setLogo( mItem.resIdOffline );
+              getFragmentManager().beginTransaction().replace( R.id.logGraphOuterLayout, currFragment ).commit();
             }
             break;
           case R.string.progitem_export:
