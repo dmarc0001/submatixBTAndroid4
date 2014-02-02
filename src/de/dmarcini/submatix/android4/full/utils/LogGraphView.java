@@ -1,9 +1,11 @@
 package de.dmarcini.submatix.android4.full.utils;
 
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Vector;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -19,22 +21,35 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import de.dmarcini.submatix.android4.full.R;
 
+/**
+ * 
+ * View, welches die Logdaten eines Tauchganges anzeigt.
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 02.02.2014
+ */
 public class LogGraphView extends View implements OnTouchListener
 {
-  public static final String   TAG                = LogGraphView.class.getSimpleName();
-  private final Paint          pnt                = new Paint( Paint.ANTI_ALIAS_FLAG );
-  private ScaleGestureDetector scaleDetector      = null;
-  private Vector<float[]>      sampleVector       = null;
-  private int                  viewWidth          = 1;
-  private int                  viewHeight         = 1;
-  private final static float   margin_top         = 20;
-  private final static float   margin_bottom      = 30;
-  private final static float   margin_bottom_ox   = 55;
-  private final static float   margin_bottom_temp = 75;
-  private final static float   countTimeMark      = 6;
-  private float                masterScale        = 0.0F;
-  private float                sampleOffset       = 0F;
-  private float                startTouchMove     = 0F;
+  @SuppressWarnings( "javadoc" )
+  public static final String       TAG                = LogGraphView.class.getSimpleName();
+  private final Paint              pnt                = new Paint( Paint.ANTI_ALIAS_FLAG );
+  private int                      currentAppstyle    = R.style.AppDarkTheme;
+  private final SPX42LogColorClass colorClass         = new SPX42LogColorClass();
+  private ScaleGestureDetector     scaleDetector      = null;
+  private Vector<float[]>          sampleVector       = null;
+  private int                      viewWidth          = 1;
+  private int                      viewHeight         = 1;
+  private final static float       margin_top         = 20;
+  private final static float       margin_bottom      = 30;
+  private final static float       margin_bottom_ox   = 55;
+  private final static float       margin_bottom_temp = 75;
+  private final static float       countTimeMark      = 6;
+  private float                    masterScale        = 0.0F;
+  private float                    sampleOffset       = 0F;
+  private float                    startTouchMove     = 0F;
 
   /**
    * 
@@ -72,6 +87,7 @@ public class LogGraphView extends View implements OnTouchListener
   {
     super( context );
     sampleVector = null;
+    initColors();
     initLogView( context );
     setOnTouchListener( this );
   }
@@ -85,10 +101,12 @@ public class LogGraphView extends View implements OnTouchListener
    * Stand: 01.02.2014
    * 
    * @param context
+   * @param attrs
    */
   public LogGraphView( Context context, AttributeSet attrs )
   {
     super( context, attrs );
+    initColors();
     initLogView( context );
     setOnTouchListener( this );
   }
@@ -102,12 +120,56 @@ public class LogGraphView extends View implements OnTouchListener
    * Stand: 01.02.2014
    * 
    * @param context
+   * @param attrs
+   * @param defStyle
    */
   public LogGraphView( Context context, AttributeSet attrs, int defStyle )
   {
     super( context, attrs, defStyle );
+    initColors();
     initLogView( context );
     setOnTouchListener( this );
+  }
+
+  /**
+   * 
+   * Farben initialisieren
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
+   * 
+   * Stand: 02.02.2014
+   */
+  private void initColors()
+  {
+    Resources res = getResources();
+    if( currentAppstyle == R.style.AppDarkTheme )
+    {
+      colorClass.spxGraphBackcolor = res.getColor( R.color.spxGraphBackcolorDark );
+      colorClass.spxGraphDepthfill = res.getColor( R.color.spxGraphDepthfillDark );
+      colorClass.spxGraphDepthborder = res.getColor( R.color.spxGraphDepthborderDark );
+      colorClass.spxGraphOuterZoombar = res.getColor( R.color.spxGraphOuterZoombarDark );
+      colorClass.spxGraphInnerZoombar = res.getColor( R.color.spxGraphInnerZoombarDark );
+      colorClass.spxGraphPpo2Line = res.getColor( R.color.spxGraphPpo2LineDark );
+      colorClass.spxGraphPpo2Scale = res.getColor( R.color.spxGraphPpo2ScaleDark );
+      colorClass.spxGraphDepthscale = res.getColor( R.color.spxGraphDepthscaleDark );
+      colorClass.spxGraphTimeline = res.getColor( R.color.spxGraphTimelineDark );
+      colorClass.spxGraphTemperatureLine = res.getColor( R.color.spxGraphTemperatureLineDark );
+      colorClass.spxGraphTemperatureScale = res.getColor( R.color.spxGraphTemperatureScaleDark );
+    }
+    else
+    {
+      colorClass.spxGraphBackcolor = getResources().getColor( R.color.spxGraphBackcolorLight );
+      colorClass.spxGraphDepthfill = res.getColor( R.color.spxGraphDepthfillLight );
+      colorClass.spxGraphDepthborder = res.getColor( R.color.spxGraphDepthborderLight );
+      colorClass.spxGraphOuterZoombar = res.getColor( R.color.spxGraphOuterZoombarLight );
+      colorClass.spxGraphInnerZoombar = res.getColor( R.color.spxGraphInnerZoombarLight );
+      colorClass.spxGraphPpo2Line = res.getColor( R.color.spxGraphPpo2LineLight );
+      colorClass.spxGraphPpo2Scale = res.getColor( R.color.spxGraphPpo2ScaleLight );
+      colorClass.spxGraphDepthscale = res.getColor( R.color.spxGraphDepthscaleLight );
+      colorClass.spxGraphTimeline = res.getColor( R.color.spxGraphTimelineLight );
+      colorClass.spxGraphTemperatureLine = res.getColor( R.color.spxGraphTemperatureLineLight );
+      colorClass.spxGraphTemperatureScale = res.getColor( R.color.spxGraphTemperatureScaleLight );
+    }
   }
 
   /**
@@ -141,7 +203,7 @@ public class LogGraphView extends View implements OnTouchListener
     //
     pnt.setColor( Color.BLACK );
     pnt.setStyle( Style.FILL );
-    canvas.drawColor( getResources().getColor( R.color.spx_graph_backcolor ) );
+    canvas.drawColor( colorClass.spxGraphBackcolor );
     //
     // gibt es ein Profil?
     //
@@ -253,10 +315,10 @@ public class LogGraphView extends View implements OnTouchListener
     bar_inner.lineTo( barStart, margin_top - 1 );
     bar_inner.close();
     // Zeichne den Mist
-    zbPnt.setColor( getResources().getColor( R.color.spx_graph_outer_zoombar ) );
+    zbPnt.setColor( colorClass.spxGraphOuterZoombar );
     zbPnt.setStyle( Style.FILL );
     canvas.drawPath( bar_outer, zbPnt );
-    zbPnt.setColor( getResources().getColor( R.color.spx_graph_inner_zoombar ) );
+    zbPnt.setColor( colorClass.spxGraphInnerZoombar );
     zbPnt.setStrokeWidth( 2.0F );
     zbPnt.setStyle( Style.FILL );
     canvas.drawPath( bar_inner, zbPnt );
@@ -328,12 +390,12 @@ public class LogGraphView extends View implements OnTouchListener
     //
     // Pfade zeichnen
     //
-    pnt.setColor( getResources().getColor( R.color.spx_graph_depthborder ) );
+    pnt.setColor( colorClass.spxGraphDepthborder );
     pnt.setStyle( Style.STROKE );
     pnt.setStrokeWidth( 2.0F );
     canvas.drawPath( pathDepth, pnt );
     pnt.setStrokeWidth( 1.0F );
-    pnt.setColor( getResources().getColor( R.color.spx_graph_depthfill ) );
+    pnt.setColor( colorClass.spxGraphDepthfill );
     pnt.setStyle( Style.FILL );
     canvas.drawPath( pathDepth, pnt );
     //
@@ -342,7 +404,7 @@ public class LogGraphView extends View implements OnTouchListener
     Path pathDepthScale = new Path();
     // Tiefenlinien machen
     pnt.setStrokeWidth( 0.5F );
-    pnt.setColor( getResources().getColor( R.color.spx_graph_depthscale ) );
+    pnt.setColor( colorClass.spxGraphDepthscale );
     pnt.setTextSize( 20 );
     pnt.setStyle( Style.FILL );
     pnt.setTextAlign( Align.LEFT );
@@ -417,7 +479,7 @@ public class LogGraphView extends View implements OnTouchListener
     pathDepthScale.lineTo( 27, ( maxValue * depthFactor ) + margin_top );
     // Zeichnen
     pnt.setStrokeWidth( 2.5F );
-    pnt.setColor( getResources().getColor( R.color.spx_graph_depthscale ) );
+    pnt.setColor( colorClass.spxGraphDepthscale );
     pnt.setStyle( Style.STROKE );
     canvas.drawPath( pathDepthScale, pnt );
     // skalenbezeichnung
@@ -452,7 +514,7 @@ public class LogGraphView extends View implements OnTouchListener
     //
     markScale = viewWidth / countTimeMark;
     Log.v( TAG, String.format( "drawTimeLine() -> divelength: <%d> secounds, timeStep: <%d> secounds, timeFactor: <%03.2f>", diveLength, timeStep, timeFactor ) );
-    pnt.setColor( getResources().getColor( R.color.spx_graph_timeline ) );
+    pnt.setColor( colorClass.spxGraphTimeline );
     pnt.setTextSize( 20 );
     pnt.setTextAlign( Align.LEFT );
     pnt.setStyle( Style.STROKE );
@@ -539,8 +601,8 @@ public class LogGraphView extends View implements OnTouchListener
     float oxygenFactor;
     float maxOxigen, maxOxigenAbsolute;
     int samplePos = 0;
-    int graphColor = getResources().getColor( R.color.spx_graph_ppo2_line );
-    int scaleColor = getResources().getColor( R.color.spx_graph_ppo2_scale );
+    int graphColor = colorClass.spxGraphPpo2Line;
+    int scaleColor = colorClass.spxGraphPpo2Scale;
     maxOxigen = getMaxValue( oxyProfil );
     // Die PPO2 muß ich nun noch skalieren, passend auf den Schirm und verkleinert
     oxygenFactor = ( viewHeight - margin_bottom_ox - ( viewHeight / 4 ) ) / maxOxigen;
@@ -656,8 +718,8 @@ public class LogGraphView extends View implements OnTouchListener
     float temperatureFactor;
     float maxTemperature, maxTemperatureAbsolute, minTemperature;
     int samplePos = 0;
-    int graphColor = getResources().getColor( R.color.spx_graph_temperature_line );
-    int scaleColor = getResources().getColor( R.color.spx_graph_temperature_scale );
+    int graphColor = colorClass.spxGraphTemperatureLine;
+    int scaleColor = colorClass.spxGraphTemperatureScale;
     maxTemperature = getMaxValue( tempProfil );
     minTemperature = getMinValue( tempProfil );
     if( ( maxTemperature - minTemperature ) < 2 )
@@ -1005,6 +1067,22 @@ public class LogGraphView extends View implements OnTouchListener
   {
     int minute = tm / 60;
     int sec = tm % 60;
-    return( String.format( "%02d:%02d m", minute, sec ) );
+    return( String.format( Locale.ENGLISH, "%02d:%02d m", minute, sec ) );
+  }
+
+  /**
+   * 
+   * Setze das Thema entsprechend der App
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
+   * 
+   * Stand: 02.02.2014
+   * 
+   * @param appStyle
+   */
+  public void setTheme( int appStyle )
+  {
+    currentAppstyle = appStyle;
+    initColors();
   }
 }

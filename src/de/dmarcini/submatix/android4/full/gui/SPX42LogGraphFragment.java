@@ -17,7 +17,6 @@ import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
 import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
 import de.dmarcini.submatix.android4.full.exceptions.NoXMLDataFileFoundException;
-import de.dmarcini.submatix.android4.full.utils.CommToast;
 import de.dmarcini.submatix.android4.full.utils.DataSQLHelper;
 import de.dmarcini.submatix.android4.full.utils.LogGraphView;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
@@ -37,15 +36,14 @@ import de.dmarcini.submatix.android4.full.utils.SPX42LogManager;
  */
 public class SPX42LogGraphFragment extends Fragment implements IBtServiceListener
 {
-  public static final String TAG                 = SPX42LogGraphFragment.class.getSimpleName();
-  protected ProgressDialog   progressDialog      = null;
-  private CommToast          theToast            = null;
-  private SPX42LogManager    logManager          = null;
-  private final int          selectedDeviceId    = -1;
-  private final String       selectedDeviceAlias = null;
-  private Activity           runningActivity     = null;
-  private int                dbId                = -1;
-  private LogGraphView       logGraphView        = null;
+  @SuppressWarnings( "javadoc" )
+  public static final String TAG             = SPX42LogGraphFragment.class.getSimpleName();
+  protected ProgressDialog   progressDialog  = null;
+  // private CommToast theToast = null;
+  private SPX42LogManager    logManager      = null;
+  private Activity           runningActivity = null;
+  private int                dbId            = -1;
+  private LogGraphView       logGraphView    = null;
 
   @Override
   public void handleMessages( int what, BtServiceMessage smsg )
@@ -132,19 +130,6 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     super.onActivityCreated( bundle );
     runningActivity = getActivity();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
-    try
-    {
-      //
-      // auch die Objekte lokalisieren
-      //
-      // changeGraphDeviceButton = ( Button )runningActivity.findViewById( R.id.changeGraphDeviceButton );
-      // graphLogsButton = ( Button )runningActivity.findViewById( R.id.graphLogsButton );
-      // graphLogsListView = ( ListView )runningActivity.findViewById( R.id.graphLogsListView );
-    }
-    catch( NullPointerException ex )
-    {
-      Log.e( TAG, "onActivityCreated: gui objects not allocated!" );
-    }
   }
 
   @Override
@@ -181,7 +166,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
   {
     super.onCreate( savedInstanceState );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
-    theToast = new CommToast( getActivity() );
+    // theToast = new CommToast( getActivity() );
     dbId = getArguments().getInt( ProjectConst.ARG_ITEM_DBID, -1 );
     if( ApplicationDEBUG.DEBUG ) Log.e( TAG, "onCreate... DBID=<" + dbId + ">" );
   }
@@ -193,6 +178,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
   public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
   {
     View rootView;
+    //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView..." );
     //
     // wenn kein Container vorhanden ist, dann gibts auch keinen View
@@ -203,6 +189,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
       return( null );
     }
     logGraphView = new LogGraphView( getActivity().getApplication().getApplicationContext() );
+    logGraphView.setTheme( FragmentCommonActivity.getAppStyle() );
     rootView = logGraphView;
     return rootView;
   }
@@ -239,11 +226,17 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     makeGraphForDive();
   }
 
+  /**
+   * 
+   * Erzeuge nun die grafik für den Tauchgang mit dem objekt LogGraphView
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 02.02.2014
+   */
   private void makeGraphForDive()
   {
-    LogGraphView lgv;
     Vector<float[]> sampleVector;
-    View logContentView = null;
     //
     ReadLogItemObj rlo = logManager.getLogObjForDbId( dbId, getActivity().getResources() );
     if( rlo != null )

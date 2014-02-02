@@ -32,10 +32,10 @@ public final class ProjectConst
   public static final String MANUFACTMAIL               = "dirk_marciniak@online.de";
   public static final String MANUFACTHOME               = "http://www.submatix.com";
   public static final String MANUFACTVERS_LT            = "1.0 LIGHT";
-  public static final String MANUFACTVERS               = "0.17-BETA";
+  public static final String MANUFACTVERS               = "0.18-BETA";
   public static final String GENYEAR                    = "2014";
   public static final String GENMONTH                   = "02";
-  public static final String GENDAY                     = "01";
+  public static final String GENDAY                     = "02";
   public static final boolean CHECK_PHYSICAL_BT         = false; 
 
   // ANDROID: Preferences Version
@@ -252,21 +252,21 @@ public final class ProjectConst
   //
   // Default Farben für die Graphen in der Loganzeige
   //
-  public static int          GRAPH_TEMPERATURE_ACOLOR   = 0xFF0000; // Axenfarbe (Beschriftungen)
-  public static int          GRAPH_TEMPERATURE_RCOLOR   = 0xFF0000; // Farbe des Graphen
-  public static int          GRAPH_PPO2ALL_ACOLOR       = 0xB300FF;
-  public static int          GRAPH_PPO2ALL_RCOLOR       = 0xB300FF;
-  public static int          GRAPH_PPO2_01_RCOLOR       = 0x0000FF;
-  public static int          GRAPH_PPO2_02_RCOLOR       = 0x0080FF;
-  public static int          GRAPH_PPO2_03_RCOLOR       = 0x7ABDFF;
-  public static int          GRAPH_SETPOINT_ACOLOR      = 0x000033;
-  public static int          GRAPH_SETPOINT_RCOLOR      = 0x000033;
-  public static int          GRAPH_INNERTGAS_ACOLOR     = 0x1A2000;
-  public static int          GRAPH_HE_RCOLOR            = 0x1A9900;
-  public static int          GRAPH_N2_RCOLOR            = 0xFF3DD8;
-  public static int          GRAPH_NULLTIME_ACOLOR      = 0x006600;
-  public static int          GRAPH_DEPTH_ACOLOR         = 0x4775FF;
-  public static int          GRAPH_DEPTH_RCOLOR         = 0x4775FF;
+//  public static int          GRAPH_TEMPERATURE_ACOLOR   = 0xFF0000; // Axenfarbe (Beschriftungen)
+//  public static int          GRAPH_TEMPERATURE_RCOLOR   = 0xFF0000; // Farbe des Graphen
+//  public static int          GRAPH_PPO2ALL_ACOLOR       = 0xB300FF;
+//  public static int          GRAPH_PPO2ALL_RCOLOR       = 0xB300FF;
+//  public static int          GRAPH_PPO2_01_RCOLOR       = 0x0000FF;
+//  public static int          GRAPH_PPO2_02_RCOLOR       = 0x0080FF;
+//  public static int          GRAPH_PPO2_03_RCOLOR       = 0x7ABDFF;
+//  public static int          GRAPH_SETPOINT_ACOLOR      = 0x000033;
+//  public static int          GRAPH_SETPOINT_RCOLOR      = 0x000033;
+//  public static int          GRAPH_INNERTGAS_ACOLOR     = 0x1A2000;
+//  public static int          GRAPH_HE_RCOLOR            = 0x1A9900;
+//  public static int          GRAPH_N2_RCOLOR            = 0xFF3DD8;
+//  public static int          GRAPH_NULLTIME_ACOLOR      = 0x006600;
+//  public static int          GRAPH_DEPTH_ACOLOR         = 0x4775FF;
+//  public static int          GRAPH_DEPTH_RCOLOR         = 0x4775FF;
   
   //
   // globale Pattern

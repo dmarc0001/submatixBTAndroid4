@@ -30,7 +30,6 @@ import de.dmarcini.submatix.android4.full.dialogs.AreYouSureToDeleteFragment;
 import de.dmarcini.submatix.android4.full.dialogs.SelectDeviceDialogFragment;
 import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
 import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
-import de.dmarcini.submatix.android4.full.utils.CommToast;
 import de.dmarcini.submatix.android4.full.utils.DataSQLHelper;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 import de.dmarcini.submatix.android4.full.utils.ReadLogItemObj;
@@ -49,17 +48,18 @@ import de.dmarcini.submatix.android4.full.utils.SPX42ReadLogListArrayAdapter;
  */
 public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceListener, OnClickListener, OnItemClickListener
 {
-  public static final String  TAG                       = SPX42LogGraphSelectFragment.class.getSimpleName();
-  private static final String LAST_CONNECTED_DEVICE_KEY = "keyLastConnectedDevice";
-  protected ProgressDialog    progressDialog            = null;
-  private CommToast           theToast                  = null;
-  private SPX42LogManager     logManager                = null;
-  private int                 selectedDeviceId          = -1;
-  private String              selectedDeviceAlias       = null;
-  private Activity            runningActivity;
-  private Button              changeGraphDeviceButton   = null;
-  private Button              graphLogsButton           = null;
-  private ListView            graphLogsListView         = null;
+  @SuppressWarnings( "javadoc" )
+  public static final String TAG                     = SPX42LogGraphSelectFragment.class.getSimpleName();
+  // private static final String LAST_CONNECTED_DEVICE_KEY = "keyLastConnectedDevice";
+  protected ProgressDialog   progressDialog          = null;
+  // private CommToast theToast = null;
+  private SPX42LogManager    logManager              = null;
+  private int                selectedDeviceId        = -1;
+  private String             selectedDeviceAlias     = null;
+  private Activity           runningActivity;
+  private Button             changeGraphDeviceButton = null;
+  private Button             graphLogsButton         = null;
+  private ListView           graphLogsListView       = null;
 
   /**
    * 
@@ -330,7 +330,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   {
     super.onCreate( savedInstanceState );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
-    theToast = new CommToast( getActivity() );
+    // theToast = new CommToast( getActivity() );
   }
 
   /**
