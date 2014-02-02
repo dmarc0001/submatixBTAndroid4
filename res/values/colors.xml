@@ -38,20 +38,30 @@
   <color name="acku_mid_value">#E6B800</color>
   <color name="acku_low_value">#FF0000</color>
   
-    <!-- Grafik-Color  -->
-  <color name="spx_graph_backcolor">#DEE6FF</color>
-  <color name="spx_graph_margincolor">#870096</color>
-  <color name="spx_graph_depthfill">#849FF0</color>
-  <color name="spx_graph_depthborder">#000280</color>
-  <color name="spx_graph_outer_zoombar">#CAFAE8</color>
-  <color name="spx_graph_inner_zoombar">#0F8056</color>
-  <color name="spx_graph_ppo2_line">#F000EC</color>
-  <color name="spx_graph_ppo2_scale">#540053</color>
-  <color name="spx_graph_depthscale">#000280</color>
-  <color name="spx_graph_timeline">#093D00</color>
-  <color name="spx_graph_temperature_line">#F50004</color>
-  <color name="spx_graph_temperature_scale">#8F1315</color>
-  <color name="spx_graph_device_name">#EDF558</color>
-  <color name="spx_graph_device_name_background">#01042B</color>
+  <!-- Grafik-Color LIGHT -->
+  <color name="spxGraphBackcolorLight">#DEE6FF</color>
+  <color name="spxGraphDepthfillLight">#849FF0</color>
+  <color name="spxGraphDepthborderLight">#000280</color>
+  <color name="spxGraphOuterZoombarLight">#CAFAE8</color>
+  <color name="spxGraphInnerZoombarLight">#0F8056</color>
+  <color name="spxGraphPpo2LineLight">#F000EC</color>
+  <color name="spxGraphPpo2ScaleLight">#540053</color>
+  <color name="spxGraphDepthscaleLight">#000280</color>
+  <color name="spxGraphTimelineLight">#093D00</color>
+  <color name="spxGraphTemperatureLineLight">#F50004</color>
+  <color name="spxGraphTemperatureScaleLight">#8F1315</color>
+  
+  <!-- Grafik-Color DARK -->
+  <color name="spxGraphBackcolorDark">#16171A</color>
+  <color name="spxGraphDepthfillDark">#194B96</color>
+  <color name="spxGraphDepthborderDark">#B6DAFF</color>
+  <color name="spxGraphOuterZoombarDark">#002400</color>
+  <color name="spxGraphInnerZoombarDark">#B8B800</color>
+  <color name="spxGraphPpo2LineDark">#F000EC</color>
+  <color name="spxGraphPpo2ScaleDark">#986698</color>
+  <color name="spxGraphDepthscaleDark">#B2B3D9</color>
+  <color name="spxGraphTimelineDark">#CCFF33</color>
+  <color name="spxGraphTemperatureLineDark">#FCB2B4</color>
+  <color name="spxGraphTemperatureScaleDark">#B96A6B</color>
   
 </resources>
