@@ -181,7 +181,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   {
     View rootView;
     //
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "makeConnectionView..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "makeGraphSelectionView..." );
     //
     // View aus Resource laden
     //
@@ -189,9 +189,9 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     //
     // Objekte lokalisieren
     //
-    changeGraphDeviceButton = ( Button )runningActivity.findViewById( R.id.changeGraphDeviceButton );
-    graphLogsButton = ( Button )runningActivity.findViewById( R.id.graphLogsButton );
-    graphLogsListView = ( ListView )runningActivity.findViewById( R.id.graphLogsListView );
+    changeGraphDeviceButton = ( Button )rootView.findViewById( R.id.changeGraphDeviceButton );
+    graphLogsButton = ( Button )rootView.findViewById( R.id.graphLogsButton );
+    graphLogsListView = ( ListView )rootView.findViewById( R.id.graphLogsListView );
     if( changeGraphDeviceButton == null || graphLogsButton == null || graphLogsListView == null )
     {
       throw new NullPointerException( "makeConnectionView: can't init GUI (not found an Element)" );

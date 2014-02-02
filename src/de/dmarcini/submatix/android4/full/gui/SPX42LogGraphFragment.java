@@ -182,7 +182,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     super.onCreate( savedInstanceState );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
     theToast = new CommToast( getActivity() );
-    dbId = getActivity().getIntent().getIntExtra( ProjectConst.ARG_ITEM_DBID, -1 );
+    dbId = getArguments().getInt( ProjectConst.ARG_ITEM_DBID, -1 );
     if( ApplicationDEBUG.DEBUG ) Log.e( TAG, "onCreate... DBID=<" + dbId + ">" );
   }
 
