@@ -202,17 +202,6 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
       Log.e( TAG, "onCreateView: container is NULL ..." );
       return( null );
     }
-    //
-    // wenn die laufende Activity eine AreaDetailActivity ist, dann gibts das View schon
-    //
-    // if( runningActivity instanceof AreaDetailGraphActivity )
-    // {
-    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
-    // return( null );
-    // }
-    //
-    // Verbindungsseite via twoPane ausgewählt
-    //
     logGraphView = new LogGraphView( getActivity().getApplication().getApplicationContext() );
     rootView = logGraphView;
     return rootView;
@@ -259,6 +248,15 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     ReadLogItemObj rlo = logManager.getLogObjForDbId( dbId, getActivity().getResources() );
     if( rlo != null )
     {
+      //
+      // Wenn die Überschrift nicht ausgeblendet ist,
+      // Tauchgangsdaten einblenden
+      //
+      if( runningActivity.getActionBar() != null )
+      {
+        String headerStr = String.format( "%s <%s>", getResources().getString( R.string.graphlog_header ), rlo.itemName );
+        runningActivity.getActionBar().setTitle( headerStr );
+      }
       try
       {
         sampleVector = SPX42DiveSampleClass.makeSamples( rlo );
