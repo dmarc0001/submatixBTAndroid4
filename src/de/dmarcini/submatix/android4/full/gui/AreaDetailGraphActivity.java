@@ -7,8 +7,11 @@
 package de.dmarcini.submatix.android4.full.gui;
 
 import android.app.Fragment;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Window;
 import android.view.WindowManager;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
@@ -26,19 +29,43 @@ import de.dmarcini.submatix.android4.full.utils.ProjectConst;
  */
 public class AreaDetailGraphActivity extends FragmentCommonActivity
 {
-  private static final String TAG          = AreaDetailGraphActivity.class.getSimpleName();
-  private static Fragment     currFragment = null;
+  private static final String TAG              = AreaDetailGraphActivity.class.getSimpleName();
+  private static String       KEY_SHOWHEADLINE = "keyProgLogShowHeadline";
+  private static Fragment     currFragment     = null;
 
   //
   //
   @Override
   public void onCreate( Bundle savedInstanceState )
   {
-    // requestWindowFeature( Window.FEATURE_NO_TITLE );
+    SharedPreferences sPref = null;
+    //
+    if( ApplicationDEBUG.DEBUG ) Log.v( TAG, "onCreate:..." );
+    //
+    // bevor es losgeht, gucken, ob die headline gezeigt werden soll
+    //
+    sPref = PreferenceManager.getDefaultSharedPreferences( this );
+    if( sPref.contains( KEY_SHOWHEADLINE ) )
+    {
+      //
+      // wenn alle Voraussetzungen für die Grafik erfüllt sind, und FULSCREEN sein soll
+      //
+      if( !sPref.getBoolean( KEY_SHOWHEADLINE, true ) && getIntent().getBooleanExtra( ProjectConst.ARG_ITEM_GRAPHEXTRA, false )
+              && ( getIntent().getIntExtra( ProjectConst.ARG_ITEM_DBID, -1 ) > 0 ) )
+      {
+        // Jepp, Überschrift verschwinden lassen
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate: hide app headline" );
+        requestWindowFeature( Window.FEATURE_NO_TITLE );
+      }
+      else
+      {
+        // Nee, soll headline ausblenden
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate: show app headline" );
+      }
+    }
     //
     super.onCreate( savedInstanceState );
-    if( ApplicationDEBUG.DEBUG ) Log.v( TAG, "onCreate:..." );
-    // Aktiviere Zurückfunktion via Actionbar Home
+    // Aktiviere Zurückfunktion via Actionbar Home, wenn Headline vorhanden
     if( getActionBar() != null )
     {
       getActionBar().setHomeButtonEnabled( true );
@@ -58,6 +85,7 @@ public class AreaDetailGraphActivity extends FragmentCommonActivity
       currFragment = new SPX42LogGraphFragment();
       currFragment.setArguments( getIntent().getExtras() );
       setContentView( R.layout.fragment_log_protocol_graph );
+      // Überschrift und Icon festlegen, wenn _Headline vorhanden ist
       if( getActionBar() != null )
       {
         getActionBar().setTitle( R.string.graphlog_header );

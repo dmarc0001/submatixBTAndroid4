@@ -244,14 +244,6 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     super.onResume();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
     //
-    // Objekte initialisieren
-    //
-    // changeGraphDeviceButton.setOnClickListener( this );
-    // graphLogsButton = ( Button )runningActivity.findViewById( R.id.graphLogsButton );
-    // graphLogsButton.setOnClickListener( this );
-    // graphLogsListView = ( ListView )runningActivity.findViewById( R.id.graphLogsListView );
-    // graphLogsListView.setOnItemClickListener( this );
-    //
     // Service Listener setzen
     //
     ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );

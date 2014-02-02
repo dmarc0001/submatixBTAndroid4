@@ -295,8 +295,17 @@
     <string name="conf_prog_others_off_light">"Hell"</string>
     <string name="conf_prog_others_on_dark_summary">"App Thema DUNKEL gewählt"</string>
     <string name="conf_prog_others_off_light_summary">"App Thema HELL gewählt"</string>
-
-        <!--  Strings für ConnectSeite  -->
+    
+    <!--  ### Kategorie Einstellungen Log Grafik ### -->
+    <string name="conf_prog_graph_screen_header">Grafische Protokolldarstellung</string>
+    <!--  Sichtbarkeit der Überschrift -->
+    <string name="conf_prog_graph_screen_headline_headline">Titelzeile (kleine Schirme)</string>
+    <string name="conf_prog_graph_screen_headline_on_summary">Titelzeile wird angezeigt</string>
+    <string name="conf_prog_graph_screen_headline_off_summary">Titelzeile wird nicht dargestellt</string>
+    <string name="conf_prog_graph_screen_headline_on">anzeigen</string>
+    <string name="conf_prog_graph_screen_headline_off">verbergen</string>
+    
+    <!--  Strings für ConnectSeite  -->
     <string name="connect_togglebtn_disconn">AUS</string>
     <string name="connect_togglebtn_doconn">WARTE</string>
     <string name="connect_togglebtn_conn">VERB</string>
