@@ -330,7 +330,6 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   {
     super.onCreate( savedInstanceState );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
-    // theToast = new CommToast( getActivity() );
   }
 
   /**
