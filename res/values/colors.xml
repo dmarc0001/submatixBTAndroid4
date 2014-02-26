@@ -57,11 +57,11 @@
   <color name="spxGraphDepthborderDark">#B6DAFF</color>
   <color name="spxGraphOuterZoombarDark">#002400</color>
   <color name="spxGraphInnerZoombarDark">#B8B800</color>
-  <color name="spxGraphPpo2LineDark">#F000EC</color>
-  <color name="spxGraphPpo2ScaleDark">#986698</color>
+  <color name="spxGraphPpo2LineDark">#8533FF</color>
+  <color name="spxGraphPpo2ScaleDark">#9D5CFF</color>
   <color name="spxGraphDepthscaleDark">#B2B3D9</color>
   <color name="spxGraphTimelineDark">#CCFF33</color>
-  <color name="spxGraphTemperatureLineDark">#FCB2B4</color>
-  <color name="spxGraphTemperatureScaleDark">#B96A6B</color>
+  <color name="spxGraphTemperatureLineDark">#E60E0E</color>
+  <color name="spxGraphTemperatureScaleDark">#FF1010</color>
   
 </resources>
