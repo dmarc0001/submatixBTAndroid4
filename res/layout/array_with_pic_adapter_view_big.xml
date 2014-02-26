@@ -15,7 +15,7 @@
         android:layout_marginLeft="@dimen/icon_margin_left"
         android:layout_marginTop="@dimen/icon_margin_top"
         android:contentDescription="@string/array_with_pic_adapter_dummy"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/spx42" />
 
     <ImageView
       android:id="@+id/arrayListLeftActiveIndicator"
