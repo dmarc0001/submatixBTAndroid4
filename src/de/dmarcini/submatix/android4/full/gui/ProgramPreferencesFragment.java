@@ -12,16 +12,14 @@ import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
-import de.dmarcini.submatix.android4.full.utils.BuildVersion;
+import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 
 /**
@@ -37,9 +35,7 @@ import de.dmarcini.submatix.android4.full.utils.ProjectConst;
  */
 public class ProgramPreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener
 {
-  private static final String TAG          = ProgramPreferencesFragment.class.getSimpleName();
-  private static final String mailCategory = "keyProgMail";
-  private static final String progData     = "keyProgData";
+  private static final String TAG = ProgramPreferencesFragment.class.getSimpleName();
 
   @Override
   public void onCreate( Bundle savedInstanceState )
@@ -48,10 +44,6 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     Log.v( TAG, "onCreate()..." );
     Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_program_preference + ">..." );
     addPreferencesFromResource( R.xml.config_program_preference );
-    if( BuildVersion.isLightVersion )
-    {
-      setLightVersion( true );
-    }
     //
     // initiiere die notwendigen summarys
     //
@@ -61,33 +53,6 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     //
     getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener( this );
     Log.v( TAG, "onCreate: add Resouce...OK" );
-  }
-
-  /**
-   * 
-   * Wenn LIGHT-Version, dann lass die Preferenz verschwinden
-   * 
-   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
-   * 
-   * Stand: 16.11.2013
-   * 
-   * @param isLight
-   * @return
-   */
-  private boolean setLightVersion( boolean isLight )
-  {
-    if( isLight )
-    {
-      if( getPreferenceScreen().findPreference( mailCategory ) instanceof PreferenceCategory )
-      {
-        getPreferenceScreen().removePreference( getPreferenceScreen().findPreference( mailCategory ) );
-      }
-      if( getPreferenceScreen().findPreference( progData ) instanceof PreferenceCategory )
-      {
-        getPreferenceScreen().removePreference( getPreferenceScreen().findPreference( progData ) );
-      }
-    }
-    return( true );
   }
 
   @Override
@@ -174,35 +139,32 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
         Log.e( TAG, "onSharedPreferenceChanged: for Key <" + key + "> was not found an EditTextPreference! abort!" );
         return;
       }
-      if( !BuildVersion.isLightVersion )
+      //
+      // Datenverzeichnis
+      //
+      if( key.equals( "keyProgDataDirectory" ) )
       {
-        //
-        // Datenverzeichnis
-        //
-        if( key.equals( "keyProgDataDirectory" ) )
+        FragmentCommonActivity.databaseDir = new File( tP.getText() );
+        if( !FragmentCommonActivity.databaseDir.exists() )
         {
-          FragmentCommonActivity.databaseDir = new File( tP.getText() );
-          if( !FragmentCommonActivity.databaseDir.exists() )
-          {
-            Log.i( TAG, "onCreate: create database root dir..." );
-            if( !FragmentCommonActivity.databaseDir.mkdirs() ) FragmentCommonActivity.databaseDir = null;
-          }
-          tP.setSummary( String.format( res.getString( R.string.conf_prog_datadir_summary ), tP.getText() ) );
+          Log.i( TAG, "onCreate: create database root dir..." );
+          if( !FragmentCommonActivity.databaseDir.mkdirs() ) FragmentCommonActivity.databaseDir = null;
         }
-        //
-        // Hauptmailadresse
-        //
-        if( key.equals( "keyProgMailMain" ) )
-        {
-          tP.setSummary( String.format( res.getString( R.string.conf_prog_mail_main_summary ), tP.getText() ) );
-        }
-        //
-        // kopiemailadresse
-        //
-        if( key.equals( "keyProgMail2nd" ) )
-        {
-          tP.setSummary( String.format( res.getString( R.string.conf_prog_mail_main_summary ), tP.getText() ) );
-        }
+        tP.setSummary( String.format( res.getString( R.string.conf_prog_datadir_summary ), tP.getText() ) );
+      }
+      //
+      // Hauptmailadresse
+      //
+      if( key.equals( "keyProgMailMain" ) )
+      {
+        tP.setSummary( String.format( res.getString( R.string.conf_prog_mail_main_summary ), tP.getText() ) );
+      }
+      //
+      // kopiemailadresse
+      //
+      if( key.equals( "keyProgMail2nd" ) )
+      {
+        tP.setSummary( String.format( res.getString( R.string.conf_prog_mail_main_summary ), tP.getText() ) );
       }
     }
     else
@@ -282,47 +244,44 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     //
     lP = ( ListPreference )pS.findPreference( "keyProgUnitsTimeFormat" );
     lP.setSummary( String.format( res.getString( R.string.conf_prog_temp_units_summary ), lP.getEntry() ) );
-    if( !BuildVersion.isLightVersion )
+    //
+    // Datenverzeichnis
+    //
+    tP = ( EditTextPreference )pS.findPreference( "keyProgDataDirectory" );
+    temp = tP.getText();
+    if( ( temp != null ) && ( !temp.isEmpty() ) )
     {
-      //
-      // Datenverzeichnis
-      //
-      tP = ( EditTextPreference )pS.findPreference( "keyProgDataDirectory" );
-      temp = tP.getText();
-      if( ( temp != null ) && ( !temp.isEmpty() ) )
-      {
-        tP.setSummary( String.format( res.getString( R.string.conf_prog_datadir_summary ), temp ) );
-      }
-      else
-      {
-        tP.setSummary( String.format( res.getString( R.string.conf_prog_datadir_summary ), "." ) );
-      }
-      //
-      // Haupt Mailadresse
-      //
-      tP = ( EditTextPreference )pS.findPreference( "keyProgMailMain" );
-      temp = tP.getText();
-      if( ( temp != null ) && ( !temp.isEmpty() ) )
-      {
-        tP.setSummary( String.format( res.getString( R.string.conf_prog_mail_main_summary ), temp ) );
-      }
-      else
-      {
-        tP.setSummary( String.format( res.getString( R.string.conf_prog_mail_main_summary ), "." ) );
-      }
-      //
-      // Kopie Mailadresse
-      //
-      tP = ( EditTextPreference )pS.findPreference( "keyProgMail2nd" );
-      temp = tP.getText();
-      if( ( temp != null ) && ( !temp.isEmpty() ) )
-      {
-        tP.setSummary( String.format( res.getString( R.string.conf_prog_mail_main_summary ), temp ) );
-      }
-      else
-      {
-        tP.setSummary( String.format( res.getString( R.string.conf_prog_mail_main_summary ), "." ) );
-      }
+      tP.setSummary( String.format( res.getString( R.string.conf_prog_datadir_summary ), temp ) );
+    }
+    else
+    {
+      tP.setSummary( String.format( res.getString( R.string.conf_prog_datadir_summary ), "." ) );
+    }
+    //
+    // Haupt Mailadresse
+    //
+    tP = ( EditTextPreference )pS.findPreference( "keyProgMailMain" );
+    temp = tP.getText();
+    if( ( temp != null ) && ( !temp.isEmpty() ) )
+    {
+      tP.setSummary( String.format( res.getString( R.string.conf_prog_mail_main_summary ), temp ) );
+    }
+    else
+    {
+      tP.setSummary( String.format( res.getString( R.string.conf_prog_mail_main_summary ), "." ) );
+    }
+    //
+    // Kopie Mailadresse
+    //
+    tP = ( EditTextPreference )pS.findPreference( "keyProgMail2nd" );
+    temp = tP.getText();
+    if( ( temp != null ) && ( !temp.isEmpty() ) )
+    {
+      tP.setSummary( String.format( res.getString( R.string.conf_prog_mail_main_summary ), temp ) );
+    }
+    else
+    {
+      tP.setSummary( String.format( res.getString( R.string.conf_prog_mail_main_summary ), "." ) );
     }
   }
 

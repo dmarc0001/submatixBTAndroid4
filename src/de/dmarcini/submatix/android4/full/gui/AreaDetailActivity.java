@@ -14,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.content.ContentSwitcher;
-import de.dmarcini.submatix.android4.full.utils.BuildVersion;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 
 /**
@@ -106,41 +105,32 @@ public class AreaDetailActivity extends FragmentCommonActivity implements OnItem
             break;
           //
           case R.string.progitem_logging:
-            if( !BuildVersion.isLightVersion )
-            {
-              Log.i( TAG, "onCreate: start SPX42ReadLogFragment..." );
-              currFragment = ( new SPX42ReadLogFragment() );
-              setContentView( R.layout.fragment_read_log );
-              getActionBar().setTitle( R.string.logread_headline );
-              getActionBar().setLogo( mItem.resIdOffline );
-              getFragmentManager().beginTransaction().replace( R.id.readLogOuterLayout, currFragment ).commit();
-            }
+            Log.i( TAG, "onCreate: start SPX42ReadLogFragment..." );
+            currFragment = ( new SPX42ReadLogFragment() );
+            setContentView( R.layout.fragment_read_log );
+            getActionBar().setTitle( R.string.logread_headline );
+            getActionBar().setLogo( mItem.resIdOffline );
+            getFragmentManager().beginTransaction().replace( R.id.readLogOuterLayout, currFragment ).commit();
             break;
           //
           case R.string.progitem_loggraph:
-            if( !BuildVersion.isLightVersion )
-            {
-              //
-              // Seite zum selektieren zeigen
-              //
-              Log.i( TAG, "onCreate: start SPX42LogGraphSelectFragment..." );
-              currFragment = ( new SPX42LogGraphSelectFragment() );
-              setContentView( R.layout.fragment_log_protocol );
-              getActionBar().setTitle( R.string.graphlog_header );
-              getActionBar().setLogo( mItem.resIdOffline );
-              getFragmentManager().beginTransaction().replace( R.id.logGraphOuterLayout, currFragment ).commit();
-            }
+            //
+            // Seite zum selektieren zeigen
+            //
+            Log.i( TAG, "onCreate: start SPX42LogGraphSelectFragment..." );
+            currFragment = ( new SPX42LogGraphSelectFragment() );
+            setContentView( R.layout.fragment_log_protocol );
+            getActionBar().setTitle( R.string.graphlog_header );
+            getActionBar().setLogo( mItem.resIdOffline );
+            getFragmentManager().beginTransaction().replace( R.id.logGraphOuterLayout, currFragment ).commit();
             break;
           case R.string.progitem_export:
-            if( !BuildVersion.isLightVersion )
-            {
-              Log.i( TAG, "onCreate: SPX42ExportLogFragment..." );
-              currFragment = ( new SPX42ExportLogFragment() );
-              setContentView( R.layout.fragment_export_log );
-              getActionBar().setTitle( R.string.export_header );
-              getActionBar().setLogo( mItem.resIdOffline );
-              getFragmentManager().beginTransaction().replace( R.id.exportLogOuterLayout, currFragment ).commit();
-            }
+            Log.i( TAG, "onCreate: SPX42ExportLogFragment..." );
+            currFragment = ( new SPX42ExportLogFragment() );
+            setContentView( R.layout.fragment_export_log );
+            getActionBar().setTitle( R.string.export_header );
+            getActionBar().setLogo( mItem.resIdOffline );
+            getFragmentManager().beginTransaction().replace( R.id.exportLogOuterLayout, currFragment ).commit();
             break;
           case R.string.progitem_spx_status:
             //

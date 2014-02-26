@@ -24,12 +24,10 @@ import de.dmarcini.submatix.android4.full.gui.FragmentCommonActivity;
  */
 public class BuildVersion
 {
-  private static final long buildNumber = 3365L;
-  private static final long buildDate = 1391347514267L;
-  @SuppressWarnings( "javadoc" )
-  public static final boolean isLightVersion = false;
+  private static final long   buildNumber       = 3367L;
+  private static final long   buildDate         = 1391347784262L;
   /**
-   * Kennzeichnung für eine Light-Version
+   * Kennzeichnung für eine Version
    */
   private static final String buildNumberString = String.format( Locale.ENGLISH, "%d", buildNumber );
 
@@ -81,16 +79,12 @@ public class BuildVersion
    * Project: SubmatixBTForPC Package: de.dmarcini.submatix.pclogger.utils
    * 
    * 
-   * Stand: 31.07.2012
+   * Stand: 26.02.2014
    * 
    * @return Versionsstring
    */
   public static String getVersion()
   {
-    if( isLightVersion )
-    {
-      return( ProjectConst.MANUFACTVERS_LT );
-    }
     return( ProjectConst.MANUFACTVERS );
   }
 }

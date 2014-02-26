@@ -7,8 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 
 /**
@@ -121,49 +121,33 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
 
   @Override
   public void handleMessages( int what, BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   @Override
   public void msgConnecting( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   @Override
   public void msgConnected( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   @Override
   public void msgDisconnected( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   @Override
   public void msgRecivedTick( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   @Override
   public void msgRecivedAlive( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   @Override
   public void msgConnectError( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 
   @Override
   public void msgReciveWriteTmeout( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
+  {}
 }

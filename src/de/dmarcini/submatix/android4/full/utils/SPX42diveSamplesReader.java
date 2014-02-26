@@ -17,6 +17,16 @@ import org.xml.sax.XMLReader;
 
 import android.util.Log;
 
+/**
+ * Klasse zum lesen von Samples aus einer XML-Datei
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
+ * 
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * 
+ *         Stand: 26.02.2014
+ */
+@SuppressWarnings( "javadoc" )
 public class SPX42diveSamplesReader
 {
   public static final String TAG              = SPX42diveSamplesReader.class.getSimpleName();
