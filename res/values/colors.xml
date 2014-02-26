@@ -39,7 +39,7 @@
   <color name="acku_low_value">#FF0000</color>
   
   <!-- Grafik-Color LIGHT -->
-  <color name="spxGraphBackcolorLight">#DEE6FF</color>
+  <color name="spxGraphBackcolorLight">#F2F2FF</color>
   <color name="spxGraphDepthfillLight">#849FF0</color>
   <color name="spxGraphDepthborderLight">#000280</color>
   <color name="spxGraphOuterZoombarLight">#CAFAE8</color>
