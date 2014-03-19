@@ -18,7 +18,7 @@ import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
 import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
 import de.dmarcini.submatix.android4.full.exceptions.NoXMLDataFileFoundException;
 import de.dmarcini.submatix.android4.full.utils.DataSQLHelper;
-import de.dmarcini.submatix.android4.full.utils.LogGraphView;
+import de.dmarcini.submatix.android4.full.utils.SPX42LogGraphView;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 import de.dmarcini.submatix.android4.full.utils.ReadLogItemObj;
 import de.dmarcini.submatix.android4.full.utils.SPX42DiveSampleClass;
@@ -43,7 +43,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
   private SPX42LogManager    logManager      = null;
   private Activity           runningActivity = null;
   private int                dbId            = -1;
-  private LogGraphView       logGraphView    = null;
+  private SPX42LogGraphView       sPX42LogGraphView    = null;
 
   @Override
   public void handleMessages( int what, BtServiceMessage smsg )
@@ -188,9 +188,9 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
       Log.e( TAG, "onCreateView: container is NULL ..." );
       return( null );
     }
-    logGraphView = new LogGraphView( getActivity().getApplication().getApplicationContext() );
-    logGraphView.setTheme( FragmentCommonActivity.getAppStyle() );
-    rootView = logGraphView;
+    sPX42LogGraphView = new SPX42LogGraphView( getActivity().getApplication().getApplicationContext() );
+    sPX42LogGraphView.setTheme( FragmentCommonActivity.getAppStyle() );
+    rootView = sPX42LogGraphView;
     return rootView;
   }
 
@@ -228,7 +228,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
 
   /**
    * 
-   * Erzeuge nun die grafik für den Tauchgang mit dem objekt LogGraphView
+   * Erzeuge nun die grafik für den Tauchgang mit dem objekt SPX42LogGraphView
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
    * 
@@ -253,8 +253,8 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
       try
       {
         sampleVector = SPX42DiveSampleClass.makeSamples( rlo );
-        logGraphView.setDiveData( sampleVector );
-        logGraphView.invalidate();
+        sPX42LogGraphView.setDiveData( sampleVector );
+        sPX42LogGraphView.invalidate();
       }
       catch( NoXMLDataFileFoundException ex )
       {

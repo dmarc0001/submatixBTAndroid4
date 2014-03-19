@@ -31,10 +31,10 @@ import de.dmarcini.submatix.android4.full.R;
  * 
  *         Stand: 02.02.2014
  */
-public class LogGraphView extends View implements OnTouchListener
+public class SPX42LogGraphView extends View implements OnTouchListener
 {
   @SuppressWarnings( "javadoc" )
-  public static final String       TAG                = LogGraphView.class.getSimpleName();
+  public static final String       TAG                = SPX42LogGraphView.class.getSimpleName();
   private final Paint              pnt                = new Paint( Paint.ANTI_ALIAS_FLAG );
   private int                      currentAppstyle    = R.style.AppDarkTheme;
   private final SPX42LogColorClass colorClass         = new SPX42LogColorClass();
@@ -83,7 +83,7 @@ public class LogGraphView extends View implements OnTouchListener
    * 
    * @param context
    */
-  public LogGraphView( Context context )
+  public SPX42LogGraphView( Context context )
   {
     super( context );
     sampleVector = null;
@@ -103,7 +103,7 @@ public class LogGraphView extends View implements OnTouchListener
    * @param context
    * @param attrs
    */
-  public LogGraphView( Context context, AttributeSet attrs )
+  public SPX42LogGraphView( Context context, AttributeSet attrs )
   {
     super( context, attrs );
     initColors();
@@ -123,7 +123,7 @@ public class LogGraphView extends View implements OnTouchListener
    * @param attrs
    * @param defStyle
    */
-  public LogGraphView( Context context, AttributeSet attrs, int defStyle )
+  public SPX42LogGraphView( Context context, AttributeSet attrs, int defStyle )
   {
     super( context, attrs, defStyle );
     initColors();
