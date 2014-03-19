@@ -550,7 +550,7 @@ public class SPX42LogGraphView extends View implements OnTouchListener
     }
     pnt.setTextAlign( Align.CENTER );
     //
-    // Vorarbeiten bis zuum Anfang, falls Offset im Minus...
+    // Vorarbeiten bis zum Anfang, falls Offset im Minus...
     //
     float markScaleCount = 0;
     while( ( currX <= viewWidth ) && samplePos < 0 )
@@ -593,7 +593,7 @@ public class SPX42LogGraphView extends View implements OnTouchListener
    *         Stand: 01.02.2014
    * @param canvas
    * @param oxyProfil
-   *          TODO
+   * 
    */
   private void drawOxigenLine( Canvas canvas, float[] oxyProfil )
   {
