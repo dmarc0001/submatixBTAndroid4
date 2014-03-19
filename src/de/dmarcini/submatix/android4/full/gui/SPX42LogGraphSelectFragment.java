@@ -283,7 +283,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   @Override
   public void onClick( View v )
   {
-    SPX42ReadLogListArrayAdapter rAdapter;
+    SPX42ReadLogListArrayAdapter rAdapter = null;
     Button button = null;
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Click" );
@@ -294,30 +294,38 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     {
       button = ( Button )v;
       //
-      // soll das angezeigte Gerät gewechselt werden?
+      // sollen Daten visualisiert werden?
       //
-      if( button == changeGraphDeviceButton )
-      {
-        // Hier wird dann ein Dialog gebraucht!
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onClick: call changeGraphDeviceButton!" );
-        SelectDeviceDialogFragment dialog = new SelectDeviceDialogFragment();
-        dialog.setDeviceList( logManager.getDeviceNameIdList() );
-        dialog.show( getFragmentManager(), "SelectDeviceDialogFragment" );
-      }
-      //
-      // oder sollen Daten visualisiert werden?
-      //
-      else if( button == graphLogsButton )
+      if( button == graphLogsButton )
       {
         if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onClick: VIEW selected Item" );
         //
         // Zeige markiertes Log an
         //
         rAdapter = ( SPX42ReadLogListArrayAdapter )graphLogsListView.getAdapter();
-        if( rAdapter.getMarkedItems().isEmpty() ) return;
-        int idx = rAdapter.getMarkedItems().firstElement();
-        ReadLogItemObj rlo = rAdapter.getItem( idx );
-        viewSelectedLogItem( rlo.dbId );
+        if( rAdapter != null )
+        {
+          if( rAdapter.getMarkedItems().isEmpty() ) return;
+          int idx = rAdapter.getMarkedItems().firstElement();
+          ReadLogItemObj rlo = rAdapter.getItem( idx );
+          viewSelectedLogItem( rlo.dbId );
+        }
+        else
+        {
+          // Nee, da ist nix ausgewählt,
+          Log.i( TAG, "onClick: not device selected!" );
+        }
+      }
+      //
+      // soll das angezeigte Gerät gewechselt werden?
+      //
+      else if( button == changeGraphDeviceButton )
+      {
+        // Hier wird dann ein Dialog gebraucht!
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onClick: call changeGraphDeviceButton!" );
+        SelectDeviceDialogFragment dialog = new SelectDeviceDialogFragment();
+        dialog.setDeviceList( logManager.getDeviceNameIdList() );
+        dialog.show( getFragmentManager(), "SelectDeviceDialogFragment" );
       }
     }
   }
