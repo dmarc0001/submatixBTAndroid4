@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">"SubmatixBTLogger"</string>
     <string name="app_name_light">SubmatixBTLogger LIGHT</string>
-    <string name="title_area_detail">"Detail"</string>
-    <string name="app_description">"Diese App verbindet sich mit dem SUBMATIX SPX42 und liest Logdaten bzw. konfiguriert den Tauchcomputer"</string>
-    <string name="app_description_light">"Diese App verbindet sich mit dem SUBMATIX SPX42 und konfiguriert den Tauchcomputer"</string>
-    <string name="dummy_filler">"SUBMATIX BT Config"</string>
-    <string name="app_bt_service">"BluethootService"</string>
+    <string name="title_area_detail">"Details"</string>
+    <string name="app_description">"Diese App verbindet sich mit dem SUBMATIX SPX42 und liest Logdaten bzw. konfiguriert den Tauchcomputer."</string>
+    <string name="app_description_light">"Diese App verbindet sich mit dem SUBMATIX SPX42 und konfiguriert den Tauchcomputer."</string>
+    <string name="dummy_filler">"SUBMATIX BT Konfig"</string>
+    <string name="app_bt_service">"Bluetooth-Service"</string>
     <string name="app_locale_timeformat_date">dd.MM.yyyy HH:mm:ss</string>
     <string name="app_version_prefix">Version</string>
     <string name="app_build_prefix">Build</string>
@@ -25,7 +25,7 @@
     <string name="progitem_config">"SPX42 Konfiguration"</string>
     <string name="progitem_gaslist">"Gase bearbeiten"</string>
     <string name="progitem_logging">"Protokolle lesen"</string>
-    <string name="progitem_loggraph">"Visualisiere Logs"</string>
+    <string name="progitem_loggraph">"Logs visualisieren"</string>
     <string name="progitem_export">"Exportiere Protokolle"</string>
     <string name="progitem_progpref">"Einstellungen"</string>
     <string name="progitem_about">Über das Programm</string>
@@ -33,29 +33,29 @@
 
     <!-- Toasts -->
     <string name="toast_exit">"Verlasse App"</string>
-    <string name="toast_exit_nobt">"Verlasse App KEIN BT ADAPTER!"</string>
-    <string name="toast_bt_enabled">"Bluethooth aktiviert!"</string>
-    <string name="toast_dummy">kommuniziere</string>
-    <string name="toast_comm_timeout">Kommunikation Zeit abgelaufen!</string>
+    <string name="toast_exit_nobt">"Verlasse, App KEIN BT ADAPTER!"</string>
+    <string name="toast_bt_enabled">"Bluetooth aktiviert!"</string>
+    <string name="toast_dummy">Kommuniziere</string>
+    <string name="toast_comm_timeout">Kommunikation: Zeit abgelaufen!</string>
     <string name="toast_comm_set_autosetpoint">Sende O2 Partialdruck soll</string>
-    <string name="toast_comm_set_autosetpoint_ok">Sende O2 Partialdruck soll: OK</string>
-    <string name="toast_comm_set_autosetpoint_alert">Sende O2 Partialdruck: FEHLER</string>
+    <string name="toast_comm_set_autosetpoint_ok">O2 Partialdruck soll: OK</string>
+    <string name="toast_comm_set_autosetpoint_alert">O2 Partialdruck: FEHLER</string>
     <string name="toast_comm_set_deco">Sende Deko-Einstellungen</string>
-    <string name="toast_comm_set_deco_ok">Sende Deko-Einstellungen: OK</string>
-    <string name="toast_comm_set_deco_alert">Sende Deko-Einstellungen: FEHLER</string>
+    <string name="toast_comm_set_deco_ok">Deko-Einstellungen: OK</string>
+    <string name="toast_comm_set_deco_alert">Deko-Einstellungen: FEHLER</string>
     <string name="toast_comm_set_display">Sende Display Einstellungen</string>
-    <string name="toast_comm_set_display_ok">Sende Display Einstellungen: OK</string>
-    <string name="toast_comm_set_display_alert">Sende Display Einstellungen: FEHLER</string>
+    <string name="toast_comm_set_display_ok">Display Einstellungen: OK</string>
+    <string name="toast_comm_set_display_alert">Display Einstellungen: FEHLER</string>
     <string name="toast_comm_set_individuals">Sende Individualeinstellungen</string>
-    <string name="toast_comm_set_individuals_ok">Sende Individualeinstellungen: OK</string>
-    <string name="toast_comm_set_individuals_alert">Sende Individualeinstellungen: FEHLER</string>
+    <string name="toast_comm_set_individuals_ok">Individualeinstellungen: OK</string>
+    <string name="toast_comm_set_individuals_alert">Individualeinstellungen: FEHLER</string>
     <string name="toast_comm_set_units">Sende Einheiteneinstellungen</string>
-    <string name="toast_comm_set_units_ok">Sende Einheiteneinstellungen: OK</string>
-    <string name="toast_comm_set_units_alert">Sende Einheiteneinstellungen: FEHLER</string>
+    <string name="toast_comm_set_units_ok">Einheiteneinstellungen: OK</string>
+    <string name="toast_comm_set_units_alert">Einheiteneinstellungen: FEHLER</string>
     <string name="toast_comm_set_gas">Sende Gaseinstellung</string>
-    <string name="toast_comm_set_gas_ok">Sende Gaseinstellung: OK</string>
+    <string name="toast_comm_set_gas_ok">Gaseinstellung: OK</string>
     <string name="toast_comm_set_gas_count" formatted="false">Sende Gas #%02d von #%02d</string>
-    <string name="toast_comm_set_gas_alert">Sende Gaseinstellung: FEHLER</string>
+    <string name="toast_comm_set_gas_alert">Gaseinstellung: FEHLER</string>
     <string name="toast_read_logdir_no_selected_entrys">Noch keine Einträge selektiert!</string>
     <string name="toast_connect_connected">Verbunden mit &lt;%s&gt;</string>
     <string name="toast_connect_disconnected">Verbindung getrennt</string>
@@ -72,31 +72,31 @@
     <string name="dialog_please_wait_read_config" formatted="false">Lese Konfiguration vom SPX...</string>
     <string name="dialog_alias_edit_title">Bearbeite Alias für Gerät</string>
     <string name="dialog_save_button">Sichern</string>
-    <string name="dialog_sqlite_error_header">Datenbsank FEHLER</string>
+    <string name="dialog_sqlite_error_header">Datenbank FEHLER</string>
     <string name="dialog_sqlite_nodatabase_error">Keine Datenbank gefunden oder\nDatenbank kann nicht erzeugt/geöffnet werden.\nProgramm muss beendet werden!</string>
     <string name="dialog_device_select_title">Gerät für Exporte wählen</string>
     <string name="dialog_device_select_button">Auswahl</string>
-    <string name="dialog_not_mail_exist_header">Keine Mailadressse</string>
+    <string name="dialog_not_mail_exist_header">Keine Mailadresse</string>
     <string name="dialog_not_mail_exist">Entschuldige, es ist keine Mail\nin den Einstellungen eingetragen!\nEintragung in den Programmeinstellungen.</string>
     <string name="dialog_not_selected_items_header">Nichts markiert</string>    
     <string name="dialog_not_selected_items">Keine Einträge zum exportieren markiert!</string>
     <string name="dialog_no_uddfdir_header">Kein UDDF-Verzeichnis</string>
     <string name="dialog_no_uddfdir">Es existiert kein Verzeichnis mit UDDF-Dateien\noder das Verzeichnis ist nicht lesbar.</string>
     <string name="dialog_no_device_selected_header">Wähle Gerät</string>
-    <string name="dialog_no_device_selected">Es wurde kein Gerät ausgewählt</string>
+    <string name="dialog_no_device_selected">Es wurde kein Gerät ausgewählt!</string>
     <string name="dialog_not_log_entrys_header">Protokolleinträge</string>
     <string name="dialog_not_log_entrys">Es gibt keine Protokolle in der Datenbank\nfür dieses Gerät</string>
     <string name="dialog_delete_header">LÖSCHEN</string>
     <string name="dialog_delete_nothing_selected">Nichts zum löschen ausgewählt</string>
     <string name="dialog_delete_are_you_sure_header">SICHER?</string>
-    <string name="dialog_delete_device">lösche ALLE Daten für Gerät\n\"%s\"</string>
-    <string name="dialog_delete_selected_logs">lösche alle markierten Protokolle</string>
+    <string name="dialog_delete_device">Lösche ALLE Daten für Gerät\n\"%s\"</string>
+    <string name="dialog_delete_selected_logs">Lösche alle markierten Protokolle</string>
     <string name="dialog_delete_button">LÖSCHEN!</string>
     
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title" formatted="false">Suche BT Geräte...</string>
-    <string name="progress_wait_for_discover_message_start" formatted="false">noch kein Gerät gefunden...</string>
-    <string name="progress_wait_for_discover_message_continue" formatted="false">letztes Gerät: %s...</string>
+    <string name="progress_wait_for_discover_message_start" formatted="false">Noch kein Gerät gefunden...</string>
+    <string name="progress_wait_for_discover_message_continue" formatted="false">Letztes Gerät: %s...</string>
     
     <!--  DUMMY Detailseite  -->
     <string name="dummy_headline">"Dummyseite"</string>
@@ -108,42 +108,42 @@
     <string name="conf_setpoint_header">"SETPOINT"</string>
     <!-- autosetpoint -->
     <string name="conf_autoset_label">"Autosetpoint"</string>
-    <string name="conf_autoset_summary">"aktuelle Auswahl: %s"</string>
+    <string name="conf_autoset_summary">"Aktuelle Auswahl: %s"</string>
     <string name="conf_autoset_default">"5"</string>
     <!-- tiefe für autosetpint -->
-    <string name="conf_highset_header">"Wähle gewünschter Highsetpoint"</string>
-    <string name="conf_highset_summary">"aktuelle Auswahl %s"</string>
+    <string name="conf_highset_header">"Wähle gewünschten Highsetpoint"</string>
+    <string name="conf_highset_summary">"Aktuelle Auswahl %s"</string>
     <string name="conf_highset_default">"1,0"</string>
     <!--  ### kategorie Decompression ### -->
     <string name="conf_deco_header">"DEKOMPRESSION"</string>
     <!-- deco presets -->
     <string name="conf_deco_preset_header">"Auswahl Voreingestellung"</string>
-    <string name="conf_deco_presets_summary">"aktuell ausgewählte Voreinstellung ist \"%s\""</string>
+    <string name="conf_deco_presets_summary">"Aktuell ausgewählte Voreinstellung ist \"%s\""</string>
     <!-- der Eintrag aus config_presets_preference.xml (Values)-->
     <string name="conf_deco_presets_default">"30:85"</string>
     <!-- labes in der layoutdatei zum gradient picker -->
     <string name="conf_deco_gradient_low_header">"LOW"</string>
     <string name="conf_deco_gradient_high_header">"HIGH"</string>
     <!-- gradienten -->
-    <string name="conf_deco_gradient">"setze Gradient"</string>
-    <string formatted="false" name="conf_deco_gradient_summary">"aktuellen Werte low: %d high: %d"</string>
+    <string name="conf_deco_gradient">"Setze Gradient"</string>
+    <string formatted="false" name="conf_deco_gradient_summary">"Aktuellen Werte low: %d high: %d"</string>
     <string name="conf_deco_gradient_default">"40:80"</string>
     <!-- gradient number picker buttons -->
-    <string name="conf_deco_gradient_button_positive">"setze Gradient"</string>
+    <string name="conf_deco_gradient_button_positive">"Setze Gradient"</string>
     <string name="conf_deco_gradient_button_negative">"Abbrechen"</string>
     <!-- last decostop -->
     <string name="conf_deco_last_stop_header">"Tiefe für letzten Stop"</string>
     <string name="conf_deco_last_stop_on">"3m"</string>
     <string name="conf_deco_last_stop_off">"6m"</string>
-    <string name="conf_deco_last_stop_on_summary">"letzter Stop in 3 Meter"</string>
-    <string name="conf_deco_last_stop_off_summary">"letzter Stop in 6 Meter"</string>
+    <string name="conf_deco_last_stop_on_summary">"Letzter Stop in 3 Metern"</string>
+    <string name="conf_deco_last_stop_off_summary">"Letzter Stop in 6 Metern"</string>
     <string name="conf_deco_last_stop_default">"6"</string>
     <!-- dynamische gradienten (bei Notfall) -->
-    <string name="conf_deco_dyn_gradients_header">"dyn. Gradienten"</string>
+    <string name="conf_deco_dyn_gradients_header">"Dyn. Gradienten"</string>
     <string name="conf_deco_dyn_gradients_on">"Dyn."</string>
     <string name="conf_deco_dyn_gradients_off">"AUS"</string>
-    <string name="conf_deco_dyn_gradients_summary_on">"dyn Gradienten sind aktiv"</string>
-    <string name="conf_deco_dyn_gradients_summary_off">"dyn Gradienten sind inaktiv"</string>
+    <string name="conf_deco_dyn_gradients_summary_on">"Dyn. Gradienten sind aktiv"</string>
+    <string name="conf_deco_dyn_gradients_summary_off">"Dyn. Gradienten sind inaktiv"</string>
     <!-- tiefe decostops -->
     <string name="conf_deco_deppstops_header">"Deep Stops"</string>
     <string name="conf_deco_deepstops_summary_on">"Deep Stops sind aktiv"</string>
@@ -156,7 +156,7 @@
     
     <!-- display helligkeit -->
     <string name="conf_display_luminance_header">"Helligkeit:"</string>
-    <string name="conf_luminance_header_summary">"aktuelle Helligkeit %s Prozent auf SPX42"</string>
+    <string name="conf_luminance_header_summary">"Aktuelle Helligkeit %s Prozent auf SPX42"</string>
     <string name="conf_luminance_default">"0"</string>
     <!-- display orientierung -->
     <string name="conf_display_orientation_header">"Display-Ausrichtung"</string>
@@ -165,14 +165,14 @@
     <!-- ### kategorie Einheiten ### -->
     <string name="conf_units_header">"SPX42 Einheiten"</string>
     <!-- temperatureinheiten -->
-    <string name="conf_units_temp_header">"Temeratureinheit"</string>
+    <string name="conf_units_temp_header">"Temperatureinheit"</string>
     <string name="conf_units_temp_metric">"Celsius"</string>
-    <string name="conf_units_temp_fahrenheid">"Fahrenheid"</string>
+    <string name="conf_units_temp_fahrenheid">"Fahrenheit"</string>
     <string name="conf_units_temp_metric_summary">"Temperatur in Celsius"</string>
-    <string name="conf_units_temp_fahrenheid_summary">"Temperatur in Fahrenheid"</string>
+    <string name="conf_units_temp_fahrenheid_summary">"Temperatur in Fahrenheit"</string>
     <!--  tiefeneinheiten -->
     <string name="conf_units_depth_header">"Einheit für die Tiefe"</string>
-    <string name="conf_units_depth_meters">"meter"</string>
+    <string name="conf_units_depth_meters">"Meter"</string>
     <string name="conf_units_depth_foot">"Fuß"</string>
     <string name="conf_units_depth_meters_summary">"Tiefe in Metern"</string>
     <string name="conf_units_depth_foot_summary">"Tiefe in Fuß"</string>
@@ -197,17 +197,17 @@
     <string name="conf_ind_pscr_summary_on">"Der PSCR Modus ist eingeschaltet"</string>
     <string name="conf_ind_pscr_summary_off">"Der PSCR-Modus ist ausgeschaltet"</string>
     <!-- anzahl der berücksichtigten sensoren -->
-    <string name="conf_ind_count_sensorwarning_header">"Sensor Warnungen"</string>
-    <string name="conf_ind_count_sensorwarning_header_summary">"aktuell %s für Warnung"</string>
+    <string name="conf_ind_count_sensorwarning_header">"Sensor-Warnungen"</string>
+    <string name="conf_ind_count_sensorwarning_header_summary">"Aktuell %s für Warnung"</string>
     <string name="conf_ind_count_default">"3"</string>
     <!-- akustische warnungen on/off -->    
-    <string name="conf_ind_acoustic_warning_header">"akustische Warnungen"</string>
+    <string name="conf_ind_acoustic_warning_header">"Akustische Warnungen"</string>
     <string name="conf_ind_acoustic_warning_on">"AN"</string>
     <string name="conf_ind_acoustic_warning_off">"AUS"</string>
-    <string name="conf_ind_acoustic_warning_on_summary">"akustische Warnungen sind AN"</string>
-    <string name="conf_ind_acoustic_warning_off_summary">"akustische Warnungen sind AUS"</string>
+    <string name="conf_ind_acoustic_warning_on_summary">"Akustische Warnungen sind AN"</string>
+    <string name="conf_ind_acoustic_warning_off_summary">"Akustische Warnungen sind AUS"</string>
     <!-- log intervall -->
-    <string name="conf_ind_interval_header">"log Interval"</string>
+    <string name="conf_ind_interval_header">"Log Intervall"</string>
     <string name="conf_ind_interval_header_summary">"Intervall %s zwischen zwei Logeinträgen"</string>
     <string name="conf_ind_interval_default">"60"</string>
     <!--  tempstick Version  -->
@@ -219,16 +219,16 @@
     <string name="connect_headline">"Verbindung zu SPX42"</string>
     <string name="connect_discover_button_title">"Finden von BT Geräten"</string>
     <string name="connect_button_off_text">"An/Aus"</string>
-    <string name="connect_disconnect_device">getrennt</string>
-    <string name="connect_connecting_device">verbinden</string>
-    <string name="connect_connected_device">verbunden</string>
+    <string name="connect_disconnect_device">Getrennt</string>
+    <string name="connect_connecting_device">Verbinden</string>
+    <string name="connect_connected_device">Verbunden</string>
     <string name="connect_editalias_button_title">Bearbeite Alias</string>
     
     <!-- Detailseite für Gaslisten-Editor -->
     <string name="conf_gaslist_headline">"SPX42 Gasliste bearbeiten"</string>
     <string name="conf_gaslist_default">"21:0:79:0:0:0"</string>
     <string name="conf_gaslist_o2">"O2"</string>
-    <string name="conf_gaslist_he">"HE"</string>
+    <string name="conf_gaslist_he">"He"</string>
     <string name="conf_gaslist_n2">"N2"</string>
     <string name="conf_gaslist_diluent1">"D1"</string>
     <string name="conf_gaslist_diluent2">"D2"</string>
@@ -237,14 +237,14 @@
     <string name="conf_gaslist_button_negative">"Abbrechen"</string>
     
     <!-- Detailseite Gasliste -->
-    <string name="gaslist_headline">"Gaslist SPX42"</string>
-    <string name="conf_gaslist_summary_first" formatted="false">aktuelles Gas %02d ist %s, MOD ist %dm (Süßwasser)</string>
+    <string name="gaslist_headline">"Gasliste SPX42"</string>
+    <string name="conf_gaslist_summary_first" formatted="false">Aktuelles Gas %02d ist %s, MOD ist %dm (Süßwasser)</string>
     <string name="conf_gaslist_summary_diluent1"> - DIL1</string>
     <string name="conf_gaslist_summary_diluent2"> - DIL2</string>
     <string name="conf_gaslist_summary_no_diluent">       </string>
     <string name="conf_gaslist_summary_bailout"> - BO</string>
     
-    <string name="conf_gaslist_noname">"noch nicht initalisiert"</string>
+    <string name="conf_gaslist_noname">"Noch nicht initalisiert"</string>
     
     <!-- ### Kategorie Gas  ## -->
     <string name="conf_gaslist_gas_key_template" formatted="false">"keyGaslistGas%02d"</string>
@@ -259,51 +259,51 @@
     <string name="conf_gaslist_gas08_header">"Gas #08"</string>
             
     <!-- Detailseite für Programmkonfiguration -->
-    <string name="conf_prog_headline">"App Einstellungen"</string>
+    <string name="conf_prog_headline">"App-Einstellungen"</string>
     <!-- ### Kategorie Zeitanzeige ### -->
-    <string name="conf_prog_units_head">Einheiten Anzeige</string>
+    <string name="conf_prog_units_head">Einheitenanzeige</string>
     <!-- Format für die Zeitanzeige -->
     <string name="conf_prog_temp_units_title">Zeitformat</string>
-    <string name="conf_prog_temp_units_summary" formatted="false">Standard Format: &lt;%s&gt;</string>
+    <string name="conf_prog_temp_units_summary" formatted="false">Standardformat: &lt;%s&gt;</string>
     <string name="conf_prog_temp_units_default">yyyy-MM-dd - HH:mm:ss</string>
     
     <!-- ### Kategorie Dateisystem ### -->
-    <string name="conf_prog_filesystem">"Dateisystem Einstellungen"</string>
+    <string name="conf_prog_filesystem">"Dateisystem-Einstellungen"</string>
     <!-- datenverzeichnis für Logdaten -->
-    <string name="conf_prog_datadir">"Daten Verzeichnis"</string>
+    <string name="conf_prog_datadir">"Datenverzeichnis"</string>
     <string name="conf_prog_datadir_summary">"Logdaten in \"%s\" gespeichert"</string>
     <!-- nur neue Logdaten oder alle Logdaten auf dem Gerät zeigen? -->
     <string name="conf_prog_showall_header">"Zeige alle neuen Logeinträge?"</string>
-    <string name="conf_prog_showall_on_summary">"zeigt alle Logeinträge"</string>
-    <string name="conf_prog_showall_off_summary">"zeigt nur neue Logeinträge "</string>
+    <string name="conf_prog_showall_on_summary">"Zeigt alle Logeinträge"</string>
+    <string name="conf_prog_showall_off_summary">"Zeigt nur neue Logeinträge "</string>
     <string name="conf_prog_showall_on">"ZEIGE"</string>
     <string name="conf_prog_showall_off">"NEIN"</string>
     <!-- ### Kategorie Mail ### -->
-    <string name="conf_prog_mail_header">"Mail Konfiguration"</string>
+    <string name="conf_prog_mail_header">"Mail-Konfiguration"</string>
     <!-- Mailversand an wen? -->
     <string name="conf_prog_mail_main">"Hauptempfänger"</string>
-    <string name="conf_prog_mail_2nd">"Copy Empfänger"</string>
+    <string name="conf_prog_mail_2nd">"Copy-Empfänger"</string>
     <string name="conf_prog_mail_main_summary">"E-Mail an &lt;%s&gt;"</string>
     <!-- soll die uddf (xml) datei komprimiert werden? -->
-    <string name="conf_prog_mail_compressed_header">"komprimiere UDDF"</string>
-    <string name="conf_prog_mail_compressed_on_summary">"UDDF Datei wird komprimiert"</string>
-    <string name="conf_prog_mail_compressed_off_summary">"UDDF Datei wird nicht komprimiert"</string>
+    <string name="conf_prog_mail_compressed_header">"Komprimiere UDDF"</string>
+    <string name="conf_prog_mail_compressed_on_summary">"UDDF-Datei wird komprimiert"</string>
+    <string name="conf_prog_mail_compressed_off_summary">"UDDF-Datei wird nicht komprimiert"</string>
     <!-- Programmtheme -->
     <string name="conf_prog_others_header">"SONSTIGES"</string>
     <string name="conf_prog_others_theme_header">"Thema"</string>
     <string name="conf_prog_others_on_dark">"Dunkel"</string>
     <string name="conf_prog_others_off_light">"Hell"</string>
-    <string name="conf_prog_others_on_dark_summary">"App Thema DUNKEL gewählt"</string>
-    <string name="conf_prog_others_off_light_summary">"App Thema HELL gewählt"</string>
+    <string name="conf_prog_others_on_dark_summary">"App-Thema DUNKEL gewählt"</string>
+    <string name="conf_prog_others_off_light_summary">"App-Thema HELL gewählt"</string>
     
     <!--  ### Kategorie Einstellungen Log Grafik ### -->
     <string name="conf_prog_graph_screen_header">Grafische Protokolldarstellung</string>
     <!--  Sichtbarkeit der Überschrift -->
     <string name="conf_prog_graph_screen_headline_headline">Titelzeile (kleine Schirme)</string>
     <string name="conf_prog_graph_screen_headline_on_summary">Titelzeile wird angezeigt</string>
-    <string name="conf_prog_graph_screen_headline_off_summary">Titelzeile wird nicht dargestellt</string>
-    <string name="conf_prog_graph_screen_headline_on">anzeigen</string>
-    <string name="conf_prog_graph_screen_headline_off">verbergen</string>
+    <string name="conf_prog_graph_screen_headline_off_summary">Titelzeile wird nicht angezeigt</string>
+    <string name="conf_prog_graph_screen_headline_on">Anzeigen</string>
+    <string name="conf_prog_graph_screen_headline_off">Verbergen</string>
     
     <!--  Strings für ConnectSeite  -->
     <string name="connect_togglebtn_disconn">AUS</string>
@@ -311,11 +311,11 @@
     <string name="connect_togglebtn_conn">VERB</string>
     
     <!-- NotificationBar  -->
-    <string name="notify_service">Submatix BT Service</string>
+    <string name="notify_service">SUBMATIX BT Service</string>
     <string name="notify_service_started">BT Service gestartet</string>
     <string name="notify_service_connected">BT Service Verbunden</string>
     <string name="notify_service_disconnected">BT Service getrennt</string>
-    <string name="notify_service_running">Submatix BT Service läuft</string>
+    <string name="notify_service_running">SUBMATIX BT Service läuft</string>
     <string name="notify_service_ticker">SUBMATIX BT Service</string>
     
     <!-- IN-PROGRESS-Frame -->
@@ -342,7 +342,7 @@
     <string name="export_header_device" formatted="false" >Exportiere Protokolle vom Gerät &lt;%s&gt;</string>
     <string name="export_subheader" formatted="false">Gerät: %s</string>
     <string name="export_change_drive_button">Gerät...</string>
-    <string name="export_delete_button">LÖSCH</string>
+    <string name="export_delete_button">LÖSCHEN</string>
     <string name="export_do_export">Export!</string>
     <string name="export_mail_bodytext">Hier sind Deine Tauchprotokolle im Anhang der Mail\n\nGrüße von Deinem ANDROID-Gerät\n\n</string>
     
@@ -351,8 +351,8 @@
     <string name="health_serial_number_label">SPX42 Seriennummer</string>
     <string name="health_firmware_version_label">SPX42 Firmware Version</string>
     <string name="health_license_label">SPX42 Lizenz</string>
-    <string name="health_license_enable">lizensiert</string>
-    <string name="health_license_disable">nicht lizensiert</string>
+    <string name="health_license_enable">Lizensiert</string>
+    <string name="health_license_disable">Nicht lizensiert</string>
     <string name="health_license_nitrox_label">Nitrox</string>
     <string name="health_license_normoxic_trimix_label">Normoxic TMX</string>
     <string name="health_license_full_trimix_label">Voll TMX</string>

@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.dmarcini.submatix.android4.full"
-    android:versionCode="14"
-    android:versionName="1.01" android:installLocation="auto">
+    android:versionCode="15"
+    android:versionName="1.02" android:installLocation="auto">
 
     <uses-sdk
         android:minSdkVersion="15"
@@ -20,7 +20,7 @@
         android:icon="@drawable/spx42"
         android:label="@string/app_name"
         android:theme="@style/AppDarkTheme" 
-        android:description="@string/app_description" android:hardwareAccelerated="true">
+        android:description="@string/app_description" android:hardwareAccelerated="true" android:debuggable="false">
         
         <!-- Die List/Main activity -->
         <activity
