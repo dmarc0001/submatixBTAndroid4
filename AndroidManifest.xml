@@ -15,12 +15,13 @@
     <!-- Die Anwendungsbeschreibung  -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <application
         android:allowBackup="true"
         android:icon="@drawable/spx42"
         android:label="@string/app_name"
         android:theme="@style/AppDarkTheme" 
-        android:description="@string/app_description" android:hardwareAccelerated="true" android:debuggable="false">
+        android:description="@string/app_description" android:hardwareAccelerated="true" android:debuggable="true" android:restoreAnyVersion="true">
         
         <!-- Die List/Main activity -->
         <activity
