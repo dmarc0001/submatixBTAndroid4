@@ -13,7 +13,7 @@ import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 
 /**
  * 
- * Ein Fragment zur Anzeige, daß die Funktion och in Arbeit ist
+ * Ein Fragment zur Anzeige, daß die Funktion noch in Arbeit ist
  * 
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
  * 
