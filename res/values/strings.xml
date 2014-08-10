@@ -34,6 +34,7 @@
     <!-- Toasts -->
     <string name="toast_exit">Exiting app</string>
     <string name="toast_exit_nobt">Exiting app, NO BT ADAPTER!</string>
+    <string name="toast_nobt_adapter">"No BT Adapter!"</string>
     <string name="toast_bt_enabled">Bluetooth enabled!</string>
     <string name="toast_dummy">Communicate</string>
     <string name="toast_comm_timeout">Communication timeout!</string>
@@ -104,33 +105,43 @@
     
     <!-- Detailseite für Konfiguration des SPX42 -->
     <string name="conf_headline">SPX42 config</string>
+    
     <!-- ### Kategorie Setpoint ###  -->
     <string name="conf_setpoint_header">SETPOINT</string>
+    
     <!-- autosetpoint -->
     <string name="conf_autoset_label">Auto-setpoint</string>
     <string name="conf_autoset_summary">Current selection is: %s</string>
     <string name="conf_autoset_default">5</string>
+    
     <!-- tiefe für autosetpint -->
     <string name="conf_highset_header">Select desired high-setpoint</string>
     <string name="conf_highset_summary">Current selection is %s</string>
     <string name="conf_highset_default">1.0</string>
+    
     <!--  ### kategorie Decompression ### -->
     <string name="conf_deco_header">DECOMPRESSION</string>
+    
     <!-- deco presets -->
     <string name="conf_deco_preset_header">Select preset</string>
     <string name="conf_deco_presets_summary">Currently selected preset is \"%s\"</string>
+    
     <!-- der Eintrag aus config_presets_preference.xml (Values)-->
     <string name="conf_deco_presets_default">30:85</string>
+    
     <!-- labes in der layoutdatei zum gradient picker -->
     <string name="conf_deco_gradient_low_header">LOW</string>
     <string name="conf_deco_gradient_high_header">HIGH</string>
+    
     <!-- gradienten -->
     <string name="conf_deco_gradient">Set gradient</string>
     <string name="conf_deco_gradient_summary" formatted="false">Current values low: %d high: %d</string>
     <string name="conf_deco_gradient_default">40:80</string>
+    
     <!-- gradient number picker buttons -->
     <string name="conf_deco_gradient_button_positive">Set gradient</string>
     <string name="conf_deco_gradient_button_negative">Cancel</string>
+    
     <!-- last decostop -->
     <string name="conf_deco_last_stop_header">Depth of last stop</string>
     <string name="conf_deco_last_stop_on">3m</string>
@@ -138,77 +149,93 @@
     <string name="conf_deco_last_stop_on_summary">Last stop in 3 meters</string>
     <string name="conf_deco_last_stop_off_summary">Last stop in 6 meters</string>
     <string name="conf_deco_last_stop_default">6</string>
+    
     <!-- dynamische gradienten (bei Notfall) -->
     <string name="conf_deco_dyn_gradients_header">Dyn. gradients</string>
     <string name="conf_deco_dyn_gradients_on">Dyn.</string>
     <string name="conf_deco_dyn_gradients_off">OFF</string>
     <string name="conf_deco_dyn_gradients_summary_on">Dyn. gradients are active</string>
     <string name="conf_deco_dyn_gradients_summary_off">Dyn. gradients are inactive</string>
+    
     <!-- tiefe decostops -->
     <string name="conf_deco_deppstops_header">Deep stops</string>
     <string name="conf_deco_deepstops_summary_on">Deep stops are active</string>
     <string name="conf_deco_deppstops_summary_off">Deep stops are inactive</string>
     <string name="conf_deco_deepstops_on">Deep stop</string>
     <string name="conf_deco_deepstops_off">No deep stop</string>
+    
     <!-- ### kategorie display ### -->
     <string name="conf_display_header">DISPLAY</string>
     <string name="conf_display_header_new">DISPLAY-N</string>
+    
     <!-- display helligkeit -->
     <string name="conf_display_luminance_header">Brightness</string>
     <string name="conf_luminance_header_summary">Current brightness is %s percent on SPX42</string>
     <string name="conf_luminance_default">100</string>
+    
     <!-- display orientierung -->
     <string name="conf_display_orientation_header">Orientation of display</string>
     <string name="conf_display_orientation_header_summary">Current setting is \"%s\"</string>
     <string name="conf_display_orientation_default">0</string>
+    
     <!-- ### kategorie Einheiten ### -->
     <string name="conf_units_header">SPX42 UNITS</string>
+    
     <!-- temperatureinheiten -->
     <string name="conf_units_temp_header">Unit of temperature</string>
     <string name="conf_units_temp_metric">Celsius</string>
     <string name="conf_units_temp_fahrenheid">Fahrenheit</string>
     <string name="conf_units_temp_metric_summary">Temperature in Celsius</string>
     <string name="conf_units_temp_fahrenheid_summary">Temperature in Fahrenheit</string>
+    
     <!--  tiefeneinheiten -->
     <string name="conf_units_depth_header">Unit of depth</string>
     <string name="conf_units_depth_meters">Meters</string>
     <string name="conf_units_depth_foot">Feet</string>
     <string name="conf_units_depth_meters_summary">Depth in meters</string>
     <string name="conf_units_depth_foot_summary">Depth in feet</string>
+    
     <!-- süß oder salzwasser -->    
     <string name="conf_units_watertype_header">Water type</string>
     <string name="conf_units_freshwater">Fresh water</string>
     <string name="conf_units_saltwater">Salt water</string>
     <string name="conf_units_freshwater_summary">Current selection is fresh water</string>
     <string name="conf_units_saltwater_summary">Current selection is salt water</string>
+    
     <!-- ### kategorie individual ### -->
     <string name="conf_ind_header">Individual settings</string>
+    
     <!-- sensoren ein/aus -->    
     <string name="conf_ind_sensors_onoff_header">Switch sensors on or off</string>
     <string name="conf_ind_sensors_text_on">ON</string>
     <string name="conf_ind_sensors_text_off">OFF</string>
     <string name="conf_ind_sensors_text_on_summary">Sensors are on</string>
     <string name="conf_ind_sensors_text_off_summary">Sensors are OFF!</string>
+    
     <!-- passive semiclosed rebreather mode on/off -->
     <string name="conf_ind_pscr_onoff_header">Switch PSCR Mode</string>
     <string name="conf_ind_pscr_text_on">ON</string>
     <string name="conf_ind_pscr_text_off">OFF</string>
     <string name="conf_ind_pscr_summary_on">The PSCR mode is on</string>
     <string name="conf_ind_pscr_summary_off">The PSCR mode is off</string>
+    
     <!-- anzahl der berücksichtigten sensoren -->
     <string name="conf_ind_count_sensorwarning_header">Sensor warnings</string>
     <string name="conf_ind_count_sensorwarning_header_summary">Current %s for warning</string>
     <string name="conf_ind_count_default">3</string>
+    
     <!-- akustische warnungen on/off -->    
     <string name="conf_ind_acoustic_warning_header">Acoustic warnings</string>
     <string name="conf_ind_acoustic_warning_on">ON</string>
     <string name="conf_ind_acoustic_warning_off">OFF</string>
     <string name="conf_ind_acoustic_warning_on_summary">Acoustic warnings are on</string>
     <string name="conf_ind_acoustic_warning_off_summary">Acoustic warnings are off</string>
+    
     <!-- log intervall -->
     <string name="conf_ind_interval_header">Logging interval</string>
     <string name="conf_ind_interval_header_summary">Interval %s between two log entries</string>
     <string name="conf_ind_interval_default">60</string>
+    
     <!--  tempstick Version  -->
     <string name="conf_ind_tempstick_header">Temp. stick type</string>
     <string name="conf_ind_tempstick_header_summary">Type of temp. stick: %s </string>
@@ -258,8 +285,10 @@
             
     <!-- Detailseite für Programmkonfiguration -->
     <string name="conf_prog_headline">App preferences</string>
+    
     <!-- ### Kategorie Zeitanzeige ### -->
     <string name="conf_prog_units_head">Unit of time</string>
+    
     <!-- Format für die Zeitanzeige -->
     <string name="conf_prog_temp_units_title">Time format</string>
     <string name="conf_prog_temp_units_summary" formatted="false">Standard format: &lt;%s&gt;</string>
@@ -267,25 +296,46 @@
     
     <!-- ### Kategorie Dateisystem ### -->
     <string name="conf_prog_filesystem">Filesystem preferences</string>
+    
     <!-- datenverzeichnis für Logdaten -->
     <string name="conf_prog_datadir">Data directory</string>
     <string name="conf_prog_datadir_summary">Log data stored in \"%s\"</string>
+    
     <!-- nur neue Logdaten oder alle Logdaten auf dem Gerät zeigen? -->
     <string name="conf_prog_showall_header">Show all new log entries?</string>
     <string name="conf_prog_showall_on_summary">Showing all log entries</string>
     <string name="conf_prog_showall_off_summary">"Showing only new log entries "</string>
     <string name="conf_prog_showall_on">SHOW</string>
     <string name="conf_prog_showall_off">NO</string>
+    
+    <!--  ### Kategorie GPS Behandlung ### -->
+    <string name="conf_prog_gps">"GPS-Einstellungen"</string>
+    
+    <!--  GPS Benutzung -->
+    <string name="conf_prog_gps_header">"Location find/write?"</string>
+    <string name="conf_prog_gps_on_summary">"Location find and write"</string>
+    <string name="conf_prog_gps_off_summary">"Let GPS unused"</string>
+    <string name="conf_prog_gps_on">"GPS ON"</string>
+    <string name="conf_prog_gps_off">"GPS OFF"</string>
+    
+    <!-- Mindeste Genauigkeit  -->
+    <string name="conf_prog_gps_accuracy_header">Min precision</string>
+    <string name="conf_prog_gps_accuracy_summary">From what precision GPS Accept?</string>
+    <string name="conf_prog_gps_accuracy_default">16</string>
+    
     <!-- ### Kategorie Mail ### -->
     <string name="conf_prog_mail_header">Email preferences</string>
+    
     <!-- Mailversand an wen? -->
     <string name="conf_prog_mail_main">Main recipient</string>
     <string name="conf_prog_mail_2nd">CC recipient</string>
     <string name="conf_prog_mail_main_summary">Send email to &lt;%s&gt;</string>
+    
     <!-- soll die uddf (xml) datei komprimiert werden? -->
     <string name="conf_prog_mail_compressed_header">Compress UDDF</string>
     <string name="conf_prog_mail_compressed_on_summary">UDDF file will be compressed</string>
     <string name="conf_prog_mail_compressed_off_summary">UDDF file will NOT be compressed</string>
+    
     <!-- Programmtheme -->
     <string name="conf_prog_others_header">Misc</string>
     <string name="conf_prog_others_theme_header">Switch theme</string>
@@ -295,14 +345,14 @@
     <string name="conf_prog_others_off_light_summary">App theme BRIGHT selected</string>
     
     <!--  ### Kategorie Einstellungen Log Grafik ### -->
+    <string name="conf_prog_graph_screen_header">Graphical log screen</string>
+    
     <!--  Sichtbarkeit der Überschrift -->
     <string name="conf_prog_graph_screen_headline_headline">Headline (small screens)</string>
-    <string name="conf_prog_graph_screen_header">Graphical log screen</string>
     <string name="conf_prog_graph_screen_headline_on_summary">Show headline</string>
     <string name="conf_prog_graph_screen_headline_off_summary">Hide headline</string>    
     <string name="conf_prog_graph_screen_headline_on">Show</string>
     <string name="conf_prog_graph_screen_headline_off">Hide</string>
-    
     
     <!--  Strings für ConnectSeite  -->
     <string name="connect_togglebtn_disconn">OFF</string>
@@ -368,5 +418,4 @@
     <!-- sonstig  -->
     <string name="no_device">- No device -</string>
     <string name="array_with_pic_adapter_dummy">PROGRAMITEM</string>
-    
 </resources>

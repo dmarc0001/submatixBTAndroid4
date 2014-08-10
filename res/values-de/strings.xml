@@ -34,6 +34,7 @@
     <!-- Toasts -->
     <string name="toast_exit">"Verlasse App"</string>
     <string name="toast_exit_nobt">"Verlasse, App KEIN BT ADAPTER!"</string>
+    <string name="toast_nobt_adapter">"KEIN BT ADAPTER!"</string>
     <string name="toast_bt_enabled">"Bluetooth aktiviert!"</string>
     <string name="toast_dummy">Kommuniziere</string>
     <string name="toast_comm_timeout">Kommunikation: Zeit abgelaufen!</string>
@@ -104,33 +105,43 @@
     
     <!-- Detailseite für Konfiguration des SPX42 -->
     <string name="conf_headline">"Konfiguriere SPX42"</string>
+    
     <!-- ### Kategorie Setpoint ###  -->
     <string name="conf_setpoint_header">"SETPOINT"</string>
+    
     <!-- autosetpoint -->
     <string name="conf_autoset_label">"Autosetpoint"</string>
     <string name="conf_autoset_summary">"Aktuelle Auswahl: %s"</string>
     <string name="conf_autoset_default">"5"</string>
+    
     <!-- tiefe für autosetpint -->
     <string name="conf_highset_header">"Wähle gewünschten Highsetpoint"</string>
     <string name="conf_highset_summary">"Aktuelle Auswahl %s"</string>
     <string name="conf_highset_default">"1,0"</string>
+    
     <!--  ### kategorie Decompression ### -->
     <string name="conf_deco_header">"DEKOMPRESSION"</string>
+    
     <!-- deco presets -->
     <string name="conf_deco_preset_header">"Auswahl Voreingestellung"</string>
     <string name="conf_deco_presets_summary">"Aktuell ausgewählte Voreinstellung ist \"%s\""</string>
+    
     <!-- der Eintrag aus config_presets_preference.xml (Values)-->
     <string name="conf_deco_presets_default">"30:85"</string>
+    
     <!-- labes in der layoutdatei zum gradient picker -->
     <string name="conf_deco_gradient_low_header">"LOW"</string>
     <string name="conf_deco_gradient_high_header">"HIGH"</string>
+    
     <!-- gradienten -->
     <string name="conf_deco_gradient">"Setze Gradient"</string>
     <string formatted="false" name="conf_deco_gradient_summary">"Aktuellen Werte low: %d high: %d"</string>
     <string name="conf_deco_gradient_default">"40:80"</string>
+    
     <!-- gradient number picker buttons -->
     <string name="conf_deco_gradient_button_positive">"Setze Gradient"</string>
     <string name="conf_deco_gradient_button_negative">"Abbrechen"</string>
+    
     <!-- last decostop -->
     <string name="conf_deco_last_stop_header">"Tiefe für letzten Stop"</string>
     <string name="conf_deco_last_stop_on">"3m"</string>
@@ -138,18 +149,21 @@
     <string name="conf_deco_last_stop_on_summary">"Letzter Stop in 3 Metern"</string>
     <string name="conf_deco_last_stop_off_summary">"Letzter Stop in 6 Metern"</string>
     <string name="conf_deco_last_stop_default">"6"</string>
+    
     <!-- dynamische gradienten (bei Notfall) -->
     <string name="conf_deco_dyn_gradients_header">"Dyn. Gradienten"</string>
     <string name="conf_deco_dyn_gradients_on">"Dyn."</string>
     <string name="conf_deco_dyn_gradients_off">"AUS"</string>
     <string name="conf_deco_dyn_gradients_summary_on">"Dyn. Gradienten sind aktiv"</string>
     <string name="conf_deco_dyn_gradients_summary_off">"Dyn. Gradienten sind inaktiv"</string>
+    
     <!-- tiefe decostops -->
     <string name="conf_deco_deppstops_header">"Deep Stops"</string>
     <string name="conf_deco_deepstops_summary_on">"Deep Stops sind aktiv"</string>
     <string name="conf_deco_deppstops_summary_off">"Deep Stops sind inaktiv"</string>
     <string name="conf_deco_deepstops_on">"tiefer Stopp"</string>
     <string name="conf_deco_deepstops_off">"kein tiefer Stop"</string>
+    
     <!-- ### kategorie display ### -->
     <string name="conf_display_header">"ANZEIGE"</string>
     <string name="conf_display_header_new">ANZUEIGE-N</string>
@@ -158,58 +172,70 @@
     <string name="conf_display_luminance_header">"Helligkeit:"</string>
     <string name="conf_luminance_header_summary">"Aktuelle Helligkeit %s Prozent auf SPX42"</string>
     <string name="conf_luminance_default">"0"</string>
+    
     <!-- display orientierung -->
     <string name="conf_display_orientation_header">"Display-Ausrichtung"</string>
     <string name="conf_display_orientation_header_summary">"Aktuell ist \"%s\""</string>
     <string name="conf_display_orientation_default">"100"</string>
+    
     <!-- ### kategorie Einheiten ### -->
     <string name="conf_units_header">"SPX42 Einheiten"</string>
+    
     <!-- temperatureinheiten -->
     <string name="conf_units_temp_header">"Temperatureinheit"</string>
     <string name="conf_units_temp_metric">"Celsius"</string>
     <string name="conf_units_temp_fahrenheid">"Fahrenheit"</string>
     <string name="conf_units_temp_metric_summary">"Temperatur in Celsius"</string>
     <string name="conf_units_temp_fahrenheid_summary">"Temperatur in Fahrenheit"</string>
+    
     <!--  tiefeneinheiten -->
     <string name="conf_units_depth_header">"Einheit für die Tiefe"</string>
     <string name="conf_units_depth_meters">"Meter"</string>
     <string name="conf_units_depth_foot">"Fuß"</string>
     <string name="conf_units_depth_meters_summary">"Tiefe in Metern"</string>
     <string name="conf_units_depth_foot_summary">"Tiefe in Fuß"</string>
+    
     <!-- süß oder salzwasser -->    
     <string name="conf_units_watertype_header">"Art des Wassers"</string>
     <string name="conf_units_freshwater">"Süßwasser"</string>
     <string name="conf_units_saltwater">"Salzwasser"</string>
     <string name="conf_units_freshwater_summary">"Eigenschaft ist Süßwasser"</string>
     <string name="conf_units_saltwater_summary">"Eigenschaft ist Salzwasser"</string>
+    
     <!-- ### kategorie individual ### -->
     <string name="conf_ind_header">"Individuelle Einst."</string>
+    
     <!-- sensoren ein/aus -->    
     <string name="conf_ind_sensors_onoff_header">"Sensoren ein/aus"</string>
     <string name="conf_ind_sensors_text_on">"EIN"</string>
     <string name="conf_ind_sensors_text_off">"AUS"</string>
     <string name="conf_ind_sensors_text_on_summary">"Sensoren sind EIN"</string>
     <string name="conf_ind_sensors_text_off_summary">"Sensoren sind AUS!"</string>
+    
     <!-- passive semiclosed rebreather mode on/off -->
     <string name="conf_ind_pscr_onoff_header">"PSCR Modus"</string>
     <string name="conf_ind_pscr_text_on">"AN"</string>
     <string name="conf_ind_pscr_text_off">"AUS"</string>
     <string name="conf_ind_pscr_summary_on">"Der PSCR Modus ist eingeschaltet"</string>
     <string name="conf_ind_pscr_summary_off">"Der PSCR-Modus ist ausgeschaltet"</string>
+    
     <!-- anzahl der berücksichtigten sensoren -->
     <string name="conf_ind_count_sensorwarning_header">"Sensor-Warnungen"</string>
     <string name="conf_ind_count_sensorwarning_header_summary">"Aktuell %s für Warnung"</string>
     <string name="conf_ind_count_default">"3"</string>
+    
     <!-- akustische warnungen on/off -->    
     <string name="conf_ind_acoustic_warning_header">"Akustische Warnungen"</string>
     <string name="conf_ind_acoustic_warning_on">"AN"</string>
     <string name="conf_ind_acoustic_warning_off">"AUS"</string>
     <string name="conf_ind_acoustic_warning_on_summary">"Akustische Warnungen sind AN"</string>
     <string name="conf_ind_acoustic_warning_off_summary">"Akustische Warnungen sind AUS"</string>
+    
     <!-- log intervall -->
     <string name="conf_ind_interval_header">"Log Intervall"</string>
     <string name="conf_ind_interval_header_summary">"Intervall %s zwischen zwei Logeinträgen"</string>
     <string name="conf_ind_interval_default">"60"</string>
+    
     <!--  tempstick Version  -->
     <string name="conf_ind_tempstick_header">Temperatur Stick Typ</string>
     <string name="conf_ind_tempstick_header_summary">Typ des Temp. Sticks ist: %s </string>
@@ -242,8 +268,7 @@
     <string name="conf_gaslist_summary_diluent1"> - DIL1</string>
     <string name="conf_gaslist_summary_diluent2"> - DIL2</string>
     <string name="conf_gaslist_summary_no_diluent">       </string>
-    <string name="conf_gaslist_summary_bailout"> - BO</string>
-    
+    <string name="conf_gaslist_summary_bailout"> - BO</string>   
     <string name="conf_gaslist_noname">"Noch nicht initalisiert"</string>
     
     <!-- ### Kategorie Gas  ## -->
@@ -260,8 +285,10 @@
             
     <!-- Detailseite für Programmkonfiguration -->
     <string name="conf_prog_headline">"App-Einstellungen"</string>
+    
     <!-- ### Kategorie Zeitanzeige ### -->
     <string name="conf_prog_units_head">Einheitenanzeige</string>
+    
     <!-- Format für die Zeitanzeige -->
     <string name="conf_prog_temp_units_title">Zeitformat</string>
     <string name="conf_prog_temp_units_summary" formatted="false">Standardformat: &lt;%s&gt;</string>
@@ -269,25 +296,46 @@
     
     <!-- ### Kategorie Dateisystem ### -->
     <string name="conf_prog_filesystem">"Dateisystem-Einstellungen"</string>
+    
     <!-- datenverzeichnis für Logdaten -->
     <string name="conf_prog_datadir">"Datenverzeichnis"</string>
     <string name="conf_prog_datadir_summary">"Logdaten in \"%s\" gespeichert"</string>
+    
     <!-- nur neue Logdaten oder alle Logdaten auf dem Gerät zeigen? -->
     <string name="conf_prog_showall_header">"Zeige alle neuen Logeinträge?"</string>
     <string name="conf_prog_showall_on_summary">"Zeigt alle Logeinträge"</string>
     <string name="conf_prog_showall_off_summary">"Zeigt nur neue Logeinträge "</string>
     <string name="conf_prog_showall_on">"ZEIGE"</string>
     <string name="conf_prog_showall_off">"NEIN"</string>
+    
+    <!--  ### Kategorie GPS Behandlung ### -->
+    <string name="conf_prog_gps">"GPS-Einstellungen"</string>
+    
+    <!--  GPS Benutzung -->
+    <string name="conf_prog_gps_header">"Standort beim Auslesen festellen/eintragen?"</string>
+    <string name="conf_prog_gps_on_summary">"Standort beim Auslesen eintragen"</string>
+    <string name="conf_prog_gps_off_summary">"GPS nicht benutzen"</string>
+    <string name="conf_prog_gps_on">"GPS AN"</string>
+    <string name="conf_prog_gps_off">"GPS AUS"</string>
+    
+    <!-- Mindeste Genauigkeit  -->
+    <string name="conf_prog_gps_accuracy_header">Mindestgenauigkeit</string>
+    <string name="conf_prog_gps_accuracy_summary">Ab welcher Genauigkeit GPS Akzeptieren</string>
+    <string name="conf_prog_gps_accuracy_default">16</string>
+    
     <!-- ### Kategorie Mail ### -->
     <string name="conf_prog_mail_header">"Mail-Konfiguration"</string>
+    
     <!-- Mailversand an wen? -->
     <string name="conf_prog_mail_main">"Hauptempfänger"</string>
     <string name="conf_prog_mail_2nd">"Copy-Empfänger"</string>
     <string name="conf_prog_mail_main_summary">"E-Mail an &lt;%s&gt;"</string>
+    
     <!-- soll die uddf (xml) datei komprimiert werden? -->
     <string name="conf_prog_mail_compressed_header">"Komprimiere UDDF"</string>
     <string name="conf_prog_mail_compressed_on_summary">"UDDF-Datei wird komprimiert"</string>
     <string name="conf_prog_mail_compressed_off_summary">"UDDF-Datei wird nicht komprimiert"</string>
+    
     <!-- Programmtheme -->
     <string name="conf_prog_others_header">"SONSTIGES"</string>
     <string name="conf_prog_others_theme_header">"Thema"</string>
@@ -298,6 +346,7 @@
     
     <!--  ### Kategorie Einstellungen Log Grafik ### -->
     <string name="conf_prog_graph_screen_header">Grafische Protokolldarstellung</string>
+    
     <!--  Sichtbarkeit der Überschrift -->
     <string name="conf_prog_graph_screen_headline_headline">Titelzeile (kleine Schirme)</string>
     <string name="conf_prog_graph_screen_headline_on_summary">Titelzeile wird angezeigt</string>
@@ -335,8 +384,7 @@
     <string name="logread_file_message_empty">Lese nächstes Protokoll aus Datenbank</string>
     <string name="logread_show_not_all_header">Nur neue Protokolle</string>
     <string name="logread_show_not_all_footer">Ende neue Protokolle</string>
-    
-    
+        
     <!-- Fragment SPXExportLogFragment -->
     <string name="export_header">Exportiere Protokolle vom Gerät</string>
     <string name="export_header_device" formatted="false" >Exportiere Protokolle vom Gerät &lt;%s&gt;</string>
@@ -370,8 +418,4 @@
     <!-- sonstig  -->
     <string name="no_device">"- Kein Gerät -"</string>
     <string name="array_with_pic_adapter_dummy">"PROGRAMITEM"</string>
-    
-
-    
-    
 </resources>
