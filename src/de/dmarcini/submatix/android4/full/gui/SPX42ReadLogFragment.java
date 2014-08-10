@@ -830,6 +830,12 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
       try
       {
         xmlCreator.closeLog();
+        //
+        // TODO: GPS einlesen, wenn in den Voreinstellungen erwünscht
+        //
+        //
+        // Kopfdaten auch sichern
+        //
         logManager.saveDive( diveHeader );
         ReadLogItemObj rlo = logListAdapter.getItem( currPositionOnItems );
         detailText = makeDetailText( diveHeader );
