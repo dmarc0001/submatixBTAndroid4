@@ -16,7 +16,6 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.DialogFragment;
@@ -133,7 +132,6 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   //
   // Ein Messagehandler, der vom Service kommende Messages bearbeitet
   //
-  @SuppressLint( "HandlerLeak" )
   private final Handler mHandler = new Handler() 
   {
     @Override
@@ -1083,8 +1081,15 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
         {
           // User did not enable Bluetooth or an error occured
           Log.v( TAG, "REQUEST_ENABLE_BT => BT Device NOT ENABLED" );
-          Toast.makeText( this, R.string.toast_exit_nobt, Toast.LENGTH_LONG ).show();
-          finish();
+          if( !ApplicationDEBUG.DEBUG )
+          {
+            Toast.makeText( this, R.string.toast_exit_nobt, Toast.LENGTH_LONG ).show();
+            finish();
+          }
+          else
+          {
+            Toast.makeText( this, R.string.toast_nobt_adapter, Toast.LENGTH_LONG ).show();
+          }
         }
         break;
       case ProjectConst.REQUEST_SPX_PREFS:
@@ -1502,7 +1507,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     //
     if( mBtAdapter == null )
     {
-      if( ProjectConst.CHECK_PHYSICAL_BT )
+      if( !ApplicationDEBUG.DEBUG )
       {
         // es gibt gar keinen adapter!
         Toast.makeText( this, R.string.toast_exit_nobt, Toast.LENGTH_LONG ).show();
@@ -1511,19 +1516,22 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       }
       else
       {
-        Toast.makeText( this, R.string.toast_exit_nobt, Toast.LENGTH_LONG ).show();
+        Toast.makeText( this, R.string.toast_nobt_adapter, Toast.LENGTH_LONG ).show();
         return;
       }
     }
-    if( !mBtAdapter.isEnabled() )
-    {
-      // Eh, kein BT erlaubt!
-      askEnableBT();
-    }
     else
     {
-      // Service wieder anbinden / starten
-      doBindService();
+      if( !mBtAdapter.isEnabled() )
+      {
+        // Eh, kein BT erlaubt!
+        askEnableBT();
+      }
+      else
+      {
+        // Service wieder anbinden / starten
+        doBindService();
+      }
     }
   }
 
