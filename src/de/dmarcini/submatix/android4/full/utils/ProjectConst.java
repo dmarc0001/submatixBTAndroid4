@@ -35,7 +35,6 @@ public final class ProjectConst
   public static final String GENYEAR                    = "2014";
   public static final String GENMONTH                   = "03";
   public static final String GENDAY                     = "19";
-  public static final boolean CHECK_PHYSICAL_BT         = false; 
 
   // ANDROID: Preferences Version
   public static int          PREF_VERSION               = 1;
