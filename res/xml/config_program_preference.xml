@@ -32,6 +32,30 @@
             android:switchTextOn="@string/conf_prog_showall_on"
             android:title="@string/conf_prog_showall_header" />
     </de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory>
+
+    <de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory
+        android:key="keyGPSPrefs"
+        android:title="@string/conf_prog_gps" >
+        
+         <SwitchPreference
+            android:defaultValue="false"
+            android:key="keyProgGpsEnable"
+            android:summaryOff="@string/conf_prog_gps_off_summary"
+            android:summaryOn="@string/conf_prog_gps_on_summary"
+            android:switchTextOff="@string/conf_prog_gps_off"
+            android:switchTextOn="@string/conf_prog_gps_on"
+            android:title="@string/conf_prog_gps_header" />
+         
+         <ListPreference 
+            android:entryValues="@array/gpsAccuracyValuesArray" 
+            android:entries="@array/gpsAccuracyNamesArray" 
+            android:title="@string/conf_prog_gps_accuracy_header" 
+            android:key="keyProgGpsAccuracy" 
+            android:summary="@string/conf_prog_gps_accuracy_summary" 
+            android:defaultValue="@string/conf_prog_gps_accuracy_default"/>          
+         
+    </de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory>
+    
     <de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory
         android:key="keyProgMail"
         android:title="@string/conf_prog_mail_header" >
@@ -41,7 +65,6 @@
         <EditTextPreference
             android:key="keyProgMail2nd"
             android:title="@string/conf_prog_mail_2nd" />
-
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="keyProgMailCompressed"
