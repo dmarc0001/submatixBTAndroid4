@@ -1,3 +1,23 @@
+//@formatter:off
+/*
+    programm: SubmatixBTLoggerAndroid
+    purpose:  configuration and read logs from SUBMATIX SPX42 divecomputer via Bluethooth    
+    Copyright (C) 2012  Dirk Marciniak
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/
+*/
+//@formatter:on
 package de.dmarcini.submatix.android4.full.gui;
 
 import java.io.File;
@@ -18,10 +38,10 @@ import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
 import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
 import de.dmarcini.submatix.android4.full.exceptions.NoXMLDataFileFoundException;
 import de.dmarcini.submatix.android4.full.utils.DataSQLHelper;
-import de.dmarcini.submatix.android4.full.utils.SPX42LogGraphView;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 import de.dmarcini.submatix.android4.full.utils.ReadLogItemObj;
 import de.dmarcini.submatix.android4.full.utils.SPX42DiveSampleClass;
+import de.dmarcini.submatix.android4.full.utils.SPX42LogGraphView;
 import de.dmarcini.submatix.android4.full.utils.SPX42LogManager;
 
 /**
@@ -37,13 +57,13 @@ import de.dmarcini.submatix.android4.full.utils.SPX42LogManager;
 public class SPX42LogGraphFragment extends Fragment implements IBtServiceListener
 {
   @SuppressWarnings( "javadoc" )
-  public static final String TAG             = SPX42LogGraphFragment.class.getSimpleName();
-  protected ProgressDialog   progressDialog  = null;
+  public static final String TAG               = SPX42LogGraphFragment.class.getSimpleName();
+  protected ProgressDialog   progressDialog    = null;
   // private CommToast theToast = null;
-  private SPX42LogManager    logManager      = null;
-  private Activity           runningActivity = null;
-  private int                dbId            = -1;
-  private SPX42LogGraphView       sPX42LogGraphView    = null;
+  private SPX42LogManager    logManager        = null;
+  private Activity           runningActivity   = null;
+  private int                dbId              = -1;
+  private SPX42LogGraphView  sPX42LogGraphView = null;
 
   @Override
   public void handleMessages( int what, BtServiceMessage smsg )
