@@ -18,18 +18,3 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/
 */
 //@formatter:on
-package de.dmarcini.submatix.android4.full.exceptions;
-
-@SuppressWarnings( "javadoc" )
-public class FirmwareNotSupportetException extends Exception
-{
-  /**
-   * 
-   */
-  private static final long serialVersionUID = 332452102120326876L;
-
-  public FirmwareNotSupportetException( String msg )
-  {
-    super( msg );
-  }
-}
