@@ -18,7 +18,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/
 */
 //@formatter:on
-package de.dmarcini.submatix.android4.full.gui;
+package de.dmarcini.submatix.android4.full.interfaces;
 
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 

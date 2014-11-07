@@ -67,6 +67,7 @@ import de.dmarcini.submatix.android4.full.dialogs.AreYouSureDialogFragment;
 import de.dmarcini.submatix.android4.full.dialogs.EditAliasDialogFragment;
 import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
 import de.dmarcini.submatix.android4.full.exceptions.FirmwareNotSupportetException;
+import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
 import de.dmarcini.submatix.android4.full.utils.GasUpdateEntity;
 import de.dmarcini.submatix.android4.full.utils.NoticeDialogListener;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;

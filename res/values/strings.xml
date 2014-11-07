@@ -365,6 +365,10 @@
     <string name="graphlog_do_view">Show!</string>
     <string name="graphlog_change_drive_button">Device...</string>
     
+    <!-- Navigator Strings  -->
+    <string name="navigation_drawer_open">Open navigator</string>
+    <string name="navigation_drawer_close">Close navigator</string>
+    
     <!-- sonstig  -->
     <string name="no_device">- no device -</string>
     <string name="array_with_pic_adapter_dummy">PROGRAMITEM</string>

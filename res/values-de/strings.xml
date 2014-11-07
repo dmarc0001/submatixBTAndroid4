@@ -367,6 +367,10 @@
     <string name="graphlog_do_view">Anzeige</string>
     <string name="graphlog_change_drive_button">Gerät...</string>
     
+    <!-- Navigator Strings  -->
+    <string name="navigation_drawer_open">Öffne Navigator</string>
+    <string name="navigation_drawer_close">Schließe Navigator</string>
+    
     <!-- sonstig  -->
     <string name="no_device">"- Kein Gerät -"</string>
     <string name="array_with_pic_adapter_dummy">"PROGRAMITEM"</string>
