@@ -30,7 +30,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import de.dmarcini.submatix.android4.full.R;
-import de.dmarcini.submatix.android4.full.utils.NoticeDialogListener;
+import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
 
 /**
  * 
@@ -50,7 +50,7 @@ public class UserAlertDialogFragment extends DialogFragment
   private String               headLine;
   private String               msg;
   // Use this instance of the interface to deliver action events
-  private NoticeDialogListener mListener = null;
+  private INoticeDialogListener mListener = null;
 
   /**
    * 
@@ -129,12 +129,12 @@ public class UserAlertDialogFragment extends DialogFragment
     try
     {
       // Instanziere den Listener, wenn möglich, ansonsten wirft das eine exception
-      mListener = ( NoticeDialogListener )activity;
+      mListener = ( INoticeDialogListener )activity;
     }
     catch( ClassCastException ex )
     {
       // Die activity implementiert den Listener nicht, werfe eine Exception
-      throw new ClassCastException( activity.toString() + " must implement NoticeDialogListener" );
+      throw new ClassCastException( activity.toString() + " must implement INoticeDialogListener" );
     }
   }
 }

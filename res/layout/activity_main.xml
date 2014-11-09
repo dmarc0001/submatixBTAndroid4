@@ -7,7 +7,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.navitest.gui.MainActivity" >
+    tools:context="de.dmarcini.submatix.android4.full.gui.MainActivity" >
 
     <!--
       In das Frame Layout kommt der Main Content
@@ -29,11 +29,11 @@
 
     <fragment
         android:id="@+id/navi_drawer"
-        android:name="com.example.navitest.gui.NavigatorFragment"
+        android:name="de.dmarcini.submatix.android4.full.gui.NavigatorFragment"
         android:layout_width="@dimen/navigation_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        tools:layout="@layout/fragment_navigation_drawer" 
+        tools:layout="@layout/fragment_navigator" 
     />
 
 </android.support.v4.widget.DrawerLayout>

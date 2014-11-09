@@ -47,7 +47,7 @@ import android.util.Log;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.exceptions.FirmwareNotSupportetException;
-import de.dmarcini.submatix.android4.full.gui.AreaListActivity;
+import de.dmarcini.submatix.android4.full.gui.MainActivity;
 import de.dmarcini.submatix.android4.full.utils.GasUpdateEntity;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 import de.dmarcini.submatix.android4.full.utils.SPX42Config;
@@ -1664,8 +1664,8 @@ public class BlueThoothComService extends Service
    */
   private void showNotification( CharSequence head, CharSequence msg )
   {
-    // Icon Titel und Inhalt anzeigen, Intent beim Anckickcne setzen
-    PendingIntent contentIntent = PendingIntent.getActivity( getApplicationContext(), 0, new Intent( getApplicationContext(), AreaListActivity.class ),
+    // Icon Titel und Inhalt anzeigen, Intent beim Ancklicken setzen
+    PendingIntent contentIntent = PendingIntent.getActivity( getApplicationContext(), 0, new Intent( getApplicationContext(), MainActivity.class ),
             PendingIntent.FLAG_UPDATE_CURRENT );
     //@formatter:off
     Notification notification = new Notification.Builder( getBaseContext() )

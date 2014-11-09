@@ -30,7 +30,7 @@ import java.util.Locale;
 
 import org.joda.time.DateTime;
 
-import de.dmarcini.submatix.android4.full.gui.FragmentCommonActivity;
+import de.dmarcini.submatix.android4.full.gui.MainActivity;
 
 /**
  * 
@@ -44,8 +44,8 @@ import de.dmarcini.submatix.android4.full.gui.FragmentCommonActivity;
  */
 public class BuildVersion
 {
-  private static final long buildNumber = 3389L;
-  private static final long buildDate = 1415389325632L;
+  private static final long   buildNumber       = 3400L;
+  private static final long   buildDate         = 1415453826018L;
   /**
    * Kennzeichnung für eine Version
    */
@@ -89,7 +89,7 @@ public class BuildVersion
    */
   public static String getdefaukltDateString()
   {
-    return( new DateTime( buildDate ).toString( FragmentCommonActivity.localTimeFormatter ) );
+    return( new DateTime( buildDate ).toString( MainActivity.localTimeFormatter ) );
   }
 
   /**

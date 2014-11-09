@@ -21,8 +21,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.content.ContentSwitcher;
+import de.dmarcini.submatix.android4.full.content.ContentSwitcher.ProgItem;
 import de.dmarcini.submatix.android4.full.interfaces.INavigationDrawerCallbacks;
 import de.dmarcini.submatix.android4.full.utils.ArrayAdapterWithPics;
 import de.dmarcini.submatix.android4.full.utils.NaviActionBarDrawerToggle;
@@ -33,22 +35,22 @@ import de.dmarcini.submatix.android4.full.utils.NaviActionBarDrawerToggle;
  */
 public class NavigatorFragment extends Fragment
 {
-  private static String              TAG                      = NavigatorFragment.class.getSimpleName();
+  private static String              TAG                     = NavigatorFragment.class.getSimpleName();
   /**
    * Den selektieren Navigator-Eintrag hier merken
    */
-  private static final String        STATE_SELECTED_POSITION  = "selected_navigation_position";
+  private static final String        STATE_SELECTED_POSITION = "selected_navigation_position";
   /**
    * Callback in die activity zur Benachrichtigung der erfolgreichen Initialisierung eines Frames
    */
-  private INavigationDrawerCallbacks mCallbacks;
-  private ActionBarDrawerToggle      mDrawerToggle;
-  private DrawerLayout               mDrawerLayout;
-  private ListView                   mDrawerListView;
-  private View                       mFragmentContainerView;
-  private int                        mCurrentSelectedPosition = 0;
-  private boolean                    mFromSavedInstanceState;
-  private boolean                    mUserLearnedDrawer;
+  private INavigationDrawerCallbacks navigatorCallbacks;
+  private ActionBarDrawerToggle      navigatorDrawerToggle;
+  private DrawerLayout               navigatorLayout;
+  private ListView                   menuListView;
+  private View                       navigatorContainerView;
+  private int                        currentSelectedPosition = 0;
+  private boolean                    isFromSavedInstanceState;
+  private boolean                    hasUserLearnedDrawer;
 
   /**
    * der Leerer, öffentliche Konstruktor
@@ -60,6 +62,20 @@ public class NavigatorFragment extends Fragment
   public NavigatorFragment()
   {}
 
+  /**
+   * Gib (wenn vorhanden) das ListView des Menüs zurück
+   *
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 08.11.2014
+   * 
+   * @return
+   */
+  public ListView getMenuListView()
+  {
+    return( menuListView );
+  }
+
   @Override
   public void onCreate( Bundle savedInstanceState )
   {
@@ -68,15 +84,16 @@ public class NavigatorFragment extends Fragment
     // Read in the flag indicating whether or not the user has demonstrated awareness of the
     // drawer. See PREF_USER_LEARNED_DRAWER for details.
     SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences( getActivity() );
-    mUserLearnedDrawer = sp.getBoolean( NaviActionBarDrawerToggle.PREF_USER_LEARNED_DRAWER, false );
+    hasUserLearnedDrawer = sp.getBoolean( NaviActionBarDrawerToggle.PREF_USER_LEARNED_DRAWER, false );
     if( savedInstanceState != null )
     {
-      mCurrentSelectedPosition = savedInstanceState.getInt( STATE_SELECTED_POSITION );
-      mFromSavedInstanceState = true;
+      currentSelectedPosition = savedInstanceState.getInt( STATE_SELECTED_POSITION );
+      isFromSavedInstanceState = true;
     }
     // Select either the default item (0) or the last selected item.
-    Log.v( TAG, String.format( Locale.getDefault(), "select item <%d>...", mCurrentSelectedPosition ) );
-    selectItem( mCurrentSelectedPosition );
+    Log.v( TAG, String.format( Locale.getDefault(), "onCreate: select item <%d>...", currentSelectedPosition ) );
+    // TODO: warum schmiert der hier ab?
+    // selectItem( currentSelectedPosition );
     Log.v( TAG, "onCreate:...OK" );
   }
 
@@ -85,7 +102,8 @@ public class NavigatorFragment extends Fragment
   {
     super.onActivityCreated( savedInstanceState );
     Log.v( TAG, "onActivityCreated:..." );
-    // Indicate that this fragment would like to influence the set of actions in the action bar.
+    // das Fragment hat eion Options Menü
+    // damit reagiert es auf den Click auf den Titerl mit dem Anzeigen des Navigators
     setHasOptionsMenu( true );
     Log.v( TAG, "onActivityCreated:...OK" );
   }
@@ -102,17 +120,17 @@ public class NavigatorFragment extends Fragment
   public void setListAdapterForOnlinestatus( boolean isOnline )
   {
     Log.v( TAG, "setListAdapterForOnlinestatus()..." );
-    mDrawerListView.setAdapter( new ArrayAdapterWithPics( getActivity(), 0, isOnline, ContentSwitcher.getProgramItemsList(),
+    menuListView.setAdapter( new ArrayAdapterWithPics( getActivity(), 0, isOnline, ContentSwitcher.getProgramItemsList(),
             ( MainActivity.getAppStyle() == R.style.AppDarkTheme ? R.style.AppDarkTheme : R.style.AppLightTheme ) ) );
-    mDrawerListView.setItemChecked( mCurrentSelectedPosition, true );
+    menuListView.setItemChecked( currentSelectedPosition, true );
   }
 
   @Override
   public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
   {
     Log.v( TAG, "onCreateView:..." );
-    mDrawerListView = ( ListView )inflater.inflate( R.layout.fragment_navigator, container, false );
-    mDrawerListView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
+    menuListView = ( ListView )inflater.inflate( R.layout.fragment_navigator, container, false );
+    menuListView.setOnItemClickListener( new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick( AdapterView<?> parent, View view, int position, long id )
       {
@@ -121,9 +139,9 @@ public class NavigatorFragment extends Fragment
     } );
     // TODO: Onlinestsatus
     setListAdapterForOnlinestatus( true );
-    mDrawerListView.setItemChecked( mCurrentSelectedPosition, true );
+    menuListView.setItemChecked( currentSelectedPosition, true );
     Log.v( TAG, "onCreateView:...OK" );
-    return mDrawerListView;
+    return menuListView;
   }
 
   /**
@@ -137,11 +155,11 @@ public class NavigatorFragment extends Fragment
    */
   public boolean isDrawerOpen()
   {
-    return mDrawerLayout != null && mDrawerLayout.isDrawerOpen( mFragmentContainerView );
+    return navigatorLayout != null && navigatorLayout.isDrawerOpen( navigatorContainerView );
   }
 
   /**
-   * Users of this fragment must call this method to set up the navigation drawer interactions.
+   * Den Navigator initialisieren
    *
    * @param fragmentId
    *          The android:id of this fragment in its activity's layout.
@@ -151,51 +169,67 @@ public class NavigatorFragment extends Fragment
   public void setUp( int fragmentId, DrawerLayout drawerLayout )
   {
     Log.v( TAG, "setUp:..." );
-    mFragmentContainerView = getActivity().findViewById( fragmentId );
-    mDrawerLayout = drawerLayout;
+    navigatorContainerView = getActivity().findViewById( fragmentId );
+    navigatorLayout = drawerLayout;
     // set a custom shadow that overlays the main content when the drawer opens
-    mDrawerLayout.setDrawerShadow( R.drawable.drawer_shadow, GravityCompat.START );
+    navigatorLayout.setDrawerShadow( R.drawable.drawer_shadow, GravityCompat.START );
     // set up the drawer's list view with items and click listener
     ActionBar actionBar = getActionBar();
     actionBar.setDisplayHomeAsUpEnabled( true );
     actionBar.setHomeButtonEnabled( true );
     // ActionBarDrawerToggle ties together the the proper interactions
     // between the navigation drawer and the action bar app icon.
-    mDrawerToggle = new NaviActionBarDrawerToggle( getActivity(), mDrawerLayout, R.drawable.spx42, R.string.navigation_drawer_open, R.string.navigation_drawer_close );
+    navigatorDrawerToggle = new NaviActionBarDrawerToggle( getActivity(), navigatorLayout, R.drawable.spx42, R.string.navigation_drawer_open, R.string.navigation_drawer_close );
     // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
     // per the navigation drawer design guidelines.
-    if( !mUserLearnedDrawer && !mFromSavedInstanceState )
+    if( !hasUserLearnedDrawer && !isFromSavedInstanceState )
     {
-      mDrawerLayout.openDrawer( mFragmentContainerView );
+      navigatorLayout.openDrawer( navigatorContainerView );
     }
     // Defer code dependent on restoration of previous instance state.
-    mDrawerLayout.post( new Runnable() {
+    navigatorLayout.post( new Runnable() {
       @Override
       public void run()
       {
-        mDrawerToggle.syncState();
+        navigatorDrawerToggle.syncState();
       }
     } );
-    mDrawerLayout.setDrawerListener( mDrawerToggle );
+    navigatorLayout.setDrawerListener( navigatorDrawerToggle );
     Log.v( TAG, "setUp:...OK" );
   }
 
+  /**
+   * 
+   * Wenn ein Navigationseintrag selektiert wurde
+   *
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 07.11.2014
+   * 
+   * @param position
+   *          welche Position war es?
+   */
   private void selectItem( int position )
   {
     Log.v( TAG, "selectItem:..." );
-    mCurrentSelectedPosition = position;
-    Log.v( TAG, "selectItem: Position:<" + position + ">..." );
-    if( mDrawerListView != null )
+    currentSelectedPosition = position;
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "selectItem: Position:<" + position + ">..." );
+    if( menuListView != null )
     {
-      mDrawerListView.setItemChecked( position, true );
+      menuListView.setItemChecked( position, true );
     }
-    if( mDrawerLayout != null )
+    if( navigatorLayout != null )
     {
-      mDrawerLayout.closeDrawer( mFragmentContainerView );
+      navigatorLayout.closeDrawer( navigatorContainerView );
     }
-    if( mCallbacks != null )
+    if( navigatorCallbacks != null )
     {
-      mCallbacks.onNavigationDrawerItemSelected( position );
+      //
+      // Übergib die ID des gewählten Eintrages
+      //
+      ProgItem pItem = ( ( ArrayAdapterWithPics )menuListView.getAdapter() ).getItem( position );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( Locale.getDefault(), "selectItem: select item-Id: <%d>, String: <%s>", pItem.nId, pItem.content ) );
+      navigatorCallbacks.onNavigationDrawerItemSelected( pItem );
     }
     Log.v( TAG, "selectItem:...OK" );
   }
@@ -207,7 +241,7 @@ public class NavigatorFragment extends Fragment
     Log.v( TAG, "onAttach:..." );
     try
     {
-      mCallbacks = ( INavigationDrawerCallbacks )activity;
+      navigatorCallbacks = ( INavigationDrawerCallbacks )activity;
     }
     catch( ClassCastException e )
     {
@@ -221,7 +255,7 @@ public class NavigatorFragment extends Fragment
   {
     super.onDetach();
     Log.v( TAG, "onDetach:..." );
-    mCallbacks = null;
+    navigatorCallbacks = null;
     Log.v( TAG, "onDetach:...OK" );
   }
 
@@ -229,7 +263,7 @@ public class NavigatorFragment extends Fragment
   public void onSaveInstanceState( Bundle outState )
   {
     super.onSaveInstanceState( outState );
-    outState.putInt( STATE_SELECTED_POSITION, mCurrentSelectedPosition );
+    outState.putInt( STATE_SELECTED_POSITION, currentSelectedPosition );
   }
 
   @Override
@@ -237,7 +271,7 @@ public class NavigatorFragment extends Fragment
   {
     super.onConfigurationChanged( newConfig );
     // Forward the new configuration the drawer toggle component.
-    mDrawerToggle.onConfigurationChanged( newConfig );
+    navigatorDrawerToggle.onConfigurationChanged( newConfig );
   }
 
   @Override
@@ -245,7 +279,7 @@ public class NavigatorFragment extends Fragment
   {
     // If the drawer is open, show the global app actions in the action bar. See also
     // showGlobalContextActionBar, which controls the top-left area of the action bar.
-    if( mDrawerLayout != null && isDrawerOpen() )
+    if( navigatorLayout != null && isDrawerOpen() )
     {
       // inflater.inflate( R.menu.global, menu );
       showGlobalContextActionBar();
@@ -257,7 +291,7 @@ public class NavigatorFragment extends Fragment
   public boolean onOptionsItemSelected( MenuItem item )
   {
     Log.v( TAG, "onOptionsItemSelected:..." );
-    if( mDrawerToggle.onOptionsItemSelected( item ) )
+    if( navigatorDrawerToggle.onOptionsItemSelected( item ) )
     {
       Log.v( TAG, "onOptionsItemSelected:...OK" );
       return true;

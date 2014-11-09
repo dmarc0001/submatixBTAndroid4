@@ -29,7 +29,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import de.dmarcini.submatix.android4.full.R;
-import de.dmarcini.submatix.android4.full.utils.NoticeDialogListener;
+import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
 
 /**
  * 
@@ -47,7 +47,7 @@ public class AreYouSureDialogFragment extends DialogFragment
   private String               msg       = null;
   private Dialog               alDial    = null;
   // Use this instance of the interface to deliver action events
-  private NoticeDialogListener mListener = null;
+  private INoticeDialogListener mListener = null;
 
   /**
    * 
@@ -115,12 +115,12 @@ public class AreYouSureDialogFragment extends DialogFragment
     try
     {
       // Instanziere den Listener, wenn möglich, ansonsten wirft das eine exception
-      mListener = ( NoticeDialogListener )activity;
+      mListener = ( INoticeDialogListener )activity;
     }
     catch( ClassCastException ex )
     {
       // Die activity implementiert den Listener nicht, werfe eine Exception
-      throw new ClassCastException( activity.toString() + " must implement NoticeDialogListener" );
+      throw new ClassCastException( activity.toString() + " must implement INoticeDialogListener" );
     }
   }
 

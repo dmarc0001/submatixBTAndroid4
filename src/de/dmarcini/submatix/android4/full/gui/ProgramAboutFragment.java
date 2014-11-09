@@ -110,17 +110,6 @@ public class ProgramAboutFragment extends Fragment
       return( null );
     }
     //
-    // wenn die laufende Activity eine AreaDetailActivity ist, dann gibts das View schon
-    //
-    if( runningActivity instanceof AreaDetailActivity )
-    {
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
-      return( null );
-    }
-    //
-    // Verbindungsseite via twoPane ausgewählt
-    //
-    //
     // View aus Resource laden
     //
     rootView = inflater.inflate( R.layout.fragment_about, container, false );

@@ -29,7 +29,6 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
@@ -103,7 +102,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     //
     // Creiere einen Adapter
     //
-    logListAdapter = new SPX42ReadLogListArrayAdapter( runningActivity, R.layout.read_log_array_adapter_view, FragmentCommonActivity.getAppStyle() );
+    logListAdapter = new SPX42ReadLogListArrayAdapter( runningActivity, R.layout.read_log_array_adapter_view, MainActivity.getAppStyle() );
     logListAdapter.setShowSavedStatus( false );
     graphLogsListView.setAdapter( logListAdapter );
     graphLogsListView.setChoiceMode( AbsListView.CHOICE_MODE_SINGLE );
@@ -287,8 +286,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     try
     {
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create SQLite helper..." );
-      DataSQLHelper sqlHelper = new DataSQLHelper( getActivity().getApplicationContext(), FragmentCommonActivity.databaseDir.getAbsolutePath() + File.separator
-              + ProjectConst.DATABASE_NAME );
+      DataSQLHelper sqlHelper = new DataSQLHelper( getActivity().getApplicationContext(), MainActivity.databaseDir.getAbsolutePath() + File.separator + ProjectConst.DATABASE_NAME );
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create logManager helper..." );
       logManager = new SPX42LogManager( sqlHelper.getWritableDatabase() );
     }
@@ -380,11 +378,11 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     //
     // wenn die laufende Activity eine AreaDetailActivity ist, dann gibts das View schon
     //
-    if( runningActivity instanceof AreaDetailActivity )
-    {
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
-      return( null );
-    }
+    // if( runningActivity instanceof AreaDetailActivity )
+    // {
+    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
+    // return( null );
+    // }
     //
     // Verbindungsseite via twoPane ausgewählt
     //
@@ -396,7 +394,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   public void onDestroy()
   {
     super.onDestroy();
-    ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
+    ( ( MainActivity )runningActivity ).removeServiceListener( this );
   }
 
   /**
@@ -538,7 +536,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause..." );
     // handler loeschen
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
-    ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
+    ( ( MainActivity )runningActivity ).removeServiceListener( this );
   }
 
   /**
@@ -572,7 +570,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     //
     // Service Listener setzen
     //
-    ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
+    ( ( MainActivity )runningActivity ).addServiceListener( this );
   }
 
   /**
@@ -595,32 +593,10 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     arguments.putInt( ProjectConst.ARG_ITEM_ID, R.string.progitem_loggraph );
     arguments.putBoolean( ProjectConst.ARG_ITEM_GRAPHEXTRA, true );
     arguments.putInt( ProjectConst.ARG_ITEM_DBID, dbId );
-    //
-    // jetzt noch eintscheiden, ob das auf großem oder kleinem Schirm läuft
-    //
-    if( FragmentCommonActivity.mTwoPane )
-    {
-      //
-      // zweischirmbetrieb, die Activity bleibt die AreaListActivity
-      //
-      Log.i( TAG, "viewSelectedLogItem: towPane mode!" );
-      SPX42LogGraphFragment lgf = new SPX42LogGraphFragment();
-      lgf.setArguments( arguments );
-      runningActivity.getActionBar().setTitle( R.string.graphlog_header );
-      getFragmentManager().beginTransaction().replace( R.id.area_detail_container, lgf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
-    }
-    else
-    {
-      //
-      // kleiner Schirm
-      // da wird jeder Eintrag als einzelne activity ausgeführt
-      //
-      Log.i( TAG, "viewSelectedLogItem: onePane mode!" );
-      Intent graphIntent = new Intent( new Intent( getActivity(), AreaDetailGraphActivity.class ) );
-      graphIntent.putExtras( arguments );
-      // die neue Activity starten
-      // graphIntent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
-      getActivity().startActivity( graphIntent );
-    }
+    Log.i( TAG, "viewSelectedLogItem:..." );
+    SPX42LogGraphFragment lgf = new SPX42LogGraphFragment();
+    lgf.setArguments( arguments );
+    runningActivity.getActionBar().setTitle( R.string.graphlog_header );
+    getFragmentManager().beginTransaction().replace( R.id.main_container, lgf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
   }
 }

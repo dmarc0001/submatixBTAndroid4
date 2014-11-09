@@ -165,8 +165,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     try
     {
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create SQLite helper..." );
-      DataSQLHelper sqlHelper = new DataSQLHelper( getActivity().getApplicationContext(), FragmentCommonActivity.databaseDir.getAbsolutePath() + File.separator
-              + ProjectConst.DATABASE_NAME );
+      DataSQLHelper sqlHelper = new DataSQLHelper( getActivity().getApplicationContext(), MainActivity.databaseDir.getAbsolutePath() + File.separator + ProjectConst.DATABASE_NAME );
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create logManager helper..." );
       logManager = new SPX42LogManager( sqlHelper.getWritableDatabase() );
     }
@@ -210,7 +209,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
       return( null );
     }
     sPX42LogGraphView = new SPX42LogGraphView( getActivity().getApplication().getApplicationContext() );
-    sPX42LogGraphView.setTheme( FragmentCommonActivity.getAppStyle() );
+    sPX42LogGraphView.setTheme( MainActivity.getAppStyle() );
     rootView = sPX42LogGraphView;
     return rootView;
   }
@@ -219,7 +218,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
   public void onDestroy()
   {
     super.onDestroy();
-    ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
+    ( ( MainActivity )runningActivity ).removeServiceListener( this );
   }
 
   @Override
@@ -229,7 +228,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause..." );
     // handler loeschen
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
-    ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
+    ( ( MainActivity )runningActivity ).removeServiceListener( this );
   }
 
   /**
@@ -243,7 +242,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     //
     // Service Listener setzen
     //
-    ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
+    ( ( MainActivity )runningActivity ).addServiceListener( this );
     makeGraphForDive();
   }
 

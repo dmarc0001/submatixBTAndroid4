@@ -313,7 +313,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
       //
       // temporaeres Verzeichnis für die zu exportierenden Dateien
       //
-      tempDir = new File( FragmentCommonActivity.databaseDir.getAbsolutePath() + File.separator + "temp" );
+      tempDir = new File( MainActivity.databaseDir.getAbsolutePath() + File.separator + "temp" );
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "temporary path: " + tempDir.getAbsolutePath() );
       // alte Elemente vernichten, falls vorhanden
       if( tempDir.exists() && tempDir.isDirectory() ) deleteDir( tempDir );
@@ -358,7 +358,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     //
     // Creiere einen Adapter
     //
-    logListAdapter = new SPX42ReadLogListArrayAdapter( runningActivity, R.layout.read_log_array_adapter_view, FragmentCommonActivity.getAppStyle() );
+    logListAdapter = new SPX42ReadLogListArrayAdapter( runningActivity, R.layout.read_log_array_adapter_view, MainActivity.getAppStyle() );
     logListAdapter.setShowSavedStatus( false );
     mainListView.setAdapter( logListAdapter );
     mainListView.setChoiceMode( AbsListView.CHOICE_MODE_MULTIPLE );
@@ -692,8 +692,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     // die Datenbank öffnen
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create SQLite helper..." );
-    DataSQLHelper sqlHelper = new DataSQLHelper( getActivity().getApplicationContext(), FragmentCommonActivity.databaseDir.getAbsolutePath() + File.separator
-            + ProjectConst.DATABASE_NAME );
+    DataSQLHelper sqlHelper = new DataSQLHelper( getActivity().getApplicationContext(), MainActivity.databaseDir.getAbsolutePath() + File.separator + ProjectConst.DATABASE_NAME );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: open Database..." );
     try
     {
@@ -826,19 +825,19 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     //
     // wenn die laufende Activity eine AreaDetailActivity ist, dann gibts das View schon
     //
-    if( runningActivity instanceof AreaDetailActivity )
-    {
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
-      //
-      // Objekte lokalisieren, Verbindungsseite ist von onePane Mode
-      //
-      mainListView = ( ListView )runningActivity.findViewById( R.id.exportLogsListView );
-      mainListView.setChoiceMode( AbsListView.CHOICE_MODE_MULTIPLE );
-      changeDeviceButton = ( Button )runningActivity.findViewById( R.id.changeDeviceButton );
-      exportLogsButton = ( Button )runningActivity.findViewById( R.id.exportLogsButton );
-      exportDeleteButton = ( Button )runningActivity.findViewById( R.id.exportDeleteButton );
-      return( null );
-    }
+    // if( runningActivity instanceof AreaDetailActivity )
+    // {
+    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
+    // //
+    // // Objekte lokalisieren, Verbindungsseite ist von onePane Mode
+    // //
+    // mainListView = ( ListView )runningActivity.findViewById( R.id.exportLogsListView );
+    // mainListView.setChoiceMode( AbsListView.CHOICE_MODE_MULTIPLE );
+    // changeDeviceButton = ( Button )runningActivity.findViewById( R.id.changeDeviceButton );
+    // exportLogsButton = ( Button )runningActivity.findViewById( R.id.exportLogsButton );
+    // exportDeleteButton = ( Button )runningActivity.findViewById( R.id.exportDeleteButton );
+    // return( null );
+    // }
     //
     // Verbindungsseite via twoPane ausgewählt
     //
@@ -1035,7 +1034,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     super.onPause();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause..." );
     // Listener abmelden
-    ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
+    ( ( MainActivity )runningActivity ).removeServiceListener( this );
   }
 
   @Override
@@ -1044,7 +1043,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     super.onResume();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
     // Listener aktivieren
-    ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
+    ( ( MainActivity )runningActivity ).addServiceListener( this );
     mainListView.setOnItemClickListener( this );
     changeDeviceButton = ( Button )runningActivity.findViewById( R.id.changeDeviceButton );
     changeDeviceButton.setOnClickListener( this );
@@ -1064,7 +1063,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
       selectedDeviceAlias = null;
     }
     // Listener aktivieren
-    ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
+    ( ( MainActivity )runningActivity ).addServiceListener( this );
   }
 
   /**
