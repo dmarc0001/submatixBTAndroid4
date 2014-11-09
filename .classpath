@@ -14,10 +14,5 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="lib" path="libs/joda-time-2.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="C:/DATEN/eclipseWorkspace/extLibs/Environment2/environment2-fork.jar" sourcepath="C:/DATEN/eclipseWorkspace/extLibs/Environment2/environment2-src.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/DATEN/eclipseWorkspace/extLibs/Environment2/environment2-doc.jar!/"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
