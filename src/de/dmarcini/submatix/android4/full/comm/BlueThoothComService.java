@@ -283,6 +283,7 @@ public class BlueThoothComService extends Service
         if( isNowStop )
         {
           Log.i( TAG, "stopping service immediate..." );
+          disconnect();
           stopSelf();
         }
         else

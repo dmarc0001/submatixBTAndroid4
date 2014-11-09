@@ -51,8 +51,7 @@ import de.dmarcini.submatix.android4.full.utils.GasUpdateEntity;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 import de.dmarcini.submatix.android4.full.utils.SPX42AliasManager;
 import de.dmarcini.submatix.android4.full.utils.SPX42Config;
-import de.jockels.open.Environment2;
-import de.jockels.open.NoSecondaryStorageException;
+import de.jockels.tools.Environment4;
 
 /**
  * Die Aktivität der Application
@@ -651,23 +650,18 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   {
     File extSdCard;
     File dataBaseRoot;
-    //
-    try
+    Environment4.Device devs[] = Environment4.getExternalStorage( this );
+    Environment4.setUseReceiver( this, false );
+    if( devs.length >= 2 )
     {
-      if( Environment2.isSecondaryExternalStorageAvailable() )
-      {
-        extSdCard = Environment2.getSecondaryExternalStorageDirectory();
-      }
-      else
-      {
-        Log.w( TAG, "extern storage not found! fallbsack to internal store!" );
-        extSdCard = Environment.getExternalStorageDirectory();
-        // extSdCard = Environment2.getCardDirectory();
-      }
+      extSdCard = devs[1].getAbsoluteFile();
+      Log.i( TAG, String.format( "extern SDCARD =  %s", extSdCard.getAbsolutePath() ) );
     }
-    catch( NoSecondaryStorageException ex )
+    else
     {
-      return( null );
+      extSdCard = Environment.getExternalStorageDirectory();
+      Log.w( TAG, String.format( "extern SDCARD (fallback) =  %s", extSdCard.getAbsolutePath() ) );
+      // extSdCard = Environment2.getCardDirectory();
     }
     if( extSdCard.exists() && extSdCard.isDirectory() && extSdCard.canWrite() )
     {

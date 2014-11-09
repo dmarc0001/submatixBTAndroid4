@@ -30,6 +30,7 @@ import java.util.Locale;
 
 import org.joda.time.DateTime;
 
+import android.os.Build;
 import de.dmarcini.submatix.android4.full.gui.MainActivity;
 
 /**
@@ -44,8 +45,8 @@ import de.dmarcini.submatix.android4.full.gui.MainActivity;
  */
 public class BuildVersion
 {
-  private static final long buildNumber = 3437L;
-  private static final long buildDate = 1415538844660L;
+  private static final long buildNumber = 3453L;
+  private static final long buildDate = 1415544798745L;
   /**
    * Kennzeichnung für eine Version
    */
@@ -105,6 +106,6 @@ public class BuildVersion
    */
   public static String getVersion()
   {
-    return( ProjectConst.MANUFACTVERS );
+    return( String.format( Locale.getDefault(), "%s, SDK:%d", ProjectConst.MANUFACTVERS, Build.VERSION.SDK_INT ) );
   }
 }
