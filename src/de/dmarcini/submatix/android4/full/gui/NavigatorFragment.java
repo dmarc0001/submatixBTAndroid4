@@ -69,7 +69,7 @@ public class NavigatorFragment extends Fragment
    * 
    * Stand: 08.11.2014
    * 
-   * @return
+   * @return ListView (das eigentliche Menü-View)
    */
   public ListView getMenuListView()
   {
@@ -92,8 +92,6 @@ public class NavigatorFragment extends Fragment
     }
     // Select either the default item (0) or the last selected item.
     Log.v( TAG, String.format( Locale.getDefault(), "onCreate: select item <%d>...", currentSelectedPosition ) );
-    // TODO: warum schmiert der hier ab?
-    // selectItem( currentSelectedPosition );
     Log.v( TAG, "onCreate:...OK" );
   }
 
@@ -102,8 +100,8 @@ public class NavigatorFragment extends Fragment
   {
     super.onActivityCreated( savedInstanceState );
     Log.v( TAG, "onActivityCreated:..." );
-    // das Fragment hat eion Options Menü
-    // damit reagiert es auf den Click auf den Titerl mit dem Anzeigen des Navigators
+    // das Fragment hat ein Options Menü
+    // damit reagiert es auf den Click auf den Titel mit dem Anzeigen des Navigators
     setHasOptionsMenu( true );
     Log.v( TAG, "onActivityCreated:...OK" );
   }
@@ -137,8 +135,7 @@ public class NavigatorFragment extends Fragment
         selectItem( position );
       }
     } );
-    // TODO: Onlinestsatus
-    setListAdapterForOnlinestatus( true );
+    setListAdapterForOnlinestatus( false );
     menuListView.setItemChecked( currentSelectedPosition, true );
     Log.v( TAG, "onCreateView:...OK" );
     return menuListView;
@@ -179,7 +176,8 @@ public class NavigatorFragment extends Fragment
     actionBar.setHomeButtonEnabled( true );
     // ActionBarDrawerToggle ties together the the proper interactions
     // between the navigation drawer and the action bar app icon.
-    navigatorDrawerToggle = new NaviActionBarDrawerToggle( getActivity(), navigatorLayout, R.drawable.spx42, R.string.navigation_drawer_open, R.string.navigation_drawer_close );
+    navigatorDrawerToggle = new NaviActionBarDrawerToggle( getActivity(), navigatorLayout, R.drawable.navigator_drawer, R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close );
     // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
     // per the navigation drawer design guidelines.
     if( !hasUserLearnedDrawer && !isFromSavedInstanceState )

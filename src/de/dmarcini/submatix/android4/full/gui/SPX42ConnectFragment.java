@@ -470,7 +470,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   {
     super.onActivityCreated( bundle );
     runningActivity = getActivity();
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ..." );
     try
     {
       discoverButton = ( Button )runningActivity.findViewById( R.id.connectDiscoverButton );
@@ -478,7 +478,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       connButton = ( ImageButton )runningActivity.findViewById( R.id.connectButton );
       aliasEditButton = ( Button )runningActivity.findViewById( R.id.connectAliasEditButton );
       connectTextView = ( TextView )runningActivity.findViewById( R.id.connectStatusText );
-      if( MainActivity.mBtAdapter != null && MainActivity.mBtAdapter.isEnabled() )
+      if( ( MainActivity.mBtAdapter != null ) && ( MainActivity.mBtAdapter.isEnabled() ) )
       {
         if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: set SPX42ConnectFragment eventhandler..." );
         devSpinner.setOnItemSelectedListener( this );
@@ -495,7 +495,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       }
       else
       {
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: NOT set onClick eventhandler..." );
+        if( ApplicationDEBUG.DEBUG ) Log.e( TAG, "onActivityCreated: NOT BT Adapter/not enabled => NOT set onClick eventhandler..." );
       }
     }
     catch( NullPointerException ex )
@@ -654,17 +654,6 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       Log.e( TAG, "onCreateView: container is NULL ..." );
       return( null );
     }
-    //
-    // wenn die laufende Activity eine AreaDetailActivity ist, dann gibts das View schon
-    //
-    // if( runningActivity instanceof AreaDetailActivity )
-    // {
-    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
-    // return( null );
-    // }
-    //
-    // Verbindungsseite via twoPane ausgewählt
-    //
     rootView = makeConnectionView( inflater, container );
     return rootView;
   }

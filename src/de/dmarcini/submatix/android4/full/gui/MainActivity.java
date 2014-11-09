@@ -32,7 +32,6 @@ import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Toast;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
@@ -97,7 +96,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   private final ArrayList<IBtServiceListener> serviceListener       = new ArrayList<IBtServiceListener>();
   private volatile boolean                    mIsBound              = false;
   private static int                          currentStyleId        = R.style.AppDarkTheme;
-  private NavigatorFragment                   mNavigationDrawerFragment;
+  private NavigatorFragment                   appNavigatorFragment;
   private CharSequence                        mTitle;                                                                      // die Titelzeile
   protected static File                       databaseDir           = null;
   protected static SPX42Config                spxConfig             = new SPX42Config();                                   // Da werden SPX-Spezifische Sachen gespeichert
@@ -136,6 +135,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       binder = null;
     }
   };
+  
+  
+  
   //
   // Ein Messagehandler, der vom Service kommende Messages bearbeitet
   //
@@ -160,7 +162,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       }
     }
   };
-
+  //
+  // @formatter:on
+  //
   /**
    * 
    * Wenn ein Fragment die Nachrichten erhalten soll, muß es den listener übergben...
@@ -237,9 +241,6 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     }
   }
 
-  //
-  // @formatter:on
-  //
   /**
    * Frage, ob BR erlaubt werden sollte Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
@@ -549,7 +550,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   {
     if( mIsBound )
     {
-      // If we have received the service, and hence registered with it, then now is the time to unregister.
+      //
+      // wenn der Service gebunen ist, muss er wieder "entbunden" werden
+      //
       if( mService != null )
       {
         Log.v( TAG, "doUnbindService..." );
@@ -699,10 +702,10 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       // ################################################################
       case ProjectConst.MESSAGE_CONNECTED:
         // die Menüs anpassen
-        if( mNavigationDrawerFragment != null )
+        if( appNavigatorFragment != null )
         {
           Log.v( TAG, "ICONS auf CONNECTED stellen..." );
-          mNavigationDrawerFragment.setListAdapterForOnlinestatus( true );
+          appNavigatorFragment.setListAdapterForOnlinestatus( true );
         }
         else
         {
@@ -715,10 +718,10 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       // ################################################################
       case ProjectConst.MESSAGE_DISCONNECTED:
         // die Menüs anpassen
-        if( mNavigationDrawerFragment != null )
+        if( appNavigatorFragment != null )
         {
           Log.v( TAG, "ICONS auf DISCONNECTED stellen" );
-          mNavigationDrawerFragment.setListAdapterForOnlinestatus( false );
+          appNavigatorFragment.setListAdapterForOnlinestatus( false );
         }
         else
         {
@@ -731,10 +734,10 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       // ################################################################
       case ProjectConst.MESSAGE_CONNECTERROR:
         // die Menüs anpassen
-        if( mNavigationDrawerFragment != null )
+        if( appNavigatorFragment != null )
         {
           Log.v( TAG, "ICONS auf DISCONNECTED stellen" );
-          mNavigationDrawerFragment.setListAdapterForOnlinestatus( false );
+          appNavigatorFragment.setListAdapterForOnlinestatus( false );
         }
         else
         {
@@ -1117,7 +1120,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         }
         else
         {
-          // User did not enable Bluetooth or an error occured
+          // Der User hats verboten oder ein Fehler trat auf
           Log.v( TAG, "REQUEST_ENABLE_BT => BT Device NOT ENABLED" );
           Toast.makeText( this, R.string.toast_exit_nobt, Toast.LENGTH_LONG ).show();
           finish();
@@ -1126,9 +1129,8 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       case ProjectConst.REQUEST_SPX_PREFS:
         //
         // wenn die Activity der SPX-Einstellungen zurückkehrt...
-        //
+        // TODO: ist der Code noch notwendig?
         Log.v( TAG, "spx42 preferences activity returns..." );
-        // finishActivity( ProjectConst.REQUEST_SPX_PREFS_F );
         setContentView( R.layout.activity_main );
         break;
       default:
@@ -1137,7 +1139,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   }
 
   /**
-   * Wenn die Activity erzeugt wird, u.A. herausfinden ob ein- oder zwei-Flächen Mode
+   * Die Activity startet
    * 
    * @see android.app.Activity#onCreate(android.os.Bundle)
    * @param savedInstanceState
@@ -1179,6 +1181,8 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       }
     }
     //
+    // den Inhalsbehälter setzten
+    //
     setContentView( R.layout.activity_main );
     //
     // finde raus, ob es ein Restart für ein neues Theme war
@@ -1190,11 +1194,11 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       // ja, jetzt muss ich auch drauf reagieren und das Preferenz-Fragment neu aufbauen
       //
       wasRestartForNewTheme = false;
-      mNavigationDrawerFragment = ( NavigatorFragment )getFragmentManager().findFragmentById( R.id.navi_drawer );
+      appNavigatorFragment = ( NavigatorFragment )getFragmentManager().findFragmentById( R.id.navi_drawer );
       mTitle = getTitle();
       Log.v( TAG, "onCreate: restart for new Theme: set navigation drawer..." );
       // Initialisiere den Navigator
-      mNavigationDrawerFragment.setUp( R.id.navi_drawer, ( DrawerLayout )findViewById( R.id.drawer_layout ) );
+      appNavigatorFragment.setUp( R.id.navi_drawer, ( DrawerLayout )findViewById( R.id.drawer_layout ) );
       Log.i( TAG, "onCreate: set program preferences after switch theme..." );
       Bundle arg = new Bundle();
       arg.putString( ProjectConst.ARG_ITEM_ID, getResources().getString( R.string.progitem_progpref ) );
@@ -1209,22 +1213,23 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       //
       // Kein Neustart mit neuem Thema
       //
-      mNavigationDrawerFragment = ( NavigatorFragment )getFragmentManager().findFragmentById( R.id.navi_drawer );
+      appNavigatorFragment = ( NavigatorFragment )getFragmentManager().findFragmentById( R.id.navi_drawer );
       mTitle = getTitle();
       Log.v( TAG, "onCreate: set navigation drawer..." );
       // Initialisiere den Navigator
-      mNavigationDrawerFragment.setUp( R.id.navi_drawer, ( DrawerLayout )findViewById( R.id.drawer_layout ) );
+      appNavigatorFragment.setUp( R.id.navi_drawer, ( DrawerLayout )findViewById( R.id.drawer_layout ) );
       //
       // Als erstes das Connect-Fragment...
       //
+      Log.i( TAG, "onCreate: default Fragnment initialising..." );
       Bundle arguments = new Bundle();
       ProgItem pItem = ContentSwitcher.getProgItemForId( R.string.progitem_about );
       arguments.putString( ProjectConst.ARG_ITEM_CONTENT, pItem.content );
       arguments.putInt( ProjectConst.ARG_ITEM_ID, pItem.nId );
       arguments.putBoolean( ProjectConst.ARG_ITEM_GRAPHEXTRA, false );
-      Log.i( TAG, "onCreate: create SPX42ConnectFragment" );
-      SPX42ConnectFragment defaultFragment = new SPX42ConnectFragment();
-      mTitle = getString( R.string.connect_headline );
+      Log.i( TAG, "onCreate: create ProgramAbountFragment" );
+      ProgramAboutFragment defaultFragment = new ProgramAboutFragment();
+      mTitle = getString( R.string.about_headline );
       defaultFragment.setArguments( arguments );
       getFragmentManager().beginTransaction().replace( R.id.main_container, defaultFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
     }
@@ -1233,7 +1238,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   @Override
   public boolean onCreateOptionsMenu( Menu menu )
   {
-    if( !mNavigationDrawerFragment.isDrawerOpen() )
+    if( !appNavigatorFragment.isDrawerOpen() )
     {
       // Only show items in the action bar relevant to this screen
       // if the drawer is not showing. Otherwise, let the drawer
@@ -1249,14 +1254,14 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void onDestroy()
   {
     super.onDestroy();
-    Log.v( TAG, "onDestroy:..." );
+    // Log.v( TAG, "onDestroy:..." );
   }
 
   @Override
   public void onStop()
   {
     super.onStop();
-    Log.v( TAG, "onStop:..." );
+    // Log.v( TAG, "onStop:..." );
     doUnbindService( true );
   }
 
@@ -1305,20 +1310,20 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       {
         Log.i( TAG, "User will close app..." );
         Toast.makeText( this, R.string.toast_exit, Toast.LENGTH_SHORT ).show();
-        // if( mService != null )
-        // {
-        // mService.destroyService();
-        // }
+        if( mService != null )
+        {
+          mService.destroyService();
+        }
         if( BluetoothAdapter.getDefaultAdapter() != null )
         {
           // TODO: Preferences -> Programmeinstellungen soll das automatisch passieren?
           BluetoothAdapter.getDefaultAdapter().disable();
         }
-        // if( aliasManager != null )
-        // {
-        // aliasManager.close();
-        // aliasManager = null;
-        // }
+        if( aliasManager != null )
+        {
+          aliasManager.close();
+          aliasManager = null;
+        }
         finish();
       }
     }
@@ -1329,8 +1334,8 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     {
       Log.i( TAG, "User will edit alias..." );
       EditAliasDialogFragment editDialog = ( EditAliasDialogFragment )dialog;
-      // mHandler.obtainMessage( ProjectConst.MESSAGE_DEVALIAS_SET, new BtServiceMessage( ProjectConst.MESSAGE_DEVALIAS_SET, new String[]
-      // { editDialog.getDeviceName(), editDialog.getAliasName(), editDialog.getMac() } ) ).sendToTarget();
+      mHandler.obtainMessage( ProjectConst.MESSAGE_DEVALIAS_SET, new BtServiceMessage( ProjectConst.MESSAGE_DEVALIAS_SET, new String[]
+      { editDialog.getDeviceName(), editDialog.getAliasName(), editDialog.getMac() } ) ).sendToTarget();
     }
     //
     // Sollte die AP geschlossen werden?
@@ -1357,23 +1362,23 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
         intent.putExtra( "EXIT", true );
         startActivity( intent );
-        // if( aliasManager != null )
-        // {
-        // aliasManager.close();
-        // aliasManager = null;
-        // }
+        if( aliasManager != null )
+        {
+          aliasManager.close();
+          aliasManager = null;
+        }
         finish();
       }
     }
     // hat sonst irgendwer Verwendung dafür?
-    // mHandler.obtainMessage( ProjectConst.MESSAGE_DIALOG_POSITIVE, new BtServiceMessage( ProjectConst.MESSAGE_DIALOG_POSITIVE, dialog ) ).sendToTarget();
+    mHandler.obtainMessage( ProjectConst.MESSAGE_DIALOG_POSITIVE, new BtServiceMessage( ProjectConst.MESSAGE_DIALOG_POSITIVE, dialog ) ).sendToTarget();
   }
 
   /**
    * Callback vom Navigator welcher Eintrag ausgewählt wurde
    * 
-   * @param nId
-   *          Die Id des Eintrages (hier gleichzeitig Resourcen-Id für den String)
+   * @param pItem
+   *          Der Programmeintrag Eintrages (hier gleichzeitig mit Resourcen-Id für den String)
    */
   @Override
   public void onNavigationDrawerItemSelected( ContentSwitcher.ProgItem pItem )
@@ -1433,7 +1438,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
           Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42PreferencesFragment..." );
           SPX42PreferencesFragment cFragment = new SPX42PreferencesFragment();
           cFragment.setArguments( arguments );
-          getActionBar().setTitle( R.string.conf_headline );
+          mTitle = getString( R.string.conf_headline );
           getFragmentManager().beginTransaction().replace( R.id.main_container, cFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
         }
         break;
@@ -1445,7 +1450,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         Log.i( TAG, "onNavigationDrawerItemSelected: create ProgramPreferencesFragment..." );
         ProgramPreferencesFragment ppFragment = new ProgramPreferencesFragment();
         ppFragment.setArguments( arguments );
-        getActionBar().setTitle( R.string.conf_prog_headline );
+        mTitle = getString( R.string.conf_prog_headline );
         getFragmentManager().beginTransaction().replace( R.id.main_container, ppFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
         break;
       //
@@ -1458,7 +1463,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
           Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42GaslistPreferencesFragment..." );
           SPX42GaslistPreferencesFragment glFragment = new SPX42GaslistPreferencesFragment();
           glFragment.setArguments( arguments );
-          getActionBar().setTitle( R.string.gaslist_headline );
+          mTitle = getString( R.string.gaslist_headline );
           getFragmentManager().beginTransaction().replace( R.id.main_container, glFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
         }
         break;
@@ -1470,7 +1475,6 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         Log.i( TAG, "onNavigationDrawerItemSelected: create ProgramAboutFragment..." );
         ProgramAboutFragment aboutFragment = new ProgramAboutFragment();
         mTitle = getString( R.string.about_headline );
-        // getActionBar().setTitle( );
         aboutFragment.setArguments( arguments );
         getFragmentManager().beginTransaction().replace( R.id.main_container, aboutFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
         break;
@@ -1483,7 +1487,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         {
           Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42ReadLogFragment..." );
           SPX42ReadLogFragment readLogFragment = ( new SPX42ReadLogFragment() );
-          getActionBar().setTitle( R.string.logread_headline );
+          mTitle = getString( R.string.logread_headline );
           readLogFragment.setArguments( arguments );
           getFragmentManager().beginTransaction().replace( R.id.main_container, readLogFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
         }
@@ -1496,7 +1500,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42LogGraphSelectFragment..." );
         SPX42LogGraphSelectFragment lgf = new SPX42LogGraphSelectFragment();
         lgf.setArguments( arguments );
-        getActionBar().setTitle( R.string.graphlog_header );
+        mTitle = getString( R.string.graphlog_header );
         getFragmentManager().beginTransaction().replace( R.id.main_container, lgf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
         break;
       //
@@ -1507,7 +1511,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         Log.i( TAG, "onNavigationDrawerItemSelected: startSPXExportLogFragment..." );
         SPX42ExportLogFragment elf = new SPX42ExportLogFragment();
         elf.setArguments( arguments );
-        getActionBar().setTitle( R.string.export_header );
+        mTitle = getString( R.string.export_header );
         getFragmentManager().beginTransaction().replace( R.id.main_container, elf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
         break;
       //
@@ -1520,7 +1524,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
           Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42HealthFragment..." );
           SPX42HealthFragment hef = new SPX42HealthFragment();
           hef.setArguments( arguments );
-          getActionBar().setTitle( R.string.health_header );
+          mTitle = getString( R.string.health_header );
           getFragmentManager().beginTransaction().replace( R.id.main_container, hef ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
         }
         break;
@@ -1531,21 +1535,19 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42ConnectFragment" );
         SPX42ConnectFragment defaultFragment = new SPX42ConnectFragment();
         mTitle = getString( R.string.connect_headline );
-        // getActionBar().setTitle( R.string.connect_headline );
         defaultFragment.setArguments( arguments );
         getFragmentManager().beginTransaction().replace( R.id.main_container, defaultFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
     }
     Log.v( TAG, "onNavigationDrawerItemSelected:...OK" );
   }
 
-  @Override
-  public boolean onOptionsItemSelected( MenuItem item )
-  {
-    // TODO: ist das noch notwendig?
-    int id = item.getItemId();
-    return super.onOptionsItemSelected( item );
-  }
-
+  // @Override
+  // public boolean onOptionsItemSelected( MenuItem item )
+  // {
+  // // TODO: ist das noch notwendig?
+  // int id = item.getItemId();
+  // return super.onOptionsItemSelected( item );
+  // }
   @Override
   public void onResume()
   {
@@ -1592,7 +1594,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void onSectionAttached( ContentSwitcher.ProgItem pItem )
   {
     Log.v( TAG, String.format( Locale.getDefault(), "onSectionAttached: fragment for  <%s>...", pItem.content ) );
-    // mTitle = pItem.content;
+    mTitle = pItem.content;
     Log.v( TAG, "onSectionAttached: OK" );
   }
 
@@ -1632,7 +1634,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     Log.v( TAG, "restoreActionBar:..." );
     ActionBar actionBar = getActionBar();
     // deprecated since API 21
-    // actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_STANDARD );
+    actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_STANDARD );
     actionBar.setDisplayShowTitleEnabled( true );
     actionBar.setTitle( mTitle );
     Log.v( TAG, "restoreActionBar:...OK" );

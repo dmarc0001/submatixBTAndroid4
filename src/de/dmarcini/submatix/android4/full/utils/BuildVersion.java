@@ -44,8 +44,8 @@ import de.dmarcini.submatix.android4.full.gui.MainActivity;
  */
 public class BuildVersion
 {
-  private static final long buildNumber = 3428L;
-  private static final long buildDate = 1415534095103L;
+  private static final long buildNumber = 3437L;
+  private static final long buildDate = 1415538844660L;
   /**
    * Kennzeichnung für eine Version
    */
