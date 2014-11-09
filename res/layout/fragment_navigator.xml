@@ -2,9 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#cccc"
-    android:choiceMode="singleChoice"
     android:divider="@android:color/transparent"
+    android:background="@color/preferenceCategoryDark.backgroundColor"
+    android:choiceMode="singleChoice"
     android:dividerHeight="0dp"
     tools:context="de.dmarcini.submatix.android4.full.gui.NavigatorFragment" />
 
+<!-- android:background="#cccc" -->
