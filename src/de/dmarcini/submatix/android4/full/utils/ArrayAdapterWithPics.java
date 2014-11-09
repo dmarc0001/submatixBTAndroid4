@@ -148,17 +148,27 @@ public class ArrayAdapterWithPics extends ArrayAdapter<ContentSwitcher.ProgItem>
         {
           holder.imageLeftIndicatorView.setImageResource( R.drawable.activated_red_icon_color );
           holder.imageRightIndicatorView.setImageResource( R.drawable.activated_red_icon_color );
+          convertView.setBackgroundColor( getContext().getResources().getColor( R.color.navigatorDark_markerColor ) );
         }
         else
         {
           holder.imageLeftIndicatorView.setImageResource( R.drawable.activated_blue_icon_color );
           holder.imageRightIndicatorView.setImageResource( R.drawable.activated_blue_icon_color );
+          convertView.setBackgroundColor( getContext().getResources().getColor( R.color.navigatorLight_markerColor ) );
         }
       }
       else
       {
         holder.imageLeftIndicatorView.setImageResource( R.drawable.deactivated_and_space );
         holder.imageRightIndicatorView.setImageResource( R.drawable.deactivated_and_space );
+        if( this.themeId == R.style.AppDarkTheme )
+        {
+          convertView.setBackgroundColor( getContext().getResources().getColor( R.color.navigatorDark_backgroundColor ) );
+        }
+        else
+        {
+          convertView.setBackgroundColor( getContext().getResources().getColor( R.color.navigatorLight_backgroundColor ) );
+        }
       }
     }
     return convertView;

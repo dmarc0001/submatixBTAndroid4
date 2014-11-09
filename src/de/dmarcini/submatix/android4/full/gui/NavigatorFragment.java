@@ -44,6 +44,7 @@ public class NavigatorFragment extends Fragment
    * Callback in die activity zur Benachrichtigung der erfolgreichen Initialisierung eines Frames
    */
   private INavigationDrawerCallbacks navigatorCallbacks;
+  @SuppressWarnings( "deprecation" )
   private ActionBarDrawerToggle      navigatorDrawerToggle;
   private DrawerLayout               navigatorLayout;
   private ListView                   menuListView;

@@ -640,9 +640,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * TODO: Android 4.3 funktioniert hier nicht :( Bibliothek kann das nicht
-   * 
-   * Stand: 25.07.2013
+   * Stand: 09.11.2014
    * 
    * @return Das Datenbankverzeichnis
    */
