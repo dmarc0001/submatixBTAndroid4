@@ -259,6 +259,40 @@ public class BlueThoothComService extends Service
         timeToStopService = System.currentTimeMillis() + msToEndService;
       }
     }
+
+    /**
+     * 
+     * Hebe die Registrierung eines Handlers auf
+     * 
+     * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.comm
+     * 
+     * Stand: 03.12.2013
+     * 
+     * @param mHandler
+     * @param isNowStop
+     *          true wenn SOFORT beenden
+     */
+    public void unregisterServiceHandler( Handler mHandler, boolean isNowStop )
+    {
+      // if( mIsBusy ) return( null );
+      Log.i( TAG, "Client unregister" );
+      mClientHandler.remove( mHandler );
+      if( mClientHandler.isEmpty() )
+      {
+        Log.i( TAG, "last Client ist removed..." );
+        if( isNowStop )
+        {
+          Log.i( TAG, "stopping service immediate..." );
+          stopSelf();
+        }
+        else
+        {
+          // isRunning = false;
+          // zeit bis zum Ende des Service setzen
+          timeToStopService = System.currentTimeMillis() + msToEndService;
+        }
+      }
+    }
   }
 
   /**

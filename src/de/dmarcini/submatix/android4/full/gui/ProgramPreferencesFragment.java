@@ -40,7 +40,6 @@ import android.view.MenuItem;
 import android.view.View;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
-import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 
 /**
  * 
@@ -217,15 +216,11 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
   private void setThemeForApp()
   {
     //
-    // Argumente für Intent zusammenbauen
+    // Bescheid geben füer Restart
     //
-    Bundle arguments = new Bundle();
-    arguments.putInt( ProjectConst.ARG_ITEM_ID, R.string.progitem_progpref );
-    Intent parentActivityIntent = new Intent( getActivity(), MainActivity.class );
-    parentActivityIntent.putExtras( arguments );
-    parentActivityIntent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
-    startActivity( parentActivityIntent );
-    getActivity().finish();
+    MainActivity.wasRestartForNewTheme = true;
+    Log.i( TAG, "setThemeForApp: activity recreate..." );
+    getActivity().recreate();
   }
 
   /**
