@@ -19,8 +19,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.dmarcini.submatix.android4.full"
-    android:versionCode="16"
-    android:versionName="2.0 BETA1" 
+    android:versionCode="17"
+    android:versionName="2.0 BETA2" 
     android:installLocation="auto">
 
     <uses-sdk
