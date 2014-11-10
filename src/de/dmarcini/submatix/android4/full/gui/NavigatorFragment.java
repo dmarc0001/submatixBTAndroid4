@@ -33,6 +33,7 @@ import de.dmarcini.submatix.android4.full.utils.NaviActionBarDrawerToggle;
  * Fragment zur Interaktion mit dem user (Darstellung Menü)
  * 
  */
+@SuppressWarnings( "deprecation" )
 public class NavigatorFragment extends Fragment
 {
   private static String              TAG                     = NavigatorFragment.class.getSimpleName();
@@ -44,7 +45,6 @@ public class NavigatorFragment extends Fragment
    * Callback in die activity zur Benachrichtigung der erfolgreichen Initialisierung eines Frames
    */
   private INavigationDrawerCallbacks navigatorCallbacks;
-  @SuppressWarnings( "deprecation" )
   private ActionBarDrawerToggle      navigatorDrawerToggle;
   private DrawerLayout               navigatorLayout;
   private ListView                   menuListView;
@@ -138,6 +138,16 @@ public class NavigatorFragment extends Fragment
     } );
     setListAdapterForOnlinestatus( false );
     menuListView.setItemChecked( currentSelectedPosition, true );
+    //
+    // Theme auswählen
+    if( MainActivity.getAppStyle() == R.style.AppDarkTheme )
+    {
+      menuListView.setBackgroundColor( getResources().getColor( R.color.navigatorDark_backgroundColor ) );
+    }
+    else
+    {
+      menuListView.setBackgroundColor( getResources().getColor( R.color.navigatorLight_backgroundColor ) );
+    }
     Log.v( TAG, "onCreateView:...OK" );
     return menuListView;
   }
@@ -163,8 +173,10 @@ public class NavigatorFragment extends Fragment
    *          The android:id of this fragment in its activity's layout.
    * @param drawerLayout
    *          The DrawerLayout containing this fragment's UI.
+   * @param selPosId
+   *          Id des zu setzenden Eintrags oder -1
    */
-  public void setUp( int fragmentId, DrawerLayout drawerLayout )
+  public void setUp( int fragmentId, DrawerLayout drawerLayout, int selPosId )
   {
     Log.v( TAG, "setUp:..." );
     navigatorContainerView = getActivity().findViewById( fragmentId );
@@ -194,6 +206,23 @@ public class NavigatorFragment extends Fragment
       }
     } );
     navigatorLayout.setDrawerListener( navigatorDrawerToggle );
+    //
+    // noch die initiale Position setzen, wenn gewünscht
+    //
+    if( selPosId != -1 )
+    {
+      Log.i( TAG, "setUp: set inital selected Item...." );
+      ArrayAdapterWithPics adapter = ( ArrayAdapterWithPics )menuListView.getAdapter();
+      // gib die Position eines Listeintrages über eine ProgId zurück
+      // die PorgId wir über die nId gefunden
+      Log.i( TAG,
+              String.format( "nId: <%d>, title: <%s>, Pos <%d>", selPosId, ContentSwitcher.getProgItemForId( selPosId ).content,
+                      adapter.getPosition( ContentSwitcher.getProgItemForId( selPosId ) ) ) );
+      Log.i( TAG, "setUp: set inital selected Item...." );
+      currentSelectedPosition = adapter.getPosition( ContentSwitcher.getProgItemForId( selPosId ) );
+      menuListView.setItemChecked( currentSelectedPosition, true );
+      Log.i( TAG, "setUp: set inital selected Item....OK" );
+    }
     Log.v( TAG, "setUp:...OK" );
   }
 

@@ -1190,12 +1190,18 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       mTitle = getTitle();
       Log.v( TAG, "onCreate: restart for new Theme: set navigation drawer..." );
       // Initialisiere den Navigator
-      appNavigatorFragment.setUp( R.id.navi_drawer, ( DrawerLayout )findViewById( R.id.drawer_layout ) );
+      appNavigatorFragment.setUp( R.id.navi_drawer, ( DrawerLayout )findViewById( R.id.drawer_layout ), R.string.progitem_progpref );
       Log.i( TAG, "onCreate: set program preferences after switch theme..." );
-      Bundle arg = new Bundle();
-      arg.putString( ProjectConst.ARG_ITEM_ID, getResources().getString( R.string.progitem_progpref ) );
+      //
+      // das Programmeinstellungsfragment
+      //
+      Bundle arguments = new Bundle();
+      ProgItem pItem = ContentSwitcher.getProgItemForId( R.string.progitem_about );
+      arguments.putString( ProjectConst.ARG_ITEM_CONTENT, pItem.content );
+      arguments.putInt( ProjectConst.ARG_ITEM_ID, pItem.nId );
+      arguments.putBoolean( ProjectConst.ARG_ITEM_GRAPHEXTRA, false );
       ProgramPreferencesFragment ppFragment = new ProgramPreferencesFragment();
-      ppFragment.setArguments( arg );
+      ppFragment.setArguments( arguments );
       getActionBar().setTitle( R.string.conf_prog_headline );
       getActionBar().setLogo( R.drawable.properties );
       getFragmentManager().beginTransaction().replace( R.id.main_container, ppFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
@@ -1209,7 +1215,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       mTitle = getTitle();
       Log.v( TAG, "onCreate: set navigation drawer..." );
       // Initialisiere den Navigator
-      appNavigatorFragment.setUp( R.id.navi_drawer, ( DrawerLayout )findViewById( R.id.drawer_layout ) );
+      appNavigatorFragment.setUp( R.id.navi_drawer, ( DrawerLayout )findViewById( R.id.drawer_layout ), R.string.progitem_about );
       //
       // Als erstes das Connect-Fragment...
       //
