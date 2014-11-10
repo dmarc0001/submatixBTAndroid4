@@ -59,7 +59,7 @@
     <string name="toast_read_logdir_no_selected_entrys">Not entrys selected yet!</string>
     <string name="toast_connect_connected">connected to &lt;%s&gt;</string>
     <string name="toast_connect_disconnected">connection disconnected</string>
-    <string name="toast_cant_bt_connect">can not connect to &lt;%s&gt;</string>
+    <string name="toast_connect_cant_bt_connect">can not connect to &lt;%s&gt;</string>
     <string name="toast_export_cant_create_dir">can\'t create dir &lt;%s&gt;</string>
     <string name="toast_export_cant_find_xmldata">can\'t find data-xml file</string>
     <string name="toast_export_internal_xml_error">internal XML-DOM-Error!</string>
