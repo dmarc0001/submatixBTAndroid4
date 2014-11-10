@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry kind="lib" path="C:/Program Files/android-sdk-windows/platforms/android-15/android.jar">
+	<classpathentry exported="true" kind="lib" path="C:/Program Files/android-sdk-windows/platforms/android-21/android.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/C:/Program Files/android-sdk-windows/docs/reference"/>
 		</attributes>
