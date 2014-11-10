@@ -11,6 +11,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Environment;
 import android.os.storage.StorageManager;
 import android.support.v4.content.ContextCompat;
@@ -458,16 +459,15 @@ public class Environment4
      * @return ein String wie in {@link android.os.Environment} definiert. Im Allgemeinen bedeuten nur MEDIA_MOUNTED und MEDIA_MOUNTED_READ_ONLY, dass das Device wirklich
      *         funktioniert. Die anderen sind mehr oder weniger nur Fehlerhinweise, z.B. MEDIA_SHARED = ist per USB an einen PC weitergereicht und kann daher nicht gelesen werden.
      */
+    @SuppressWarnings( "deprecation" )
     public String getState()
     {
       if( mRemovable || mState == null )
       {
         // TODO: das funktionert hier nicht...
-        // if( Build.VERSION.SDK_INT >= 19 )
-        // // Android 4.4? Dann dort nachfragen
-        // mState = Environment.getStorageState( this );
-        // else
-        if( canRead() && getTotalSpace() > 0 )
+        if( Build.VERSION.SDK_INT >= 19 ) // Android 4.4? Dann dort nachfragen
+          mState = Environment.getStorageState( this );
+        else if( canRead() && getTotalSpace() > 0 )
           // lesbar und Größe vorhanden => gibt es
           mState = Environment.MEDIA_MOUNTED;
         else if( mState == null || Environment.MEDIA_MOUNTED.equals( mState ) )

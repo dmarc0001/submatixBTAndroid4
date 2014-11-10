@@ -1647,6 +1647,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    * 
    * Stand: 06.11.2014
    */
+  @SuppressWarnings( "deprecation" )
   public void restoreActionBar()
   {
     Log.v( TAG, "restoreActionBar:..." );
