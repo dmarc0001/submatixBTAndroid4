@@ -51,10 +51,10 @@ public final class ProjectConst
   public static final String MANUFACTNAME               = "Dirk Marciniak";
   public static final String MANUFACTMAIL               = "dirk@submatix.com";
   public static final String MANUFACTHOME               = "http://www.submatix.com";
-  public static final String MANUFACTVERS               = "2.0 b2";
+  public static final String MANUFACTVERS               = "2.0 b3";
   public static final String GENYEAR                    = "2014";
   public static final String GENMONTH                   = "11";
-  public static final String GENDAY                     = "10";
+  public static final String GENDAY                     = "15";
   public static final boolean CHECK_PHYSICAL_BT         = false; 
 
   // ANDROID: Preferences Version
