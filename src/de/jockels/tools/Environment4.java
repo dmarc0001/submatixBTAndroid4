@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -67,6 +68,7 @@ import android.util.Log;
  * @version 0.9
  *
  */
+@SuppressWarnings( "javadoc" )
 public class Environment4
 {
   private static final String      TAG            = "Environment4";
@@ -228,8 +230,8 @@ public class Environment4
     try
     {
       // Aufruf der versteckten Methode getVolumeList
-      Method m = c.getMethod( "getVolumeList", null );
-      vols = ( Object[] )m.invoke( sm, null ); // android.os.Storage.StorageVolume
+      Method m = c.getMethod( "getVolumeList", ( Class )null );
+      vols = ( Object[] )m.invoke( sm, ( Class )null ); // android.os.Storage.StorageVolume
       Device[] temp = new Device[vols.length];
       for( int i = 0; i < vols.length; i++ )
         temp[i] = new Device( vols[i] );
@@ -308,10 +310,14 @@ public class Environment4
    */
   public static class Device extends File
   {
-    String mUserLabel, mUuid, mState, mWriteState, mType;
-    boolean mPrimary, mRemovable, mEmulated, mAllowMassStorage;
-    long    mMaxFileSize;
-    File    mFiles, mCache;
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 2360762770949457696L;
+    String                    mUserLabel, mUuid, mState, mWriteState, mType;
+    boolean                   mPrimary, mRemovable, mEmulated, mAllowMassStorage;
+    long                      mMaxFileSize;
+    File                      mFiles, mCache;
 
     /**
      * Erzeugen aus context.getDataDirectory(), also interner Speicher
@@ -336,36 +342,56 @@ public class Environment4
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
+    @SuppressWarnings( "rawtypes" )
     Device( Object storage ) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
     {
-      super( ( String )storage.getClass().getMethod( "getPath", null ).invoke( storage, null ) );
+      super( ( String )storage.getClass().getMethod( "getPath", ( Class<?> )null ).invoke( storage, ( Class )null ) );
       for( Method m : storage.getClass().getMethods() )
       {
-        if( m.getName().equals( "getUserLabel" ) && m.getParameterTypes().length == 0 && m.getReturnType() == String.class ) mUserLabel = ( String )m.invoke( storage, null ); // ab
-                                                                                                                                                                               // Android
-                                                                                                                                                                               // 4.4
-        if( m.getName().equals( "getUuid" ) && m.getParameterTypes().length == 0 && m.getReturnType() == String.class ) mUuid = ( String )m.invoke( storage, null ); // ab Android
-                                                                                                                                                                     // 4.4
-        if( m.getName().equals( "getState" ) && m.getParameterTypes().length == 0 && m.getReturnType() == String.class ) mState = ( String )m.invoke( storage, null ); // ab Android
-                                                                                                                                                                       // 4.4
-        if( m.getName().equals( "isRemovable" ) && m.getParameterTypes().length == 0 && m.getReturnType() == boolean.class ) mRemovable = ( Boolean )m.invoke( storage, null ); // ab
-                                                                                                                                                                                // Android
-                                                                                                                                                                                // 4.0
-        if( m.getName().equals( "isPrimary" ) && m.getParameterTypes().length == 0 && m.getReturnType() == boolean.class ) mPrimary = ( Boolean )m.invoke( storage, null ); // ab
-                                                                                                                                                                            // Android
-                                                                                                                                                                            // 4.2
-        if( m.getName().equals( "isEmulated" ) && m.getParameterTypes().length == 0 && m.getReturnType() == boolean.class ) mEmulated = ( Boolean )m.invoke( storage, null ); // ab
-                                                                                                                                                                              // Android
-                                                                                                                                                                              // 4.0
+        if( m.getName().equals( "getUserLabel" ) && m.getParameterTypes().length == 0 && m.getReturnType() == String.class )
+        {
+          // ab Android 4.4
+          mUserLabel = ( String )m.invoke( storage, ( Class )null );
+        }
+        if( m.getName().equals( "getUuid" ) && m.getParameterTypes().length == 0 && m.getReturnType() == String.class )
+        {
+          // ab Android 4.4
+          mUuid = ( String )m.invoke( storage, ( Class )null );
+        }
+        if( m.getName().equals( "getState" ) && m.getParameterTypes().length == 0 && m.getReturnType() == String.class )
+        {
+          // ab Android 4.4
+          mState = ( String )m.invoke( storage, ( Class )null );
+        }
+        if( m.getName().equals( "isRemovable" ) && m.getParameterTypes().length == 0 && m.getReturnType() == boolean.class )
+        {
+          // ab Android 4.0
+          mRemovable = ( Boolean )m.invoke( storage, ( Class )null ); // ab
+        }
+        if( m.getName().equals( "isPrimary" ) && m.getParameterTypes().length == 0 && m.getReturnType() == boolean.class )
+        {
+          // ab Android 4.2
+          mPrimary = ( Boolean )m.invoke( storage, ( Class )null );
+        }
+        if( m.getName().equals( "isEmulated" ) && m.getParameterTypes().length == 0 && m.getReturnType() == boolean.class )
+        {
+          // Android 4.0
+          mEmulated = ( Boolean )m.invoke( storage, ( Class )null ); // ab
+        }
         if( m.getName().equals( "allowMassStorage" ) && m.getParameterTypes().length == 0 && m.getReturnType() == boolean.class )
-          mAllowMassStorage = ( Boolean )m.invoke( storage, null ); // ab Android 4.0
-        if( m.getName().equals( "getMaxFileSize" ) && m.getParameterTypes().length == 0 && m.getReturnType() == long.class ) mMaxFileSize = ( Long )m.invoke( storage, null ); // ab
-                                                                                                                                                                               // Android
-                                                                                                                                                                               // 4.0
-        // getDescription (ab 4.1 mit context) liefert keine sinnvollen Werte
-        // getPathFile (ab 4.2) liefert keine sinnvollen Werte
-        // getMtpReserveSpace (ab 4.0) für diese Zwecke unwichtig
-        // getStorageId (ab 4.0) für diese Zwecke unwichtig
+        {
+          // ab Android 4.0
+          mAllowMassStorage = ( Boolean )m.invoke( storage, ( Class )null );
+        }
+        if( m.getName().equals( "getMaxFileSize" ) && m.getParameterTypes().length == 0 && m.getReturnType() == long.class )
+        {
+          // ab Android 4.0
+          // getDescription (ab 4.1 mit context) liefert keine sinnvollen Werte
+          // getPathFile (ab 4.2) liefert keine sinnvollen Werte
+          // getMtpReserveSpace (ab 4.0) für diese Zwecke unwichtig
+          // getStorageId (ab 4.0) für diese Zwecke unwichtig
+          mMaxFileSize = ( Long )m.invoke( storage, ( Class )null );
+        }
       }
       if( mState == null ) mState = getState();
       if( mPrimary )
@@ -459,6 +485,7 @@ public class Environment4
      * @return ein String wie in {@link android.os.Environment} definiert. Im Allgemeinen bedeuten nur MEDIA_MOUNTED und MEDIA_MOUNTED_READ_ONLY, dass das Device wirklich
      *         funktioniert. Die anderen sind mehr oder weniger nur Fehlerhinweise, z.B. MEDIA_SHARED = ist per USB an einen PC weitergereicht und kann daher nicht gelesen werden.
      */
+    @SuppressLint( "NewApi" )
     @SuppressWarnings( "deprecation" )
     public String getState()
     {
@@ -477,6 +504,15 @@ public class Environment4
       return mState;
     }
 
+    /**
+     * Gibt immer ein Fileobjekt zurück
+     *
+     * Project: SubmatixBTLoggerAndroid Package: de.jockels.tools
+     * 
+     * Stand: 11.11.2014
+     * 
+     * @return File Objekt
+     */
     public File getFilesDir()
     {
       if( mFiles == null )
@@ -487,6 +523,15 @@ public class Environment4
       return mFiles;
     }
 
+    /**
+     * Gibt immer ein Cache-File Objekt zurück
+     *
+     * Project: SubmatixBTLoggerAndroid Package: de.jockels.tools
+     * 
+     * Stand: 11.11.2014
+     * 
+     * @return Cackhe Objekt
+     */
     public File getCacheDir()
     {
       if( mCache == null )
@@ -529,21 +574,57 @@ public class Environment4
       return mEmulated;
     }
 
+    /**
+     * Massenspeicher erlaubt?
+     *
+     * Project: SubmatixBTLoggerAndroid Package: de.jockels.tools
+     * 
+     * Stand: 11.11.2014
+     * 
+     * @return Ist ein Massenspeicher erlaubt oder nicht
+     */
     public boolean isAllowMassStorage()
     {
       return mAllowMassStorage;
     }
 
+    /**
+     * Die Größe der erlaubten Dateigröße
+     *
+     * Project: SubmatixBTLoggerAndroid Package: de.jockels.tools
+     * 
+     * Stand: 11.11.2014
+     * 
+     * @return
+     */
     public long getMaxFileSize()
     {
       return mMaxFileSize;
     }
 
+    /**
+     * Benutzerlabel
+     *
+     * Project: SubmatixBTLoggerAndroid Package: de.jockels.tools
+     * 
+     * Stand: 11.11.2014
+     * 
+     * @return
+     */
     public String getUserLabel()
     {
       return mUserLabel;
     }
 
+    /**
+     * Die UUID zurück geben
+     *
+     * Project: SubmatixBTLoggerAndroid Package: de.jockels.tools
+     * 
+     * Stand: 11.11.2014
+     * 
+     * @return
+     */
     public String getUuid()
     {
       return mUuid;
