@@ -165,7 +165,7 @@
     <!-- ### kategorie Einheiten ### -->
     <string name="conf_units_header">"SPX42 Einheiten"</string>
     <!-- temperatureinheiten -->
-    <string name="conf_units_temp_header">"Temeratureinheit"</string>
+    <string name="conf_units_temp_header">"Temperatureinheit"</string>
     <string name="conf_units_temp_metric">"Celsius"</string>
     <string name="conf_units_temp_fahrenheid">"Fahrenheid"</string>
     <string name="conf_units_temp_metric_summary">"Temperatur in Celsius"</string>
@@ -351,8 +351,8 @@
     <string name="health_serial_number_label">SPX42 Seriennummer</string>
     <string name="health_firmware_version_label">SPX42 Firmware Version</string>
     <string name="health_license_label">SPX42 Lizenz</string>
-    <string name="health_license_enable">lizensiert</string>
-    <string name="health_license_disable">nicht lizensiert</string>
+    <string name="health_license_enable">lizenziert</string>
+    <string name="health_license_disable">nicht lizenziert</string>
     <string name="health_license_nitrox_label">Nitrox</string>
     <string name="health_license_normoxic_trimix_label">Normoxic TMX</string>
     <string name="health_license_full_trimix_label">Voll TMX</string>
