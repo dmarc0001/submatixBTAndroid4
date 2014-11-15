@@ -95,7 +95,7 @@ public final class ProjectConst
   public static final String DEFAULTDATADIR             = "database";
   public static final String DEFAULTEXPORTDIR           = "export";
   public static final String DATABASE_NAME              = "submatixDatabase.db";
-  public static final int    DATABASE_VERSION           = 5;
+  public static final int    DATABASE_VERSION           = 6;
   
   // Messages für SPX 42
   public static final String STX                        = new String( new byte[] { 0x02 } );
@@ -174,8 +174,7 @@ public final class ProjectConst
   
   // Android: ID für Intentrequests
   public static final int REQUEST_ENABLE_BT             = 1;
-  public static final int REQUEST_SPX_PREFS             = 2;
-  public static final int REQUEST_SEND_MAIL             = 3;
+  public static final int REQUEST_SEND_MAIL             = 2;
   
   // Android (für PC MUSS die Klasse auskommentiert werden )
   public static final class ActionEvent
@@ -235,6 +234,7 @@ public final class ProjectConst
   public static final String A_ALIAS                    = "alias";
   public static final String A_MAC                      = "mac";
   public static final String A_SERIAL                   = "serial";
+  public static final String A_PIN                      = "pin";
   
   //
   // Tabelle für die Kopfdaten des Tauchgangs
