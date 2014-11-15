@@ -51,6 +51,7 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.widget.Toast;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
@@ -670,7 +671,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     File dataBaseRoot;
     Environment4.Device devs[] = Environment4.getExternalStorage( this );
     Environment4.setUseReceiver( this, false );
-    if( devs.length >= 2 )
+    if( ( devs != null ) && ( devs.length >= 2 ) )
     {
       extSdCard = devs[1].getAbsoluteFile();
       Log.i( TAG, String.format( "extern SDCARD =  %s", extSdCard.getAbsolutePath() ) );
@@ -1275,14 +1276,6 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     // Log.v( TAG, "onDestroy:..." );
   }
 
-  @Override
-  public void onStop()
-  {
-    super.onStop();
-    // Log.v( TAG, "onStop:..." );
-    doUnbindService( true );
-  }
-
   /**
    * Wird ein Dialog negativ beendet (nein oder Abbruch)
    * 
@@ -1390,6 +1383,20 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     }
     // hat sonst irgendwer Verwendung dafür?
     mHandler.obtainMessage( ProjectConst.MESSAGE_DIALOG_POSITIVE, new BtServiceMessage( ProjectConst.MESSAGE_DIALOG_POSITIVE, dialog ) ).sendToTarget();
+  }
+
+  /**
+   * Reagiere auf die BACK-Taste
+   */
+  @Override
+  public boolean onKeyDown( int keyCode, KeyEvent event )
+  {
+    if( ( keyCode == KeyEvent.KEYCODE_BACK ) )
+    {
+      Log.v( TAG, "BACK pressed!" );
+      return false;
+    }
+    return false;
   }
 
   /**
@@ -1614,6 +1621,14 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     Log.v( TAG, String.format( Locale.getDefault(), "onSectionAttached: fragment for  <%s>...", pItem.content ) );
     mTitle = pItem.content;
     Log.v( TAG, "onSectionAttached: OK" );
+  }
+
+  @Override
+  public void onStop()
+  {
+    super.onStop();
+    // Log.v( TAG, "onStop:..." );
+    doUnbindService( true );
   }
 
   /**
