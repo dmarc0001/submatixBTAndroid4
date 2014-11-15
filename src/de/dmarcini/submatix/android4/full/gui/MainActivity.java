@@ -1139,14 +1139,6 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
           finish();
         }
         break;
-      // TODO: ist der Code noch notwendig?
-      // case ProjectConst.REQUEST_SPX_PREFS:
-      // //
-      // // wenn die Activity der SPX-Einstellungen zurückkehrt...
-      //
-      // Log.v( TAG, "spx42 preferences activity returns..." );
-      // setContentView( R.layout.activity_main );
-      // break;
       default:
         Log.w( TAG, "unknown Request code for activity result" );
     }
