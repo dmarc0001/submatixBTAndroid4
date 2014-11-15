@@ -1127,7 +1127,7 @@ public class BlueThoothComService extends Service
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.comm
    * 
    * 
-   * Stand: 18.07.2013 TODO
+   * Stand: 18.07.2013
    */
   public void askForGasFromSPX()
   {
@@ -1515,9 +1515,9 @@ public class BlueThoothComService extends Service
     {
       timerThread.cancel();
     }
-    nm.cancel( NOTIFICATION ); // Cancel the persistent notification.
+    // Beende die Benachrichtigung in der Statuszeile
+    nm.cancel( NOTIFICATION );
     Log.i( TAG, "Service Stopped." );
-    // isRunning = false;
   }
 
   @Override
@@ -1703,6 +1703,7 @@ public class BlueThoothComService extends Service
     PendingIntent contentIntent = PendingIntent.getActivity( getApplicationContext(), 0, new Intent( getApplicationContext(), MainActivity.class ),
             PendingIntent.FLAG_UPDATE_CURRENT );
     //@formatter:off
+    @SuppressWarnings( "deprecation" )
     Notification notification = new Notification.Builder( getBaseContext() )
                                   .setContentTitle( head )
                                   .setContentText( msg )
