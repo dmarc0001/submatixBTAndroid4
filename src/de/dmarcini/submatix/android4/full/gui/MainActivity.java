@@ -158,8 +158,6 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     }
   };
   
-  
-  
   //
   // Ein Messagehandler, der vom Service kommende Messages bearbeitet
   //
@@ -1141,13 +1139,14 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
           finish();
         }
         break;
-      case ProjectConst.REQUEST_SPX_PREFS:
-        //
-        // wenn die Activity der SPX-Einstellungen zurückkehrt...
-        // TODO: ist der Code noch notwendig?
-        Log.v( TAG, "spx42 preferences activity returns..." );
-        setContentView( R.layout.activity_main );
-        break;
+      // TODO: ist der Code noch notwendig?
+      // case ProjectConst.REQUEST_SPX_PREFS:
+      // //
+      // // wenn die Activity der SPX-Einstellungen zurückkehrt...
+      //
+      // Log.v( TAG, "spx42 preferences activity returns..." );
+      // setContentView( R.layout.activity_main );
+      // break;
       default:
         Log.w( TAG, "unknown Request code for activity result" );
     }
@@ -1329,8 +1328,13 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         }
         if( BluetoothAdapter.getDefaultAdapter() != null )
         {
-          // TODO: Preferences -> Programmeinstellungen soll das automatisch passieren?
-          BluetoothAdapter.getDefaultAdapter().disable();
+          // Preferences -> Programmeinstellungen soll das automatisch passieren?
+          SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( this );
+          if( sPref.getBoolean( "keyProgOthersDisableBTOnExit", true ) )
+          {
+            if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "disable BT Adapter on exit!" );
+            BluetoothAdapter.getDefaultAdapter().disable();
+          }
         }
         if( aliasManager != null )
         {
@@ -1366,8 +1370,13 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         Toast.makeText( this, R.string.toast_exit, Toast.LENGTH_SHORT ).show();
         if( BluetoothAdapter.getDefaultAdapter() != null )
         {
-          // TODO: Preferences -> Programmeinstellungen soll das automatisch passieren?
-          BluetoothAdapter.getDefaultAdapter().disable();
+          // Preferences -> Programmeinstellungen soll das automatisch passieren?
+          SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( this );
+          if( sPref.getBoolean( "keyProgOthersDisableBTOnExit", true ) )
+          {
+            if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "disable BT Adapter on exit!" );
+            BluetoothAdapter.getDefaultAdapter().disable();
+          }
         }
         // nach stackoverflow
         Intent intent = new Intent( Intent.ACTION_MAIN );
@@ -1388,7 +1397,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   }
 
   /**
-   * Reagiere auf die BACK-Taste
+   * Reagiere auf die BACK-Taste, entweder Navigator öffnen opder Programm beenden
    */
   @Override
   public boolean onKeyDown( int keyCode, KeyEvent event )
@@ -1587,13 +1596,6 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     Log.v( TAG, "onNavigationDrawerItemSelected:...OK" );
   }
 
-  // @Override
-  // public boolean onOptionsItemSelected( MenuItem item )
-  // {
-  // // TODO: ist das noch notwendig?
-  // int id = item.getItemId();
-  // return super.onOptionsItemSelected( item );
-  // }
   @Override
   public void onResume()
   {

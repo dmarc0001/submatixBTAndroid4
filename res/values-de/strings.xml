@@ -265,8 +265,7 @@
     <!-- Format für die Zeitanzeige -->
     <string name="conf_prog_temp_units_title">Zeitformat</string>
     <string name="conf_prog_temp_units_summary" formatted="false">Standard Format: &lt;%s&gt;</string>
-    <string name="conf_prog_temp_units_default">yyyy-MM-dd - HH:mm:ss</string>
-    
+    <string name="conf_prog_temp_units_default">yyyy-MM-dd - HH:mm:ss</string>   
     <!-- ### Kategorie Dateisystem ### -->
     <string name="conf_prog_filesystem">"Dateisystem Einstellungen"</string>
     <!-- datenverzeichnis für Logdaten -->
@@ -288,8 +287,15 @@
     <string name="conf_prog_mail_compressed_header">"komprimiere UDDF"</string>
     <string name="conf_prog_mail_compressed_on_summary">"UDDF Datei wird komprimiert"</string>
     <string name="conf_prog_mail_compressed_off_summary">"UDDF Datei wird nicht komprimiert"</string>
-    <!-- Programmtheme -->
+    <!-- ### Kategorie Anderes ### -->
     <string name="conf_prog_others_header">"SONSTIGES"</string>
+    <!-- BT disable on exit?  -->
+    <string name="conf_prog_others_bt_disable_bt_header">"BT deakitvieren"</string>
+    <string name="conf_prog_others_on_disable_bt">"aus"</string>
+    <string name="conf_prog_others_off_disable_bt">"aktiv"</string>
+    <string name="conf_prog_others_on_disable_bt_summary">"BT beim Beenden deaktivieren"</string>
+    <string name="conf_prog_others_off_disable_bt_summary">"BT beim Beenden aktiv lassen"</string>
+    <!-- Programmtheme -->
     <string name="conf_prog_others_theme_header">"Thema"</string>
     <string name="conf_prog_others_on_dark">"Dunkel"</string>
     <string name="conf_prog_others_off_light">"Hell"</string>
