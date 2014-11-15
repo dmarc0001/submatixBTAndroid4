@@ -43,6 +43,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -53,6 +54,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.View;
 import android.widget.Toast;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
@@ -1391,9 +1393,28 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   @Override
   public boolean onKeyDown( int keyCode, KeyEvent event )
   {
+    DrawerLayout dLayout;
+    //
     if( ( keyCode == KeyEvent.KEYCODE_BACK ) )
     {
-      Log.v( TAG, "BACK pressed!" );
+      Log.v( TAG, "onKeyDown: BACK pressed!" );
+      dLayout = ( DrawerLayout )findViewById( R.id.drawer_layout );
+      if( dLayout != null )
+      {
+        View containerView = findViewById( R.id.navi_drawer );
+        if( dLayout.isDrawerOpen( containerView ) )
+        {
+          // Was mach ich, wenn das schon offen ist?
+          Log.v( TAG, "onKeyDown:BACK pressed => navigator is open, ask user for exit." );
+          AreYouSureDialogFragment sureDial = new AreYouSureDialogFragment( getString( R.string.dialog_sure_exit ) );
+          sureDial.show( getFragmentManager().beginTransaction(), "programexit" );
+        }
+        else
+        {
+          Log.v( TAG, "onKeyDown:BACK pressed => open navigator" );
+          dLayout.openDrawer( containerView );
+        }
+      }
       return false;
     }
     return false;
@@ -1668,7 +1689,10 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     Log.v( TAG, "restoreActionBar:..." );
     ActionBar actionBar = getActionBar();
     // deprecated since API 21
-    actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_STANDARD );
+    if( Build.VERSION.SDK_INT < 21 )
+    {
+      actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_STANDARD );
+    }
     actionBar.setDisplayShowTitleEnabled( true );
     actionBar.setTitle( mTitle );
     Log.v( TAG, "restoreActionBar:...OK" );
