@@ -94,7 +94,7 @@ public class UserAlertDialogFragment extends DialogFragment
     LayoutInflater inflater = getActivity().getLayoutInflater();
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    rootView = inflater.inflate( R.layout.fragment_alert_dialog, null );
+    rootView = inflater.inflate( R.layout.fragment_dialog_alert, null );
     //
     // die Texte einfügen, natürlich
     //
