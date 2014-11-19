@@ -32,7 +32,6 @@ import android.widget.TextView;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
-import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 
 /**
@@ -103,11 +102,11 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
     //
     // wenn die laufende Activity eine AreaDetailActivity ist, dann gibts das View schon
     //
-    // if( runningActivity instanceof AreaDetailActivity )
-    // {
-    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
-    // return( null );
-    // }
+    if( runningActivity instanceof AreaDetailActivity )
+    {
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
+      return( null );
+    }
     //
     // Verbindungsseite via twoPane ausgewählt
     //
@@ -146,7 +145,7 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
     // die abgeleiteten Objekte führen das auch aus
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
-    ( ( MainActivity )runningActivity ).removeServiceListener( this );
+    ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
   }
 
   /**
@@ -157,21 +156,21 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
   {
     super.onResume();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
-    ( ( MainActivity )runningActivity ).addServiceListener( this );
-    // if( runningActivity instanceof AreaDetailActivity )
-    // {
-    // //
-    // // die Adressen der gesuchten Objekte rausuchen
-    // //
-    // ackuVoltageTextView = ( TextView )runningActivity.findViewById( R.id.ackuVoltageTextView );
-    // serialNumberTextView = ( TextView )runningActivity.findViewById( R.id.serialNumberTextView );
-    // firmwareVersionTextView = ( TextView )runningActivity.findViewById( R.id.firmwareVersionTextView );
-    // licenseNitroxTextView = ( TextView )runningActivity.findViewById( R.id.licenseNitroxTextView );
-    // licenseNTMXTextView = ( TextView )runningActivity.findViewById( R.id.licenseNTMXTextView );
-    // licenseTMXTextView = ( TextView )runningActivity.findViewById( R.id.licenseTMXTextView );
-    // licenseIndividualTextView = ( TextView )runningActivity.findViewById( R.id.licenseIndividualTextView );
-    // //
-    // }
+    ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
+    if( runningActivity instanceof AreaDetailActivity )
+    {
+      //
+      // die Adressen der gesuchten Objekte rausuchen
+      //
+      ackuVoltageTextView = ( TextView )runningActivity.findViewById( R.id.ackuVoltageTextView );
+      serialNumberTextView = ( TextView )runningActivity.findViewById( R.id.serialNumberTextView );
+      firmwareVersionTextView = ( TextView )runningActivity.findViewById( R.id.firmwareVersionTextView );
+      licenseNitroxTextView = ( TextView )runningActivity.findViewById( R.id.licenseNitroxTextView );
+      licenseNTMXTextView = ( TextView )runningActivity.findViewById( R.id.licenseNTMXTextView );
+      licenseTMXTextView = ( TextView )runningActivity.findViewById( R.id.licenseTMXTextView );
+      licenseIndividualTextView = ( TextView )runningActivity.findViewById( R.id.licenseIndividualTextView );
+      //
+    }
   }
 
   @Override
@@ -211,7 +210,7 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
   public void msgConnected( BtServiceMessage msg )
   {
     Resources res = runningActivity.getResources();
-    float ackuValue = MainActivity.ackuValue;
+    float ackuValue = FragmentCommonActivity.ackuValue;
     //
     // Fülle die Textfelder mit aktuellen Werten
     //
@@ -235,9 +234,9 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
       ackuVoltageTextView.setTextColor( res.getColor( R.color.acku_low_value ) );
     }
     // Beschriftungen
-    serialNumberTextView.setText( MainActivity.spxConfig.getSerial() );
-    firmwareVersionTextView.setText( MainActivity.spxConfig.getFirmwareVersion() );
-    switch ( MainActivity.spxConfig.getLicenseState() )
+    serialNumberTextView.setText( FragmentCommonActivity.spxConfig.getSerial() );
+    firmwareVersionTextView.setText( FragmentCommonActivity.spxConfig.getFirmwareVersion() );
+    switch ( FragmentCommonActivity.spxConfig.getLicenseState() )
     {
       case ProjectConst.SPX_LICENSE_FULLTX:
         if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX MIX License : FULL TRIMIX licensed" );
@@ -258,7 +257,7 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
     //
     // jetzt noch den Individual-Lizenzsatatus erfragen
     //
-    if( 1 == MainActivity.spxConfig.getCustomEnabled() )
+    if( 1 == FragmentCommonActivity.spxConfig.getCustomEnabled() )
     {
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX CUSTOM License : licensed" );
       licenseIndividualTextView.setText( res.getString( R.string.health_license_enable ) );
@@ -281,7 +280,7 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
   @Override
   public void msgRecivedAlive( BtServiceMessage msg )
   {
-    ackuVoltageTextView.setText( String.format( runningActivity.getResources().getString( R.string.health_acku_volatage ), MainActivity.ackuValue ) );
+    ackuVoltageTextView.setText( String.format( runningActivity.getResources().getString( R.string.health_acku_volatage ), FragmentCommonActivity.ackuValue ) );
   }
 
   @Override

@@ -36,7 +36,7 @@ import android.util.Log;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
-import de.dmarcini.submatix.android4.full.gui.MainActivity;
+import de.dmarcini.submatix.android4.full.gui.FragmentCommonActivity;
 
 /**
  * 
@@ -431,7 +431,7 @@ public class SPX42LogManager extends SPX42AliasManager
         DateTime startDateTime = new DateTime( startTm );
         String detailText = String.format( res.getString( R.string.logread_saved_format ), cu.getInt( 9 ) / 10.0, res.getString( R.string.app_unit_depth_metric ),
                 cu.getInt( 11 ) / 60, cu.getInt( 11 ) % 60 );
-        String itemName = String.format( "#%03d: %s", cu.getInt( 2 ), startDateTime.toString( MainActivity.localTimeFormatter ) );
+        String itemName = String.format( "#%03d: %s", cu.getInt( 2 ), startDateTime.toString( FragmentCommonActivity.localTimeFormatter ) );
         ReadLogItemObj rlo = new ReadLogItemObj();
         rlo.isSaved = true;
         rlo.itemName = itemName;
@@ -522,7 +522,7 @@ public class SPX42LogManager extends SPX42AliasManager
       DateTime startDateTime = new DateTime( startTm );
       String detailText = String.format( res.getString( R.string.logread_saved_format ), cu.getInt( 9 ) / 10.0, res.getString( R.string.app_unit_depth_metric ),
               cu.getInt( 11 ) / 60, cu.getInt( 11 ) % 60 );
-      String itemName = String.format( "#%03d: %s", cu.getInt( 2 ), startDateTime.toString( MainActivity.localTimeFormatter ) );
+      String itemName = String.format( "#%03d: %s", cu.getInt( 2 ), startDateTime.toString( FragmentCommonActivity.localTimeFormatter ) );
       rlo.isSaved = true;
       rlo.itemName = itemName;
       rlo.itemNameOnSPX = cu.getString( 3 );

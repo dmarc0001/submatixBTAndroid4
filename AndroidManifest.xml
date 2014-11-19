@@ -17,16 +17,14 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/
 -->
-<manifest 
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.dmarcini.submatix.android4.full"
-    android:versionCode="19"
-    android:versionName="2.0 BETA4" 
-    android:installLocation="auto">
+    android:versionCode="14"
+    android:versionName="1.01" android:installLocation="auto">
 
     <uses-sdk
         android:minSdkVersion="15"
-        android:targetSdkVersion="21" />
+        android:targetSdkVersion="17" />
     <!--  Berechtigungen  -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
@@ -40,27 +38,34 @@
         android:icon="@drawable/spx42"
         android:label="@string/app_name"
         android:theme="@style/AppDarkTheme" 
-        android:description="@string/app_description" 
-        android:hardwareAccelerated="true" >
+        android:description="@string/app_description" android:hardwareAccelerated="true">
         
         <!-- Die List/Main activity -->
         <activity
-            android:name="de.dmarcini.submatix.android4.full.gui.MainActivity"
+            android:name="de.dmarcini.submatix.android4.full.gui.AreaListActivity"
             android:label="@string/app_name"
-            android:screenOrientation="sensorLandscape" 
-            android:launchMode="singleTop">            
+            android:screenOrientation="sensorLandscape" android:launchMode="singleTop">            
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         
+        <!-- die Detailacivity, bei schmalen screens -->
+        <activity
+            android:name="de.dmarcini.submatix.android4.full.gui.AreaDetailActivity"
+            android:label="@string/title_area_detail"
+            android:screenOrientation="sensorLandscape" android:launchMode="singleTop">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".gui.areaListActivity" />
+        </activity>
+
         <!-- Die grafische Activity -->
         <activity 
             android:name="de.dmarcini.submatix.android4.full.gui.AreaDetailGraphActivity"
             android:label="@string/graphlog_title"
-            android:screenOrientation="sensorLandscape" 
-            android:launchMode="singleTop">
+            android:screenOrientation="sensorLandscape" android:launchMode="singleTop">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".gui.areaListActivity" />

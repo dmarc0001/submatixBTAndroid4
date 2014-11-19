@@ -27,13 +27,13 @@
       android:contentDescription="@string/app_name" />
 
     <TextView
-    	android:id="@+id/arrayListTextView"
-    	android:layout_width="wrap_content"
-    	android:layout_height="wrap_content"
-    	android:layout_centerVertical="true"
+      android:id="@+id/arrayListTextView"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
       android:layout_toRightOf="@+id/arrayListLeftActiveIndicator"
-    	android:text="@string/array_with_pic_adapter_dummy"
-    	android:textAppearance="?android:attr/textAppearanceMedium" />
+      android:text="@string/array_with_pic_adapter_dummy"
+      android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <ImageView
       android:id="@+id/arrayListRightActiveIndicator"

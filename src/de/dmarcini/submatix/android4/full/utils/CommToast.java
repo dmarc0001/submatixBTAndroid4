@@ -33,7 +33,7 @@ import android.widget.Toast;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.dialogs.WaitProgressFragmentDialog;
-import de.dmarcini.submatix.android4.full.gui.MainActivity;
+import de.dmarcini.submatix.android4.full.gui.FragmentCommonActivity;
 
 /**
  * 
@@ -153,7 +153,7 @@ public class CommToast
       //
       // welcher Style ist angesagt?
       //
-      if( MainActivity.getAppStyle() == R.style.AppDarkTheme )
+      if( FragmentCommonActivity.getAppStyle() == R.style.AppDarkTheme )
       {
         toastLayout.setBackgroundColor( act.getResources().getColor( R.color.connectToastDark_backgroundColor ) );
         toastMessageTextView.setTextAppearance( act.getApplicationContext(), R.style.commToastDark );

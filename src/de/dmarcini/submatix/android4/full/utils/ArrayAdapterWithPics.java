@@ -148,31 +148,17 @@ public class ArrayAdapterWithPics extends ArrayAdapter<ContentSwitcher.ProgItem>
         {
           holder.imageLeftIndicatorView.setImageResource( R.drawable.activated_red_icon_color );
           holder.imageRightIndicatorView.setImageResource( R.drawable.activated_red_icon_color );
-          convertView.setBackgroundColor( getContext().getResources().getColor( R.color.navigatorDark_markerColor ) );
-          holder.txtTitle.setTextColor( getContext().getResources().getColor( R.color.navigatorDark_activeTextColor ) );
         }
         else
         {
           holder.imageLeftIndicatorView.setImageResource( R.drawable.activated_blue_icon_color );
           holder.imageRightIndicatorView.setImageResource( R.drawable.activated_blue_icon_color );
-          convertView.setBackgroundColor( getContext().getResources().getColor( R.color.navigatorLight_markerColor ) );
-          holder.txtTitle.setTextColor( getContext().getResources().getColor( R.color.navigatorLight_activeTextColor ) );
         }
       }
       else
       {
         holder.imageLeftIndicatorView.setImageResource( R.drawable.deactivated_and_space );
         holder.imageRightIndicatorView.setImageResource( R.drawable.deactivated_and_space );
-        if( this.themeId == R.style.AppDarkTheme )
-        {
-          convertView.setBackgroundColor( getContext().getResources().getColor( R.color.navigatorDark_backgroundColor ) );
-          holder.txtTitle.setTextColor( getContext().getResources().getColor( R.color.navigatorDark_inactiveTextColor ) );
-        }
-        else
-        {
-          convertView.setBackgroundColor( getContext().getResources().getColor( R.color.navigatorLight_backgroundColor ) );
-          holder.txtTitle.setTextColor( getContext().getResources().getColor( R.color.navigatorLight_inactiveTextColor ) );
-        }
       }
     }
     return convertView;

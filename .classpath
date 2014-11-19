@@ -2,9 +2,22 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="lib" path="C:/Program Files/android-sdk-windows/platforms/android-15/android.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/C:/Program Files/android-sdk-windows/docs/reference"/>
+		</attributes>
+		<accessrules>
+			<accessrule kind="nonaccessible" pattern="com/android/internal/**"/>
+		</accessrules>
+	</classpathentry>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="lib" path="libs/joda-time-2.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/DATEN/eclipseWorkspace/extLibs/Environment2/environment2-fork.jar" sourcepath="C:/DATEN/eclipseWorkspace/extLibs/Environment2/environment2-src.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/C:/DATEN/eclipseWorkspace/extLibs/Environment2/environment2-doc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

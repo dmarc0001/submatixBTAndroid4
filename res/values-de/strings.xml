@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">"SubmatixBTLogger"</string>
@@ -60,8 +60,6 @@
     <string name="toast_connect_connected">Verbunden mit &lt;%s&gt;</string>
     <string name="toast_connect_disconnected">Verbindung getrennt</string>
     <string name="toast_connect_cant_bt_connect">Kann nicht mit &lt;%s&gt; verbinden</string>
-    <string name="toast_connect_device_paired">Gerät %s wurde gepaart</string>
-    <string name="toast_connect_device_automatic_pairing">Gerät %s wird automatisch gepaart</string>
     <string name="toast_export_cant_create_dir">Kann Verzeichnis &lt;%s&gt; nicht anlegen</string>
     <string name="toast_export_cant_find_xmldata">Kann XML-Datendatei nicht finden</string>
     <string name="toast_export_internal_xml_error">Interner XML-DOM-Fehler!</string>
@@ -70,7 +68,6 @@
     <string name="dialog_sure_exit">"Sind Sie sicher?"</string>
     <string name="dialog_exit_button">"Beenden"</string>
     <string name="dialog_cancel_button">"Abbrechen"</string>
-    <string name="dialog_understand_button">Verstanden</string>
     <string name="dialog_please_wait_title" formatted="false">Bitte warten...</string>
     <string name="dialog_please_wait_read_config" formatted="false">Lese Konfiguration vom SPX...</string>
     <string name="dialog_alias_edit_title">Bearbeite Alias für Gerät</string>
@@ -95,10 +92,6 @@
     <string name="dialog_delete_device">lösche ALLE Daten für Gerät\n\"%s\"</string>
     <string name="dialog_delete_selected_logs">lösche alle markierten Protokolle</string>
     <string name="dialog_delete_button">LÖSCHEN!</string>
-    <string name="dialog_no_pin_headline">Nicht gepaart</string>
-    <string name="dialog_no_pin_errmsg">Das Gerät\n\"%s\"\nist noch nicht gepaart\nbitte in den Geräte BT Einstellungen paaren</string>
-    <string name="dialog_get_pin_msg">PIN für Gerät\n\"%s\"</string>
-    <string name="dialog_pin_wrong_format">PIN falsches Format! Nochmal?\n(Gerät: \"%s\")</string>
     
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title" formatted="false">Suche BT Geräte...</string>
@@ -118,13 +111,13 @@
     <string name="conf_autoset_summary">"aktuelle Auswahl: %s"</string>
     <string name="conf_autoset_default">"5"</string>
     <!-- tiefe für autosetpint -->
-    <string name="conf_highset_header">"Wähle gewünschten Highsetpoint"</string>
+    <string name="conf_highset_header">"Wähle gewünschter Highsetpoint"</string>
     <string name="conf_highset_summary">"aktuelle Auswahl %s"</string>
     <string name="conf_highset_default">"1,0"</string>
     <!--  ### kategorie Decompression ### -->
     <string name="conf_deco_header">"DEKOMPRESSION"</string>
     <!-- deco presets -->
-    <string name="conf_deco_preset_header">"Auswahl Voreinstellung"</string>
+    <string name="conf_deco_preset_header">"Auswahl Voreingestellung"</string>
     <string name="conf_deco_presets_summary">"aktuell ausgewählte Voreinstellung ist \"%s\""</string>
     <!-- der Eintrag aus config_presets_preference.xml (Values)-->
     <string name="conf_deco_presets_default">"30:85"</string>
@@ -133,7 +126,7 @@
     <string name="conf_deco_gradient_high_header">"HIGH"</string>
     <!-- gradienten -->
     <string name="conf_deco_gradient">"setze Gradient"</string>
-    <string formatted="false" name="conf_deco_gradient_summary">"aktuelle Werte low: %d high: %d"</string>
+    <string formatted="false" name="conf_deco_gradient_summary">"aktuellen Werte low: %d high: %d"</string>
     <string name="conf_deco_gradient_default">"40:80"</string>
     <!-- gradient number picker buttons -->
     <string name="conf_deco_gradient_button_positive">"setze Gradient"</string>
@@ -159,7 +152,7 @@
     <string name="conf_deco_deepstops_off">"kein tiefer Stop"</string>
     <!-- ### kategorie display ### -->
     <string name="conf_display_header">"ANZEIGE"</string>
-    <string name="conf_display_header_new">ANZUEIGE</string>
+    <string name="conf_display_header_new">ANZUEIGE-N</string>
     
     <!-- display helligkeit -->
     <string name="conf_display_luminance_header">"Helligkeit:"</string>
@@ -172,16 +165,16 @@
     <!-- ### kategorie Einheiten ### -->
     <string name="conf_units_header">"SPX42 Einheiten"</string>
     <!-- temperatureinheiten -->
-    <string name="conf_units_temp_header">"Temperatureinheit"</string>
+    <string name="conf_units_temp_header">"Temeratureinheit"</string>
     <string name="conf_units_temp_metric">"Celsius"</string>
     <string name="conf_units_temp_fahrenheid">"Fahrenheid"</string>
     <string name="conf_units_temp_metric_summary">"Temperatur in Celsius"</string>
     <string name="conf_units_temp_fahrenheid_summary">"Temperatur in Fahrenheid"</string>
     <!--  tiefeneinheiten -->
     <string name="conf_units_depth_header">"Einheit für die Tiefe"</string>
-    <string name="conf_units_depth_meters">"Meter"</string>
+    <string name="conf_units_depth_meters">"meter"</string>
     <string name="conf_units_depth_foot">"Fuß"</string>
-    <string name="conf_units_depth_meters_summary">"Tiefe in Meter"</string>
+    <string name="conf_units_depth_meters_summary">"Tiefe in Metern"</string>
     <string name="conf_units_depth_foot_summary">"Tiefe in Fuß"</string>
     <!-- süß oder salzwasser -->    
     <string name="conf_units_watertype_header">"Art des Wassers"</string>
@@ -230,7 +223,6 @@
     <string name="connect_connecting_device">verbinden</string>
     <string name="connect_connected_device">verbunden</string>
     <string name="connect_editalias_button_title">Bearbeite Alias</string>
-    <string name="connect_editaliasv4_button_title">Bearbeite Alias/PIN</string>
     
     <!-- Detailseite für Gaslisten-Editor -->
     <string name="conf_gaslist_headline">"SPX42 Gasliste bearbeiten"</string>
@@ -273,7 +265,8 @@
     <!-- Format für die Zeitanzeige -->
     <string name="conf_prog_temp_units_title">Zeitformat</string>
     <string name="conf_prog_temp_units_summary" formatted="false">Standard Format: &lt;%s&gt;</string>
-    <string name="conf_prog_temp_units_default">yyyy-MM-dd - HH:mm:ss</string>   
+    <string name="conf_prog_temp_units_default">yyyy-MM-dd - HH:mm:ss</string>
+    
     <!-- ### Kategorie Dateisystem ### -->
     <string name="conf_prog_filesystem">"Dateisystem Einstellungen"</string>
     <!-- datenverzeichnis für Logdaten -->
@@ -295,15 +288,8 @@
     <string name="conf_prog_mail_compressed_header">"komprimiere UDDF"</string>
     <string name="conf_prog_mail_compressed_on_summary">"UDDF Datei wird komprimiert"</string>
     <string name="conf_prog_mail_compressed_off_summary">"UDDF Datei wird nicht komprimiert"</string>
-    <!-- ### Kategorie Anderes ### -->
-    <string name="conf_prog_others_header">"SONSTIGES"</string>
-    <!-- BT disable on exit?  -->
-    <string name="conf_prog_others_bt_disable_bt_header">"BT deakitvieren"</string>
-    <string name="conf_prog_others_on_disable_bt">"aus"</string>
-    <string name="conf_prog_others_off_disable_bt">"aktiv"</string>
-    <string name="conf_prog_others_on_disable_bt_summary">"BT beim Beenden deaktivieren"</string>
-    <string name="conf_prog_others_off_disable_bt_summary">"BT beim Beenden aktiv lassen"</string>
     <!-- Programmtheme -->
+    <string name="conf_prog_others_header">"SONSTIGES"</string>
     <string name="conf_prog_others_theme_header">"Thema"</string>
     <string name="conf_prog_others_on_dark">"Dunkel"</string>
     <string name="conf_prog_others_off_light">"Hell"</string>
@@ -365,8 +351,8 @@
     <string name="health_serial_number_label">SPX42 Seriennummer</string>
     <string name="health_firmware_version_label">SPX42 Firmware Version</string>
     <string name="health_license_label">SPX42 Lizenz</string>
-    <string name="health_license_enable">lizenziert</string>
-    <string name="health_license_disable">nicht lizenziert</string>
+    <string name="health_license_enable">lizensiert</string>
+    <string name="health_license_disable">nicht lizensiert</string>
     <string name="health_license_nitrox_label">Nitrox</string>
     <string name="health_license_normoxic_trimix_label">Normoxic TMX</string>
     <string name="health_license_full_trimix_label">Voll TMX</string>
@@ -380,10 +366,6 @@
     <string name="graphlog_header_device" formatted="false" >Zeige Protokolle vom Gerät &lt;%s&gt;</string>
     <string name="graphlog_do_view">Anzeige</string>
     <string name="graphlog_change_drive_button">Gerät...</string>
-    
-    <!-- Navigator Strings  -->
-    <string name="navigation_drawer_open">Öffne Navigator</string>
-    <string name="navigation_drawer_close">Schließe Navigator</string>
     
     <!-- sonstig  -->
     <string name="no_device">"- Kein Gerät -"</string>

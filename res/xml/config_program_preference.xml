@@ -3,7 +3,6 @@
     android:id="@+id/conf_prog_preferencescreen"
     android:title="@string/conf_prog_headline" >
 
-    <!-- Abschnitt Einheiten -->
     <de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory
         android:key="keyProgUnitViews"
         android:title="@string/conf_prog_units_head" >
@@ -14,9 +13,8 @@
             android:key="keyProgUnitsTimeFormat" 
             android:summary="@string/conf_prog_temp_units_summary" 
             android:defaultValue="@string/conf_prog_temp_units_default"/>
+            
     </de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory>
-    
-    <!-- Abschnitt Programmdaten (Datenbank etc) -->    
     <de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory
         android:key="keyProgData"
         android:title="@string/conf_prog_filesystem" >
@@ -34,8 +32,6 @@
             android:switchTextOn="@string/conf_prog_showall_on"
             android:title="@string/conf_prog_showall_header" />
     </de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory>
-    
-    <!-- Abschnitt Mails versenden  -->
     <de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory
         android:key="keyProgMail"
         android:title="@string/conf_prog_mail_header" >
@@ -45,6 +41,7 @@
         <EditTextPreference
             android:key="keyProgMail2nd"
             android:title="@string/conf_prog_mail_2nd" />
+
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="keyProgMailCompressed"
@@ -52,8 +49,6 @@
             android:summaryOn="@string/conf_prog_mail_compressed_on_summary"
             android:title="@string/conf_prog_mail_compressed_header" />
     </de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory>
-    
-    <!-- Abschnitt "sonstiges"  -->
     <de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory
         android:key="keyProgOthers"
         android:title="@string/conf_prog_others_header" >
@@ -65,17 +60,7 @@
             android:switchTextOff="@string/conf_prog_others_off_light"
             android:switchTextOn="@string/conf_prog_others_on_dark"
             android:title="@string/conf_prog_others_theme_header" />
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="keyProgOthersDisableBTOnExit"
-            android:summaryOff="@string/conf_prog_others_off_disable_bt_summary"
-            android:summaryOn="@string/conf_prog_others_on_disable_bt_summary"
-            android:switchTextOff="@string/conf_prog_others_off_disable_bt"
-            android:switchTextOn="@string/conf_prog_others_on_disable_bt"
-            android:title="@string/conf_prog_others_bt_disable_bt_header" />
     </de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory>
-    
-    <!-- Abschnitt für Einstellungen der grafischen Log-Anzeige  -->
     <de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory
         android:key="keyProgLogGraph"
         android:title="@string/conf_prog_graph_screen_header" >

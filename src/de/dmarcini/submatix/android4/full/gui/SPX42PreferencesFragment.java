@@ -44,7 +44,6 @@ import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.exceptions.FirmwareNotSupportetException;
-import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
 import de.dmarcini.submatix.android4.full.utils.CommToast;
 import de.dmarcini.submatix.android4.full.utils.GradientPickerPreference;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
@@ -325,7 +324,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   public void msgConnected( BtServiceMessage msg )
   {
     Log.v( TAG, "msgConnected()...ask for SPX config..." );
-    MainActivity fActivity = ( MainActivity )runningActivity;
+    FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     // Dialog schliesen, wenn geöffnet
     theToast.dismissDial();
     theToast.openWaitDial( maxEvents, getActivity().getResources().getString( R.string.dialog_please_wait_title ),
@@ -348,7 +347,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   public void msgConnectError( BtServiceMessage msg )
   {
     // zum Menü zurück
-    Intent intent = new Intent( getActivity(), MainActivity.class );
+    Intent intent = new Intent( getActivity(), AreaListActivity.class );
     intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
     startActivity( intent );
     return;
@@ -362,7 +361,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   public void msgDisconnected( BtServiceMessage msg )
   {
     // zum Menü zurück
-    Intent intent = new Intent( getActivity(), MainActivity.class );
+    Intent intent = new Intent( getActivity(), AreaListActivity.class );
     intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
     startActivity( intent );
   }
@@ -651,7 +650,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     try
     {
       lumin = Integer.parseInt( displayParm[0], 16 );
-      if( MainActivity.spxConfig.isNewerDisplayBrigthness() )
+      if( FragmentCommonActivity.spxConfig.isNewerDisplayBrigthness() )
       {
         if( lumin < 0 || lumin > 4 ) lumin = 1;
       }
@@ -865,7 +864,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // und den Tempstick einstellen, wenn vorhanden
     //
-    if( MainActivity.spxConfig.hasSixValuesIndividual() )
+    if( FragmentCommonActivity.spxConfig.hasSixValuesIndividual() )
     {
       lP = getListPreference( individualTempStick );
       if( lP == null )
@@ -967,7 +966,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // ist es die fehhlerhafte firmware?
     //
-    if( MainActivity.spxConfig.hasFahrenheidBug() )
+    if( FragmentCommonActivity.spxConfig.hasFahrenheidBug() )
     {
       // ist es die Fehlerhafte Firmware, IMMER alles gemeinsam auf METRISCH/Imperial setzen
       if( isDepthImperial == 0 )
@@ -1126,10 +1125,10 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     super.onCreate( savedInstanceState );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate()..." );
     theToast = new CommToast( getActivity() );
-    if( MainActivity.spxConfig.getCustomEnabled() == 1 )
+    if( FragmentCommonActivity.spxConfig.getCustomEnabled() == 1 )
     {
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Preferences in INDIVIDUAL Mode" );
-      if( MainActivity.spxConfig.hasSixValuesIndividual() )
+      if( FragmentCommonActivity.spxConfig.hasSixValuesIndividual() )
       {
         addPreferencesFromResource( R.xml.config_spx42_preference_individual_six );
         if( ApplicationDEBUG.DEBUG ) Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_individual_six + ">..." );
@@ -1146,7 +1145,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       addPreferencesFromResource( R.xml.config_spx42_preference_std );
       if( ApplicationDEBUG.DEBUG ) Log.v( TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_preference_std + ">..." );
     }
-    if( MainActivity.spxConfig.isSixMetersAutoSetpoint() )
+    if( FragmentCommonActivity.spxConfig.isSixMetersAutoSetpoint() )
     {
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate: isSixMetersAutoSetpoint..." );
       autoSetPref = getListPreference( setpointAuto );
@@ -1165,9 +1164,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // die richtigen Helligkeitsstufen setzen
     //
-    if( MainActivity.spxConfig.isInitialized() )
+    if( FragmentCommonActivity.spxConfig.isInitialized() )
     {
-      setNewLuminancePropertys( MainActivity.spxConfig.isNewerDisplayBrigthness() );
+      setNewLuminancePropertys( FragmentCommonActivity.spxConfig.isNewerDisplayBrigthness() );
     }
     //
     // initiiere die notwendigen summarys
@@ -1189,7 +1188,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     {
       case android.R.id.home:
         Log.v( TAG, "onOptionsItemSelected: HOME" );
-        Intent intent = new Intent( getActivity(), MainActivity.class );
+        Intent intent = new Intent( getActivity(), AreaListActivity.class );
         intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
         startActivity( intent );
         return true;
@@ -1207,7 +1206,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener( this );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause(): clear service listener for preferences fragment..." );
-    ( ( MainActivity )runningActivity ).removeServiceListener( this );
+    ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
   }
 
   @Override
@@ -1221,7 +1220,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener( this );
     ignorePrefChange = true;
     // Service Listener setzen
-    MainActivity fActivity = ( MainActivity )runningActivity;
+    FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume(): set service listener for preferences fragment..." );
     fActivity.addServiceListener( this );
   }
@@ -1419,7 +1418,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
         // jede ungerade Zeile färben
         if( prefIdx % 2 > 0 )
         {
-          if( MainActivity.getAppStyle() == R.style.AppDarkTheme )
+          if( FragmentCommonActivity.getAppStyle() == R.style.AppDarkTheme )
           {
             // dunkles Thema
             pref.setLayoutResource( R.layout.preference_dark );
@@ -1479,7 +1478,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     sP = lP.findIndexOfValue( lP.getValue() );
     //
-    MainActivity fActivity = ( MainActivity )runningActivity;
+    FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     ignorePrefChange = true;
     try
     {
@@ -1588,7 +1587,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     {
       deepStops = 0;
     }
-    MainActivity fActivity = ( MainActivity )runningActivity;
+    FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     ignorePrefChange = true;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "sendDecoPrefs: write deco prefs via runningActivity..." );
     try
@@ -1641,7 +1640,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     orient = lP.findIndexOfValue( lP.getValue() );
     if( orient == -1 ) orient = 0;
     //
-    MainActivity fActivity = ( MainActivity )runningActivity;
+    FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     ignorePrefChange = true;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "sendDisplayPrefs: write display prefs via runningActivity lum:%d, orient:%d...", lumin, orient ) );
     try
@@ -1762,7 +1761,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // Tempstick auslesen
     //
-    if( MainActivity.spxConfig.hasSixValuesIndividual() )
+    if( FragmentCommonActivity.spxConfig.hasSixValuesIndividual() )
     {
       lP = getListPreference( individualTempStick );
       if( lP == null )
@@ -1774,7 +1773,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       tempStick = lP.findIndexOfValue( lP.getValue() );
     }
     //
-    MainActivity fActivity = ( MainActivity )runningActivity;
+    FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     ignorePrefChange = true;
     if( ApplicationDEBUG.DEBUG )
       Log.d( TAG, String.format( "sendIndividualPrefs: write individual prefs via runningActivity :<SE:%d, PS:%d, SC:%d, SN:%d, LI:%d, TS:%d>...", sensorsOff, pscrOff,
@@ -1868,7 +1867,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       isFreshwater = 0;
     }
     //
-    MainActivity fActivity = ( MainActivity )runningActivity;
+    FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
     ignorePrefChange = true;
     if( ApplicationDEBUG.DEBUG )
       Log.d( TAG, String.format( "sendUnitPrefs: write display prefs via runningActivity temp:%d, depth:%d, freshwater:%d...", isTempImperial, isDepthImperial, isFreshwater ) );
@@ -1911,7 +1910,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // das nur bei Individuallizenz
     //
-    if( MainActivity.spxConfig.getCustomEnabled() == 1 )
+    if( FragmentCommonActivity.spxConfig.getCustomEnabled() == 1 )
     {
       setIndividualsSummary();
     }
@@ -2160,7 +2159,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     // Tempstick
     //
-    if( MainActivity.spxConfig.hasSixValuesIndividual() )
+    if( FragmentCommonActivity.spxConfig.hasSixValuesIndividual() )
     {
       lP = ( ListPreference )pS.findPreference( individualTempStick );
       lP.setSummary( String.format( res.getString( R.string.conf_ind_tempstick_header_summary ), lP.getEntry() ) );

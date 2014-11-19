@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingTop="@dimen/item_top_margin" >
 
     <ImageView
         android:id="@+id/arrayListIconView"
@@ -33,7 +34,7 @@
     	android:layout_centerVertical="true"
       android:layout_toRightOf="@+id/arrayListLeftActiveIndicator"
     	android:text="@string/array_with_pic_adapter_dummy"
-    	android:textAppearance="?android:attr/textAppearanceMedium" />
+    	android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <ImageView
       android:id="@+id/arrayListRightActiveIndicator"

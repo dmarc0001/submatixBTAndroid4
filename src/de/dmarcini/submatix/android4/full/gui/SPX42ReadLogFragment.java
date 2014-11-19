@@ -52,7 +52,6 @@ import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
 import de.dmarcini.submatix.android4.full.dialogs.WaitProgressFragmentDialog;
 import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
 import de.dmarcini.submatix.android4.full.exceptions.XMLFileCreatorException;
-import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
 import de.dmarcini.submatix.android4.full.utils.CommToast;
 import de.dmarcini.submatix.android4.full.utils.DataSQLHelper;
 import de.dmarcini.submatix.android4.full.utils.LogXMLCreator;
@@ -181,19 +180,19 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     //
     // Jetzt ist der Zeitpunkt, die Datenbank zu befragen, ob das Logteilchen schon gesichert ist
     //
-    isSaved = logManager.isLogInDatabase( MainActivity.spxConfig.getSerial(), fileName );
+    isSaved = logManager.isLogInDatabase( FragmentCommonActivity.spxConfig.getSerial(), fileName );
     if( isSaved )
     {
       if( showAllLogEntrys )
       {
-        SPX42DiveHeadData diveHead = logManager.getDiveHeader( MainActivity.spxConfig.getSerial(), fileName );
+        SPX42DiveHeadData diveHead = logManager.getDiveHeader( FragmentCommonActivity.spxConfig.getSerial(), fileName );
         detailText = makeDetailText( diveHead );
         dbId = diveHead.diveId;
         //
         // jetzt eintagen in die Anzeige
         //
-        ReadLogItemObj rlio = new ReadLogItemObj( isSaved, String.format( "#%03d: %s", number, tm.toString( MainActivity.localTimeFormatter ) ), fileName, detailText, dbId,
-                number, tm.getMillis() );
+        ReadLogItemObj rlio = new ReadLogItemObj( isSaved, String.format( "#%03d: %s", number, tm.toString( FragmentCommonActivity.localTimeFormatter ) ), fileName, detailText,
+                dbId, number, tm.getMillis() );
         // Eintrag an den Anfang stellen
         logListAdapter.insert( rlio, 0 );
       }
@@ -208,8 +207,8 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
       //
       // jetzt eintagen in die Anzeige
       //
-      ReadLogItemObj rlio = new ReadLogItemObj( isSaved, String.format( "#%03d: %s", number, tm.toString( MainActivity.localTimeFormatter ) ), fileName, detailText, dbId, number,
-              tm.getMillis() );
+      ReadLogItemObj rlio = new ReadLogItemObj( isSaved, String.format( "#%03d: %s", number, tm.toString( FragmentCommonActivity.localTimeFormatter ) ), fileName, detailText,
+              dbId, number, tm.getMillis() );
       // Eintrag an den Anfang stellen
       logListAdapter.insert( rlio, 0 );
     }
@@ -357,7 +356,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
           {
             currPositionOnItems = items.remove( 0 );
             ReadLogItemObj dirItem = logListAdapter.getItem( currPositionOnItems );
-            ( ( MainActivity )runningActivity ).askForLogDetail( dirItem.numberOnSPX );
+            ( ( FragmentCommonActivity )runningActivity ).askForLogDetail( dirItem.numberOnSPX );
           }
           else
           {
@@ -434,8 +433,8 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     //
     logListAdapter.clear();
     // Logdirectory lesen
-    ( ( MainActivity )runningActivity ).aksForUnitsFromSPX42();
-    ( ( MainActivity )runningActivity ).askForLogDirectoryFromSPX();
+    ( ( FragmentCommonActivity )runningActivity ).aksForUnitsFromSPX42();
+    ( ( FragmentCommonActivity )runningActivity ).askForLogDirectoryFromSPX();
     openWaitDial( 0, String.format( runningActivity.getResources().getString( R.string.logread_please_wait_dialog_header ), 1 ) );
     countDirEntrys = 0;
     if( pd != null )
@@ -456,7 +455,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   public void msgDisconnected( BtServiceMessage msg )
   {
     Log.v( TAG, "msgDisconnected" );
-    Intent intent = new Intent( getActivity(), MainActivity.class );
+    Intent intent = new Intent( getActivity(), AreaListActivity.class );
     intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
     startActivity( intent );
   }
@@ -554,7 +553,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     try
     {
       mainListView = ( ListView )runningActivity.findViewById( R.id.readLogDirListView );
-      logListAdapter = new SPX42ReadLogListArrayAdapter( runningActivity, R.layout.read_log_array_adapter_view, MainActivity.getAppStyle() );
+      logListAdapter = new SPX42ReadLogListArrayAdapter( runningActivity, R.layout.read_log_array_adapter_view, FragmentCommonActivity.getAppStyle() );
       mainListView.setAdapter( logListAdapter );
     }
     catch( NullPointerException ex )
@@ -573,7 +572,8 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     // die Datenbank öffnen
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create SQLite helper..." );
-    DataSQLHelper sqlHelper = new DataSQLHelper( getActivity().getApplicationContext(), MainActivity.databaseDir.getAbsolutePath() + File.separator + ProjectConst.DATABASE_NAME );
+    DataSQLHelper sqlHelper = new DataSQLHelper( getActivity().getApplicationContext(), FragmentCommonActivity.databaseDir.getAbsolutePath() + File.separator
+            + ProjectConst.DATABASE_NAME );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: open Database..." );
     try
     {
@@ -615,7 +615,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
       //
       currPositionOnItems = items.remove( 0 );
       ReadLogItemObj dirItem = logListAdapter.getItem( currPositionOnItems );
-      ( ( MainActivity )runningActivity ).askForLogDetail( dirItem.numberOnSPX );
+      ( ( FragmentCommonActivity )runningActivity ).askForLogDetail( dirItem.numberOnSPX );
     }
   }
 
@@ -645,22 +645,22 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     //
     // wenn die laufende Activity eine AreaDetailActivity ist, dann gibts das View schon
     //
-    // if( runningActivity instanceof AreaDetailActivity )
-    // {
-    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
-    // //
-    // // Objekte lokalisieren, Verbindungsseite ist von onePane Mode
-    // //
-    // mainListView = ( ListView )runningActivity.findViewById( R.id.readLogDirListView );
-    // mainListView.setChoiceMode( AbsListView.CHOICE_MODE_MULTIPLE );
-    // readDirButton = ( Button )runningActivity.findViewById( R.id.readLogDirButton );
-    // //
-    // // Einstellung(en) lesen und Oberfläche einstellen
-    // //
-    // makeShowEntryPreferences();
-    // showAllLogEntrys = getShowAllEntrysFromPrefs();
-    // return( null );
-    // }
+    if( runningActivity instanceof AreaDetailActivity )
+    {
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
+      //
+      // Objekte lokalisieren, Verbindungsseite ist von onePane Mode
+      //
+      mainListView = ( ListView )runningActivity.findViewById( R.id.readLogDirListView );
+      mainListView.setChoiceMode( AbsListView.CHOICE_MODE_MULTIPLE );
+      readDirButton = ( Button )runningActivity.findViewById( R.id.readLogDirButton );
+      //
+      // Einstellung(en) lesen und Oberfläche einstellen
+      //
+      makeShowEntryPreferences();
+      showAllLogEntrys = getShowAllEntrysFromPrefs();
+      return( null );
+    }
     //
     // Verbindungsseite via twoPane ausgewählt
     //
@@ -718,7 +718,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     // die abgeleiteten Objekte führen das auch aus
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
-    ( ( MainActivity )runningActivity ).removeServiceListener( this );
+    ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
   }
 
   /**
@@ -730,7 +730,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     super.onResume();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
     // Listener aktivieren
-    ( ( MainActivity )runningActivity ).addServiceListener( this );
+    ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
     mainListView.setOnItemClickListener( this );
     readDirButton = ( Button )runningActivity.findViewById( R.id.readLogDirButton );
     readDirButton.setOnClickListener( this );
@@ -811,14 +811,14 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     //
     // erzeuge eine XML-Datei
     //
-    diveHeader.xmlFile = new File( String.format( "%s%s%s-%04d-%s.xml", MainActivity.databaseDir.getAbsolutePath(), File.separator, MainActivity.spxConfig.getSerial(),
-            logNumberOnSPX, MainActivity.mBtAdapter.getAddress().replaceAll( ":", "_" ) ) );
+    diveHeader.xmlFile = new File( String.format( "%s%s%s-%04d-%s.xml", FragmentCommonActivity.databaseDir.getAbsolutePath(), File.separator,
+            FragmentCommonActivity.spxConfig.getSerial(), logNumberOnSPX, FragmentCommonActivity.mBtAdapter.getAddress().replaceAll( ":", "_" ) ) );
     diveHeader.fileNameOnSpx = rlio.itemNameOnSPX;
     diveHeader.startTime = rlio.startTimeMilis;
     diveHeader.diveNumberOnSPX = rlio.numberOnSPX;
-    diveHeader.deviceSerialNumber = MainActivity.spxConfig.getSerial();
+    diveHeader.deviceSerialNumber = FragmentCommonActivity.spxConfig.getSerial();
     diveHeader.units = ( isUnitImperial ? "i" : "m" );
-    diveHeader.deviceId = logManager.getIdForDeviceFromSerial( MainActivity.spxConfig.getSerial() );
+    diveHeader.deviceId = logManager.getIdForDeviceFromSerial( FragmentCommonActivity.spxConfig.getSerial() );
     //
     // und einen neuen XML-Dateicreator
     //

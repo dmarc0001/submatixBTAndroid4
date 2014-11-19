@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">SubmatixBTLogger</string>
@@ -59,18 +59,15 @@
     <string name="toast_read_logdir_no_selected_entrys">Not entrys selected yet!</string>
     <string name="toast_connect_connected">connected to &lt;%s&gt;</string>
     <string name="toast_connect_disconnected">connection disconnected</string>
-    <string name="toast_connect_cant_bt_connect">can not connect to &lt;%s&gt;</string>
-    <string name="toast_connect_device_paired">device %s was paired</string>
-    <string name="toast_connect_device_automatic_pairing">pairing automatic device %s</string>
+    <string name="toast_cant_bt_connect">can not connect to &lt;%s&gt;</string>
     <string name="toast_export_cant_create_dir">can\'t create dir &lt;%s&gt;</string>
     <string name="toast_export_cant_find_xmldata">can\'t find data-xml file</string>
     <string name="toast_export_internal_xml_error">internal XML-DOM-Error!</string>
     
     <!-- Dialogboxen  -->
-    <string name="dialog_sure_exit">Are you sure?</string>
+    <string name="dialog_sure_exit">are you sure?</string>
     <string name="dialog_exit_button">EXIT</string>
     <string name="dialog_cancel_button">Cancel</string>
-    <string name="dialog_understand_button">understanding</string>
     <string name="dialog_please_wait_title" formatted="false">please wait...</string>
     <string name="dialog_please_wait_read_config" formatted="false">read SPX config...</string>
     <string name="dialog_alias_edit_title">Edit alias for Device</string>
@@ -95,10 +92,6 @@
     <string name="dialog_delete_device">delete ALL data from device\n\"%s\"</string>
     <string name="dialog_delete_selected_logs">delete the selected Logs</string>
     <string name="dialog_delete_button">DELETE!</string>
-    <string name="dialog_no_pin_headline">Not paired</string>
-    <string name="dialog_no_pin_errmsg">Device\n\"%s\"\nis not paired yet.\nPlease do it in device BT Options.</string>
-    <string name="dialog_get_pin_msg">Get PIN for Device\n\"%s\"</string>
-    <string name="dialog_pin_wrong_format">PIN has wrong format! Retry?\n(device: \"%s\")</string>
     
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title" formatted="false">Searching BT Devices..</string>
@@ -159,7 +152,7 @@
     <string name="conf_deco_deepstops_off">no deep</string>
     <!-- ### kategorie display ### -->
     <string name="conf_display_header">DISPLAY</string>
-    <string name="conf_display_header_new">DISPLAY</string>
+    <string name="conf_display_header_new">DISPLAY-N</string>
     <!-- display helligkeit -->
     <string name="conf_display_luminance_header">luminance</string>
     <string name="conf_luminance_header_summary">current luminance is %s percent on SPX42</string>
@@ -229,7 +222,6 @@
     <string name="connect_connecting_device">connecting</string>
     <string name="connect_connected_device">connected</string>
     <string name="connect_editalias_button_title">Edit alias</string>
-    <string name="connect_editaliasv4_button_title">Edit Alias/PIN</string>
     
     <!-- Detailseite für Gaslisten-Editor -->
     <string name="conf_gaslist_headline">SPX42 gaslist edit</string>
@@ -294,20 +286,14 @@
     <string name="conf_prog_mail_compressed_header">compress uddf</string>
     <string name="conf_prog_mail_compressed_on_summary">uddf file will compressed</string>
     <string name="conf_prog_mail_compressed_off_summary">uddf file will NOT compressed</string>
-    <!-- ### Kategorie Anderes ### -->
-    <string name="conf_prog_others_header">OTHERS</string>
-    <!-- BT disable on exit?  -->
-    <string name="conf_prog_others_bt_disable_bt_header">"Bluethooth"</string>
-    <string name="conf_prog_others_on_disable_bt">"active"</string>
-    <string name="conf_prog_others_off_disable_bt">"let"</string>
-    <string name="conf_prog_others_on_disable_bt_summary">"disable BT on exit"</string>
-    <string name="conf_prog_others_off_disable_bt_summary">"let BT active on exit"</string>
     <!-- Programmtheme -->
+    <string name="conf_prog_others_header">OTHERS</string>
     <string name="conf_prog_others_theme_header">switch theme</string>
     <string name="conf_prog_others_on_dark">dark</string>
     <string name="conf_prog_others_off_light">light</string>
     <string name="conf_prog_others_on_dark_summary">app theme DARK selected</string>
     <string name="conf_prog_others_off_light_summary">app theme LIGHT selected</string>
+    
     <!--  ### Kategorie Einstellungen Log Grafik ### -->
     <!--  Sichtbarkeit der Überschrift -->
     <string name="conf_prog_graph_screen_headline_headline">Headline (small screens)</string>
@@ -378,10 +364,6 @@
     <string name="graphlog_header_device" formatted="false" >view logs from device &lt;%s&gt;</string>
     <string name="graphlog_do_view">Show!</string>
     <string name="graphlog_change_drive_button">Device...</string>
-    
-    <!-- Navigator Strings  -->
-    <string name="navigation_drawer_open">Open navigator</string>
-    <string name="navigation_drawer_close">Close navigator</string>
     
     <!-- sonstig  -->
     <string name="no_device">- no device -</string>

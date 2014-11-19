@@ -8,10 +8,6 @@
   <color name="connectToastDark.textColor">#057AFF</color>  
   <color name="logReadDark.notSavedColor">#F5F576</color>
   <color name="logReadDark.savedColor">#9DFF85</color>
-  <color name="navigatorDark.backgroundColor">#80444543</color>
-  <color name="navigatorDark.markerColor">#888A86</color>
-  <color name="navigatorDark.inactiveTextColor">#BABABA</color>
-  <color name="navigatorDark.activeTextColor">#FFD1D1</color>
   
   <!-- Light Thema -->
   <color name="preferenceCategoryLight.textColor">#0554FF</color>
@@ -22,10 +18,6 @@
   <color name="connectToastLight.textColor">#009E1D</color>  
   <color name="logReadLight.notSavedColor">#85853D</color>
   <color name="logReadLight.savedColor">#187501</color>
-  <color name="navigatorLight.backgroundColor">#80FEFFFC</color>
-  <color name="navigatorLight.markerColor">#D1D1D1</color>
-  <color name="navigatorLight.inactiveTextColor">#474747</color>
-  <color name="navigatorLight.activeTextColor">#000000</color>
   
   
   <!-- uni colors -->

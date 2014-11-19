@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="@dimen/icon_margin_left"
-        android:layout_marginStart="@dimen/icon_margin_left"
         android:layout_marginTop="@dimen/icon_margin_top"
         android:contentDescription="@string/array_with_pic_adapter_dummy"
         android:src="@drawable/bluetooth_icon_bw" />
@@ -22,9 +21,8 @@
         android:layout_alignBottom="@+id/btArrayListIconView"
         android:layout_marginLeft="15dp"
         android:layout_toRightOf="@+id/btArrayListIconView"
-        android:layout_toEndOf="@+id/btArrayListIconView"
         android:gravity="center_horizontal"
         android:text="@string/array_with_pic_adapter_dummy"
-        android:textAppearance="@style/menuTextAppearance" />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
     
 </RelativeLayout>

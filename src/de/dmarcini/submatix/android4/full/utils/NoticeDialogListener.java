@@ -18,22 +18,25 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/
 */
 //@formatter:on
-package de.dmarcini.submatix.android4.full;
+package de.dmarcini.submatix.android4.full.utils;
+
+import android.app.DialogFragment;
 
 /**
- * Klasse mit statischem Flag zum Debuggen
  * 
- * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4
+ * Die aufrufende App muss das Interface implementieren
+ * 
+ * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
  * 
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
  * 
- *         Stand: 18.11.2013
+ *         Stand: 02.11.2012
  */
-public class ApplicationDEBUG
+public interface NoticeDialogListener
 {
-  //
-  // dies ist ein Workarround, da BuildConfig.DEBUG nicht funktioniert :-(
-  //
   @SuppressWarnings( "javadoc" )
-  public static final boolean DEBUG = false;
+  public void onDialogPositiveClick( DialogFragment dialog );
+
+  @SuppressWarnings( "javadoc" )
+  public void onDialogNegativeClick( DialogFragment dialog );
 }

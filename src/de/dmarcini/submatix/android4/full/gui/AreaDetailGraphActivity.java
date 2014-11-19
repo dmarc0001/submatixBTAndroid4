@@ -47,7 +47,7 @@ import de.dmarcini.submatix.android4.full.utils.ProjectConst;
  * 
  *         Stand: 01.02.2014
  */
-public class AreaDetailGraphActivity extends MainActivity
+public class AreaDetailGraphActivity extends FragmentCommonActivity
 {
   private static final String TAG              = AreaDetailGraphActivity.class.getSimpleName();
   private static String       KEY_SHOWHEADLINE = "keyProgLogShowHeadline";

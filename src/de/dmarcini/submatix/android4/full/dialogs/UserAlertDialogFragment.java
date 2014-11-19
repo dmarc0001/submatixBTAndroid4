@@ -30,7 +30,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import de.dmarcini.submatix.android4.full.R;
-import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
+import de.dmarcini.submatix.android4.full.utils.NoticeDialogListener;
 
 /**
  * 
@@ -50,7 +50,7 @@ public class UserAlertDialogFragment extends DialogFragment
   private String               headLine;
   private String               msg;
   // Use this instance of the interface to deliver action events
-  private INoticeDialogListener mListener = null;
+  private NoticeDialogListener mListener = null;
 
   /**
    * 
@@ -94,7 +94,7 @@ public class UserAlertDialogFragment extends DialogFragment
     LayoutInflater inflater = getActivity().getLayoutInflater();
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    rootView = inflater.inflate( R.layout.fragment_dialog_alert, null );
+    rootView = inflater.inflate( R.layout.fragment_alert_dialog, null );
     //
     // die Texte einfügen, natürlich
     //
@@ -129,12 +129,12 @@ public class UserAlertDialogFragment extends DialogFragment
     try
     {
       // Instanziere den Listener, wenn möglich, ansonsten wirft das eine exception
-      mListener = ( INoticeDialogListener )activity;
+      mListener = ( NoticeDialogListener )activity;
     }
     catch( ClassCastException ex )
     {
       // Die activity implementiert den Listener nicht, werfe eine Exception
-      throw new ClassCastException( activity.toString() + " must implement INoticeDialogListener" );
+      throw new ClassCastException( activity.toString() + " must implement NoticeDialogListener" );
     }
   }
 }

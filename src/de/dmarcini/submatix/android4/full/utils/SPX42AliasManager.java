@@ -56,16 +56,16 @@ public class SPX42AliasManager
    * 
    * Stand: 26.07.2013
    * 
-   * @param _db
+   * @param db
    * @throws NoDatabaseException
    */
-  public SPX42AliasManager( SQLiteDatabase _db ) throws NoDatabaseException
+  public SPX42AliasManager( SQLiteDatabase db ) throws NoDatabaseException
   {
-    if( _db == null || !_db.isOpen() )
+    if( db == null || !db.isOpen() )
     {
       throw new NoDatabaseException( "no database or dadabase is not open!" );
     }
-    dBase = _db;
+    dBase = db;
   }
 
   /**
@@ -93,18 +93,18 @@ public class SPX42AliasManager
    * 
    * Stand: 21.01.2014
    * 
-   * @param _deviceId
+   * @param deviceId
    */
-  public void deleteAlias( int _deviceId )
+  public void deleteAlias( int deviceId )
   {
     int count = 0;
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "deleteAlias..." );
-    if( _deviceId < 0 )
+    if( deviceId < 0 )
     {
       return;
     }
-    count = dBase.delete( ProjectConst.A_TABLE_ALIASES, String.format( "%s=%d", ProjectConst.A_DEVICEID, _deviceId ), null );
+    count = dBase.delete( ProjectConst.A_TABLE_ALIASES, String.format( "%s=%d", ProjectConst.A_DEVICEID, deviceId ), null );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "deleteAlias: <" + count + "> aliases deleted: OK" );
     return;
   }
@@ -117,17 +117,17 @@ public class SPX42AliasManager
    * 
    * Stand: 21.01.2014
    * 
-   * @param _deviceId
+   * @param deviceId
    * @return Existiert das Gerät in der Datenbank?
    */
-  public boolean existDeviceId( int _deviceId )
+  public boolean existDeviceId( int deviceId )
   {
     String sql;
     Cursor cu;
     boolean retVal = false;
     //
     if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getDeviceIdList..." );
-    sql = String.format( Locale.ENGLISH, "select count(*) from %s where %s=%d;", ProjectConst.A_TABLE_ALIASES, ProjectConst.A_DEVICEID, _deviceId );
+    sql = String.format( Locale.ENGLISH, "select count(*) from %s where %s=%d;", ProjectConst.A_TABLE_ALIASES, ProjectConst.A_DEVICEID, deviceId );
     cu = dBase.rawQuery( sql, null );
     //
     try
@@ -140,13 +140,12 @@ public class SPX42AliasManager
         }
       }
       cu.close();
-      Log.d( TAG, "exist Devive <" + _deviceId + "> : " + retVal );
+      Log.d( TAG, "exist Devive <" + deviceId + "> : " + retVal );
       return( retVal );
     }
     catch( SQLException ex )
     {
       Log.e( TAG, "Error while existDeviceId: <" + ex.getLocalizedMessage() + ">" );
-      cu.close();
       return( false );
     }
   }
@@ -192,61 +191,8 @@ public class SPX42AliasManager
     // Cursor schliessen
     //
     cu.close();
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getAliasForId: OK" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getDiveListForDevice: OK" );
     return( sql );
-  }
-
-  /**
-   * 
-   * Gib die PIN aus der DB zurück, falls vorhanden
-   *
-   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
-   * 
-   * Stand: 15.11.2014
-   * 
-   * @param _deviceId
-   * @return PIN oder null
-   */
-  public String getPINForId( int _deviceId )
-  {
-    String sql;
-    String pin = null;
-    Cursor cu;
-    //
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getPINForId..." );
-    if( _deviceId < 0 )
-    {
-      return( null );
-    }
-    // @formatter:off
-    sql = String.format( Locale.ENGLISH, "select %s from %s where %s=%d;", 
-            ProjectConst.A_PIN, 
-            ProjectConst.A_TABLE_ALIASES,
-            ProjectConst.A_DEVICEID,
-            _deviceId);
-    // @formatter:on
-    cu = dBase.rawQuery( sql, null );
-    if( cu.moveToFirst() )
-    {
-      try
-      {
-        pin = cu.getString( 0 );
-      }
-      finally
-      {
-        cu.close();
-      }
-    }
-    else
-    {
-      cu.close();
-      pin = null;
-    }
-    //
-    // Cursor schliessen
-    //
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getPINForId: OK" );
-    return( pin );
   }
 
   /**
@@ -258,17 +204,17 @@ public class SPX42AliasManager
    * 
    * Stand: 26.07.2013
    * 
-   * @param _mac
-   * @param _defaultAlias
+   * @param mac
+   * @param defaultAlias
    * @return Den Alias des Gerätes zurück
    */
-  public String getAliasForMac( String _mac, String _defaultAlias )
+  public String getAliasForMac( String mac, String defaultAlias )
   {
     String sql, alias;
     Cursor cu;
     //
     if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getAliasForMac..." );
-    sql = String.format( "select %s from %s where %s like '%s';", ProjectConst.A_ALIAS, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_MAC, _mac );
+    sql = String.format( "select %s from %s where %s like '%s';", ProjectConst.A_ALIAS, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_MAC, mac );
     cu = dBase.rawQuery( sql, null );
     // formatter:on
     if( cu.moveToFirst() )
@@ -281,52 +227,8 @@ public class SPX42AliasManager
       if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getAliasForMac: found <" + alias + ">" );
       return( alias );
     }
-    cu.close();
-    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getAliasForMac: not found, use default <" + _defaultAlias + ">" );
-    return( _defaultAlias );
-  }
-
-  /**
-   * 
-   * Gib die PIN für einen BT MAC zurück
-   *
-   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
-   * 
-   * Stand: 15.11.2014
-   * 
-   * @param _mac
-   * @return PIN oder null
-   */
-  public String getPINForMac( String _mac )
-  {
-    String sql;
-    String pin = null;
-    Cursor cu;
-    //
-    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getPINForMac..." );
-    sql = String.format( "select %s from %s where %s like '%s';", ProjectConst.A_PIN, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_MAC, _mac );
-    cu = dBase.rawQuery( sql, null );
-    // formatter:on
-    if( cu.moveToFirst() )
-    {
-      try
-      {
-        pin = cu.getString( 0 );
-      }
-      finally
-      {
-        cu.close();
-      }
-      //
-      // Cursor schliessen
-      //
-      cu.close();
-      if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getPINForMac: found <" + pin + ">" );
-      return( pin );
-    }
-    cu.close();
-    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getPINForMac: not found" );
-    return( null );
+    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getAliasForMac: not found, use default <" + defaultAlias + ">" );
+    return( defaultAlias );
   }
 
   /**
@@ -367,7 +269,6 @@ public class SPX42AliasManager
     catch( SQLException ex )
     {
       Log.e( TAG, "Error while getDeviceIdList: <" + ex.getLocalizedMessage() + ">" );
-      cu.close();
       return( null );
     }
   }
@@ -409,7 +310,6 @@ public class SPX42AliasManager
     }
     catch( SQLException ex )
     {
-      cu.close();
       Log.e( TAG, "Error while getDeviceNameIdList: <" + ex.getLocalizedMessage() + ">" );
       return( null );
     }
@@ -424,17 +324,17 @@ public class SPX42AliasManager
    * 
    * Stand: 28.08.2013
    * 
-   * @param _mac
+   * @param mac
    * @return Deviceid
    */
-  public int getIdForDeviceFromMac( String _mac )
+  public int getIdForDeviceFromMac( String mac )
   {
     String sql;
     int deviceId = -1;
     Cursor cu;
     //
     if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getIdForDevice..." );
-    sql = String.format( "select %s from %s where %s like '%s';", ProjectConst.A_DEVICEID, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_MAC, _mac );
+    sql = String.format( "select %s from %s where %s like '%s';", ProjectConst.A_DEVICEID, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_MAC, mac );
     cu = dBase.rawQuery( sql, null );
     // formatter:on
     if( cu.moveToFirst() )
@@ -447,7 +347,6 @@ public class SPX42AliasManager
       if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getIdForDevice: found <" + deviceId + ">" );
       return( deviceId );
     }
-    cu.close();
     if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getIdForDevice: not found, use default <-1>" );
     return( -1 );
   }
@@ -460,17 +359,17 @@ public class SPX42AliasManager
    * 
    * Stand: 01.12.2013
    * 
-   * @param _serial
+   * @param serial
    * @return Datenbank-Id des gesuchten Gerätes
    */
-  public int getIdForDeviceFromSerial( String _serial )
+  public int getIdForDeviceFromSerial( String serial )
   {
     String sql;
     int deviceId = -1;
     Cursor cu;
     //
     if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getIdForDeviceFromSerial..." );
-    sql = String.format( "select %s from %s where %s like '%s';", ProjectConst.A_DEVICEID, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_SERIAL, _serial );
+    sql = String.format( "select %s from %s where %s like '%s';", ProjectConst.A_DEVICEID, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_SERIAL, serial );
     // if( ApplicationDEBUG.DEBUG ) Log.e( TAG, "getIdForDeviceFromSerial: sql <" + sql + ">" );
     cu = dBase.rawQuery( sql, null );
     // formatter:on
@@ -484,7 +383,6 @@ public class SPX42AliasManager
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getIdForDeviceFromSerial: found <" + deviceId + ">" );
       return( deviceId );
     }
-    cu.close();
     if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getIdForDeviceFromSerial: not found, use default <-1>" );
     return( -1 );
   }
@@ -498,21 +396,21 @@ public class SPX42AliasManager
    * 
    * Stand: 26.07.2013
    * 
-   * @param _mac
-   * @param _devName
-   * @param _alias
-   * @param _serial
+   * @param mac
+   * @param devName
+   * @param alias
+   * @param serial
    *          Kann null sein, wenn nicht bekannt, wird dann ignoriert
    * @return War das Setzen des Alias für Gerät erfolgreich?
    */
-  public boolean setAliasForMac( String _mac, String _devName, String _alias, String _serial )
+  public boolean setAliasForMac( String mac, String devName, String alias, String serial )
   {
     String sql;
     Cursor cu;
     ContentValues values;
     //
     if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "setAliasForMac..." );
-    sql = String.format( "select %s from %s where %s like '%s';", ProjectConst.A_ALIAS, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_MAC, _mac );
+    sql = String.format( "select %s from %s where %s like '%s';", ProjectConst.A_ALIAS, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_MAC, mac );
     cu = dBase.rawQuery( sql, null );
     //
     try
@@ -525,28 +423,26 @@ public class SPX42AliasManager
         cu.close();
         // Vorbereiten eines ContentValues Objektes
         values = new ContentValues();
-        values.put( ProjectConst.A_ALIAS, _alias );
-        values.put( ProjectConst.A_DEVNAME, _devName );
-        if( _serial != null ) values.put( ProjectConst.A_SERIAL, _serial );
+        values.put( ProjectConst.A_ALIAS, alias );
+        values.put( ProjectConst.A_DEVNAME, devName );
+        if( serial != null ) values.put( ProjectConst.A_SERIAL, serial );
         // Ausführen mit on-the-fly whereklausel
-        if( 0 < dBase.update( ProjectConst.A_TABLE_ALIASES, values, String.format( "%s like '%s'", ProjectConst.A_MAC, _mac ), null ) ) return( true );
+        if( 0 < dBase.update( ProjectConst.A_TABLE_ALIASES, values, String.format( "%s like '%s'", ProjectConst.A_MAC, mac ), null ) ) return( true );
         return( false );
       }
       //
       // nein, das existiert noch nicht
       //
       values = new ContentValues();
-      values.put( ProjectConst.A_MAC, _mac );
-      values.put( ProjectConst.A_DEVNAME, _devName );
-      values.put( ProjectConst.A_ALIAS, _alias );
-      if( _serial != null ) values.put( ProjectConst.A_SERIAL, _serial );
-      cu.close();
+      values.put( ProjectConst.A_MAC, mac );
+      values.put( ProjectConst.A_DEVNAME, devName );
+      values.put( ProjectConst.A_ALIAS, alias );
+      if( serial != null ) values.put( ProjectConst.A_SERIAL, serial );
       if( -1 == dBase.insertOrThrow( ProjectConst.A_TABLE_ALIASES, null, values ) ) return( false );
       return( true );
     }
     catch( SQLException ex )
     {
-      cu.close();
       Log.e( TAG, "Error while setAliasForMac: <" + ex.getLocalizedMessage() + ">" );
       return( false );
     }
@@ -584,7 +480,6 @@ public class SPX42AliasManager
         cu.close();
         return;
       }
-      cu.close();
       //
       // nein, das existiert noch nicht
       //
@@ -597,7 +492,6 @@ public class SPX42AliasManager
     catch( SQLException ex )
     {
       Log.e( TAG, "Error while setAliasForMacIfNotExist: <" + ex.getLocalizedMessage() + ">" );
-      cu.close();
       return;
     }
   }
@@ -645,40 +539,7 @@ public class SPX42AliasManager
     }
     catch( SQLException ex )
     {
-      cu.close();
       Log.e( TAG, "Error while setSerialIfNotExist: <" + ex.getLocalizedMessage() + ">" );
-      return;
-    }
-  }
-
-  /**
-   * 
-   * PIN für eine MAC setzen
-   *
-   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
-   * 
-   * Stand: 15.11.2014
-   * 
-   * @param _mac
-   * @param _pin
-   */
-  public void setPinForMac( String _mac, String _pin )
-  {
-    ContentValues values;
-    String whereString;
-    //
-    try
-    {
-      if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "setPinForMac..." );
-      values = new ContentValues();
-      values.put( ProjectConst.A_PIN, _pin );
-      whereString = String.format( "%s='%s'", ProjectConst.A_MAC, _mac );
-      dBase.update( ProjectConst.A_TABLE_ALIASES, values, whereString, null );
-      return;
-    }
-    catch( SQLException ex )
-    {
-      Log.e( TAG, "Error while setPinForMac: <" + ex.getLocalizedMessage() + ">" );
       return;
     }
   }

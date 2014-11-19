@@ -6,8 +6,10 @@
     For more on layout aliases, see:
     http://developer.android.com/training/multiscreen/screensizes.html#TaskUseAliasFilters
     -->
+    <item name="activity_area_list" type="layout">@layout/activity_area_twopane_mid</item>
     <item name="gas_picker_layout" type="layout">@layout/gas_picker_layout_big</item>
     <item name="fragment_connect" type="layout">@layout/fragment_connect_mid</item>
+    <item name="array_with_pic_adapter_view" type="layout">@layout/array_with_pic_adapter_view_mid</item>
     <item name="fragment_about" type="layout">@layout/fragment_about_big</item>
     <item name="fragment_read_log" type="layout">@layout/fragment_read_log_big</item>
     <item name="read_log_array_adapter_view" type="layout">@layout/read_log_array_adapter_view_big</item>

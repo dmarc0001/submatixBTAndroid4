@@ -69,11 +69,16 @@ public class DataSQLHelper extends SQLiteOpenHelper
     dbName = dbn;
   }
 
-  private void createAliasTable( final SQLiteDatabase db )
+  /**
+   * Erzeuge Tabellen in einer bereits geöffneten Datenbank
+   * 
+   * @param db
+   *          Datenbankobjekt
+   */
+  private void createTables( final SQLiteDatabase db )
   {
     String sql;
-    //
-    Log.i( TAG, "createAliasTable..." );
+    Log.i( TAG, "createTables..." );
     // Alias Tabelle
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "create table " + ProjectConst.A_TABLE_ALIASES + "..." );
     sql = "create table  " + ProjectConst.A_TABLE_ALIASES + " ";
@@ -82,11 +87,262 @@ public class DataSQLHelper extends SQLiteOpenHelper
     sql += ProjectConst.A_DEVNAME + " text not null, \n";
     sql += ProjectConst.A_ALIAS + " text not null, \n";
     sql += ProjectConst.A_MAC + " text not null, \n";
-    sql += ProjectConst.A_SERIAL + " text\n,";
-    sql += ProjectConst.A_PIN + " text\n";
+    sql += ProjectConst.A_SERIAL + " text\n";
     sql += ");";
     try
     {
+      db.execSQL( sql );
+    }
+    catch( SQLException ex )
+    {
+      Log.e( TAG, ex.getLocalizedMessage() );
+      Toast.makeText( cx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT ).show();
+      return;
+    }
+    // Main-Tabelle
+    createMainTable( db );
+    Log.i( TAG, "createTables...OK" );
+  }
+
+  /**
+   * Lösche Tabellen aus einer bestehenden geöffneten Datenbank zur Erzeugung einer neuen Version.
+   * 
+   * @param db
+   *          geöffnete Datenbank
+   */
+  private void dropTables( final SQLiteDatabase db )
+  {
+    String sql = null;
+    Log.i( TAG, "dropTables..." );
+    // Aliase
+    sql = "drop table " + ProjectConst.A_TABLE_ALIASES + ";";
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SQL: <" + sql + ">" );
+    try
+    {
+      db.execSQL( sql );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SQL: <" + sql + ">.... OK" );
+    }
+    catch( SQLException ex )
+    {
+      Log.e( TAG, ex.getLocalizedMessage() );
+      Toast.makeText( cx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT ).show();
+      return;
+    }
+    // Maindaten
+    sql = "drop table " + ProjectConst.H_TABLE_DIVELOGS + ";";
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SQL: <" + sql + ">" );
+    try
+    {
+      db.execSQL( sql );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SQL: <" + sql + ">.... OK" );
+    }
+    catch( SQLException ex )
+    {
+      Log.e( TAG, ex.getLocalizedMessage() );
+      Toast.makeText( cx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT ).show();
+      return;
+    }
+    Log.i( TAG, "dropTables...OK" );
+  }
+
+  /**
+   * 
+   * Gib das Verzeichnis der DB als File Objekt zurück
+   * 
+   * Project: SubmatixBTLog-Service Package: de.dmarcini.bluethooth.submatix.btService
+   * 
+   * 
+   * Stand: 30.10.2011
+   * 
+   * @return Verzeichnis der DB als File Objekt
+   */
+  public File getDbDir()
+  {
+    File dbFile;
+    dbFile = new File( dbName );
+    return( new File( dbFile.getParent() ) );
+  }
+
+  /**
+   * Gib eine geöffnete Datenbank zurück.
+   * 
+   * @param writable
+   * @return Objekt einer Datenbank als SQLiteDatabase
+   */
+  private SQLiteDatabase getOpenDatabase( boolean writable )
+  {
+    SQLiteDatabase dbObj;
+    int flags;
+    // Datenbank versuchen zu oeffnen
+    if( writable )
+      flags = SQLiteDatabase.OPEN_READWRITE;
+    else
+      flags = SQLiteDatabase.OPEN_READONLY;
+    try
+    {
+      dbObj = SQLiteDatabase.openDatabase( dbName, null, flags );
+    }
+    catch( SQLiteCantOpenDatabaseException ex )
+    {
+      Log.w( TAG, "can't open Database, try create one... <" + ex.getLocalizedMessage() + ">" );
+      try
+      {
+        // Geht nicht, probier mal mit erzeugen
+        dbObj = SQLiteDatabase.openDatabase( dbName, null, SQLiteDatabase.OPEN_READWRITE + SQLiteDatabase.CREATE_IF_NECESSARY );
+        // wennes hier eine exception git, bitte sehr....
+        dbObj.setVersion( ProjectConst.DATABASE_VERSION );
+        onCreate( dbObj );
+      }
+      catch( SQLiteException ex1 )
+      {
+        Log.e( TAG, "can't open Database. Got an exception: <" + ex.getLocalizedMessage() + ">" );
+        return( null );
+      }
+    }
+    catch( SQLiteException ex )
+    {
+      Log.e( TAG, "can't open Database. Got an exception: <" + ex.getLocalizedMessage() + ">" );
+      return( null );
+    }
+    return( dbObj );
+  }
+
+  /**
+   * Gib eine nur lesbare Datenbank zurück
+   * 
+   * @return eine nur lesbare Datenbank oder null
+   */
+  @Override
+  public SQLiteDatabase getReadableDatabase()
+  {
+    SQLiteDatabase dbObj;
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d( TAG, "getReadableDatabase()... " );
+      Log.d( TAG, "Datepath: " + dbName );
+    }
+    dbObj = getOpenDatabase( false );
+    // OK, offen Upgrade abfragen
+    onUpgrade( dbObj, dbObj.getVersion(), ProjectConst.DATABASE_VERSION );
+    if( dbObj.isOpen() && dbObj.isReadOnly() )
+      return( dbObj );
+    else
+      return( getOpenDatabase( false ) );
+  }
+
+  /**
+   * Gib eine beschreibbare Datenbank zurück
+   * 
+   * @return eine bescheibbare Datenbank oder null
+   */
+  @Override
+  public SQLiteDatabase getWritableDatabase()
+  {
+    SQLiteDatabase dbObj;
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d( TAG, "getWritableDatabase... " );
+      Log.d( TAG, "Datepath: " + dbName );
+    }
+    dbObj = getOpenDatabase( true );
+    // OK, offen Upgrade abfragen
+    onUpgrade( dbObj, dbObj.getVersion(), ProjectConst.DATABASE_VERSION );
+    if( dbObj.isOpen() )
+      return( dbObj );
+    else
+      return( getOpenDatabase( true ) );
+  }
+
+  /**
+   * Ereignis beim Erzeugen des Objektes, nach Konstruktor...
+   * 
+   * @param db
+   *          geöffnete Datenbank
+   */
+  @Override
+  public void onCreate( SQLiteDatabase db )
+  {
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
+    createTables( db );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate...OK" );
+  }
+
+  /**
+   * Wird beim öffnen einer Datenbank aufgerufen um zu checken, ob ein Update der Datenbankstrukturen nowendig ist.
+   * 
+   * @param db
+   *          geöffnete Datenbank
+   * @param newVersion
+   *          eventuell neue Version Der Datenbank
+   */
+  @Override
+  public void onUpgrade( SQLiteDatabase db, int oldVersion, int newVersion )
+  {
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onUpgrade Old: <" + oldVersion + "> New: <" + newVersion + ">..." );
+    if( oldVersion >= newVersion ) return;
+    Log.i( TAG, "onUpgrade: update Version from Old: <" + oldVersion + "> to New: <" + newVersion + ">..." );
+    if( db.isReadOnly() )
+    {
+      // neu RW oeffnen
+      Log.v( TAG, "Database ist readonly. close and open RW..." );
+      db.close();
+      db = getOpenDatabase( true );
+    }
+    if( oldVersion == 1 && newVersion == 2 )
+    {
+      createMainTable( db );
+      db.setVersion( newVersion );
+    }
+    if( oldVersion == 4 && newVersion == 5 )
+    {
+      upgradeV4ToV5( db );
+      db.setVersion( newVersion );
+    }
+    else
+    {
+      dropTables( db );
+      createTables( db );
+      db.setVersion( newVersion );
+      db.close();
+      Log.i( TAG, "onUpgrade...OK" );
+    }
+  }
+
+  /**
+   * 
+   * Tabelle konvertiere3n (Feld für Nummer auf SPX nach INT konvertieren)
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
+   * 
+   * Stand: 08.01.2014
+   * 
+   * @param db
+   */
+  private void upgradeV4ToV5( SQLiteDatabase db )
+  {
+    Log.i( TAG, "upgrade db from version 4 to 5..." );
+    String sql;
+    try
+    {
+      // indizi loeschen
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "drop old indizies..." );
+      sql = "drop index idx_" + ProjectConst.H_TABLE_DIVELOGS + "_" + ProjectConst.H_STARTTIME + ";";
+      db.execSQL( sql );
+      sql = "drop index idx_" + ProjectConst.H_DEVICEID + ";";
+      db.execSQL( sql );
+      // Tabelle umbenennen
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "rename old table..." );
+      sql = "alter table " + ProjectConst.H_TABLE_DIVELOGS + " rename to " + ProjectConst.H_TABLE_DIVELOGS + "_old;";
+      db.execSQL( sql );
+      // tabelle neu anlegen
+      createMainTable( db );
+      // Daten in neue Tablelle übernehmen
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "convert data..." );
+      sql = "insert into " + ProjectConst.H_TABLE_DIVELOGS + " select * from " + ProjectConst.H_TABLE_DIVELOGS + "_old;";
+      db.execSQL( sql );
+      // alte Tabelle entfernen
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "drop old table..." );
+      sql = "drop table " + ProjectConst.H_TABLE_DIVELOGS + "_old;";
       db.execSQL( sql );
     }
     catch( SQLException ex )
@@ -161,343 +417,5 @@ public class DataSQLHelper extends SQLiteOpenHelper
       return;
     }
     Log.i( TAG, "createMainTable...OK" );
-  }
-
-  /**
-   * Erzeuge Tabellen in einer bereits geöffneten Datenbank
-   * 
-   * @param db
-   *          Datenbankobjekt
-   */
-  private void createTables( final SQLiteDatabase db )
-  {
-    Log.i( TAG, "createTables..." );
-    // Alias Tabelle
-    createAliasTable( db );
-    // Main-Tabelle
-    createMainTable( db );
-    Log.i( TAG, "createTables...OK" );
-  }
-
-  /**
-   * Lösche Tabellen aus einer bestehenden geöffneten Datenbank zur Erzeugung einer neuen Version.
-   * 
-   * @param db
-   *          geöffnete Datenbank
-   */
-  private void dropTables( final SQLiteDatabase db )
-  {
-    String sql = null;
-    Log.i( TAG, "dropTables..." );
-    // Aliase
-    sql = "drop table " + ProjectConst.A_TABLE_ALIASES + ";";
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SQL: <" + sql + ">" );
-    try
-    {
-      db.execSQL( sql );
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SQL: <" + sql + ">.... OK" );
-    }
-    catch( SQLException ex )
-    {
-      Log.e( TAG, ex.getLocalizedMessage() );
-      Toast.makeText( cx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT ).show();
-      return;
-    }
-    // Maindaten
-    sql = "drop table " + ProjectConst.H_TABLE_DIVELOGS + ";";
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SQL: <" + sql + ">" );
-    try
-    {
-      db.execSQL( sql );
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SQL: <" + sql + ">.... OK" );
-    }
-    catch( SQLException ex )
-    {
-      Log.e( TAG, ex.getLocalizedMessage() );
-      Toast.makeText( cx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT ).show();
-      return;
-    }
-    Log.i( TAG, "dropTables...OK" );
-  }
-
-  /**
-   * 
-   * Gib das Verzeichnis der DB als File Objekt zurück
-   * 
-   * Project: SubmatixBTLog-Service Package: de.dmarcini.bluethooth.submatix.btService
-   * 
-   * 
-   * Stand: 30.10.2011
-   * 
-   * @return Verzeichnis der DB als File Objekt
-   */
-  public File getDbDir()
-  {
-    File dbFile;
-    dbFile = new File( dbName );
-    return( new File( dbFile.getParent() ) );
-  }
-
-  /**
-   * Gib eine geöffnete Datenbank zurück.
-   * 
-   * @param writable
-   * @return Objekt einer Datenbank als SQLiteDatabase
-   */
-  @SuppressWarnings( "resource" )
-  private SQLiteDatabase getOpenDatabase( boolean writable )
-  {
-    SQLiteDatabase dbObj;
-    int flags;
-    // Datenbank versuchen zu oeffnen
-    if( writable )
-      flags = SQLiteDatabase.OPEN_READWRITE;
-    else
-      flags = SQLiteDatabase.OPEN_READONLY;
-    try
-    {
-      dbObj = SQLiteDatabase.openDatabase( dbName, null, flags );
-    }
-    catch( SQLiteCantOpenDatabaseException ex )
-    {
-      Log.w( TAG, "can't open Database, try create one... <" + ex.getLocalizedMessage() + ">" );
-      try
-      {
-        // Geht nicht, probier mal mit erzeugen
-        dbObj = SQLiteDatabase.openDatabase( dbName, null, SQLiteDatabase.OPEN_READWRITE + SQLiteDatabase.CREATE_IF_NECESSARY );
-        // wennes hier eine exception git, bitte sehr....
-        dbObj.setVersion( ProjectConst.DATABASE_VERSION );
-        onCreate( dbObj );
-      }
-      catch( SQLiteException ex1 )
-      {
-        Log.e( TAG, "can't open Database. Got an exception: <" + ex.getLocalizedMessage() + ">" );
-        dbObj = null;
-        return( null );
-      }
-    }
-    catch( SQLiteException ex )
-    {
-      Log.e( TAG, "can't open Database. Got an exception: <" + ex.getLocalizedMessage() + ">" );
-      dbObj = null;
-      return( null );
-    }
-    return( dbObj );
-  }
-
-  /**
-   * Gib eine nur lesbare Datenbank zurück
-   * 
-   * @return eine nur lesbare Datenbank oder null
-   */
-  @Override
-  public SQLiteDatabase getReadableDatabase()
-  {
-    SQLiteDatabase dbObj;
-    if( ApplicationDEBUG.DEBUG )
-    {
-      Log.d( TAG, "getReadableDatabase()... " );
-      Log.d( TAG, "Datepath: " + dbName );
-    }
-    dbObj = getOpenDatabase( false );
-    // OK, offen Upgrade abfragen
-    onUpgrade( dbObj, dbObj.getVersion(), ProjectConst.DATABASE_VERSION );
-    if( dbObj.isOpen() && dbObj.isReadOnly() )
-      return( dbObj );
-    else
-      return( getOpenDatabase( false ) );
-  }
-
-  /**
-   * Gib eine beschreibbare Datenbank zurück
-   * 
-   * @return eine bescheibbare Datenbank oder null
-   */
-  @Override
-  public SQLiteDatabase getWritableDatabase()
-  {
-    SQLiteDatabase dbObj;
-    if( ApplicationDEBUG.DEBUG )
-    {
-      Log.d( TAG, "getWritableDatabase... " );
-      Log.d( TAG, "Datepath: " + dbName );
-    }
-    dbObj = getOpenDatabase( true );
-    // OK, offen Upgrade abfragen
-    onUpgrade( dbObj, dbObj.getVersion(), ProjectConst.DATABASE_VERSION );
-    if( dbObj.isOpen() )
-      return( dbObj );
-    else
-      return( getOpenDatabase( true ) );
-  }
-
-  /**
-   * Ereignis beim Erzeugen des Objektes, nach Konstruktor...
-   * 
-   * @param db
-   *          geöffnete Datenbank
-   */
-  @Override
-  public void onCreate( SQLiteDatabase db )
-  {
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
-    createTables( db );
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate...OK" );
-  }
-
-  /**
-   * Wird beim öffnen einer Datenbank aufgerufen um zu checken, ob ein Update der Datenbankstrukturen nowendig ist.
-   * 
-   * @param db
-   *          geöffnete Datenbank
-   * @param newVersion
-   *          eventuell neue Version Der Datenbank
-   */
-  @SuppressWarnings( "resource" )
-  @Override
-  public void onUpgrade( SQLiteDatabase db, int oldVersion, int newVersion )
-  {
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onUpgrade Old: <" + oldVersion + "> New: <" + newVersion + ">..." );
-    if( oldVersion >= newVersion ) return;
-    Log.i( TAG, "onUpgrade: update Version from Old: <" + oldVersion + "> to New: <" + newVersion + ">..." );
-    if( db.isReadOnly() )
-    {
-      // neu RW oeffnen
-      Log.v( TAG, "Database ist readonly. close and open RW..." );
-      db.close();
-      db = getOpenDatabase( true );
-    }
-    if( oldVersion == 1 && newVersion == 2 )
-    {
-      createMainTable( db );
-      db.setVersion( newVersion );
-    }
-    else if( oldVersion == 4 )
-    {
-      if( newVersion == 5 )
-      {
-        upgradeV4ToV5( db );
-        db.setVersion( newVersion );
-      }
-      else if( newVersion == 6 )
-      {
-        upgradeV4ToV5( db );
-        upgradeV5ToV6( db );
-        db.setVersion( newVersion );
-      }
-    }
-    else if( oldVersion == 5 )
-    {
-      upgradeV5ToV6( db );
-      db.setVersion( newVersion );
-    }
-    else
-    {
-      dropTables( db );
-      createTables( db );
-      db.setVersion( newVersion );
-    }
-    db.close();
-    Log.i( TAG, "onUpgrade...OK" );
-  }
-
-  /**
-   * 
-   * Tabelle konvertieren (Feld für Nummer auf SPX nach INT konvertieren)
-   * 
-   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
-   * 
-   * Stand: 08.01.2014
-   * 
-   * @param db
-   */
-  private void upgradeV4ToV5( SQLiteDatabase db )
-  {
-    Log.i( TAG, "upgrade db from version 4 to 5..." );
-    String sql;
-    try
-    {
-      // indizi loeschen
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "drop old indizies..." );
-      sql = "drop index idx_" + ProjectConst.H_TABLE_DIVELOGS + "_" + ProjectConst.H_STARTTIME + ";";
-      db.execSQL( sql );
-      sql = "drop index idx_" + ProjectConst.H_DEVICEID + ";";
-      db.execSQL( sql );
-      // Tabelle umbenennen
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "rename old table..." );
-      sql = "alter table " + ProjectConst.H_TABLE_DIVELOGS + " rename to " + ProjectConst.H_TABLE_DIVELOGS + "_old;";
-      db.execSQL( sql );
-      // tabelle neu anlegen
-      createMainTable( db );
-      // Daten in neue Tablelle übernehmen
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "convert data..." );
-      sql = "insert into " + ProjectConst.H_TABLE_DIVELOGS + " select * from " + ProjectConst.H_TABLE_DIVELOGS + "_old;";
-      db.execSQL( sql );
-      // alte Tabelle entfernen
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "drop old table..." );
-      sql = "drop table " + ProjectConst.H_TABLE_DIVELOGS + "_old;";
-      db.execSQL( sql );
-    }
-    catch( SQLException ex )
-    {
-      Log.e( TAG, ex.getLocalizedMessage() );
-      Toast.makeText( cx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT ).show();
-      return;
-    }
-  }
-
-  /**
-   * 
-   * Upgrade vin Version 5 nach Version 6
-   *
-   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
-   * 
-   * Stand: 15.11.2014
-   * 
-   * @param db
-   */
-  private void upgradeV5ToV6( SQLiteDatabase db )
-  {
-    Log.i( TAG, "upgrade db from version 5 to 6..." );
-    String sql;
-    try
-    {
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "rename old table..." );
-      sql = "alter table " + ProjectConst.A_TABLE_ALIASES + " rename to " + ProjectConst.A_TABLE_ALIASES + "_old;";
-      db.execSQL( sql );
-      // tabelle neu anlegen
-      createAliasTable( db );
-      // Daten in neue Tablelle übernehmen
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "convert data..." );
-      //@formatter:off 
-      sql = String.format( "insert into %s (%s,%s,%s,%s,%s) select %s,%s,%s,%s,%s from %s_old;",
-              ProjectConst.A_TABLE_ALIASES,
-              // fields to
-              ProjectConst.A_DEVICEID,
-              ProjectConst.A_DEVNAME,
-              ProjectConst.A_ALIAS,
-              ProjectConst.A_MAC,
-              ProjectConst.A_SERIAL,
-              // fields from
-              ProjectConst.A_DEVICEID,
-              ProjectConst.A_DEVNAME,
-              ProjectConst.A_ALIAS,
-              ProjectConst.A_MAC,
-              ProjectConst.A_SERIAL,
-              // table from
-              ProjectConst.A_TABLE_ALIASES );              
-      //@formatter:on 
-      db.execSQL( sql );
-      // alte Tabelle entfernen
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "drop old table..." );
-      sql = "drop table " + ProjectConst.A_TABLE_ALIASES + "_old;";
-      db.execSQL( sql );
-    }
-    catch( SQLException ex )
-    {
-      Log.e( TAG, ex.getLocalizedMessage() );
-      Toast.makeText( cx, ex.getLocalizedMessage(), Toast.LENGTH_SHORT ).show();
-      return;
-    }
   }
 }

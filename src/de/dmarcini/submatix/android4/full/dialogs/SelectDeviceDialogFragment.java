@@ -35,8 +35,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Spinner;
 import de.dmarcini.submatix.android4.full.R;
-import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
 import de.dmarcini.submatix.android4.full.utils.DeviceSelectArrayAdapterWithPics;
+import de.dmarcini.submatix.android4.full.utils.NoticeDialogListener;
 
 /**
  * 
@@ -56,7 +56,7 @@ public class SelectDeviceDialogFragment extends DialogFragment
   private String                        selectedDevice   = null;
   private int                           selectedDeviceId = -1;
   // Use this instance of the interface to deliver action events
-  private INoticeDialogListener          mListener        = null;
+  private NoticeDialogListener          mListener        = null;
 
   /**
    * 
@@ -98,12 +98,12 @@ public class SelectDeviceDialogFragment extends DialogFragment
     try
     {
       // Instanziere den Listener, wenn möglich, ansonsten wirft das eine exception
-      mListener = ( INoticeDialogListener )activity;
+      mListener = ( NoticeDialogListener )activity;
     }
     catch( ClassCastException ex )
     {
       // Die activity implementiert den Listener nicht, werfe eine Exception
-      throw new ClassCastException( activity.toString() + " must implement INoticeDialogListener" );
+      throw new ClassCastException( activity.toString() + " must implement NoticeDialogListener" );
     }
   }
 

@@ -32,7 +32,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 import de.dmarcini.submatix.android4.full.R;
-import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
+import de.dmarcini.submatix.android4.full.utils.NoticeDialogListener;
 
 /**
  * 
@@ -50,7 +50,7 @@ public class AreYouSureToDeleteFragment extends DialogFragment
   private View                 rootView;
   private String               msg       = "?";
   // Use this instance of the interface to deliver action events
-  private INoticeDialogListener mListener = null;
+  private NoticeDialogListener mListener = null;
 
   @SuppressWarnings( "unused" )
   private AreYouSureToDeleteFragment()
@@ -81,12 +81,12 @@ public class AreYouSureToDeleteFragment extends DialogFragment
     try
     {
       // Instanziere den Listener, wenn möglich, ansonsten wirft das eine exception
-      mListener = ( INoticeDialogListener )activity;
+      mListener = ( NoticeDialogListener )activity;
     }
     catch( ClassCastException ex )
     {
       // Die activity implementiert den Listener nicht, werfe eine Exception
-      throw new ClassCastException( activity.toString() + " must implement INoticeDialogListener" );
+      throw new ClassCastException( activity.toString() + " must implement NoticeDialogListener" );
     }
   }
 
