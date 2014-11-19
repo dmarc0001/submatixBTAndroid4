@@ -82,7 +82,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
     sql += ProjectConst.A_DEVNAME + " text not null, \n";
     sql += ProjectConst.A_ALIAS + " text not null, \n";
     sql += ProjectConst.A_MAC + " text not null, \n";
-    sql += ProjectConst.A_SERIAL + " text\n";
+    sql += ProjectConst.A_SERIAL + " text\n,";
     sql += ProjectConst.A_PIN + " text\n";
     sql += ");";
     try
@@ -396,9 +396,9 @@ public class DataSQLHelper extends SQLiteOpenHelper
       dropTables( db );
       createTables( db );
       db.setVersion( newVersion );
-      db.close();
-      Log.i( TAG, "onUpgrade...OK" );
     }
+    db.close();
+    Log.i( TAG, "onUpgrade...OK" );
   }
 
   /**
@@ -469,7 +469,24 @@ public class DataSQLHelper extends SQLiteOpenHelper
       createAliasTable( db );
       // Daten in neue Tablelle übernehmen
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "convert data..." );
-      sql = "insert into " + ProjectConst.A_TABLE_ALIASES + " select * from " + ProjectConst.A_TABLE_ALIASES + "_old;";
+      //@formatter:off 
+      sql = String.format( "insert into %s (%s,%s,%s,%s,%s) select %s,%s,%s,%s,%s from %s_old;",
+              ProjectConst.A_TABLE_ALIASES,
+              // fields to
+              ProjectConst.A_DEVICEID,
+              ProjectConst.A_DEVNAME,
+              ProjectConst.A_ALIAS,
+              ProjectConst.A_MAC,
+              ProjectConst.A_SERIAL,
+              // fields from
+              ProjectConst.A_DEVICEID,
+              ProjectConst.A_DEVNAME,
+              ProjectConst.A_ALIAS,
+              ProjectConst.A_MAC,
+              ProjectConst.A_SERIAL,
+              // table from
+              ProjectConst.A_TABLE_ALIASES );              
+      //@formatter:on 
       db.execSQL( sql );
       // alte Tabelle entfernen
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "drop old table..." );

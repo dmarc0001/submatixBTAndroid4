@@ -210,6 +210,7 @@ public class SPX42AliasManager
   public String getPINForId( int _deviceId )
   {
     String sql;
+    String pin = null;
     Cursor cu;
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getPINForId..." );
@@ -227,18 +228,25 @@ public class SPX42AliasManager
     cu = dBase.rawQuery( sql, null );
     if( cu.moveToFirst() )
     {
-      sql = cu.getString( 0 );
+      try
+      {
+        pin = cu.getString( 0 );
+      }
+      finally
+      {
+        cu.close();
+      }
     }
     else
     {
-      sql = null;
+      cu.close();
+      pin = null;
     }
     //
     // Cursor schliessen
     //
-    cu.close();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getPINForId: OK" );
-    return( sql );
+    return( pin );
   }
 
   /**
@@ -291,7 +299,8 @@ public class SPX42AliasManager
    */
   public String getPINForMac( String _mac )
   {
-    String sql, pin;
+    String sql;
+    String pin = null;
     Cursor cu;
     //
     if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getPINForMac..." );
@@ -300,7 +309,14 @@ public class SPX42AliasManager
     // formatter:on
     if( cu.moveToFirst() )
     {
-      pin = cu.getString( 0 );
+      try
+      {
+        pin = cu.getString( 0 );
+      }
+      finally
+      {
+        cu.close();
+      }
       //
       // Cursor schliessen
       //

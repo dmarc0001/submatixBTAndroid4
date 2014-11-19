@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 
 import org.joda.time.DateTime;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -75,6 +76,7 @@ public class BlueThoothComService extends Service
    * 
    * Stand: 02.03.2013
    */
+  @SuppressLint( "NewApi" )
   private class ConnectThread extends Thread
   {
     private final String          TAGCON = ConnectThread.class.getSimpleName();
@@ -96,16 +98,73 @@ public class BlueThoothComService extends Service
     {
       mmDevice = device;
       BluetoothSocket tmp = null;
-      if( ApplicationDEBUG.DEBUG )
-      {
-        Log.d( TAGCON, "createRfCommSocketToServiceRecord(" + ProjectConst.SERIAL_DEVICE_UUID + ")" );
-      }
+      Log.v( TAGCON, "ConnectThread()..." );
       //
       // Einen Socket für das Gerät erzeugen
       //
       try
       {
-        tmp = device.createRfcommSocketToServiceRecord( ProjectConst.SERIAL_DEVICE_UUID );
+        //
+        // wenn alles in bester Ordnung ist...
+        //
+        if( device.getBondState() == BluetoothDevice.BOND_BONDED || device.getBondState() == BluetoothDevice.BOND_BONDING )
+        {
+          // dann verbinde!
+          if( ApplicationDEBUG.DEBUG ) Log.d( TAGCON, "device bonded/bonding, connecting..." );
+          if( ApplicationDEBUG.DEBUG ) Log.d( TAGCON, "createRfCommSocketToServiceRecord(" + ProjectConst.SERIAL_DEVICE_UUID + ")" );
+          tmp = device.createRfcommSocketToServiceRecord( ProjectConst.SERIAL_DEVICE_UUID );
+        }
+        else
+        {
+          Log.w( TAGCON, "device NOT bonded..." );
+          if( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT )
+          {
+            //
+            // wenn das ab Kitkat läuft, noch ein Veruch aus der DB
+            //
+            if( MainActivity.aliasManager != null )
+            {
+              String devicePin = MainActivity.aliasManager.getPINForMac( device.getAddress() );
+              if( devicePin != null )
+              {
+                if( ApplicationDEBUG.DEBUG ) Log.d( TAGCON, String.format( "device pin from databese is <%s>", devicePin ) );
+                // Das Gerät automatisch paaren, PIN Speichern,
+                // passiert in SPX42ConnectionFragment via Broadcast Reciver, via BluetoothDevice.ACTION_PAIRING_REQUEST
+                // verbinde!
+                if( ApplicationDEBUG.DEBUG ) Log.d( TAGCON, "createRfCommSocketToServiceRecord(" + ProjectConst.SERIAL_DEVICE_UUID + ")" );
+                tmp = device.createRfcommSocketToServiceRecord( ProjectConst.SERIAL_DEVICE_UUID );
+              }
+              else
+              {
+                // keine PIN in der DB => der Weg über die Meldung zum User
+                if( ApplicationDEBUG.DEBUG ) Log.d( TAGCON, "device pairing request: database has no pin for device..." );
+                tmp = null;
+                BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECT_NOTBOUND, device );
+                sendMessageToApp( msg );
+              }
+            }
+            else
+            {
+              tmp = null;
+              //
+              // wenn das BT-Grerät nicht gepaart ist oder gerade wird, mach eine Ansage an den User
+              //
+              if( ApplicationDEBUG.DEBUG ) Log.d( TAGCON, "device NOT bonded send message..." );
+              BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECT_NOTBOUND );
+              sendMessageToApp( msg );
+            }
+          }
+          else
+          {
+            //
+            // wenn das nicht unter Kitkat oder höher läuft und
+            // wenn das BT-Grerät nicht gepaart ist oder gerade wird, mach eine Ansage an den User
+            //
+            if( ApplicationDEBUG.DEBUG ) Log.d( TAGCON, "device NOT bonded send message..." );
+            BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECT_NOTBOUND );
+            sendMessageToApp( msg );
+          }
+        }
       }
       catch( IOException e )
       {
@@ -127,7 +186,11 @@ public class BlueThoothComService extends Service
     {
       try
       {
-        mmSocket.close();
+        if( mmSocket != null ) mmSocket.close();
+      }
+      catch( NullPointerException e )
+      {
+        if( ApplicationDEBUG.DEBUG ) Log.e( TAG, "not an open Socket exist!" );
       }
       catch( IOException e )
       {
@@ -151,6 +214,12 @@ public class BlueThoothComService extends Service
       }
       // immer discovering beenden, Verbindungsaufbau sonst schleppend
       mAdapter.cancelDiscovery();
+      if( mmSocket == null )
+      {
+        connectionFailed();
+        if( ApplicationDEBUG.DEBUG ) Log.e( TAG, "connection failed, Socket ist null" );
+        return;
+      }
       // Eine Verbindung zum BluetoothSocket
       try
       {
@@ -162,7 +231,13 @@ public class BlueThoothComService extends Service
         mmSocket.connect();
         Log.v( TAGCON, "connected..." );
       }
-      catch( IOException e )
+      catch( NullPointerException ex )
+      {
+        connectionFailed();
+        if( ApplicationDEBUG.DEBUG ) Log.e( TAG, "connection failed, Socket ist null" );
+        return;
+      }
+      catch( IOException ex )
       {
         connectionFailed();
         // Socket schließen
@@ -170,9 +245,9 @@ public class BlueThoothComService extends Service
         {
           mmSocket.close();
         }
-        catch( IOException ex )
+        catch( IOException e )
         {
-          Log.e( TAG, "unable to close() socket during connection failure", ex );
+          Log.e( TAG, "unable to close() socket during connection failure", e );
         }
         return;
       }

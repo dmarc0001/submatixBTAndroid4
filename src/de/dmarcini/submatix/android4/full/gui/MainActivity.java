@@ -123,11 +123,14 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   protected static File                       databaseDir           = null;
   protected static SPX42Config                spxConfig             = new SPX42Config();                                   // Da werden SPX-Spezifische Sachen gespeichert
   protected static BluetoothAdapter           mBtAdapter            = null;
-  protected static SPX42AliasManager          aliasManager          = null;
   protected static float                      ackuValue             = 0.0F;
   protected static boolean                    wasRestartForNewTheme = false;                                               // War es ein restsart mit neuem Thema?
   @SuppressWarnings( "javadoc" )
   public static DateTimeFormatter             localTimeFormatter    = DateTimeFormat.forPattern( "yyyy-MM-dd - HH:mm:ss" );
+  /**
+   * Global verfügbarer Alias Manager, Zuordnung Gerät <-> Alias
+   */
+  public static SPX42AliasManager             aliasManager          = null;
   //
   //@formatter:off
   //
@@ -593,6 +596,13 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     }
   }
 
+  @Override
+  public void finishFromChild( Activity child )
+  {
+    // wenn eine child-App beendet hat
+    finish();
+  }
+
   /**
    * 
    * Mit welchem Gerät (Addr) bin ich verbunden?
@@ -821,7 +831,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       // Sonst....
       // ################################################################
       default:
-        if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "unknown message with id <" + smsg.getId() + "> recived!" );
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "unknown message with id <" + smsg.getId() + "> recived!" );
     }
   }
 
@@ -1333,6 +1343,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
           aliasManager.close();
           aliasManager = null;
         }
+        // TODO;
         finish();
       }
     }
@@ -1347,7 +1358,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       { editDialog.getDeviceName(), editDialog.getAliasName(), editDialog.getMac() } ) ).sendToTarget();
     }
     //
-    // Sollte die AP geschlossen werden?
+    // Sollte die APP geschlossen werden?
     //
     else if( dialog instanceof UserAlertDialogFragment )
     {
@@ -1642,7 +1653,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void onStop()
   {
     super.onStop();
-    // Log.v( TAG, "onStop:..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onStop:..." );
     doUnbindService( true );
   }
 
