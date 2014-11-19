@@ -30,6 +30,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import de.dmarcini.submatix.android4.full.R;
@@ -94,7 +95,7 @@ public class EditAliasDialogFragment extends DialogFragment
     this.aliasName = alias;
     this.deviceName = device;
     this.macAddr = mac;
-    this.devicePin = null;
+    this.devicePin = "0000";
   }
 
   /**
@@ -111,7 +112,7 @@ public class EditAliasDialogFragment extends DialogFragment
    *          Welcher Gerätealias (alt)
    * @param mac
    *          Welche Geräte-MAC
-   * @param devicePin
+   * @param oldPin
    *          Welche alte PIN war da?
    */
   public EditAliasDialogFragment( String device, String alias, String mac, String oldPin )
@@ -133,7 +134,7 @@ public class EditAliasDialogFragment extends DialogFragment
     LayoutInflater inflater = getActivity().getLayoutInflater();
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    rootView = inflater.inflate( R.layout.fragment_dialog_alias_edit, null );
+    rootView = inflater.inflate( R.layout.fragment_dialog_alias_edit, ( ViewGroup )null );
     //
     // die Texte einfügen, natürlich
     //
