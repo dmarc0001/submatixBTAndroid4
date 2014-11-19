@@ -228,6 +228,7 @@ public class BlueThoothComService extends Service
         // er endet mit Verbindung oder Exception
         //
         Log.v( TAGCON, "Socket connecting (blocking)..." );
+        setState( ProjectConst.CONN_STATE_CONNECTING );
         mmSocket.connect();
         Log.v( TAGCON, "connected..." );
       }
@@ -1370,7 +1371,7 @@ public class BlueThoothComService extends Service
     mConnectThread = new ConnectThread( device );
     connectedDeviceMac = addr;
     mConnectThread.start();
-    setState( ProjectConst.CONN_STATE_CONNECTING );
+    // setState( ProjectConst.CONN_STATE_CONNECTING );
   }
 
   /**
