@@ -52,7 +52,7 @@ public class EditAliasDialogFragment extends DialogFragment
   private String                deviceName = null;
   private String                aliasName  = null;
   private String                macAddr    = null;
-  private String                oldPin     = null;
+  private String                devicePin  = null;
   // Use this instance of the interface to deliver action events
   private INoticeDialogListener mListener  = null;
 
@@ -94,7 +94,7 @@ public class EditAliasDialogFragment extends DialogFragment
     this.aliasName = alias;
     this.deviceName = device;
     this.macAddr = mac;
-    this.oldPin = null;
+    this.devicePin = null;
   }
 
   /**
@@ -111,7 +111,7 @@ public class EditAliasDialogFragment extends DialogFragment
    *          Welcher Gerätealias (alt)
    * @param mac
    *          Welche Geräte-MAC
-   * @param oldPin
+   * @param devicePin
    *          Welche alte PIN war da?
    */
   public EditAliasDialogFragment( String device, String alias, String mac, String oldPin )
@@ -120,7 +120,7 @@ public class EditAliasDialogFragment extends DialogFragment
     this.aliasName = alias;
     this.deviceName = device;
     this.macAddr = mac;
-    this.oldPin = oldPin;
+    this.devicePin = oldPin;
   }
 
   @Override
@@ -150,7 +150,7 @@ public class EditAliasDialogFragment extends DialogFragment
     {
       EditText edPin = ( EditText )rootView.findViewById( R.id.aliasEditDialogPINEditTextView );
       edPin.setVisibility( View.VISIBLE );
-      edPin.setText( this.oldPin );
+      edPin.setText( this.devicePin );
     }
     //
     // jetzt dem Builder das View übergeben
@@ -169,7 +169,7 @@ public class EditAliasDialogFragment extends DialogFragment
         {
           // bei Android ab 4.4
           EditText edPin = ( EditText )rootView.findViewById( R.id.aliasEditDialogPINEditTextView );
-          oldPin = edPin.getText().toString();
+          devicePin = edPin.getText().toString();
         }
         mListener.onDialogPositiveClick( EditAliasDialogFragment.this );
       }
@@ -236,11 +236,11 @@ public class EditAliasDialogFragment extends DialogFragment
    * 
    * Stand: 19.11.2014
    * 
-   * @return
+   * @return die editierte PIN
    */
   public String getPin()
   {
-    return( oldPin );
+    return( devicePin );
   }
 
   /**
