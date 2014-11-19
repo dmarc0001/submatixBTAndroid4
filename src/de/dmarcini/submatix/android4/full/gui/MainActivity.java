@@ -214,6 +214,8 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     if( mService != null )
     {
       BtServiceMessage msg;
+      Iterator<IBtServiceListener> it = serviceListener.iterator();
+      //
       int state = mService.getConnectionState();
       // welche Message muss ich machen?
       switch ( state )
@@ -221,19 +223,28 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         default:
         case ProjectConst.CONN_STATE_NONE:
           msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
+          // an alle Listener versenden!
+          while( it.hasNext() )
+          {
+            it.next().msgDisconnected( msg );
+          }
           break;
         case ProjectConst.CONN_STATE_CONNECTING:
           msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECTING );
+          // an alle Listener versenden!
+          while( it.hasNext() )
+          {
+            it.next().msgConnecting( msg );
+          }
           break;
         case ProjectConst.CONN_STATE_CONNECTED:
           msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECTED );
+          // an alle Listener versenden!
+          while( it.hasNext() )
+          {
+            it.next().msgConnected( msg );
+          }
           break;
-      }
-      // an alle Listener versenden!
-      Iterator<IBtServiceListener> it = serviceListener.iterator();
-      while( it.hasNext() )
-      {
-        it.next().msgConnected( msg );
       }
     }
   }
@@ -1338,12 +1349,18 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
             BluetoothAdapter.getDefaultAdapter().disable();
           }
         }
+        // Code nach stackoverflow
+        // TODO: online geht das nicht....
+        Intent intent = new Intent( Intent.ACTION_MAIN );
+        intent.addCategory( Intent.CATEGORY_HOME );
+        intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
+        intent.putExtra( "EXIT", true );
+        startActivity( intent );
         if( aliasManager != null )
         {
           aliasManager.close();
           aliasManager = null;
         }
-        // TODO;
         finish();
       }
     }

@@ -737,7 +737,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       if( MainActivity.aliasManager == null )
       {
         //
-        // die Datenbank öffnen
+        // die Datenbank öffnen, wenn erforderlich
         //
         if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create SQLite helper..." );
         DataSQLHelper sqlHelper = new DataSQLHelper( getActivity().getApplicationContext(), MainActivity.databaseDir.getAbsolutePath() + File.separator
