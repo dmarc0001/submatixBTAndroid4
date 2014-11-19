@@ -230,8 +230,8 @@ public class Environment4
     try
     {
       // Aufruf der versteckten Methode getVolumeList
-      Method m = c.getMethod( "getVolumeList", ( Class )null );
-      vols = ( Object[] )m.invoke( sm, ( Class )null ); // android.os.Storage.StorageVolume
+      Method m = c.getMethod( "getVolumeList", null );
+      vols = ( Object[] )m.invoke( sm, null ); // android.os.Storage.StorageVolume
       Device[] temp = new Device[vols.length];
       for( int i = 0; i < vols.length; i++ )
         temp[i] = new Device( vols[i] );
@@ -292,6 +292,7 @@ public class Environment4
     {
       // Fallback auf normale Android-Funktionen
       Log.e( TAG, "getVolumeList not found, fallback" );
+      Log.v( TAG, e.getLocalizedMessage() );
       // TODO ist noch bei keinem Testgerät vorgekommen
     }
   }
@@ -345,43 +346,43 @@ public class Environment4
     @SuppressWarnings( "rawtypes" )
     Device( Object storage ) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException
     {
-      super( ( String )storage.getClass().getMethod( "getPath", ( Class<?> )null ).invoke( storage, ( Class )null ) );
+      super( ( String )storage.getClass().getMethod( "getPath", null ).invoke( storage, null ) );
       for( Method m : storage.getClass().getMethods() )
       {
         if( m.getName().equals( "getUserLabel" ) && m.getParameterTypes().length == 0 && m.getReturnType() == String.class )
         {
           // ab Android 4.4
-          mUserLabel = ( String )m.invoke( storage, ( Class )null );
+          mUserLabel = ( String )m.invoke( storage, null );
         }
         if( m.getName().equals( "getUuid" ) && m.getParameterTypes().length == 0 && m.getReturnType() == String.class )
         {
           // ab Android 4.4
-          mUuid = ( String )m.invoke( storage, ( Class )null );
+          mUuid = ( String )m.invoke( storage, null );
         }
         if( m.getName().equals( "getState" ) && m.getParameterTypes().length == 0 && m.getReturnType() == String.class )
         {
           // ab Android 4.4
-          mState = ( String )m.invoke( storage, ( Class )null );
+          mState = ( String )m.invoke( storage, null );
         }
         if( m.getName().equals( "isRemovable" ) && m.getParameterTypes().length == 0 && m.getReturnType() == boolean.class )
         {
           // ab Android 4.0
-          mRemovable = ( Boolean )m.invoke( storage, ( Class )null ); // ab
+          mRemovable = ( Boolean )m.invoke( storage, null );
         }
         if( m.getName().equals( "isPrimary" ) && m.getParameterTypes().length == 0 && m.getReturnType() == boolean.class )
         {
           // ab Android 4.2
-          mPrimary = ( Boolean )m.invoke( storage, ( Class )null );
+          mPrimary = ( Boolean )m.invoke( storage, null );
         }
         if( m.getName().equals( "isEmulated" ) && m.getParameterTypes().length == 0 && m.getReturnType() == boolean.class )
         {
           // Android 4.0
-          mEmulated = ( Boolean )m.invoke( storage, ( Class )null ); // ab
+          mEmulated = ( Boolean )m.invoke( storage, null );
         }
         if( m.getName().equals( "allowMassStorage" ) && m.getParameterTypes().length == 0 && m.getReturnType() == boolean.class )
         {
           // ab Android 4.0
-          mAllowMassStorage = ( Boolean )m.invoke( storage, ( Class )null );
+          mAllowMassStorage = ( Boolean )m.invoke( storage, null );
         }
         if( m.getName().equals( "getMaxFileSize" ) && m.getParameterTypes().length == 0 && m.getReturnType() == long.class )
         {
@@ -390,7 +391,7 @@ public class Environment4
           // getPathFile (ab 4.2) liefert keine sinnvollen Werte
           // getMtpReserveSpace (ab 4.0) für diese Zwecke unwichtig
           // getStorageId (ab 4.0) für diese Zwecke unwichtig
-          mMaxFileSize = ( Long )m.invoke( storage, ( Class )null );
+          mMaxFileSize = ( Long )m.invoke( storage, null );
         }
       }
       if( mState == null ) mState = getState();
@@ -491,7 +492,6 @@ public class Environment4
     {
       if( mRemovable || mState == null )
       {
-        // TODO: das funktionert hier nicht...
         if( Build.VERSION.SDK_INT >= 19 ) // Android 4.4? Dann dort nachfragen
           mState = Environment.getStorageState( this );
         else if( canRead() && getTotalSpace() > 0 )
