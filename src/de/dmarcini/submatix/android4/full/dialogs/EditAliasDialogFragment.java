@@ -30,10 +30,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import de.dmarcini.submatix.android4.full.R;
-import de.dmarcini.submatix.android4.full.utils.NoticeDialogListener;
+import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
 
 /**
  * 
@@ -47,13 +48,14 @@ import de.dmarcini.submatix.android4.full.utils.NoticeDialogListener;
  */
 public class EditAliasDialogFragment extends DialogFragment
 {
-  private static final String  TAG        = EditAliasDialogFragment.class.getSimpleName();
-  private View                 rootView;
-  private String               deviceName = null;
-  private String               aliasName  = null;
-  private String               macAddr    = null;
+  private static final String   TAG        = EditAliasDialogFragment.class.getSimpleName();
+  private View                  rootView;
+  private String                deviceName = null;
+  private String                aliasName  = null;
+  private String                macAddr    = null;
+  private String                devicePin  = null;
   // Use this instance of the interface to deliver action events
-  private NoticeDialogListener mListener  = null;
+  private INoticeDialogListener mListener  = null;
 
   /**
    * 
@@ -81,8 +83,11 @@ public class EditAliasDialogFragment extends DialogFragment
    * Stand: 02.11.2012
    * 
    * @param device
+   *          Welches Gerät
    * @param alias
+   *          Welcher Gerätealias (alt)
    * @param mac
+   *          Welche Geräte-MAC
    */
   public EditAliasDialogFragment( String device, String alias, String mac )
   {
@@ -90,6 +95,33 @@ public class EditAliasDialogFragment extends DialogFragment
     this.aliasName = alias;
     this.deviceName = device;
     this.macAddr = mac;
+    this.devicePin = "0000";
+  }
+
+  /**
+   * 
+   * Konstruktor mit Überschrift und Parametern
+   *
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.dialogs
+   * 
+   * Stand: 19.11.2014
+   * 
+   * @param device
+   *          Welches Gerät
+   * @param alias
+   *          Welcher Gerätealias (alt)
+   * @param mac
+   *          Welche Geräte-MAC
+   * @param oldPin
+   *          Welche alte PIN war da?
+   */
+  public EditAliasDialogFragment( String device, String alias, String mac, String oldPin )
+  {
+    super();
+    this.aliasName = alias;
+    this.deviceName = device;
+    this.macAddr = mac;
+    this.devicePin = oldPin;
   }
 
   @Override
@@ -102,7 +134,7 @@ public class EditAliasDialogFragment extends DialogFragment
     LayoutInflater inflater = getActivity().getLayoutInflater();
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    rootView = inflater.inflate( R.layout.alias_edit_dialog_fragment, null );
+    rootView = inflater.inflate( R.layout.fragment_dialog_alias_edit, ( ViewGroup )null );
     //
     // die Texte einfügen, natürlich
     //
@@ -112,6 +144,15 @@ public class EditAliasDialogFragment extends DialogFragment
     EditText ed = ( EditText )rootView.findViewById( R.id.aliasEditDialogAliasEditTextView );
     ed.setText( aliasName, TextView.BufferType.EDITABLE );
     ed.selectAll();
+    //
+    // ud, wenn Android ab 4.4 läuft
+    //
+    if( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT )
+    {
+      EditText edPin = ( EditText )rootView.findViewById( R.id.aliasEditDialogPINEditTextView );
+      edPin.setVisibility( View.VISIBLE );
+      edPin.setText( this.devicePin );
+    }
     //
     // jetzt dem Builder das View übergeben
     //
@@ -125,6 +166,12 @@ public class EditAliasDialogFragment extends DialogFragment
         // Gib in der App bescheid, ich will es so!
         ed = ( EditText )rootView.findViewById( R.id.aliasEditDialogAliasEditTextView );
         aliasName = ed.getText().toString();
+        if( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT )
+        {
+          // bei Android ab 4.4
+          EditText edPin = ( EditText )rootView.findViewById( R.id.aliasEditDialogPINEditTextView );
+          devicePin = edPin.getText().toString();
+        }
         mListener.onDialogPositiveClick( EditAliasDialogFragment.this );
       }
     } );
@@ -149,12 +196,12 @@ public class EditAliasDialogFragment extends DialogFragment
     try
     {
       // Instanziere den Listener, wenn möglich, ansonsten wirft das eine exception
-      mListener = ( NoticeDialogListener )activity;
+      mListener = ( INoticeDialogListener )activity;
     }
     catch( ClassCastException ex )
     {
       // Die activity implementiert den Listener nicht, werfe eine Exception
-      throw new ClassCastException( activity.toString() + " must implement NoticeDialogListener" );
+      throw new ClassCastException( activity.toString() + " must implement INoticeDialogListener" );
     }
   }
 
@@ -180,6 +227,21 @@ public class EditAliasDialogFragment extends DialogFragment
   public String getDeviceName()
   {
     return( deviceName );
+  }
+
+  /**
+   * 
+   * Gib die (editierte) PIN zurück
+   *
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.dialogs
+   * 
+   * Stand: 19.11.2014
+   * 
+   * @return die editierte PIN
+   */
+  public String getPin()
+  {
+    return( devicePin );
   }
 
   /**

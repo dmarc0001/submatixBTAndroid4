@@ -1,4 +1,4 @@
-﻿//@formatter:off
+//@formatter:off
 /*
     programm: SubmatixBTLoggerAndroid
     purpose:  configuration and read logs from SUBMATIX SPX42 divecomputer via Bluethooth    
@@ -18,24 +18,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/
 */
 //@formatter:on
-/**
- * gemeinsamer Code der List- und der Detailactivity
- * 
- * FragmentCommonActivity.java de.dmarcini.submatix.android4.gui SubmatixBTLoggerAndroid_4
- * 
- */
 package de.dmarcini.submatix.android4.full.gui;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Vector;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.DialogFragment;
@@ -46,15 +43,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.MenuItem;
+import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.Toast;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
@@ -62,49 +62,34 @@ import de.dmarcini.submatix.android4.full.comm.BlueThoothComService;
 import de.dmarcini.submatix.android4.full.comm.BlueThoothComService.LocalBinder;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.content.ContentSwitcher;
+import de.dmarcini.submatix.android4.full.content.ContentSwitcher.ProgItem;
 import de.dmarcini.submatix.android4.full.dialogs.AreYouSureDialogFragment;
 import de.dmarcini.submatix.android4.full.dialogs.EditAliasDialogFragment;
 import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
 import de.dmarcini.submatix.android4.full.exceptions.FirmwareNotSupportetException;
+import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
+import de.dmarcini.submatix.android4.full.interfaces.INavigationDrawerCallbacks;
+import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
 import de.dmarcini.submatix.android4.full.utils.GasUpdateEntity;
-import de.dmarcini.submatix.android4.full.utils.NoticeDialogListener;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 import de.dmarcini.submatix.android4.full.utils.SPX42AliasManager;
 import de.dmarcini.submatix.android4.full.utils.SPX42Config;
+import de.jockels.tools.Environment4;
 
 /**
- * 
- * Der gemeinsame Code der List- und Detailactivity
- * 
- * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+ * Die Aktivität der Application
+ *
+ * Project: NaviTest Package: com.example.navitest
  * 
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- * 
- *         Stand: 10.11.2013
+ *
+ *         Stand: 06.11.2014
  */
-public class FragmentCommonActivity extends Activity implements NoticeDialogListener, IBtServiceListener
+public class MainActivity extends Activity implements INavigationDrawerCallbacks, INoticeDialogListener, IBtServiceListener
 {
-  private static final String                 TAG                = FragmentCommonActivity.class.getSimpleName();
-  private static final String                 SERVICENAME        = BlueThoothComService.class.getCanonicalName();
-  private static final String                 PACKAGENAME        = BlueThoothComService.class.getPackage().getName();
-  // private static final String PACKAGENAME = "de.dmarcini.submatix.android4";
-  @SuppressWarnings( "javadoc" )
-  public static DateTimeFormatter             localTimeFormatter = DateTimeFormat.forPattern( "yyyy-MM-dd - HH:mm:ss" );
-  protected static File                       databaseDir        = null;
-  protected static boolean                    mTwoPane           = false;
-  protected static SPX42Config                spxConfig          = new SPX42Config();                                   // Da werden SPX-Spezifische Sachen gespeichert
-  protected static BluetoothAdapter           mBtAdapter         = null;
-  protected static SPX42AliasManager          aliasManager       = null;
-  protected static float                      ackuValue          = 0.0F;
-  private static Vector<String[]>             dirEntryCache      = new Vector<String[]>();
-  private static boolean                      dirCacheIsFilling  = true;
-  private static String[]                     deviceUnis         = null;
-  private BlueThoothComService                mService           = null;
-  private LocalBinder                         binder             = null;
-  private final ArrayList<IBtServiceListener> serviceListener    = new ArrayList<IBtServiceListener>();
-  private volatile boolean                    mIsBound           = false;
-  private static int                          currentStyleId     = R.style.AppDarkTheme;
-
+  //
+  // @formatter:on
+  //
   /**
    * 
    * Gib den Style der App zurück
@@ -120,6 +105,32 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     return( currentStyleId );
   }
 
+  private static String                       TAG                   = MainActivity.class.getSimpleName();
+  private static final String                 SERVICENAME           = BlueThoothComService.class.getCanonicalName();
+  private static final String                 PACKAGENAME           = BlueThoothComService.class.getPackage().getName();
+  private static final String                 FIRSTTIME             = "keyFirstTimeInitiated";
+  private static final String                 PREFVERSION           = "keyPreferencesVersion";
+  private static Vector<String[]>             dirEntryCache         = new Vector<String[]>();
+  private static boolean                      dirCacheIsFilling     = true;
+  private static String[]                     deviceUnis            = null;
+  private BlueThoothComService                mService              = null;
+  private LocalBinder                         binder                = null;
+  private final ArrayList<IBtServiceListener> serviceListener       = new ArrayList<IBtServiceListener>();
+  private volatile boolean                    mIsBound              = false;
+  private static int                          currentStyleId        = R.style.AppDarkTheme;
+  private NavigatorFragment                   appNavigatorFragment;
+  private CharSequence                        mTitle;                                                                      // die Titelzeile
+  protected static File                       databaseDir           = null;
+  protected static SPX42Config                spxConfig             = new SPX42Config();                                   // Da werden SPX-Spezifische Sachen gespeichert
+  protected static BluetoothAdapter           mBtAdapter            = null;
+  protected static float                      ackuValue             = 0.0F;
+  protected static boolean                    wasRestartForNewTheme = false;                                               // War es ein restsart mit neuem Thema?
+  @SuppressWarnings( "javadoc" )
+  public static DateTimeFormatter             localTimeFormatter    = DateTimeFormat.forPattern( "yyyy-MM-dd - HH:mm:ss" );
+  /**
+   * Global verfügbarer Alias Manager, Zuordnung Gerät <-> Alias
+   */
+  public static SPX42AliasManager             aliasManager          = null;
   //
   //@formatter:off
   //
@@ -149,9 +160,11 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       binder = null;
     }
   };
+  
   //
   // Ein Messagehandler, der vom Service kommende Messages bearbeitet
   //
+  @SuppressLint( "HandlerLeak" )
   private final Handler mHandler = new Handler() 
   {
     @Override
@@ -172,7 +185,9 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       }
     }
   };
-
+  //
+  // @formatter:on
+  //
   /**
    * 
    * Wenn ein Fragment die Nachrichten erhalten soll, muß es den listener übergben...
@@ -180,7 +195,8 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
    * 
-   *         Stand: 24.02.2013
+   * Stand: 24.02.2013
+   * 
    * @param listener
    */
   public void addServiceListener( IBtServiceListener listener )
@@ -191,36 +207,44 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       serviceListener.add( listener );
     }
     //
-    // wenn ich im "Tablettmodus" bin, wird natürlich keine
+    // Es wird natürlich keine
     // neue Activity gestartet, d.h. es wird dann auch kein onConnect erzeugt.
     // Somit muss ich da etwas nachhelfen.
     //
-    if( mTwoPane )
+    if( mService != null )
     {
-      if( mService != null )
+      BtServiceMessage msg;
+      Iterator<IBtServiceListener> it = serviceListener.iterator();
+      //
+      int state = mService.getConnectionState();
+      // welche Message muss ich machen?
+      switch ( state )
       {
-        BtServiceMessage msg;
-        int state = mService.getConnectionState();
-        // welche Message muss ich machen?
-        switch ( state )
-        {
-          default:
-          case ProjectConst.CONN_STATE_NONE:
-            msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
-            break;
-          case ProjectConst.CONN_STATE_CONNECTING:
-            msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECTING );
-            break;
-          case ProjectConst.CONN_STATE_CONNECTED:
-            msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECTED );
-            break;
-        }
-        // an alle Listener versenden!
-        Iterator<IBtServiceListener> it = serviceListener.iterator();
-        while( it.hasNext() )
-        {
-          it.next().msgConnected( msg );
-        }
+        default:
+        case ProjectConst.CONN_STATE_NONE:
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
+          // an alle Listener versenden!
+          while( it.hasNext() )
+          {
+            it.next().msgDisconnected( msg );
+          }
+          break;
+        case ProjectConst.CONN_STATE_CONNECTING:
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECTING );
+          // an alle Listener versenden!
+          while( it.hasNext() )
+          {
+            it.next().msgConnecting( msg );
+          }
+          break;
+        case ProjectConst.CONN_STATE_CONNECTED:
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECTED );
+          // an alle Listener versenden!
+          while( it.hasNext() )
+          {
+            it.next().msgConnected( msg );
+          }
+          break;
       }
     }
   }
@@ -232,7 +256,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
    * 
-   *         Stand: 15.08.2013
+   * Stand: 15.08.2013
    */
   public void aksForUnitsFromSPX42()
   {
@@ -251,9 +275,6 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     }
   }
 
-  //
-  //@formatter:on
-  //
   /**
    * Frage, ob BR erlaubt werden sollte Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
@@ -281,28 +302,6 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     {
       mService.askForConfigFromSPX42();
     }
-  }
-
-  /**
-   * 
-   * erfrage die MAC des verbundenen Gerätes
-   * 
-   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
-   * 
-   * Stand: 01.12.2013
-   * 
-   * @return MAC oder "0"
-   */
-  public String getConnectedMac()
-  {
-    if( mService != null )
-    {
-      if( mService.getConnectedDevice() != null )
-      {
-        return( mService.getConnectedDevice() );
-      }
-    }
-    return( "0" );
   }
 
   /**
@@ -502,10 +501,8 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     //
     for( int i = 0; i < services.size(); i++ )
     {
-      // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Service Nr." + i + ":" + services.get( i ).service + "<" + services.get( i ).service.getPackageName() + ">" );
       if( ( services.get( i ).service.getPackageName() ).matches( PACKAGENAME ) )
       {
-        // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Service class name <" + services.get( i ).service.getClassName() + ">" );
         if( SERVICENAME.equals( services.get( i ).service.getClassName() ) )
         {
           if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Service is running, need not start..." );
@@ -583,11 +580,13 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
    * 
    * Stand: 23.02.2013
    */
-  private void doUnbindService()
+  private void doUnbindService( boolean isNowStopping )
   {
     if( mIsBound )
     {
-      // If we have received the service, and hence registered with it, then now is the time to unregister.
+      //
+      // wenn der Service gebunen ist, muss er wieder "entbunden" werden
+      //
       if( mService != null )
       {
         Log.v( TAG, "doUnbindService..." );
@@ -596,7 +595,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
           if( mService != null && binder != null )
           {
             if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "doUnbindService...unregister Handler..." );
-            binder.unregisterServiceHandler( mHandler );
+            binder.unregisterServiceHandler( mHandler, isNowStopping );
           }
           unbindService( mConnection );
           mService = null;
@@ -611,11 +610,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   @Override
   public void finishFromChild( Activity child )
   {
-    Log.i( TAG, "child process called finish()..." );
-    //
-    // wenn eine Clientactivity mit finish() beendet
-    // wurde, ist hier auch schluss
-    //
+    // wenn eine child-App beendet hat
     finish();
   }
 
@@ -641,6 +636,28 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
 
   /**
    * 
+   * erfrage die MAC des verbundenen Gerätes
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 01.12.2013
+   * 
+   * @return MAC oder "0"
+   */
+  public String getConnectedMac()
+  {
+    if( mService != null )
+    {
+      if( mService.getConnectedDevice() != null )
+      {
+        return( mService.getConnectedDevice() );
+      }
+    }
+    return( "0" );
+  }
+
+  /**
+   * 
    * Verbindungsstatus erfragen
    * 
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
@@ -659,18 +676,45 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     return( ProjectConst.CONN_STATE_NONE );
   }
 
+  /**
+   * 
+   * das Database Directory finden
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 09.11.2014
+   * 
+   * @return Das Datenbankverzeichnis
+   */
+  private File getDatabaseDir()
+  {
+    File extSdCard;
+    File dataBaseRoot;
+    Environment4.Device devs[] = Environment4.getExternalStorage( this );
+    Environment4.setUseReceiver( this, false );
+    if( ( devs != null ) && ( devs.length >= 2 ) )
+    {
+      extSdCard = devs[1].getAbsoluteFile();
+      Log.i( TAG, String.format( "extern SDCARD =  %s", extSdCard.getAbsolutePath() ) );
+    }
+    else
+    {
+      extSdCard = Environment.getExternalStorageDirectory();
+      Log.w( TAG, String.format( "extern SDCARD (fallback) =  %s", extSdCard.getAbsolutePath() ) );
+      // extSdCard = Environment2.getCardDirectory();
+    }
+    if( extSdCard.exists() && extSdCard.isDirectory() && extSdCard.canWrite() )
+    {
+      Log.i( TAG, "datastore Directory is: <" + extSdCard + ">" );
+      dataBaseRoot = new File( extSdCard + File.separator + ProjectConst.APPROOTDIR );
+      return( dataBaseRoot );
+    }
+    return( null );
+  }
+
   @Override
   public void handleMessages( int what, BtServiceMessage smsg )
   {
-    AreaListFragment frag;
-    //
-    // versuche mal das Fragment mit der Liste zu finden
-    //
-    frag = ( AreaListFragment )getFragmentManager().findFragmentById( R.id.area_list );
-    if( frag == null )
-    {
-      frag = ( AreaListFragment )getFragmentManager().findFragmentById( R.id.item_list );
-    }
     // was war denn los? Welche Nachricht kam rein?
     switch ( what )
     {
@@ -692,10 +736,10 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       // ################################################################
       case ProjectConst.MESSAGE_CONNECTED:
         // die Menüs anpassen
-        if( frag != null )
+        if( appNavigatorFragment != null )
         {
           Log.v( TAG, "ICONS auf CONNECTED stellen..." );
-          frag.setListAdapterForOnlinestatus( true );
+          appNavigatorFragment.setListAdapterForOnlinestatus( true );
         }
         else
         {
@@ -708,10 +752,10 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       // ################################################################
       case ProjectConst.MESSAGE_DISCONNECTED:
         // die Menüs anpassen
-        if( frag != null )
+        if( appNavigatorFragment != null )
         {
           Log.v( TAG, "ICONS auf DISCONNECTED stellen" );
-          frag.setListAdapterForOnlinestatus( false );
+          appNavigatorFragment.setListAdapterForOnlinestatus( false );
         }
         else
         {
@@ -724,10 +768,10 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       // ################################################################
       case ProjectConst.MESSAGE_CONNECTERROR:
         // die Menüs anpassen
-        if( frag != null )
+        if( appNavigatorFragment != null )
         {
           Log.v( TAG, "ICONS auf DISCONNECTED stellen" );
-          frag.setListAdapterForOnlinestatus( false );
+          appNavigatorFragment.setListAdapterForOnlinestatus( false );
         }
         else
         {
@@ -798,8 +842,35 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       // Sonst....
       // ################################################################
       default:
-        if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "unknown message with id <" + smsg.getId() + "> recived!" );
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "unknown message with id <" + smsg.getId() + "> recived!" );
     }
+  }
+
+  /**
+   * Erzeuge die Menüeinträge Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   */
+  private void initStaticContenSwitcher()
+  {
+    Log.v( TAG, "initStaticContent..." );
+    // zuerst aufräumen
+    ContentSwitcher.clearItems();
+    //
+    // irgendeine Kennung muss der String bekommen, also gibts halt die String-ID
+    //
+    ContentSwitcher
+            .addItem( new ProgItem( R.string.progitem_connect, R.drawable.bluetooth_icon_bw, R.drawable.bluetooth_icon_color, getString( R.string.progitem_connect ), true ) );
+    ContentSwitcher
+            .addItem( new ProgItem( R.string.progitem_spx_status, R.drawable.spx_health_icon, R.drawable.spx_health_icon, getString( R.string.progitem_spx_status ), false ) );
+    ContentSwitcher.addItem( new ProgItem( R.string.progitem_config, R.drawable.spx_toolbox_offline, R.drawable.spx_toolbox_online, getString( R.string.progitem_config ), false ) );
+    ContentSwitcher.addItem( new ProgItem( R.string.progitem_gaslist, R.drawable.gasedit_offline, R.drawable.gasedit_online, getString( R.string.progitem_gaslist ), false ) );
+    ContentSwitcher.addItem( new ProgItem( R.string.progitem_logging, R.drawable.logging_offline, R.drawable.logging_online, getString( R.string.progitem_logging ), false ) );
+    ContentSwitcher.addItem( new ProgItem( R.string.progitem_loggraph, R.drawable.graphsbar_online, R.drawable.graphsbar_online, getString( R.string.progitem_loggraph ), true ) );
+    ContentSwitcher.addItem( new ProgItem( R.string.progitem_export, R.drawable.export_offline, R.drawable.export_online, getString( R.string.progitem_export ), true ) );
+    ContentSwitcher
+            .addItem( new ProgItem( R.string.progitem_progpref, R.drawable.app_toolbox_offline, R.drawable.app_toolbox_online, getString( R.string.progitem_progpref ), true ) );
+    ContentSwitcher.addItem( new ProgItem( R.string.progitem_about, R.drawable.yin_yang, R.drawable.yin_yang, getString( R.string.progitem_about ), true ) );
+    ContentSwitcher.addItem( new ProgItem( R.string.progitem_exit, R.drawable.shutoff, R.drawable.shutoff, getString( R.string.progitem_exit ), true ) );
   }
 
   /**
@@ -825,22 +896,6 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     // Ein Stringarray kommt in den DIR-Cache
     //
     dirEntryCache.add( ( String[] )smsg.getContainer() );
-  }
-
-  /**
-   * 
-   * Ist die Activity mit zwei Anzeigeflächen? (Tablett)
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * 
-   * Stand: 07.01.2013
-   * 
-   * @return ist zweigeteilt oder nicht
-   */
-  public boolean istActivityTwoPane()
-  {
-    return( mTwoPane );
   }
 
   /**
@@ -1099,26 +1154,11 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
         }
         else
         {
-          // User did not enable Bluetooth or an error occured
+          // Der User hats verboten oder ein Fehler trat auf
           Log.v( TAG, "REQUEST_ENABLE_BT => BT Device NOT ENABLED" );
-          if( !ApplicationDEBUG.DEBUG )
-          {
-            Toast.makeText( this, R.string.toast_exit_nobt, Toast.LENGTH_LONG ).show();
-            finish();
-          }
-          else
-          {
-            Toast.makeText( this, R.string.toast_nobt_adapter, Toast.LENGTH_LONG ).show();
-          }
+          Toast.makeText( this, R.string.toast_exit_nobt, Toast.LENGTH_LONG ).show();
+          finish();
         }
-        break;
-      case ProjectConst.REQUEST_SPX_PREFS:
-        //
-        // wenn die Activity der SPX-Einstellungen zurückkehrt...
-        //
-        Log.v( TAG, "spx42 preferences activity returns..." );
-        // finishActivity( ProjectConst.REQUEST_SPX_PREFS_F );
-        setContentView( R.layout.activity_area_list );
         break;
       default:
         Log.w( TAG, "unknown Request code for activity result" );
@@ -1126,7 +1166,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   }
 
   /**
-   * Wenn die Activity erzeugt wird, u.A. herausfinden ob ein- oder zwei-Flächen Mode
+   * Die Activity startet
    * 
    * @see android.app.Activity#onCreate(android.os.Bundle)
    * @param savedInstanceState
@@ -1140,6 +1180,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     {
       finish();
     }
+    initStaticContenSwitcher();
     serviceListener.clear();
     serviceListener.add( this );
     // den defaultadapter lesen
@@ -1149,6 +1190,7 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     // Das gewünschte Thema setzen
     //
     SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( this );
+    setAppPreferences( sPref );
     if( sPref.contains( "keyProgOthersThemeIsDark" ) )
     {
       boolean whishedTheme = sPref.getBoolean( "keyProgOthersThemeIsDark", false );
@@ -1166,41 +1208,93 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       }
     }
     //
-    setContentView( R.layout.activity_area_list );
+    // den Inhalsbehälter setzten
+    //
+    setContentView( R.layout.activity_main );
     //
     // finde raus, ob es ein Restart für ein neues Theme war
     //
-    if( getIntent().getExtras() != null && getIntent().getExtras().containsKey( ProjectConst.ARG_ITEM_ID ) )
+    if( wasRestartForNewTheme )
     {
-      Log.v( TAG, "onCreate: it was an bundle there..." );
-      if( getIntent().getExtras().getInt( ProjectConst.ARG_ITEM_ID, 0 ) == R.string.progitem_progpref )
-      {
-        // ja, jetzt muss ich auch drauf reagieren und die Preferenzen aufbauen
-        Log.i( TAG, "onCreate: set program preferences after switch theme..." );
-        Bundle arg = new Bundle();
-        arg.putString( ProjectConst.ARG_ITEM_ID, getResources().getString( R.string.progitem_progpref ) );
-        ProgramPreferencesFragment ppFragment = new ProgramPreferencesFragment();
-        ppFragment.setArguments( arg );
-        getActionBar().setTitle( R.string.conf_prog_headline );
-        getActionBar().setLogo( R.drawable.properties );
-        getFragmentManager().beginTransaction().replace( R.id.area_detail_container, ppFragment ).commit();
-      }
+      Log.v( TAG, "onCreate: it was an restart for new Theme.." );
+      //
+      // ja, jetzt muss ich auch drauf reagieren und das Preferenz-Fragment neu aufbauen
+      //
+      wasRestartForNewTheme = false;
+      appNavigatorFragment = ( NavigatorFragment )getFragmentManager().findFragmentById( R.id.navi_drawer );
+      mTitle = getTitle();
+      Log.v( TAG, "onCreate: restart for new Theme: set navigation drawer..." );
+      // Initialisiere den Navigator
+      appNavigatorFragment.setUp( R.id.navi_drawer, ( DrawerLayout )findViewById( R.id.drawer_layout ), R.string.progitem_progpref );
+      Log.i( TAG, "onCreate: set program preferences after switch theme..." );
+      //
+      // das Programmeinstellungsfragment
+      //
+      Bundle arguments = new Bundle();
+      ProgItem pItem = ContentSwitcher.getProgItemForId( R.string.progitem_about );
+      arguments.putString( ProjectConst.ARG_ITEM_CONTENT, pItem.content );
+      arguments.putInt( ProjectConst.ARG_ITEM_ID, pItem.nId );
+      arguments.putBoolean( ProjectConst.ARG_ITEM_GRAPHEXTRA, false );
+      ProgramPreferencesFragment ppFragment = new ProgramPreferencesFragment();
+      ppFragment.setArguments( arguments );
+      getActionBar().setTitle( R.string.conf_prog_headline );
+      getActionBar().setLogo( R.drawable.properties );
+      getFragmentManager().beginTransaction().replace( R.id.main_container, ppFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
     }
+    else
+    {
+      //
+      // Kein Neustart mit neuem Thema
+      //
+      appNavigatorFragment = ( NavigatorFragment )getFragmentManager().findFragmentById( R.id.navi_drawer );
+      mTitle = getTitle();
+      Log.v( TAG, "onCreate: set navigation drawer..." );
+      // Initialisiere den Navigator
+      appNavigatorFragment.setUp( R.id.navi_drawer, ( DrawerLayout )findViewById( R.id.drawer_layout ), R.string.progitem_about );
+      //
+      // Als erstes das Connect-Fragment...
+      //
+      Log.i( TAG, "onCreate: default Fragnment initialising..." );
+      Bundle arguments = new Bundle();
+      ProgItem pItem = ContentSwitcher.getProgItemForId( R.string.progitem_about );
+      arguments.putString( ProjectConst.ARG_ITEM_CONTENT, pItem.content );
+      arguments.putInt( ProjectConst.ARG_ITEM_ID, pItem.nId );
+      arguments.putBoolean( ProjectConst.ARG_ITEM_GRAPHEXTRA, false );
+      Log.i( TAG, "onCreate: create ProgramAbountFragment" );
+      ProgramAboutFragment defaultFragment = new ProgramAboutFragment();
+      mTitle = getString( R.string.about_headline );
+      defaultFragment.setArguments( arguments );
+      getFragmentManager().beginTransaction().replace( R.id.main_container, defaultFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+    }
+  }
+
+  @Override
+  public boolean onCreateOptionsMenu( Menu menu )
+  {
+    if( !appNavigatorFragment.isDrawerOpen() )
+    {
+      // Only show items in the action bar relevant to this screen
+      // if the drawer is not showing. Otherwise, let the drawer
+      // decide what to show in the action bar.
+      // getMenuInflater().inflate( R.menu.main, menu );
+      restoreActionBar();
+      return true;
+    }
+    return super.onCreateOptionsMenu( menu );
   }
 
   @Override
   public void onDestroy()
   {
     super.onDestroy();
+    // Log.v( TAG, "onDestroy:..." );
   }
 
   /**
    * Wird ein Dialog negativ beendet (nein oder Abbruch)
    * 
-   * @see de.dmarcini.submatix.android4.full.dialogs.AreYouSureDialogFragment.NoticeDialogListener#onDialogNegative(android.app.DialogFragment)
    * @param dialog
    */
-  @SuppressWarnings( "javadoc" )
   @Override
   public void onDialogNegativeClick( DialogFragment dialog )
   {
@@ -1211,10 +1305,19 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   /**
    * Wird ein dialog Positiv beendet (ja oder Ok...)
    * 
-   * @see de.dmarcini.submatix.android4.full.dialogs.AreYouSureDialogFragment.NoticeDialogListener#onDialogPositive(android.app.DialogFragment)
+   * @see de.dmarcini.submatix.android4.full.dialogs.AreYouSureDialogFragment.INoticeDialogListener#onDialogPositive(android.app.DialogFragment)
    * @param dialog
    */
-  @SuppressWarnings( "javadoc" )
+  /**
+   * 
+   * Eine positive Erwiderung auf ein Formular
+   *
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 09.11.2014
+   * 
+   * @param dialog
+   */
   @Override
   public void onDialogPositiveClick( DialogFragment dialog )
   {
@@ -1238,9 +1341,21 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
         }
         if( BluetoothAdapter.getDefaultAdapter() != null )
         {
-          // TODO: Preferences -> Programmeinstellungen soll das automatisch passieren?
-          BluetoothAdapter.getDefaultAdapter().disable();
+          // Preferences -> Programmeinstellungen soll das automatisch passieren?
+          SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( this );
+          if( sPref.getBoolean( "keyProgOthersDisableBTOnExit", true ) )
+          {
+            if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "disable BT Adapter on exit!" );
+            BluetoothAdapter.getDefaultAdapter().disable();
+          }
         }
+        // Code nach stackoverflow
+        // TODO: online geht das nicht....
+        Intent intent = new Intent( Intent.ACTION_MAIN );
+        intent.addCategory( Intent.CATEGORY_HOME );
+        intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
+        intent.putExtra( "EXIT", true );
+        startActivity( intent );
         if( aliasManager != null )
         {
           aliasManager.close();
@@ -1257,10 +1372,10 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
       Log.i( TAG, "User will edit alias..." );
       EditAliasDialogFragment editDialog = ( EditAliasDialogFragment )dialog;
       mHandler.obtainMessage( ProjectConst.MESSAGE_DEVALIAS_SET, new BtServiceMessage( ProjectConst.MESSAGE_DEVALIAS_SET, new String[]
-      { editDialog.getDeviceName(), editDialog.getAliasName(), editDialog.getMac() } ) ).sendToTarget();
+      { editDialog.getDeviceName(), editDialog.getAliasName(), editDialog.getMac(), editDialog.getPin() } ) ).sendToTarget();
     }
     //
-    // Sollte die AP geschlossen werden?
+    // Sollte die APP geschlossen werden?
     //
     else if( dialog instanceof UserAlertDialogFragment )
     {
@@ -1275,8 +1390,13 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
         Toast.makeText( this, R.string.toast_exit, Toast.LENGTH_SHORT ).show();
         if( BluetoothAdapter.getDefaultAdapter() != null )
         {
-          // TODO: Preferences -> Programmeinstellungen soll das automatisch passieren?
-          BluetoothAdapter.getDefaultAdapter().disable();
+          // Preferences -> Programmeinstellungen soll das automatisch passieren?
+          SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( this );
+          if( sPref.getBoolean( "keyProgOthersDisableBTOnExit", true ) )
+          {
+            if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "disable BT Adapter on exit!" );
+            BluetoothAdapter.getDefaultAdapter().disable();
+          }
         }
         // nach stackoverflow
         Intent intent = new Intent( Intent.ACTION_MAIN );
@@ -1297,43 +1417,65 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
   }
 
   /**
-   * Wird ein Eintrag der Auswahlliste angeklickt Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * @param listView
-   * @param view
-   * @param position
-   * @param id
+   * Reagiere auf die BACK-Taste, entweder Navigator öffnen opder Programm beenden
    */
-  public void onListItemClick( ListView listView, View view, int position, long id )
+  @Override
+  public boolean onKeyDown( int keyCode, KeyEvent event )
   {
-    ContentSwitcher.ProgItem mItem = null;
+    DrawerLayout dLayout;
+    //
+    if( ( keyCode == KeyEvent.KEYCODE_BACK ) )
+    {
+      Log.v( TAG, "onKeyDown: BACK pressed!" );
+      dLayout = ( DrawerLayout )findViewById( R.id.drawer_layout );
+      if( dLayout != null )
+      {
+        View containerView = findViewById( R.id.navi_drawer );
+        if( dLayout.isDrawerOpen( containerView ) )
+        {
+          // Was mach ich, wenn das schon offen ist?
+          Log.v( TAG, "onKeyDown:BACK pressed => navigator is open, ask user for exit." );
+          AreYouSureDialogFragment sureDial = new AreYouSureDialogFragment( getString( R.string.dialog_sure_exit ) );
+          sureDial.show( getFragmentManager().beginTransaction(), "programexit" );
+        }
+        else
+        {
+          Log.v( TAG, "onKeyDown:BACK pressed => open navigator" );
+          dLayout.openDrawer( containerView );
+        }
+      }
+      return false;
+    }
+    return false;
+  }
+
+  /**
+   * Callback vom Navigator welcher Eintrag ausgewählt wurde
+   * 
+   * @param pItem
+   *          Der Programmeintrag Eintrages (hier gleichzeitig mit Resourcen-Id für den String)
+   */
+  @Override
+  public void onNavigationDrawerItemSelected( ContentSwitcher.ProgItem pItem )
+  {
     Bundle arguments = new Bundle();
     boolean isOnline = false;
     //
+    Log.v( TAG, String.format( "onNavigationDrawerItemSelected: id: <%d>, content: <%s>...", pItem.nId, pItem.content ) );
     //
-    // zunächst will ich mal wissen, was das werden soll!
+    // Argumente für die Fragmente füllen
     //
-    Log.v( TAG, "onListItemClick()..." );
-    Log.v( TAG, "onListItemClick: ID was: <" + position + ">" );
-    mItem = ( ContentSwitcher.ProgItem )listView.getItemAtPosition( position );
-    if( mItem == null )
-    {
-      Log.e( TAG, "onListItemClick: program menu item was NOT explored!" );
-      return;
-    }
-    arguments.putString( ProjectConst.ARG_ITEM_CONTENT, mItem.content );
-    arguments.putInt( ProjectConst.ARG_ITEM_ID, mItem.nId );
+    arguments.putString( ProjectConst.ARG_ITEM_CONTENT, pItem.content );
+    arguments.putInt( ProjectConst.ARG_ITEM_ID, pItem.nId );
     arguments.putBoolean( ProjectConst.ARG_ITEM_GRAPHEXTRA, false );
-    Log.v( TAG, "onListItemClick: item content was: " + mItem.content );
-    Log.v( TAG, "onListItemClick: item id was: " + mItem.nId );
     //
     // wenn EXIT angeordnet wurde
     //
-    switch ( mItem.nId )
+    switch ( pItem.nId )
     {
       case R.string.progitem_exit:
         // ENDE
-        Log.v( TAG, "onListItemClick: make dialog for USER..." );
+        Log.v( TAG, "onNavigationDrawerItemSelected: make dialog for USER..." );
         AreYouSureDialogFragment sureDial = new AreYouSureDialogFragment( getString( R.string.dialog_sure_exit ) );
         sureDial.show( getFragmentManager().beginTransaction(), "programexit" );
         return;
@@ -1345,178 +1487,133 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     {
       isOnline = true;
     }
-    // ////////////////////////////////////////////////////////////////////////
-    // jetzt noch zwischen Tablett mit Schirmsplitt und Smartphone unterscheiden
-    // ////////////////////////////////////////////////////////////////////////
-    if( mTwoPane )
+    //
+    // das richti8ge Icon setzen
+    //
+    if( isOnline )
     {
-      if( isOnline )
-      {
-        getActionBar().setLogo( mItem.resIdOnline );
-      }
-      else
-      {
-        // wenn der SPX OFFLINE ist, nur OFFLINE Funktionen freigeben
-        getActionBar().setLogo( mItem.resIdOffline );
-      }
-      //
-      // zweischirmbetrieb, die Activity bleibt die AreaListActivity
-      //
-      Log.i( TAG, "onListItemClick: towPane mode!" );
-      //
-      // Abhängig vom Onlinestatus
-      //
-      switch ( mItem.nId )
-      {
-        case R.string.progitem_config:
-          if( isOnline )
-          {
-            //
-            // Der Benutzer wählt den Konfigurationseintrag für den SPX
-            //
-            Log.i( TAG, "onListItemClick: create SPX42PreferencesFragment..." );
-            SPX42PreferencesFragment cFragment = new SPX42PreferencesFragment();
-            cFragment.setArguments( arguments );
-            getActionBar().setTitle( R.string.conf_headline );
-            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, cFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
-          }
-          break;
-        //
-        case R.string.progitem_progpref:
-          //
-          // der Benutzer will Programmeinstellungen setzen
-          //
-          Log.i( TAG, "onListItemClick: create ProgramPreferencesFragment..." );
-          ProgramPreferencesFragment ppFragment = new ProgramPreferencesFragment();
-          ppFragment.setArguments( arguments );
-          getActionBar().setTitle( R.string.conf_prog_headline );
-          getFragmentManager().beginTransaction().replace( R.id.area_detail_container, ppFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
-          break;
-        case R.string.progitem_gaslist:
-          if( isOnline )
-          {
-            //
-            // der Benutzer wählt den Gaslisten Editmode
-            //
-            Log.i( TAG, "onListItemClick: create SPX42GaslistPreferencesFragment..." );
-            SPX42GaslistPreferencesFragment glFragment = new SPX42GaslistPreferencesFragment();
-            glFragment.setArguments( arguments );
-            getActionBar().setTitle( R.string.gaslist_headline );
-            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, glFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
-          }
-          break;
-        //
-        case R.string.progitem_about:
-          //
-          // Das ÜBER das Programm-Ding
-          //
-          Log.i( TAG, "onListItemClick: create ProgramAboutFragment..." );
-          ProgramAboutFragment aboutFragment = new ProgramAboutFragment();
-          getActionBar().setTitle( R.string.about_headline );
-          aboutFragment.setArguments( arguments );
-          getFragmentManager().beginTransaction().replace( R.id.area_detail_container, aboutFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
-          break;
-        case R.string.progitem_logging:
-          //
-          // Log vom SPX-lesen
-          //
-          if( isOnline )
-          {
-            Log.i( TAG, "onListItemClick: create SPX42ReadLogFragment..." );
-            SPX42ReadLogFragment readLogFragment = ( new SPX42ReadLogFragment() );
-            getActionBar().setTitle( R.string.logread_headline );
-            readLogFragment.setArguments( arguments );
-            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, readLogFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
-          }
-          break;
-        case R.string.progitem_loggraph:
-          //
-          // Logs grafisch darstellen
-          //
-          Log.i( TAG, "onListItemClick: create SPX42LogGraphSelectFragment..." );
-          SPX42LogGraphSelectFragment lgf = new SPX42LogGraphSelectFragment();
-          lgf.setArguments( arguments );
-          getActionBar().setTitle( R.string.graphlog_header );
-          getFragmentManager().beginTransaction().replace( R.id.area_detail_container, lgf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
-          break;
-        case R.string.progitem_export:
-          //
-          // Logs exportieren
-          //
-          Log.i( TAG, "onListItemClick: startSPXExportLogFragment..." );
-          SPX42ExportLogFragment elf = new SPX42ExportLogFragment();
-          elf.setArguments( arguments );
-          getActionBar().setTitle( R.string.export_header );
-          getFragmentManager().beginTransaction().replace( R.id.area_detail_container, elf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
-          break;
-        case R.string.progitem_spx_status:
-          if( isOnline )
-          {
-            //
-            // Eine Statussetie des SPX anzeigen
-            //
-            Log.i( TAG, "onListItemClick: create SPX42HealthFragment..." );
-            SPX42HealthFragment hef = new SPX42HealthFragment();
-            hef.setArguments( arguments );
-            getActionBar().setTitle( R.string.health_header );
-            getFragmentManager().beginTransaction().replace( R.id.area_detail_container, hef ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
-          }
-          break;
-        default:
-          Log.w( TAG, "Not programitem found for <" + mItem.nId + ">" );
-        case R.string.progitem_connect:
-          //
-          // keine passende ID gefunden oder
-          // der Benutzer wählt den Verbindungseintrag
-          //
-          SPX42ConnectFragment connFragment = ( SPX42ConnectFragment )getFragmentManager().findFragmentById( R.id.connectLinearLayout );
-          if( connFragment == null )
-          {
-            connFragment = new SPX42ConnectFragment();
-          }
-          getActionBar().setTitle( R.string.connect_headline );
-          connFragment.setArguments( arguments );
-          getFragmentManager().beginTransaction().replace( R.id.area_detail_container, connFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
-          //
-      }
+      getActionBar().setLogo( pItem.resIdOnline );
     }
     else
     {
-      //
-      // kleiner Schirm
-      // da wird jeder Eintrag als einzelne activity ausgeführt
-      //
-      Log.i( TAG, "onListItemClick: onePane modus! Call intent DetailActivity fur itenid<" + mItem.nId + ">" );
-      Intent detailIntent = new Intent( this, AreaDetailActivity.class );
-      detailIntent.putExtras( arguments );
-      // die neue Activity starten
-      startActivity( detailIntent );
+      // wenn der SPX OFFLINE ist, nur OFFLINE Funktionen freigeben
+      getActionBar().setLogo( pItem.resIdOffline );
     }
-  }
-
-  @Override
-  public boolean onOptionsItemSelected( MenuItem item )
-  {
-    switch ( item.getItemId() )
+    //
+    // jetzt das richtige Fragment auswählen und aktivieren
+    //
+    switch ( pItem.nId )
     {
-      case android.R.id.home:
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onOptionsItemSelected: navigate UP!" );
-        // This is called when the Home (Up) button is pressed
-        // in the Action Bar.
-        Intent parentActivityIntent = new Intent( this, AreaListActivity.class );
-        parentActivityIntent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
-        startActivity( parentActivityIntent );
-        finish();
-        return true;
+      case R.string.progitem_config:
+        if( isOnline )
+        {
+          //
+          // Der Benutzer wählt den Konfigurationseintrag für den SPX
+          //
+          Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42PreferencesFragment..." );
+          SPX42PreferencesFragment cFragment = new SPX42PreferencesFragment();
+          cFragment.setArguments( arguments );
+          mTitle = getString( R.string.conf_headline );
+          getFragmentManager().beginTransaction().replace( R.id.main_container, cFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+        }
+        break;
+      //
+      case R.string.progitem_progpref:
+        //
+        // der Benutzer will Programmeinstellungen setzen
+        //
+        Log.i( TAG, "onNavigationDrawerItemSelected: create ProgramPreferencesFragment..." );
+        ProgramPreferencesFragment ppFragment = new ProgramPreferencesFragment();
+        ppFragment.setArguments( arguments );
+        mTitle = getString( R.string.conf_prog_headline );
+        getFragmentManager().beginTransaction().replace( R.id.main_container, ppFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+        break;
+      //
+      case R.string.progitem_gaslist:
+        if( isOnline )
+        {
+          //
+          // der Benutzer wählt den Gaslisten Editmode
+          //
+          Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42GaslistPreferencesFragment..." );
+          SPX42GaslistPreferencesFragment glFragment = new SPX42GaslistPreferencesFragment();
+          glFragment.setArguments( arguments );
+          mTitle = getString( R.string.gaslist_headline );
+          getFragmentManager().beginTransaction().replace( R.id.main_container, glFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+        }
+        break;
+      //
+      case R.string.progitem_about:
+        //
+        // Das ÜBER das Programm-Ding
+        //
+        Log.i( TAG, "onNavigationDrawerItemSelected: create ProgramAboutFragment..." );
+        ProgramAboutFragment aboutFragment = new ProgramAboutFragment();
+        mTitle = getString( R.string.about_headline );
+        aboutFragment.setArguments( arguments );
+        getFragmentManager().beginTransaction().replace( R.id.main_container, aboutFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+        break;
+      //
+      case R.string.progitem_logging:
+        //
+        // Log vom SPX-lesen
+        //
+        if( isOnline )
+        {
+          Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42ReadLogFragment..." );
+          SPX42ReadLogFragment readLogFragment = ( new SPX42ReadLogFragment() );
+          mTitle = getString( R.string.logread_headline );
+          readLogFragment.setArguments( arguments );
+          getFragmentManager().beginTransaction().replace( R.id.main_container, readLogFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+        }
+        break;
+      //
+      case R.string.progitem_loggraph:
+        //
+        // Logs grafisch darstellen
+        //
+        Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42LogGraphSelectFragment..." );
+        SPX42LogGraphSelectFragment lgf = new SPX42LogGraphSelectFragment();
+        lgf.setArguments( arguments );
+        mTitle = getString( R.string.graphlog_header );
+        getFragmentManager().beginTransaction().replace( R.id.main_container, lgf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+        break;
+      //
+      case R.string.progitem_export:
+        //
+        // Logs exportieren
+        //
+        Log.i( TAG, "onNavigationDrawerItemSelected: startSPXExportLogFragment..." );
+        SPX42ExportLogFragment elf = new SPX42ExportLogFragment();
+        elf.setArguments( arguments );
+        mTitle = getString( R.string.export_header );
+        getFragmentManager().beginTransaction().replace( R.id.main_container, elf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+        break;
+      //
+      case R.string.progitem_spx_status:
+        if( isOnline )
+        {
+          //
+          // Eine Statussetie des SPX anzeigen
+          //
+          Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42HealthFragment..." );
+          SPX42HealthFragment hef = new SPX42HealthFragment();
+          hef.setArguments( arguments );
+          mTitle = getString( R.string.health_header );
+          getFragmentManager().beginTransaction().replace( R.id.main_container, hef ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+        }
+        break;
+      //
+      default:
+        Log.w( TAG, "Not programitem found for <" + pItem.nId + ">" );
+      case R.string.progitem_connect:
+        Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42ConnectFragment" );
+        SPX42ConnectFragment defaultFragment = new SPX42ConnectFragment();
+        mTitle = getString( R.string.connect_headline );
+        defaultFragment.setArguments( arguments );
+        getFragmentManager().beginTransaction().replace( R.id.main_container, defaultFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
     }
-    return super.onOptionsItemSelected( item );
-  }
-
-  @Override
-  public void onPause()
-  {
-    super.onPause();
-    doUnbindService();
+    Log.v( TAG, "onNavigationDrawerItemSelected:...OK" );
   }
 
   @Override
@@ -1527,32 +1624,54 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     //
     if( mBtAdapter == null )
     {
-      if( !ApplicationDEBUG.DEBUG )
+      if( ProjectConst.CHECK_PHYSICAL_BT )
       {
-        // es gibt gar keinen adapter!
+        // es gibt gar keinen Adapter!
         Toast.makeText( this, R.string.toast_exit_nobt, Toast.LENGTH_LONG ).show();
         finish();
         return;
       }
       else
       {
-        Toast.makeText( this, R.string.toast_nobt_adapter, Toast.LENGTH_LONG ).show();
+        Toast.makeText( this, R.string.toast_exit_nobt, Toast.LENGTH_LONG ).show();
         return;
       }
     }
+    if( !mBtAdapter.isEnabled() )
+    {
+      // Eh, kein BT erlaubt!
+      askEnableBT();
+    }
     else
     {
-      if( !mBtAdapter.isEnabled() )
-      {
-        // Eh, kein BT erlaubt!
-        askEnableBT();
-      }
-      else
-      {
-        // Service wieder anbinden / starten
-        doBindService();
-      }
+      // Service wieder anbinden / starten
+      doBindService();
     }
+  }
+
+  /**
+   * Den Programmtitel entsprechend der Selektion setzen, Callback des aufgerufenen Fragmentes
+   *
+   * Project: NaviTest Package: com.example.navitest.gui
+   * 
+   * Stand: 06.11.2014
+   * 
+   * @param pItem
+   *          ProgrammItem Eintrag des selektieren Menüpunktes
+   */
+  public void onSectionAttached( ContentSwitcher.ProgItem pItem )
+  {
+    Log.v( TAG, String.format( Locale.getDefault(), "onSectionAttached: fragment for  <%s>...", pItem.content ) );
+    mTitle = pItem.content;
+    Log.v( TAG, "onSectionAttached: OK" );
+  }
+
+  @Override
+  public void onStop()
+  {
+    super.onStop();
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onStop:..." );
+    doUnbindService( true );
   }
 
   /**
@@ -1576,6 +1695,127 @@ public class FragmentCommonActivity extends Activity implements NoticeDialogList
     if( index > -1 )
     {
       serviceListener.remove( index );
+    }
+  }
+
+  /**
+   * ActionBar restaurieren bei onCreateOptionsMenu
+   *
+   * Project: NaviTest Package: com.example.navitest
+   * 
+   * Stand: 06.11.2014
+   */
+  @SuppressWarnings( "deprecation" )
+  public void restoreActionBar()
+  {
+    Log.v( TAG, "restoreActionBar:..." );
+    ActionBar actionBar = getActionBar();
+    // deprecated since API 21
+    if( Build.VERSION.SDK_INT < 21 )
+    {
+      actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_STANDARD );
+    }
+    actionBar.setDisplayShowTitleEnabled( true );
+    actionBar.setTitle( mTitle );
+    Log.v( TAG, "restoreActionBar:...OK" );
+  }
+
+  /**
+   * 
+   * App Preferenzen setzen, wenn First Time -> Standarts setzen
+   *
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 09.11.2014
+   * 
+   * @param sPref
+   */
+  private void setAppPreferences( SharedPreferences sPref )
+  {
+    if( !sPref.contains( FIRSTTIME ) )
+    {
+      Log.w( TAG, "onCreate: not found firsttime key == make first time preferences..." );
+      if( !sPref.getBoolean( FIRSTTIME, false ) )
+      {
+        setDefaultPreferences();
+      }
+    }
+    //
+    // sind die Preferenzen in der richtigen version?
+    //
+    if( sPref.contains( PREFVERSION ) )
+    {
+      if( ProjectConst.PREF_VERSION != sPref.getInt( PREFVERSION, 0 ) )
+      {
+        Log.w( TAG, "onCreate: pref version to old == make first time preferences..." );
+        setDefaultPreferences();
+      }
+    }
+    else
+    {
+      Log.w( TAG, "onCreate: pref version not found == make first time preferences..." );
+      setDefaultPreferences();
+    }
+    //
+    // Verzeichnis für Datenbanken etc
+    //
+    databaseDir = new File( sPref.getString( "keyProgDataDirectory", getDatabaseDir().getAbsolutePath() ) );
+    if( databaseDir != null )
+    {
+      if( !databaseDir.exists() )
+      {
+        Log.i( TAG, "onCreate: create database root dir..." );
+        if( !databaseDir.mkdirs() ) databaseDir = null;
+      }
+    }
+    if( sPref.contains( "keyProgUnitsTimeFormat" ) )
+    {
+      localTimeFormatter = DateTimeFormat.forPattern( sPref.getString( "keyProgUnitsTimeFormat", "yyyy/dd/MM - hh:mm:ss a" ) );
+    }
+  }
+
+  /**
+   * Erzeuge Preferenzen für den SPX42 Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   */
+  public void setDefaultPreferences()
+  {
+    String gasKeyTemplate = getResources().getString( R.string.conf_gaslist_gas_key_template );
+    String gasListDefault = getResources().getString( R.string.conf_gaslist_default );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "setDefaultPreferences: make default preferences..." );
+    PreferenceManager.setDefaultValues( this, R.xml.config_spx42_preference_individual, true );
+    PreferenceManager.setDefaultValues( this, R.xml.config_program_preference, true );
+    //
+    // workarround um defaults zu setzen
+    //
+    SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( this );
+    SharedPreferences.Editor editor = sPref.edit();
+    editor.remove( FIRSTTIME );
+    editor.putBoolean( FIRSTTIME, true );
+    editor.remove( PREFVERSION );
+    editor.putInt( PREFVERSION, ProjectConst.PREF_VERSION );
+    //
+    // Gaslistenpresets eintragen
+    //
+    for( int i = 1; i < 9; i++ )
+    {
+      editor.putString( String.format( gasKeyTemplate, i ), gasListDefault );
+    }
+    //
+    // external Storage eintragen
+    //
+    databaseDir = getDatabaseDir();
+    editor.putString( "keyProgDataDirectory", databaseDir.getAbsolutePath() );
+    //
+    // alles in die Propertys
+    //
+    if( editor.commit() )
+    {
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "setDefaultPreferences: wrote preferences to storeage." );
+    }
+    else
+    {
+      Log.e( TAG, "setDefaultPreferences: CAN'T wrote preferences to storage." );
     }
   }
 

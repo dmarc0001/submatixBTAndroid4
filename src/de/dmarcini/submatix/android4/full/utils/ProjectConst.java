@@ -49,12 +49,13 @@ public final class ProjectConst
   public static final String CREATORPROGRAM             = "SUBMATIX SPX42 Manager";
   public static final String CREATORNAME                = "SPX42";
   public static final String MANUFACTNAME               = "Dirk Marciniak";
-  public static final String MANUFACTMAIL               = "dirk_marciniak@online.de";
+  public static final String MANUFACTMAIL               = "dirk@submatix.com";
   public static final String MANUFACTHOME               = "http://www.submatix.com";
-  public static final String MANUFACTVERS               = "1.02";
+  public static final String MANUFACTVERS               = "2.0 b4-a";
   public static final String GENYEAR                    = "2014";
-  public static final String GENMONTH                   = "03";
-  public static final String GENDAY                     = "19";
+  public static final String GENMONTH                   = "11";
+  public static final String GENDAY                     = "15";
+  public static final boolean CHECK_PHYSICAL_BT         = false; 
 
   // ANDROID: Preferences Version
   public static int          PREF_VERSION               = 1;
@@ -94,7 +95,7 @@ public final class ProjectConst
   public static final String DEFAULTDATADIR             = "database";
   public static final String DEFAULTEXPORTDIR           = "export";
   public static final String DATABASE_NAME              = "submatixDatabase.db";
-  public static final int    DATABASE_VERSION           = 5;
+  public static final int    DATABASE_VERSION           = 6;
   
   // Messages für SPX 42
   public static final String STX                        = new String( new byte[] { 0x02 } );
@@ -173,8 +174,7 @@ public final class ProjectConst
   
   // Android: ID für Intentrequests
   public static final int REQUEST_ENABLE_BT             = 1;
-  public static final int REQUEST_SPX_PREFS             = 2;
-  public static final int REQUEST_SEND_MAIL             = 3;
+  public static final int REQUEST_SEND_MAIL             = 2;
   
   // Android (für PC MUSS die Klasse auskommentiert werden )
   public static final class ActionEvent
@@ -191,33 +191,34 @@ public final class ProjectConst
   public static final int    MESSAGE_CONNECTED          = ActionEvent.RESERVED_ID_MAX + 6;
   public static final int    MESSAGE_DISCONNECTED       = ActionEvent.RESERVED_ID_MAX + 7;
   public static final int    MESSAGE_CONNECTERROR       = ActionEvent.RESERVED_ID_MAX + 8;
-  public static final int    MESSAGE_SERIAL_READ        = ActionEvent.RESERVED_ID_MAX + 9;
-  public static final int    MESSAGE_MANUFACTURER_READ  = ActionEvent.RESERVED_ID_MAX + 10;
-  public static final int    MESSAGE_SPXALIVE           = ActionEvent.RESERVED_ID_MAX + 11;
-  public static final int    MESSAGE_COMMTIMEOUT        = ActionEvent.RESERVED_ID_MAX + 12;
-  public static final int    MESSAGE_FWVERSION_READ     = ActionEvent.RESERVED_ID_MAX + 13;
-  public static final int    MESSAGE_SETPOINT_READ      = ActionEvent.RESERVED_ID_MAX + 14;
-  public static final int    MESSAGE_SETPOINT_ACK       = ActionEvent.RESERVED_ID_MAX + 15;
-  public static final int    MESSAGE_LICENSE_STATE_READ = ActionEvent.RESERVED_ID_MAX + 16;
-  public static final int    MESSAGE_DECO_READ          = ActionEvent.RESERVED_ID_MAX + 17;
-  public static final int    MESSAGE_DECO_ACK           = ActionEvent.RESERVED_ID_MAX + 18;
-  public static final int    MESSAGE_DISPLAY_READ       = ActionEvent.RESERVED_ID_MAX + 19;
-  public static final int    MESSAGE_DISPLAY_ACK        = ActionEvent.RESERVED_ID_MAX + 20;
-  public static final int    MESSAGE_UNITS_READ         = ActionEvent.RESERVED_ID_MAX + 21;
-  public static final int    MESSAGE_UNITS_ACK          = ActionEvent.RESERVED_ID_MAX + 22;
-  public static final int    MESSAGE_INDIVID_READ       = ActionEvent.RESERVED_ID_MAX + 23;
-  public static final int    MESSAGE_INDIVID_ACK        = ActionEvent.RESERVED_ID_MAX + 24;
-  public static final int    MESSAGE_GAS_READ           = ActionEvent.RESERVED_ID_MAX + 25;
-  public static final int    MESSAGE_GAS_ACK            = ActionEvent.RESERVED_ID_MAX + 26;
-  public static final int    MESSAGE_DEVALIAS_SET       = ActionEvent.RESERVED_ID_MAX + 27;
-  public static final int    MESSAGE_DIRENTRY_READ      = ActionEvent.RESERVED_ID_MAX + 28;
-  public static final int    MESSAGE_DIRENTRY_END       = ActionEvent.RESERVED_ID_MAX + 29;
-  public static final int    MESSAGE_LOGENTRY_START     = ActionEvent.RESERVED_ID_MAX + 30;
-  public static final int    MESSAGE_LOGENTRY_LINE      = ActionEvent.RESERVED_ID_MAX + 31;
-  public static final int    MESSAGE_LOGENTRY_STOP      = ActionEvent.RESERVED_ID_MAX + 32;
-  public static final int    MESSAGE_LOCAL_ONE_PROTO_OK = ActionEvent.RESERVED_ID_MAX + 33;
-  public static final int    MESSAGE_LOCAL_LOGEXPORTED  = ActionEvent.RESERVED_ID_MAX + 34;
-  public static final int    MESSAGE_LOCAL_EXPORTERR    = ActionEvent.RESERVED_ID_MAX + 35;
+  public static final int    MESSAGE_CONNECT_NOTBOUND   = ActionEvent.RESERVED_ID_MAX + 9;
+  public static final int    MESSAGE_SERIAL_READ        = ActionEvent.RESERVED_ID_MAX + 10;
+  public static final int    MESSAGE_MANUFACTURER_READ  = ActionEvent.RESERVED_ID_MAX + 11;
+  public static final int    MESSAGE_SPXALIVE           = ActionEvent.RESERVED_ID_MAX + 12;
+  public static final int    MESSAGE_COMMTIMEOUT        = ActionEvent.RESERVED_ID_MAX + 13;
+  public static final int    MESSAGE_FWVERSION_READ     = ActionEvent.RESERVED_ID_MAX + 14;
+  public static final int    MESSAGE_SETPOINT_READ      = ActionEvent.RESERVED_ID_MAX + 15;
+  public static final int    MESSAGE_SETPOINT_ACK       = ActionEvent.RESERVED_ID_MAX + 16;
+  public static final int    MESSAGE_LICENSE_STATE_READ = ActionEvent.RESERVED_ID_MAX + 17;
+  public static final int    MESSAGE_DECO_READ          = ActionEvent.RESERVED_ID_MAX + 18;
+  public static final int    MESSAGE_DECO_ACK           = ActionEvent.RESERVED_ID_MAX + 19;
+  public static final int    MESSAGE_DISPLAY_READ       = ActionEvent.RESERVED_ID_MAX + 20;
+  public static final int    MESSAGE_DISPLAY_ACK        = ActionEvent.RESERVED_ID_MAX + 21;
+  public static final int    MESSAGE_UNITS_READ         = ActionEvent.RESERVED_ID_MAX + 22;
+  public static final int    MESSAGE_UNITS_ACK          = ActionEvent.RESERVED_ID_MAX + 23;
+  public static final int    MESSAGE_INDIVID_READ       = ActionEvent.RESERVED_ID_MAX + 24;
+  public static final int    MESSAGE_INDIVID_ACK        = ActionEvent.RESERVED_ID_MAX + 25;
+  public static final int    MESSAGE_GAS_READ           = ActionEvent.RESERVED_ID_MAX + 26;
+  public static final int    MESSAGE_GAS_ACK            = ActionEvent.RESERVED_ID_MAX + 27;
+  public static final int    MESSAGE_DEVALIAS_SET       = ActionEvent.RESERVED_ID_MAX + 28;
+  public static final int    MESSAGE_DIRENTRY_READ      = ActionEvent.RESERVED_ID_MAX + 29;
+  public static final int    MESSAGE_DIRENTRY_END       = ActionEvent.RESERVED_ID_MAX + 30;
+  public static final int    MESSAGE_LOGENTRY_START     = ActionEvent.RESERVED_ID_MAX + 31;
+  public static final int    MESSAGE_LOGENTRY_LINE      = ActionEvent.RESERVED_ID_MAX + 32;
+  public static final int    MESSAGE_LOGENTRY_STOP      = ActionEvent.RESERVED_ID_MAX + 33;
+  public static final int    MESSAGE_LOCAL_ONE_PROTO_OK = ActionEvent.RESERVED_ID_MAX + 34;
+  public static final int    MESSAGE_LOCAL_LOGEXPORTED  = ActionEvent.RESERVED_ID_MAX + 35;
+  public static final int    MESSAGE_LOCAL_EXPORTERR    = ActionEvent.RESERVED_ID_MAX + 36;
   
 
   // DATENBANK
@@ -234,6 +235,7 @@ public final class ProjectConst
   public static final String A_ALIAS                    = "alias";
   public static final String A_MAC                      = "mac";
   public static final String A_SERIAL                   = "serial";
+  public static final String A_PIN                      = "pin";
   
   //
   // Tabelle für die Kopfdaten des Tauchgangs

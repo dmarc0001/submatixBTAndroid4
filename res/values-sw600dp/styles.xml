@@ -61,5 +61,11 @@
       <item name="android:background">@color/connectToastAlert.backgroundColor</item>
       <item name="android:textColor">@color/connectToastAlert.textColor</item>
     </style>
+
+        <!-- Textgrößen angepasst -->
+    <style name="menuTextAppearance">
+        <item name="android:textSize">19sp</item>
+    </style>
+    
     
 </resources>

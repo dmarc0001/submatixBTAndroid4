@@ -18,7 +18,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/
 */
 //@formatter:on
-package de.dmarcini.submatix.android4.full.utils;
+package de.dmarcini.submatix.android4.full.interfaces;
 
 import android.app.DialogFragment;
 
@@ -32,7 +32,7 @@ import android.app.DialogFragment;
  * 
  *         Stand: 02.11.2012
  */
-public interface NoticeDialogListener
+public interface INoticeDialogListener
 {
   @SuppressWarnings( "javadoc" )
   public void onDialogPositiveClick( DialogFragment dialog );

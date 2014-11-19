@@ -40,7 +40,6 @@ import android.view.MenuItem;
 import android.view.View;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
-import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 
 /**
  * 
@@ -101,7 +100,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     {
       case android.R.id.home:
         Log.v( TAG, "onOptionsItemSelected: HOME" );
-        Intent intent = new Intent( getActivity(), AreaListActivity.class );
+        Intent intent = new Intent( getActivity(), MainActivity.class );
         intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
         startActivity( intent );
         return true;
@@ -141,7 +140,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
       //
       if( key.equals( "keyProgUnitsTimeFormat" ) )
       {
-        FragmentCommonActivity.localTimeFormatter = DateTimeFormat.forPattern( lP.getValue() );
+        MainActivity.localTimeFormatter = DateTimeFormat.forPattern( lP.getValue() );
         lP.setSummary( String.format( res.getString( R.string.conf_prog_temp_units_summary ), lP.getEntry() ) );
       }
       //
@@ -164,11 +163,11 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
       //
       if( key.equals( "keyProgDataDirectory" ) )
       {
-        FragmentCommonActivity.databaseDir = new File( tP.getText() );
-        if( !FragmentCommonActivity.databaseDir.exists() )
+        MainActivity.databaseDir = new File( tP.getText() );
+        if( !MainActivity.databaseDir.exists() )
         {
           Log.i( TAG, "onCreate: create database root dir..." );
-          if( !FragmentCommonActivity.databaseDir.mkdirs() ) FragmentCommonActivity.databaseDir = null;
+          if( !MainActivity.databaseDir.mkdirs() ) MainActivity.databaseDir = null;
         }
         tP.setSummary( String.format( res.getString( R.string.conf_prog_datadir_summary ), tP.getText() ) );
       }
@@ -197,7 +196,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
       }
       if( key.equals( "keyProgOthersThemeIsDark" ) )
       {
-        if( getActivity() instanceof FragmentCommonActivity )
+        if( getActivity() instanceof MainActivity )
         {
           setThemeForApp();
         }
@@ -216,29 +215,12 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
    */
   private void setThemeForApp()
   {
-    if( ( ( FragmentCommonActivity )getActivity() ).istActivityTwoPane() )
-    {
-      //
-      // Argumente für Intent zusammenbauen
-      //
-      Bundle arguments = new Bundle();
-      arguments.putInt( ProjectConst.ARG_ITEM_ID, R.string.progitem_progpref );
-      Intent parentActivityIntent = new Intent( getActivity(), AreaListActivity.class );
-      parentActivityIntent.putExtras( arguments );
-      parentActivityIntent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
-      startActivity( parentActivityIntent );
-      getActivity().finish();
-    }
-    else
-    {
-      Bundle arguments = new Bundle();
-      arguments.putInt( ProjectConst.ARG_ITEM_ID, R.string.progitem_progpref );
-      Intent parentActivityIntent = new Intent( getActivity(), AreaDetailActivity.class );
-      parentActivityIntent.putExtras( arguments );
-      parentActivityIntent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK );
-      startActivity( parentActivityIntent );
-      getActivity().finish();
-    }
+    //
+    // Bescheid geben füer Restart
+    //
+    MainActivity.wasRestartForNewTheme = true;
+    Log.i( TAG, "setThemeForApp: activity recreate..." );
+    getActivity().recreate();
   }
 
   /**
@@ -323,7 +305,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
         // jede ungerade Zeile färben
         if( prefIdx % 2 > 0 )
         {
-          if( FragmentCommonActivity.getAppStyle() == R.style.AppDarkTheme )
+          if( MainActivity.getAppStyle() == R.style.AppDarkTheme )
           {
             // dunkles Thema
             pref.setLayoutResource( R.layout.preference_dark );

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="gradientPresetValuesArray">
+        <item>35:70</item>
+        <item>30:85</item>
+        <item>25:85</item>
+        <item>15:90</item>
+        <item>10:100</item>
+        <item>00:00</item>
+        </string-array>
+        
+    <string-array name="gradientPresetNamesArray">
+        <item>Sehr Konsevativ</item>
+        <item>Standart</item>
+        <item>Moderat</item>
+        <item>Aggressiv</item>
+        <item>Sehr aggressiv</item>
+        <item>Benutzerdef.</item>
+    </string-array>
+    
+</resources>

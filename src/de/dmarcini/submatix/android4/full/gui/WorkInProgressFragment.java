@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
+import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
 
 /**
  * 
@@ -92,11 +93,11 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
     //
     // wenn die laufende Activity eine AreaDetailActivity ist, dann gibts das View schon
     //
-    if( runningActivity instanceof AreaDetailActivity )
-    {
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
-      return( null );
-    }
+    // if( runningActivity instanceof AreaDetailActivity )
+    // {
+    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
+    // return( null );
+    // }
     //
     // Verbindungsseite via twoPane ausgewählt
     //
@@ -124,7 +125,7 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
     // die abgeleiteten Objekte führen das auch aus
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
-    ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
+    ( ( MainActivity )runningActivity ).removeServiceListener( this );
   }
 
   /**
@@ -135,7 +136,7 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
   {
     super.onResume();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
-    ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
+    ( ( MainActivity )runningActivity ).addServiceListener( this );
     // wenn zu diesem Zeitpunkt das Array noch nicht gefüllt ist, dann mach das nun
   }
 

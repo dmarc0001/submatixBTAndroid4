@@ -39,7 +39,7 @@ import android.widget.NumberPicker.OnValueChangeListener;
 import android.widget.TextView;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
-import de.dmarcini.submatix.android4.full.gui.FragmentCommonActivity;
+import de.dmarcini.submatix.android4.full.gui.MainActivity;
 
 /**
  * 
@@ -179,7 +179,7 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
   {
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateDialogView()..." );
     setDialogLayoutResource( R.layout.gradient_picker_layout );
-    currentStyleId = FragmentCommonActivity.getAppStyle();
+    currentStyleId = MainActivity.getAppStyle();
     return super.onCreateDialogView();
   }
 

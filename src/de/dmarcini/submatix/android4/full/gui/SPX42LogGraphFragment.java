@@ -37,6 +37,7 @@ import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
 import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
 import de.dmarcini.submatix.android4.full.exceptions.NoXMLDataFileFoundException;
+import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
 import de.dmarcini.submatix.android4.full.utils.DataSQLHelper;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 import de.dmarcini.submatix.android4.full.utils.ReadLogItemObj;
@@ -164,8 +165,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     try
     {
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create SQLite helper..." );
-      DataSQLHelper sqlHelper = new DataSQLHelper( getActivity().getApplicationContext(), FragmentCommonActivity.databaseDir.getAbsolutePath() + File.separator
-              + ProjectConst.DATABASE_NAME );
+      DataSQLHelper sqlHelper = new DataSQLHelper( getActivity().getApplicationContext(), MainActivity.databaseDir.getAbsolutePath() + File.separator + ProjectConst.DATABASE_NAME );
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create logManager helper..." );
       logManager = new SPX42LogManager( sqlHelper.getWritableDatabase() );
     }
@@ -209,7 +209,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
       return( null );
     }
     sPX42LogGraphView = new SPX42LogGraphView( getActivity().getApplication().getApplicationContext() );
-    sPX42LogGraphView.setTheme( FragmentCommonActivity.getAppStyle() );
+    sPX42LogGraphView.setTheme( MainActivity.getAppStyle() );
     rootView = sPX42LogGraphView;
     return rootView;
   }
@@ -218,7 +218,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
   public void onDestroy()
   {
     super.onDestroy();
-    ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
+    ( ( MainActivity )runningActivity ).removeServiceListener( this );
   }
 
   @Override
@@ -228,7 +228,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause..." );
     // handler loeschen
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
-    ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
+    ( ( MainActivity )runningActivity ).removeServiceListener( this );
   }
 
   /**
@@ -242,7 +242,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     //
     // Service Listener setzen
     //
-    ( ( FragmentCommonActivity )runningActivity ).addServiceListener( this );
+    ( ( MainActivity )runningActivity ).addServiceListener( this );
     makeGraphForDive();
   }
 
@@ -272,6 +272,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
       }
       try
       {
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "read dive samples from file <%s>...", rlo.fileOnMobile ) );
         sampleVector = SPX42DiveSampleClass.makeSamples( rlo );
         sPX42LogGraphView.setDiveData( sampleVector );
         sPX42LogGraphView.invalidate();

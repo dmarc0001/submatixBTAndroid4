@@ -41,6 +41,7 @@ import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.exceptions.FirmwareNotSupportetException;
+import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
 import de.dmarcini.submatix.android4.full.utils.CommToast;
 import de.dmarcini.submatix.android4.full.utils.GasPickerPreference;
 import de.dmarcini.submatix.android4.full.utils.GasUpdateEntity;
@@ -146,7 +147,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   public void msgConnected( BtServiceMessage msg )
   {
     Log.v( TAG, "msgConnected()...ask for SPX config..." );
-    FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
+    MainActivity fActivity = ( MainActivity )runningActivity;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgConnected(): ask for SPX config..." );
     // Dialog schliesen, wenn geöffnet
     theToast.dismissDial();
@@ -180,7 +181,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   public void msgDisconnected( BtServiceMessage msg )
   {
     Log.v( TAG, "msgDisconnected" );
-    Intent intent = new Intent( getActivity(), AreaListActivity.class );
+    Intent intent = new Intent( getActivity(), MainActivity.class );
     intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
     startActivity( intent );
   }
@@ -409,7 +410,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     {
       case android.R.id.home:
         Log.v( TAG, "onOptionsItemSelected: HOME" );
-        Intent intent = new Intent( getActivity(), AreaListActivity.class );
+        Intent intent = new Intent( getActivity(), MainActivity.class );
         intent.addFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
         startActivity( intent );
         return true;
@@ -427,7 +428,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     //
     getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener( this );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause(): clear service listener for preferences fragment..." );
-    ( ( FragmentCommonActivity )runningActivity ).removeServiceListener( this );
+    ( ( MainActivity )runningActivity ).removeServiceListener( this );
   }
 
   @Override
@@ -443,7 +444,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     waitForGasOkCount = 0;
     waitForGasNumber = 0;
     // Service Listener setzen
-    FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
+    MainActivity fActivity = ( MainActivity )runningActivity;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume(): set service listener for preferences fragment..." );
     fActivity.addServiceListener( this );
   }
@@ -511,7 +512,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onSharedPreferenceChanged: gas to update to list: <" + gasNr + ">" );
       gasUpdates.add( new GasUpdateEntity( gasNr, gasParms ) );
     }
-    FragmentCommonActivity fActivity = ( FragmentCommonActivity )runningActivity;
+    MainActivity fActivity = ( MainActivity )runningActivity;
     ignorePrefChange = true;
     // wie viele ACK muss ich abwarten?
     waitForGasOkCount = waitForGasNumber = gasUpdates.size();
@@ -542,7 +543,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "The Preference <%s> is number %d", gP.getTitle(), idx ) );
       if( idx % 2 > 0 )
       {
-        if( FragmentCommonActivity.getAppStyle() == R.style.AppDarkTheme )
+        if( MainActivity.getAppStyle() == R.style.AppDarkTheme )
         {
           // dunkles Thema
           gP.setLayoutResource( R.layout.preference_dark );

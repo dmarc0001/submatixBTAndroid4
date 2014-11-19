@@ -28,7 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import de.dmarcini.submatix.android4.full.R;
-import de.dmarcini.submatix.android4.full.gui.FragmentCommonActivity;
+import de.dmarcini.submatix.android4.full.gui.MainActivity;
 
 /**
  * 
@@ -108,7 +108,7 @@ public class ColorizedPreferenceCategory extends PreferenceCategory
   private int getTheme( Context context )
   {
     Log.v( TAG, "check for theme in app..." );
-    currStyle = FragmentCommonActivity.getAppStyle();
+    currStyle = MainActivity.getAppStyle();
     return( currStyle );
   }
 

@@ -32,9 +32,22 @@
         android:layout_marginRight="@dimen/default_left_right_margin"
         android:ems="10"
         android:gravity="center_horizontal"
-        android:singleLine="true">
+        android:singleLine="true" >
 
         <requestFocus />
     </EditText>
+    
+    <EditText
+        android:id="@+id/aliasEditDialogPINEditTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_left_right_margin"
+        android:layout_marginRight="@dimen/default_left_right_margin"
+        android:inputType="number"
+        android:digits="0123456789"
+        android:ems="10"
+        android:gravity="center_horizontal"
+        android:singleLine="true"
+        android:visibility="invisible" />
 
 </LinearLayout>

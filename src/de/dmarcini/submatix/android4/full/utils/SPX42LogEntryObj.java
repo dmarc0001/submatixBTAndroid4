@@ -1,7 +1,7 @@
 ﻿//@formatter:off
 /*
-    programm: SubmatixBTLoggerAndroid
-    purpose:  configuration and read logs from SUBMATIX SPX42 divecomputer via Bluethooth    
+    programm: SubmatixBTLoggerAimport java.util.Locale;
+iguration and read logs from SUBMATIX SPX42 divecomputer via Bluethooth    
     Copyright (C) 2012  Dirk Marciniak
 
     This program is free software: you can redistribute it and/or modify
