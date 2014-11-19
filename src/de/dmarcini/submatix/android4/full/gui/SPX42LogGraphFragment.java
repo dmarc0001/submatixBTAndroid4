@@ -272,6 +272,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
       }
       try
       {
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "read dive samples from file <%s>...", rlo.fileOnMobile ) );
         sampleVector = SPX42DiveSampleClass.makeSamples( rlo );
         sPX42LogGraphView.setDiveData( sampleVector );
         sPX42LogGraphView.invalidate();

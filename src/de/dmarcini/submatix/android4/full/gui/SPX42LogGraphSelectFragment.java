@@ -28,7 +28,6 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.ProgressDialog;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
@@ -70,8 +69,6 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
 {
   @SuppressWarnings( "javadoc" )
   public static final String TAG                     = SPX42LogGraphSelectFragment.class.getSimpleName();
-  // private static final String LAST_CONNECTED_DEVICE_KEY = "keyLastConnectedDevice";
-  protected ProgressDialog   progressDialog          = null;
   // private CommToast theToast = null;
   private SPX42LogManager    logManager              = null;
   private int                selectedDeviceId        = -1;
