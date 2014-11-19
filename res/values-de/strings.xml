@@ -230,6 +230,7 @@
     <string name="connect_connecting_device">verbinden</string>
     <string name="connect_connected_device">verbunden</string>
     <string name="connect_editalias_button_title">Bearbeite Alias</string>
+    <string name="connect_editaliasv4_button_title">Bearbeite Alias/PIN</string>
     
     <!-- Detailseite für Gaslisten-Editor -->
     <string name="conf_gaslist_headline">"SPX42 Gasliste bearbeiten"</string>

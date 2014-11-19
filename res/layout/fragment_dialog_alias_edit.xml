@@ -36,5 +36,18 @@
 
         <requestFocus />
     </EditText>
+    
+    <EditText
+        android:id="@+id/aliasEditDialogPINEditTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_left_right_margin"
+        android:layout_marginRight="@dimen/default_left_right_margin"
+        android:digits="4"
+        android:ems="10"
+        android:gravity="center_horizontal"
+        android:inputType="number|textFilter"
+        android:singleLine="true"
+        android:visibility="invisible" />
 
 </LinearLayout>

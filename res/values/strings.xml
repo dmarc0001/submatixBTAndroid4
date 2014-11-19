@@ -229,6 +229,7 @@
     <string name="connect_connecting_device">connecting</string>
     <string name="connect_connected_device">connected</string>
     <string name="connect_editalias_button_title">Edit alias</string>
+    <string name="connect_editaliasv4_button_title">Edit Alias/PIN</string>
     
     <!-- Detailseite für Gaslisten-Editor -->
     <string name="conf_gaslist_headline">SPX42 gaslist edit</string>
