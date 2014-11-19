@@ -627,11 +627,11 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     if( msg.getContainer() instanceof String[] )
     {
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgReciveDeviceAliasSet: is String[]..." );
-      // genau 3 Paraqmeter (devicename,alias,mac)
+      // genau 4 Parameter (devicename,alias,mac,pin)
       String[] parm = ( String[] )msg.getContainer();
-      if( parm.length == 3 )
+      if( parm.length == 4 )
       {
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgReciveDeviceAliasSet: is 3 params" );
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgReciveDeviceAliasSet: is 4 params" );
         dIndex = btArrayAdapter.getIndexForMac( parm[2] );
         // hat er's gefunden?
         if( dIndex == -1 )
@@ -645,6 +645,13 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         //
         if( MainActivity.aliasManager.setAliasForMac( parm[2], parm[0], parm[1], null ) )
         {
+          if( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT )
+          {
+            //
+            // wenn Android >= API 19 (4.4) läuft
+            //
+            MainActivity.aliasManager.setPinForMac( parm[2], parm[3] );
+          }
           if( 0 == btArrayAdapter.getCount() )
           {
             fillNewAdapterWithPairedDevices();
@@ -843,7 +850,20 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         // erzeuge den Dialog zum Bearbeiten des Alias
         //
         int pos = devSpinner.getSelectedItemPosition();
-        DialogFragment dialog = new EditAliasDialogFragment( btArrayAdapter.getDevName( pos ), btArrayAdapter.getAlias( pos ), btArrayAdapter.getMAC( pos ) );
+        DialogFragment dialog = null;
+        if( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT )
+        {
+          String oldPin = MainActivity.aliasManager.getPINForMac( btArrayAdapter.getMAC( pos ) );
+          if( oldPin == null )
+          {
+            oldPin = "0000";
+          }
+          dialog = new EditAliasDialogFragment( btArrayAdapter.getDevName( pos ), btArrayAdapter.getAlias( pos ), btArrayAdapter.getMAC( pos ), oldPin );
+        }
+        else
+        {
+          dialog = new EditAliasDialogFragment( btArrayAdapter.getDevName( pos ), btArrayAdapter.getAlias( pos ), btArrayAdapter.getMAC( pos ) );
+        }
         dialog.show( getFragmentManager(), "EditAliasDialogFragment" );
       }
     }
@@ -878,6 +898,19 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       return( null );
     }
     rootView = makeConnectionView( inflater, container );
+    if( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT )
+    {
+      try
+      {
+        // Falls PIN editierbar (ab Version 4.4)
+        Button aliasButton = ( Button )rootView.findViewById( R.id.connectAliasEditButton );
+        aliasButton.setText( R.string.connect_editaliasv4_button_title );
+      }
+      catch( NullPointerException ex )
+      {
+        Log.e( TAG, "cant find Button resource for edit alias!" );
+      }
+    }
     return rootView;
   }
 
