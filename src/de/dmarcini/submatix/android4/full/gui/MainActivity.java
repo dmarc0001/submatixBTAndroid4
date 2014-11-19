@@ -1372,7 +1372,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       Log.i( TAG, "User will edit alias..." );
       EditAliasDialogFragment editDialog = ( EditAliasDialogFragment )dialog;
       mHandler.obtainMessage( ProjectConst.MESSAGE_DEVALIAS_SET, new BtServiceMessage( ProjectConst.MESSAGE_DEVALIAS_SET, new String[]
-      { editDialog.getDeviceName(), editDialog.getAliasName(), editDialog.getMac() } ) ).sendToTarget();
+      { editDialog.getDeviceName(), editDialog.getAliasName(), editDialog.getMac(), editDialog.getPin() } ) ).sendToTarget();
     }
     //
     // Sollte die APP geschlossen werden?
