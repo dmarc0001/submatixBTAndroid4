@@ -30,7 +30,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,13 +68,11 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
   @SuppressWarnings( "javadoc" )
   public static final int     BT_DEVAR_NAME     = 2;
   @SuppressWarnings( "javadoc" )
-  public static final int     BT_DEVAR_DBID     = 3;
+  public static final int     BT_DEVAR_ISPAIRED = 3;
   @SuppressWarnings( "javadoc" )
-  public static final int     BT_DEVAR_ISPAIRED = 4;
+  public static final int     BT_DEVAR_ISONLINE = 4;
   @SuppressWarnings( "javadoc" )
-  public static final int     BT_DEVAR_ISONLINE = 5;
-  @SuppressWarnings( "javadoc" )
-  public static final int     BT_DEVAR_COUNT    = 6;
+  public static final int     BT_DEVAR_COUNT    = 5;
 
   /**
    * 
@@ -151,7 +148,6 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
       String[] fields = getItem( position );
       fields[BT_DEVAR_ALIAS] = items[BT_DEVAR_ALIAS];
       fields[BT_DEVAR_NAME] = items[BT_DEVAR_NAME];
-      fields[BT_DEVAR_DBID] = items[BT_DEVAR_DBID];
       fields[BT_DEVAR_ISPAIRED] = items[BT_DEVAR_ISPAIRED];
       fields[BT_DEVAR_ISONLINE] = items[BT_DEVAR_ISONLINE];
       fields[BT_DEVAR_COUNT] = items[BT_DEVAR_COUNT];
@@ -251,56 +247,6 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
       }
     }
     return cView;
-  }
-
-  /**
-   * 
-   * gib die DatenbankID zurück (als INT)
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
-   * 
-   * 
-   * Stand: 17.02.2013
-   * 
-   * @param position
-   * @return dbId
-   */
-  public int getDbIdNum( int position )
-  {
-    String dbIdStr = getStringAt( position, BT_DEVAR_DBID );
-    int dbId;
-    //
-    if( dbIdStr != null )
-    {
-      try
-      {
-        dbId = Integer.parseInt( dbIdStr );
-      }
-      catch( NumberFormatException ex )
-      {
-        Log.e( TAG, "can't NumberString (" + dbIdStr + ") convert to int " + ex.getMessage() );
-        dbId = 0;
-      }
-      return( dbId );
-    }
-    return( 0 );
-  }
-
-  /**
-   * 
-   * Gib die DatenbankId des Eintrages zurück
-   * 
-   * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.utils
-   * 
-   * 
-   * Stand: 05.11.2012
-   * 
-   * @param position
-   * @return den String
-   */
-  public String getDbIdStr( int position )
-  {
-    return( getStringAt( position, BT_DEVAR_DBID ) );
   }
 
   /**
