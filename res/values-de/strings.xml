@@ -61,6 +61,7 @@
     <string name="toast_connect_disconnected">Verbindung getrennt</string>
     <string name="toast_connect_cant_bt_connect">Kann nicht mit &lt;%s&gt; verbinden</string>
     <string name="toast_connect_device_paired">Gerät %s wurde gepaart</string>
+    <string name="toast_connect_device_pairing_request">Für Gerät %s wurde paaren angefordert</string>
     <string name="toast_connect_device_automatic_pairing">Gerät %s wird automatisch gepaart</string>
     <string name="toast_export_cant_create_dir">Kann Verzeichnis &lt;%s&gt; nicht anlegen</string>
     <string name="toast_export_cant_find_xmldata">Kann XML-Datendatei nicht finden</string>

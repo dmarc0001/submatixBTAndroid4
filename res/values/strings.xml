@@ -61,6 +61,7 @@
     <string name="toast_connect_disconnected">connection disconnected</string>
     <string name="toast_connect_cant_bt_connect">can not connect to &lt;%s&gt;</string>
     <string name="toast_connect_device_paired">device %s was paired</string>
+    <string name="toast_connect_device_pairing_request">device %s pairing requested</string>
     <string name="toast_connect_device_automatic_pairing">pairing automatic device %s</string>
     <string name="toast_export_cant_create_dir">can\'t create dir &lt;%s&gt;</string>
     <string name="toast_export_cant_find_xmldata">can\'t find data-xml file</string>

@@ -244,7 +244,7 @@ public class PinErrorDialog extends DialogFragment
    * 
    * Stand: 18.11.2014
    * 
-   * @return
+   * @return die PIN vom Benutzer editiert
    */
   public String getPin()
   {

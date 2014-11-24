@@ -187,7 +187,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
             // Das Gerät extraieren
             //
             BluetoothDevice device = intent.getParcelableExtra( BluetoothDevice.EXTRA_DEVICE );
-            theToast.showConnectionToast( String.format(getResources().getString( R.string.toast_connect_device_paired ), device.getName()), false );
+            theToast.showConnectionToast( String.format(getResources().getString( R.string.toast_connect_device_pairing_request ), device.getName()), false );
 //            if( device.getBondState() == BluetoothDevice.BOND_BONDING )
 //            {
 //              if( ApplicationDEBUG.DEBUG )Log.d(TAG, "device is bonding... wait...");
