@@ -64,7 +64,7 @@ public final class ProjectConst
   public static final UUID   SERIAL_DEVICE_UUID         = UUID.fromString( "00001101-0000-1000-8000-00805f9b34fb" );
 
   // Android: gewünschte BT Geräteklasse
-  public static final int SPX_BTDEVICE_CLASS            = 0x1F00;
+  public static final int    SPX_BTDEVICE_CLASS         = 0x1F00;
 
   // ANDROID: Verbindungsstatus BT
   public static final int    CONN_STATE_NONE            = 0;
