@@ -20,6 +20,7 @@
 //@formatter:on
 package de.dmarcini.submatix.android4.full.utils;
 
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Vector;
 
@@ -411,6 +412,53 @@ public class SPX42AliasManager
     {
       cu.close();
       Log.e( TAG, "Error while getDeviceNameIdList: <" + ex.getLocalizedMessage() + ">" );
+      return( null );
+    }
+  }
+
+  /**
+   * 
+   * Gib eine Liste mit Beschreibungen für alle gespeicherten Geräte zurück
+   *
+   * Project: SubmatixBTAndroid4 Package: de.dmarcini.submatix.android4.full.utils
+   * 
+   * Stand: 24.11.2014
+   * 
+   * @return Vector mit Parametern aller gespeicherten Geräte
+   */
+  public Vector<HashMap<String, String>> getDeviceAdressesList()
+  {
+    String sql;
+    Cursor cu;
+    Vector<HashMap<String, String>> devLists = new Vector<HashMap<String, String>>();
+    //
+    if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "getDeviceAdressesList..." );
+    sql = String.format( "select %s,%s,%s from %s order by %s", ProjectConst.A_MAC, ProjectConst.A_DEVNAME, ProjectConst.A_ALIAS, ProjectConst.A_TABLE_ALIASES,
+            ProjectConst.A_DEVICEID );
+    cu = dBase.rawQuery( sql, null );
+    //
+    try
+    {
+      if( cu.moveToFirst() )
+      {
+        do
+        {
+          HashMap<String, String> props = new HashMap<String, String>();
+          props.put( ProjectConst.A_MAC, cu.getString( 0 ) );
+          props.put( ProjectConst.A_DEVNAME, cu.getString( 1 ) );
+          props.put( ProjectConst.A_ALIAS, cu.getString( 2 ) );
+          devLists.add( props );
+        }
+        while( cu.moveToNext() );
+      }
+      Log.d( TAG, "getDeviceAdressesList: read <" + devLists.size() + "> entrys..." );
+      cu.close();
+      return( devLists );
+    }
+    catch( SQLException ex )
+    {
+      cu.close();
+      Log.e( TAG, "Error while getDeviceAdressesList: <" + ex.getLocalizedMessage() + ">" );
       return( null );
     }
   }
