@@ -21,8 +21,8 @@
 package de.dmarcini.submatix.android4.full.gui;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.Vector;
 
 import android.annotation.SuppressLint;
@@ -286,9 +286,73 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     //
     // eine Liste der bereits gepaarten Devices
     //
-    Set<BluetoothDevice> pairedDevices = MainActivity.mBtAdapter.getBondedDevices();
+    Vector<BluetoothDevice> pairedDevices = new Vector<BluetoothDevice>( MainActivity.mBtAdapter.getBondedDevices() );
     //
-    // Sind dort einige vorhanden, oder in der Liste der discoverten Devices dann ab in den adapter...
+    // Liste der Geräte aus der Datenbank, Abgleich mit gepaarten und discoverten Geräten
+    //
+    Vector<HashMap<String, String>> devListStored = MainActivity.aliasManager.getDeviceAdressesList();
+    Iterator<HashMap<String, String>> itStored = devListStored.iterator();
+    while( itStored.hasNext() )
+    {
+      HashMap<String, String> deviceMap = itStored.next();
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "fillNewAdapterWithKnownDevices: check stored Device <" + deviceMap.get( ProjectConst.A_DEVNAME ) + ">..." );
+      // eintrag in Arrayadapter vorbereiten
+      String[] entr = new String[BluetoothDeviceArrayAdapter.BT_DEVAR_COUNT];
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "stored device: " + deviceMap.get( ProjectConst.A_DEVNAME ) );
+      entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = deviceMap.get( ProjectConst.A_ALIAS );
+      entr[BluetoothDeviceArrayAdapter.BT_DEVAR_MAC] = deviceMap.get( ProjectConst.A_MAC );
+      entr[BluetoothDeviceArrayAdapter.BT_DEVAR_NAME] = deviceMap.get( ProjectConst.A_DEVNAME );
+      entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISPAIRED] = "false";
+      entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISONLINE] = "false";
+      // zuerst die geparten Geräte vergleichen
+      it = pairedDevices.iterator();
+      while( it.hasNext() )
+      {
+        BluetoothDevice device = it.next();
+        if( device.getAddress().equals( deviceMap.get( ProjectConst.A_MAC ) ) )
+        {
+          if( ApplicationDEBUG.DEBUG )
+            Log.d( TAG, "fillNewAdapterWithKnownDevices: Device <" + deviceMap.get( ProjectConst.A_DEVNAME ) + "> was in paired devices, remove from list..." );
+          entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISPAIRED] = "true";
+          try
+          {
+            it.remove();
+          }
+          catch( UnsupportedOperationException ex )
+          {
+            pairedDevices.remove( device );
+          }
+          break;
+        }
+      }
+      // und noch gegen die discoverten Geräte testen
+      it = discoveredDevices.iterator();
+      while( it.hasNext() )
+      {
+        BluetoothDevice device = it.next();
+        if( device.getAddress().equals( deviceMap.get( ProjectConst.A_MAC ) ) )
+        {
+          if( ApplicationDEBUG.DEBUG )
+            Log.d( TAG, "fillNewAdapterWithKnownDevices: Device <" + deviceMap.get( ProjectConst.A_DEVNAME ) + "> was in discovered devices, remove from list..." );
+          entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISONLINE] = "true";
+          try
+          {
+            it.remove();
+          }
+          catch( UnsupportedOperationException ex )
+          {
+            pairedDevices.remove( device );
+          }
+          break;
+        }
+      }
+      //
+      // Den Eintrag aus der Datenbank eintragen
+      //
+      btArrayAdapter.add( entr );
+    }
+    //
+    // Sind noch unbearbeitete Geräte vorhanden, oder in der Liste der discoverten Devices dann ab in den adapter...
     //
     if( pairedDevices.size() > 0 || discoveredDevices.size() > 0 )
     {
@@ -306,8 +370,8 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
             // Feld 0 = Geräte Alias / Gerätename
             // Feld 1 = Geräte-MAC
             // Feld 2 = Geräte-Name
-            // Feld 3 = Datenbank-Id (wenn vorhanden) sonst 0
-            // Feld 4 = Gerät gepart?
+            // Feld 3 = Gerät gepart?
+            // Feld 4 = Gerät online?
             String[] entr = new String[BluetoothDeviceArrayAdapter.BT_DEVAR_COUNT];
             if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "paired Device: " + device.getName() );
             entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = MainActivity.aliasManager.getAliasForMac( device.getAddress(), device.getName() );
@@ -315,7 +379,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
             entr[BluetoothDeviceArrayAdapter.BT_DEVAR_NAME] = device.getName();
             entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISPAIRED] = "true";
             entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISONLINE] = "false";
-            btArrayAdapter.add( entr );
+            btArrayAdapter.addOrUpdate( entr );
           }
           catch( NullPointerException ex )
           {
@@ -336,15 +400,15 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         // Feld 0 = Geräte Alias / Gerätename
         // Feld 1 = Geräte-MAC
         // Feld 2 = Geräte-Name
-        // Feld 3 = Datenbank-Id (wenn vorhanden) sonst 0
-        // Feld 4 = Gerät gepart?
+        // Feld 3 = Gerät gepart?
+        // Feld 4 = Gerät online?
         String[] entr = new String[BluetoothDeviceArrayAdapter.BT_DEVAR_COUNT];
         entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ALIAS] = devAlias;
         entr[BluetoothDeviceArrayAdapter.BT_DEVAR_MAC] = device.getAddress();
         entr[BluetoothDeviceArrayAdapter.BT_DEVAR_NAME] = device.getName();
         entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISPAIRED] = "false";
         entr[BluetoothDeviceArrayAdapter.BT_DEVAR_ISONLINE] = "true";
-        btArrayAdapter.add( entr );
+        btArrayAdapter.addOrUpdate( entr );
       }
     }
     else
@@ -451,102 +515,6 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
 
   /**
    * 
-   * NAchricht, ein Dialog ist Positiv beendet worden
-   *
-   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
-   * 
-   * Stand: 18.11.2014
-   * 
-   * @param smsg
-   *          die Nachricht
-   */
-  @SuppressLint( "NewApi" )
-  private void msgRecivedDialogPositive( BtServiceMessage smsg )
-  {
-    //
-    // hier ist nur der PIN-Dialog interessant, und nur bei API >= 19
-    //
-    if( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT )
-    {
-      if( smsg.getContainer() instanceof PinErrorDialog )
-      {
-        PinErrorDialog pinDial = ( PinErrorDialog )smsg.getContainer();
-        if( pinDial.getTag().equals( DIAL_GET_PIN ) )
-        {
-          if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "get-pin-dialog ends positive" );
-          BluetoothDevice device = pinDial.getDevice();
-          String newPin = pinDial.getPin();
-          // kleine Prüfung, es müssen 4 Ziffern sein
-          if( newPin.matches( "\\d{4}" ) )
-          {
-            //
-            // Die PIN könnte passen, das Format stimmt schon mal
-            //
-            if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "pin in an valid format!" );
-            // ab in die Database, falls noch nicht vorhanden
-            MainActivity.aliasManager.setAliasForMacIfNotExist( device.getAddress(), device.getName() );
-            MainActivity.aliasManager.setPinForMac( device.getAddress(), newPin );
-            ( ( MainActivity )runningActivity ).doConnectBtDevice( device.getAddress() );
-            //
-            if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "pin saved" );
-          }
-          else
-          {
-            //
-            // PIN war falsch formatiert :-(
-            // nochmal oder Abbruch
-            //
-            Log.e( TAG, "NOT valid PIN Format <" + newPin + ">" );
-            pinDial.dismiss();
-            // Bei KITKAT kann ich hier die PIN eintragen lassen, in die DB schreiben und den Pairungprozess starten
-            String msg = String.format( getResources().getString( R.string.dialog_pin_wrong_format ), device.getName() );
-            pinDial = new PinErrorDialog( getResources().getString( R.string.dialog_no_pin_headline ), msg, device );
-            pinDial.show( getFragmentManager().beginTransaction(), DIAL_GET_PIN );
-          }
-        }
-      }
-    }
-  }
-
-  /**
-   * 
-   * Nachricht, wenn beim Verbindungsversuch ein nicht gepaartes Gerät verucht wurde
-   *
-   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
-   * 
-   * Stand: 16.11.2014
-   * 
-   * @param smsg
-   *          Der Container smsg.getContainer() ist vom Typ BluetoothDevice
-   */
-  private void msgConnectNotbound( BtServiceMessage smsg )
-  {
-    String msg;
-    BluetoothDevice device;
-    String dName;
-    //
-    device = ( BluetoothDevice )smsg.getContainer();
-    dName = String.format( "%s/%s", MainActivity.aliasManager.getAliasForMac( device.getAddress(), device.getName() ), device.getName() );
-    //
-    if( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT )
-    {
-      // Bei KITKAT kann ich hier die PIN eintragen lassen, in die DB schreiben und den Pairungprozess starten
-      msg = String.format( getResources().getString( R.string.dialog_get_pin_msg ), dName );
-      PinErrorDialog eDial = new PinErrorDialog( getResources().getString( R.string.dialog_no_pin_headline ), msg, device );
-      eDial.show( getFragmentManager().beginTransaction(), DIAL_GET_PIN );
-    }
-    else
-    {
-      // bei App < 4.4 gebe ich nur den Hinweis an den User, er muss das Gerät paaren
-      // Message ist der container des Messageobjektes == String
-      msg = String.format( getResources().getString( R.string.dialog_no_pin_errmsg ), dName );
-      PinErrorDialog eDial = new PinErrorDialog( getResources().getString( R.string.dialog_no_pin_headline ), msg );
-      eDial.show( getFragmentManager().beginTransaction(), DIAL_NO_PIN_ERR );
-    }
-  }
-
-  /**
-   * 
    * Die Anzeige der Verbunden/trennen Seite
    * 
    * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.gui
@@ -612,6 +580,43 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     setToggleButtonTextAndStat( ProjectConst.CONN_STATE_CONNECTING );
   }
 
+  /**
+   * 
+   * Nachricht, wenn beim Verbindungsversuch ein nicht gepaartes Gerät verucht wurde
+   *
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 16.11.2014
+   * 
+   * @param smsg
+   *          Der Container smsg.getContainer() ist vom Typ BluetoothDevice
+   */
+  private void msgConnectNotbound( BtServiceMessage smsg )
+  {
+    String msg;
+    BluetoothDevice device;
+    String dName;
+    //
+    device = ( BluetoothDevice )smsg.getContainer();
+    dName = String.format( "%s/%s", MainActivity.aliasManager.getAliasForMac( device.getAddress(), device.getName() ), device.getName() );
+    //
+    if( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT )
+    {
+      // Bei KITKAT kann ich hier die PIN eintragen lassen, in die DB schreiben und den Pairungprozess starten
+      msg = String.format( getResources().getString( R.string.dialog_get_pin_msg ), dName );
+      PinErrorDialog eDial = new PinErrorDialog( getResources().getString( R.string.dialog_no_pin_headline ), msg, device );
+      eDial.show( getFragmentManager().beginTransaction(), DIAL_GET_PIN );
+    }
+    else
+    {
+      // bei App < 4.4 gebe ich nur den Hinweis an den User, er muss das Gerät paaren
+      // Message ist der container des Messageobjektes == String
+      msg = String.format( getResources().getString( R.string.dialog_no_pin_errmsg ), dName );
+      PinErrorDialog eDial = new PinErrorDialog( getResources().getString( R.string.dialog_no_pin_headline ), msg );
+      eDial.show( getFragmentManager().beginTransaction(), DIAL_NO_PIN_ERR );
+    }
+  }
+
   @Override
   public void msgDisconnected( BtServiceMessage msg )
   {
@@ -635,6 +640,65 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   public void msgRecivedAlive( BtServiceMessage msg )
   {
     //
+  }
+
+  /**
+   * 
+   * NAchricht, ein Dialog ist Positiv beendet worden
+   *
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 18.11.2014
+   * 
+   * @param smsg
+   *          die Nachricht
+   */
+  @SuppressLint( "NewApi" )
+  private void msgRecivedDialogPositive( BtServiceMessage smsg )
+  {
+    //
+    // hier ist nur der PIN-Dialog interessant, und nur bei API >= 19
+    //
+    if( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT )
+    {
+      if( smsg.getContainer() instanceof PinErrorDialog )
+      {
+        PinErrorDialog pinDial = ( PinErrorDialog )smsg.getContainer();
+        if( pinDial.getTag().equals( DIAL_GET_PIN ) )
+        {
+          if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "get-pin-dialog ends positive" );
+          BluetoothDevice device = pinDial.getDevice();
+          String newPin = pinDial.getPin();
+          // kleine Prüfung, es müssen 4 Ziffern sein
+          if( newPin.matches( "\\d{4}" ) )
+          {
+            //
+            // Die PIN könnte passen, das Format stimmt schon mal
+            //
+            if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "pin in an valid format!" );
+            // ab in die Database, falls noch nicht vorhanden
+            MainActivity.aliasManager.setAliasForMacIfNotExist( device.getAddress(), device.getName() );
+            MainActivity.aliasManager.setPinForMac( device.getAddress(), newPin );
+            ( ( MainActivity )runningActivity ).doConnectBtDevice( device.getAddress() );
+            //
+            if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "pin saved" );
+          }
+          else
+          {
+            //
+            // PIN war falsch formatiert :-(
+            // nochmal oder Abbruch
+            //
+            Log.e( TAG, "NOT valid PIN Format <" + newPin + ">" );
+            pinDial.dismiss();
+            // Bei KITKAT kann ich hier die PIN eintragen lassen, in die DB schreiben und den Pairungprozess starten
+            String msg = String.format( getResources().getString( R.string.dialog_pin_wrong_format ), device.getName() );
+            pinDial = new PinErrorDialog( getResources().getString( R.string.dialog_no_pin_headline ), msg, device );
+            pinDial.show( getFragmentManager().beginTransaction(), DIAL_GET_PIN );
+          }
+        }
+      }
+    }
   }
 
   /**
