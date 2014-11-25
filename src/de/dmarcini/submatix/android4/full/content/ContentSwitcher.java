@@ -61,6 +61,7 @@ public class ContentSwitcher
     public String              sId;
     public String              content;
     public boolean             workOffline;
+    public boolean             isDummy;
     public int                 nId;
     public int                 resIdOffline;
     public int                 resIdOnline;
@@ -77,11 +78,12 @@ public class ContentSwitcher
      * @param content
      * @param workOffline
      */
-    public ProgItem( String id, String content, boolean workOffline )
+    public ProgItem( String id, String content, boolean workOffline, boolean isDummy )
     {
       this.sId = id;
       this.content = content;
       this.workOffline = workOffline;
+      this.isDummy = isDummy;
       this.resIdOffline = R.drawable.placeholder;
       this.resIdOnline = R.drawable.placeholder;
       try
@@ -107,12 +109,13 @@ public class ContentSwitcher
      * @param content
      * @param workOffline
      */
-    public ProgItem( int id, String content, boolean workOffline )
+    public ProgItem( int id, String content, boolean workOffline, boolean isDummy )
     {
       this.sId = String.format( "%d", id );
       this.nId = id;
       this.content = content;
       this.workOffline = workOffline;
+      this.isDummy = isDummy;
       this.resIdOffline = R.drawable.placeholder;
       this.resIdOnline = R.drawable.placeholder;
     }
@@ -132,12 +135,13 @@ public class ContentSwitcher
      * @param content
      * @param workOffline
      */
-    public ProgItem( int id, int resIdOffline, int resIdOnline, String content, boolean workOffline )
+    public ProgItem( int id, int resIdOffline, int resIdOnline, String content, boolean workOffline, boolean isDummy )
     {
       this.sId = String.format( "%d", id );
       this.nId = id;
       this.content = content;
       this.workOffline = workOffline;
+      this.isDummy = isDummy;
       this.resIdOffline = resIdOffline;
       this.resIdOnline = resIdOnline;
     }
@@ -183,7 +187,7 @@ public class ContentSwitcher
 
   static
   {
-    addItem( new ProgItem( "1", "dummy 1", true ) );
+    addItem( new ProgItem( "1", "dummy 1", true, true ) );
   }
 
   /**

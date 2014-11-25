@@ -78,6 +78,7 @@ public class ArrayAdapterWithPics extends ArrayAdapter<ContentSwitcher.ProgItem>
     while( it.hasNext() )
     {
       ContentSwitcher.ProgItem item = it.next();
+      if( item.isDummy ) continue;
       if( isOnline || item.workOffline )
       {
         // wenn wir online sind oder die Funktion auch offline erlaubt ist
