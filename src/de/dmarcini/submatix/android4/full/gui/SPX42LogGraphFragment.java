@@ -111,6 +111,46 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     }
   }
 
+  /**
+   * 
+   * Erzeuge nun die grafik für den Tauchgang mit dem objekt SPX42LogGraphView
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 02.02.2014
+   */
+  private void makeGraphForDive()
+  {
+    Vector<float[]> sampleVector;
+    //
+    ReadLogItemObj rlo = logManager.getLogObjForDbId( dbId, getActivity().getResources() );
+    if( rlo != null )
+    {
+      //
+      // Wenn die Überschrift nicht ausgeblendet ist,
+      // Tauchgangsdaten einblenden
+      //
+      if( runningActivity.getActionBar() != null )
+      {
+        String headerStr = String.format( "%s <%s>", getResources().getString( R.string.graphlog_header ), rlo.itemName );
+        runningActivity.getActionBar().setTitle( headerStr );
+      }
+      try
+      {
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "read dive samples from file <%s>...", rlo.fileOnMobile ) );
+        sampleVector = SPX42DiveSampleClass.makeSamples( rlo );
+        sPX42LogGraphView.setDiveData( sampleVector );
+        sPX42LogGraphView.invalidate();
+      }
+      catch( NoXMLDataFileFoundException ex )
+      {
+        Log.e( TAG, "can't create diveLog samples : <" + ex.getLocalizedMessage() + ">" );
+        // TODO: User benachrichtigen
+        return;
+      }
+    }
+  }
+
   @Override
   public void msgConnected( BtServiceMessage msg )
   {
@@ -195,7 +235,6 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
   {
     super.onCreate( savedInstanceState );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
-    // theToast = new CommToast( getActivity() );
     dbId = getArguments().getInt( ProjectConst.ARG_ITEM_DBID, -1 );
     if( ApplicationDEBUG.DEBUG ) Log.e( TAG, "onCreate... DBID=<" + dbId + ">" );
   }
@@ -231,6 +270,26 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
   }
 
   @Override
+  public void onDetach()
+  {
+    super.onDetach();
+    Bundle arguments = getArguments();
+    //
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_ID ) )
+    {
+      // Es gibt einen Eintrag für den Gewählten Menüpunkt
+      if( arguments.getBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, false ) )
+      {
+        // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
+        // und kennzeichnen
+        arguments.putInt( ProjectConst.ARG_ITEM_DBID, dbId );
+        arguments.putBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, false );
+        runningActivity.fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
+      }
+    }
+  }
+
+  @Override
   public void onPause()
   {
     super.onPause();
@@ -253,45 +312,5 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     //
     runningActivity.addServiceListener( this );
     makeGraphForDive();
-  }
-
-  /**
-   * 
-   * Erzeuge nun die grafik für den Tauchgang mit dem objekt SPX42LogGraphView
-   * 
-   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
-   * 
-   * Stand: 02.02.2014
-   */
-  private void makeGraphForDive()
-  {
-    Vector<float[]> sampleVector;
-    //
-    ReadLogItemObj rlo = logManager.getLogObjForDbId( dbId, getActivity().getResources() );
-    if( rlo != null )
-    {
-      //
-      // Wenn die Überschrift nicht ausgeblendet ist,
-      // Tauchgangsdaten einblenden
-      //
-      if( runningActivity.getActionBar() != null )
-      {
-        String headerStr = String.format( "%s <%s>", getResources().getString( R.string.graphlog_header ), rlo.itemName );
-        runningActivity.getActionBar().setTitle( headerStr );
-      }
-      try
-      {
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "read dive samples from file <%s>...", rlo.fileOnMobile ) );
-        sampleVector = SPX42DiveSampleClass.makeSamples( rlo );
-        sPX42LogGraphView.setDiveData( sampleVector );
-        sPX42LogGraphView.invalidate();
-      }
-      catch( NoXMLDataFileFoundException ex )
-      {
-        Log.e( TAG, "can't create diveLog samples : <" + ex.getLocalizedMessage() + ">" );
-        // TODO: User benachrichtigen
-        return;
-      }
-    }
   }
 }
