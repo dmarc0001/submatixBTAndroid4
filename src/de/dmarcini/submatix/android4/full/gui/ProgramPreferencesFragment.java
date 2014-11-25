@@ -40,6 +40,7 @@ import android.view.MenuItem;
 import android.view.View;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
+import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 
 /**
  * 
@@ -75,6 +76,23 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
   }
 
   @Override
+  public void onActivityCreated( Bundle savedInstanceState )
+  {
+    super.onActivityCreated( savedInstanceState );
+    Bundle arguments = getArguments();
+    // Wenn eine Überschrift vorhanden ist
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    {
+      // Übergib die Überschrift für die ActionBar
+      ( ( MainActivity )getActivity() ).onSectionAttached( arguments.getString( ProjectConst.ARG_ITEM_CONTENT ) );
+    }
+    else
+    {
+      Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+    }
+  };
+
+  @Override
   public void onResume()
   {
     super.onResume();
@@ -91,6 +109,25 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     // den Change-Listener abbestellen ;-)
     //
     getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener( this );
+  }
+
+  @Override
+  public void onDetach()
+  {
+    super.onDetach();
+    Bundle arguments = getArguments();
+    //
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_ID ) )
+    {
+      // Es gibt einen Eintrag für den Gewählten Menüpunkt
+      if( arguments.getBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false ) )
+      {
+        // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
+        // und kennzeichnen
+        arguments.putBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false );
+        ( ( MainActivity )getActivity() ).fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
+      }
+    }
   }
 
   @Override

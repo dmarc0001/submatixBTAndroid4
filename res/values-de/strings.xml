@@ -26,6 +26,7 @@
     <string name="progitem_gaslist">"Gase bearbeiten"</string>
     <string name="progitem_logging">"Protokolle lesen"</string>
     <string name="progitem_loggraph">"Visualisiere Logs"</string>
+    <string name="progitem_loggraph_detail">"Visualisiere Logs Detail"</string>
     <string name="progitem_export">"Exportiere Protokolle"</string>
     <string name="progitem_progpref">"Einstellungen"</string>
     <string name="progitem_about">Über das Programm</string>
@@ -310,15 +311,6 @@
     <string name="conf_prog_others_off_light">"Hell"</string>
     <string name="conf_prog_others_on_dark_summary">"App Thema DUNKEL gewählt"</string>
     <string name="conf_prog_others_off_light_summary">"App Thema HELL gewählt"</string>
-    
-    <!--  ### Kategorie Einstellungen Log Grafik ### -->
-    <string name="conf_prog_graph_screen_header">Grafische Protokolldarstellung</string>
-    <!--  Sichtbarkeit der Überschrift -->
-    <string name="conf_prog_graph_screen_headline_headline">Titelzeile (kleine Schirme)</string>
-    <string name="conf_prog_graph_screen_headline_on_summary">Titelzeile wird angezeigt</string>
-    <string name="conf_prog_graph_screen_headline_off_summary">Titelzeile wird nicht dargestellt</string>
-    <string name="conf_prog_graph_screen_headline_on">anzeigen</string>
-    <string name="conf_prog_graph_screen_headline_off">verbergen</string>
     
     <!--  Strings für ConnectSeite  -->
     <string name="connect_togglebtn_disconn">AUS</string>

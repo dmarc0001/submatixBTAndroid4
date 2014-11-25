@@ -91,7 +91,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   private TextView                      connectTextView           = null;
   protected ProgressDialog              progressDialog            = null;
   private boolean                       runDiscovering            = false;
-  private Activity                      runningActivity           = null;
+  private MainActivity                  runningActivity           = null;
   private CommToast                     theToast                  = null;
   private boolean                       showCommToast             = false;
   private final Vector<BluetoothDevice> discoveredDevices         = new Vector<BluetoothDevice>();
@@ -679,7 +679,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
             // ab in die Database, falls noch nicht vorhanden
             MainActivity.aliasManager.setAliasForMacIfNotExist( device.getAddress(), device.getName() );
             MainActivity.aliasManager.setPinForMac( device.getAddress(), newPin );
-            ( ( MainActivity )runningActivity ).doConnectBtDevice( device.getAddress() );
+            runningActivity.doConnectBtDevice( device.getAddress() );
             //
             if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "pin saved" );
           }
@@ -781,7 +781,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   public void onActivityCreated( Bundle bundle )
   {
     super.onActivityCreated( bundle );
-    runningActivity = getActivity();
+    runningActivity = ( MainActivity )getActivity();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ..." );
     try
     {
@@ -814,6 +814,15 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     {
       Log.e( TAG, "onActivityCreated: gui objects not allocated!" );
     }
+    Bundle arguments = getArguments();
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    {
+      runningActivity.onSectionAttached( arguments.getString( ProjectConst.ARG_ITEM_CONTENT ) );
+    }
+    else
+    {
+      Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+    }
     //
     // Intend-Filter und Intend für Pairing Anfragen
     //
@@ -830,7 +839,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   public void onAttach( Activity activity )
   {
     super.onAttach( activity );
-    runningActivity = activity;
+    runningActivity = ( MainActivity )activity;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
     try
     {
@@ -859,7 +868,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   @Override
   public void onClick( View cView )
   {
-    int connState = ( ( MainActivity )runningActivity ).getConnectionStatus();
+    int connState = runningActivity.getConnectionStatus();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onClick: ON CLICK!" );
     //
     // Wenn das der CONNECT Button war
@@ -892,18 +901,18 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
           String deviceMac = ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getMAC( devSpinner.getSelectedItemPosition() );
           String deviceName = ( ( BluetoothDeviceArrayAdapter )devSpinner.getAdapter() ).getDevName( devSpinner.getSelectedItemPosition() );
           setAliasForDeviceIfNotExist( deviceMac, deviceName );
-          ( ( MainActivity )runningActivity ).doConnectBtDevice( deviceMac );
+          runningActivity.doConnectBtDevice( deviceMac );
           break;
         case ProjectConst.CONN_STATE_CONNECTING:
           Log.i( TAG, "cancel connecting.." );
-          ( ( MainActivity )runningActivity ).doDisconnectBtDevice();
+          runningActivity.doDisconnectBtDevice();
         case ProjectConst.CONN_STATE_CONNECTED:
           if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onClick: switch connect to OFF" );
           //
           // wenn da noch einer werkelt, anhalten und kompostieren
           //
           showCommToast = true;
-          ( ( MainActivity )runningActivity ).doDisconnectBtDevice();
+          runningActivity.doDisconnectBtDevice();
           break;
       }
     }
@@ -1018,7 +1027,26 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     {
       MainActivity.mBtAdapter.cancelDiscovery();
     }
-    ( ( MainActivity )runningActivity ).removeServiceListener( this );
+    runningActivity.removeServiceListener( this );
+  }
+
+  @Override
+  public void onDetach()
+  {
+    super.onDetach();
+    Bundle arguments = getArguments();
+    //
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_ID ) )
+    {
+      // Es gibt einen Eintrag für den Gewählten Menüpunkt
+      if( arguments.getBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false ) )
+      {
+        // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
+        // und kennzeichnen
+        arguments.putBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false );
+        runningActivity.fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
+      }
+    }
   }
 
   @Override
@@ -1042,7 +1070,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     // die abgeleiteten Objekte führen das auch aus
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
-    ( ( MainActivity )runningActivity ).removeServiceListener( this );
+    runningActivity.removeServiceListener( this );
   }
 
   /**
@@ -1053,14 +1081,14 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   {
     super.onResume();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
-    ( ( MainActivity )runningActivity ).addServiceListener( this );
+    runningActivity.addServiceListener( this );
     // wenn zu diesem Zeitpunkt das Array noch nicht gefüllt ist, dann mach das nun
     if( 0 == btArrayAdapter.getCount() )
     {
       fillNewAdapterWithKnownDevices();
     }
     // setze den verbindungsstatus visuell
-    setToggleButtonTextAndStat( ( ( MainActivity )runningActivity ).getConnectionStatus() );
+    setToggleButtonTextAndStat( runningActivity.getConnectionStatus() );
   }
 
   /**
@@ -1155,7 +1183,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       }
       // ArrayAdapter erfragen
       // mit welchem Gerät bin ich verbunden?
-      lastConnectedDeviceMac = ( ( MainActivity )runningActivity ).getConnectedDevice();
+      lastConnectedDeviceMac = runningActivity.getConnectedDevice();
       Log.v( TAG, "setSpinnerToConnectedDevice connected Device: <" + lastConnectedDeviceMac + ">" );
       if( lastConnectedDeviceMac != null )
       {

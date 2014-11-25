@@ -31,6 +31,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
@@ -47,22 +48,21 @@ import de.dmarcini.submatix.android4.full.utils.SPX42LogManager;
 
 /**
  * 
- * Ein Detsailfragment, welches die Verbindung mit dem SPX Managed
+ * Zeige Logs grafisch an!
  * 
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
  * 
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
  * 
- *         Stand: 01.02.2014
+ *         Stand: 25.11.2014
  */
-public class SPX42LogGraphFragment extends Fragment implements IBtServiceListener
+public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceListener
 {
   @SuppressWarnings( "javadoc" )
-  public static final String TAG               = SPX42LogGraphFragment.class.getSimpleName();
+  public static final String TAG               = SPX42LogGraphDetailFragment.class.getSimpleName();
   protected ProgressDialog   progressDialog    = null;
-  // private CommToast theToast = null;
   private SPX42LogManager    logManager        = null;
-  private Activity           runningActivity   = null;
+  private MainActivity       runningActivity   = null;
   private int                dbId              = -1;
   private SPX42LogGraphView  sPX42LogGraphView = null;
 
@@ -111,141 +111,6 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     }
   }
 
-  @Override
-  public void msgConnected( BtServiceMessage msg )
-  {
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgConnected..." );
-  }
-
-  @Override
-  public void msgConnectError( BtServiceMessage msg )
-  {}
-
-  @Override
-  public void msgConnecting( BtServiceMessage msg )
-  {}
-
-  @Override
-  public void msgDisconnected( BtServiceMessage msg )
-  {}
-
-  @Override
-  public void msgRecivedAlive( BtServiceMessage msg )
-  {}
-
-  @Override
-  public void msgRecivedTick( BtServiceMessage msg )
-  {
-    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
-  }
-
-  @Override
-  public void msgReciveWriteTmeout( BtServiceMessage msg )
-  {
-    //
-  }
-
-  @Override
-  public void onActivityCreated( Bundle bundle )
-  {
-    super.onActivityCreated( bundle );
-    runningActivity = getActivity();
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
-  }
-
-  @Override
-  public void onAttach( Activity activity )
-  {
-    super.onAttach( activity );
-    runningActivity = activity;
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
-    //
-    // die Datenbank öffnen
-    //
-    try
-    {
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create SQLite helper..." );
-      DataSQLHelper sqlHelper = new DataSQLHelper( getActivity().getApplicationContext(), MainActivity.databaseDir.getAbsolutePath() + File.separator + ProjectConst.DATABASE_NAME );
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create logManager helper..." );
-      logManager = new SPX42LogManager( sqlHelper.getWritableDatabase() );
-    }
-    catch( NoDatabaseException ex )
-    {
-      Log.e( TAG, "NoDatabaseException: <" + ex.getLocalizedMessage() + ">" );
-      UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_sqlite_error_header ), runningActivity.getResources()
-              .getString( R.string.dialog_sqlite_nodatabase_error ) );
-      uad.show( getFragmentManager(), "abortProgram" );
-    }
-  }
-
-  /**
-   * Nach dem Erzeugen des Objektes noch Einstellungen....
-   */
-  @Override
-  public void onCreate( Bundle savedInstanceState )
-  {
-    super.onCreate( savedInstanceState );
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
-    // theToast = new CommToast( getActivity() );
-    dbId = getArguments().getInt( ProjectConst.ARG_ITEM_DBID, -1 );
-    if( ApplicationDEBUG.DEBUG ) Log.e( TAG, "onCreate... DBID=<" + dbId + ">" );
-  }
-
-  /**
-   * Wenn das View erzeugt wird (nach onCreate), noch ein paar Sachen erledigen
-   */
-  @Override
-  public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
-  {
-    View rootView;
-    //
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView..." );
-    //
-    // wenn kein Container vorhanden ist, dann gibts auch keinen View
-    //
-    if( container == null )
-    {
-      Log.e( TAG, "onCreateView: container is NULL ..." );
-      return( null );
-    }
-    sPX42LogGraphView = new SPX42LogGraphView( getActivity().getApplication().getApplicationContext() );
-    sPX42LogGraphView.setTheme( MainActivity.getAppStyle() );
-    rootView = sPX42LogGraphView;
-    return rootView;
-  }
-
-  @Override
-  public void onDestroy()
-  {
-    super.onDestroy();
-    ( ( MainActivity )runningActivity ).removeServiceListener( this );
-  }
-
-  @Override
-  public void onPause()
-  {
-    super.onPause();
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause..." );
-    // handler loeschen
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
-    ( ( MainActivity )runningActivity ).removeServiceListener( this );
-  }
-
-  /**
-   * Wenn das View wieder nach vorn kommt / reaktiviert wurde
-   */
-  @Override
-  public synchronized void onResume()
-  {
-    super.onResume();
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
-    //
-    // Service Listener setzen
-    //
-    ( ( MainActivity )runningActivity ).addServiceListener( this );
-    makeGraphForDive();
-  }
-
   /**
    * 
    * Erzeuge nun die grafik für den Tauchgang mit dem objekt SPX42LogGraphView
@@ -284,5 +149,168 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
         return;
       }
     }
+  }
+
+  @Override
+  public void msgConnected( BtServiceMessage msg )
+  {
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgConnected..." );
+  }
+
+  @Override
+  public void msgConnectError( BtServiceMessage msg )
+  {}
+
+  @Override
+  public void msgConnecting( BtServiceMessage msg )
+  {}
+
+  @Override
+  public void msgDisconnected( BtServiceMessage msg )
+  {}
+
+  @Override
+  public void msgRecivedAlive( BtServiceMessage msg )
+  {}
+
+  @Override
+  public void msgRecivedTick( BtServiceMessage msg )
+  {
+    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
+  }
+
+  @Override
+  public void msgReciveWriteTmeout( BtServiceMessage msg )
+  {
+    //
+  }
+
+  @Override
+  public void onActivityCreated( Bundle bundle )
+  {
+    super.onActivityCreated( bundle );
+    runningActivity = ( MainActivity )getActivity();
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
+    Bundle arguments = getArguments();
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    {
+      runningActivity.onSectionAttached( arguments.getString( ProjectConst.ARG_ITEM_CONTENT ) );
+    }
+    else
+    {
+      Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+    }
+  }
+
+  @Override
+  public void onAttach( Activity activity )
+  {
+    super.onAttach( activity );
+    runningActivity = ( MainActivity )activity;
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
+    //
+    // die Datenbank öffnen
+    //
+    try
+    {
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create SQLite helper..." );
+      DataSQLHelper sqlHelper = new DataSQLHelper( getActivity().getApplicationContext(), MainActivity.databaseDir.getAbsolutePath() + File.separator + ProjectConst.DATABASE_NAME );
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create logManager helper..." );
+      logManager = new SPX42LogManager( sqlHelper.getWritableDatabase() );
+    }
+    catch( NoDatabaseException ex )
+    {
+      Log.e( TAG, "NoDatabaseException: <" + ex.getLocalizedMessage() + ">" );
+      UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_sqlite_error_header ), runningActivity.getResources()
+              .getString( R.string.dialog_sqlite_nodatabase_error ) );
+      uad.show( getFragmentManager(), "abortProgram" );
+    }
+  }
+
+  /**
+   * Nach dem Erzeugen des Objektes noch Einstellungen....
+   */
+  @Override
+  public void onCreate( Bundle savedInstanceState )
+  {
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
+    super.onCreate( savedInstanceState );
+    runningActivity.getWindow().setFlags( WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN );
+    dbId = getArguments().getInt( ProjectConst.ARG_DBID, -1 );
+    if( ApplicationDEBUG.DEBUG ) Log.e( TAG, "onCreate... DBID=<" + dbId + ">" );
+  }
+
+  /**
+   * Wenn das View erzeugt wird (nach onCreate), noch ein paar Sachen erledigen
+   */
+  @Override
+  public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
+  {
+    View rootView;
+    //
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView..." );
+    //
+    // wenn kein Container vorhanden ist, dann gibts auch keinen View
+    //
+    if( container == null )
+    {
+      Log.e( TAG, "onCreateView: container is NULL ..." );
+      return( null );
+    }
+    sPX42LogGraphView = new SPX42LogGraphView( getActivity().getApplication().getApplicationContext() );
+    sPX42LogGraphView.setTheme( MainActivity.getAppStyle() );
+    rootView = sPX42LogGraphView;
+    return rootView;
+  }
+
+  @Override
+  public void onDestroy()
+  {
+    super.onDestroy();
+    runningActivity.removeServiceListener( this );
+  }
+
+  @Override
+  public void onDetach()
+  {
+    super.onDetach();
+    Bundle arguments = getArguments();
+    //
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_ID ) )
+    {
+      // Es gibt einen Eintrag für den Gewählten Menüpunkt
+      if( arguments.getBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false ) )
+      {
+        // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
+        // und kennzeichnen
+        arguments.putBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false );
+        runningActivity.fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
+      }
+    }
+  }
+
+  @Override
+  public void onPause()
+  {
+    super.onPause();
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause..." );
+    // handler loeschen
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
+    runningActivity.removeServiceListener( this );
+  }
+
+  /**
+   * Wenn das View wieder nach vorn kommt / reaktiviert wurde
+   */
+  @Override
+  public synchronized void onResume()
+  {
+    super.onResume();
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
+    //
+    // Service Listener setzen
+    //
+    runningActivity.addServiceListener( this );
+    makeGraphForDive();
   }
 }

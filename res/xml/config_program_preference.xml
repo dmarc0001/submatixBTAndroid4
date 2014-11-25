@@ -75,18 +75,4 @@
             android:title="@string/conf_prog_others_bt_disable_bt_header" />
     </de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory>
     
-    <!-- Abschnitt für Einstellungen der grafischen Log-Anzeige  -->
-    <de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory
-        android:key="keyProgLogGraph"
-        android:title="@string/conf_prog_graph_screen_header" >
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="keyProgLogShowHeadline"
-            android:summaryOff="@string/conf_prog_graph_screen_headline_off_summary"
-            android:summaryOn="@string/conf_prog_graph_screen_headline_on_summary"
-            android:switchTextOff="@string/conf_prog_graph_screen_headline_off"
-            android:switchTextOn="@string/conf_prog_graph_screen_headline_on"
-            android:title="@string/conf_prog_graph_screen_headline_headline" />
-    </de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory>
-    
 </PreferenceScreen>

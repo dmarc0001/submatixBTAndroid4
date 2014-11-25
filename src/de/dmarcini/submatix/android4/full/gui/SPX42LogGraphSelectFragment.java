@@ -27,7 +27,6 @@ import java.util.Vector;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
@@ -73,7 +72,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   private SPX42LogManager    logManager              = null;
   private int                selectedDeviceId        = -1;
   private String             selectedDeviceAlias     = null;
-  private Activity           runningActivity;
+  private MainActivity       runningActivity;
   private Button             changeGraphDeviceButton = null;
   private Button             graphLogsButton         = null;
   private ListView           graphLogsListView       = null;
@@ -254,7 +253,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   public void onActivityCreated( Bundle bundle )
   {
     super.onActivityCreated( bundle );
-    runningActivity = getActivity();
+    runningActivity = ( MainActivity )getActivity();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
     try
     {
@@ -269,13 +268,64 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     {
       Log.e( TAG, "onActivityCreated: gui objects not allocated!" );
     }
+    Bundle arguments = getArguments();
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    {
+      runningActivity.onSectionAttached( arguments.getString( ProjectConst.ARG_ITEM_CONTENT ) );
+      if( arguments.containsKey( ProjectConst.ARG_SELECTED_DEVICE ) )
+      {
+        // Gerät vorselektieren
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: marked device <" + arguments.getInt( ProjectConst.ARG_SELECTED_DEVICE ) + ">" );
+        fillListAdapter( arguments.getInt( ProjectConst.ARG_SELECTED_DEVICE ) );
+        if( arguments.containsKey( ProjectConst.ARG_SELECTED_DIVE ) )
+        {
+          // Dive vorselektieren
+          setDiveAdapterForDiveId( arguments.getInt( ProjectConst.ARG_SELECTED_DIVE ) );
+        }
+      }
+    }
+    else
+    {
+      Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+    }
+  }
+
+  /**
+   * 
+   * Suche und selektiere ggf. den vorgemerkten Dive
+   *
+   * Project: SubmatixBTAndroid4 Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 25.11.2014
+   * 
+   * @param diveId
+   */
+  private void setDiveAdapterForDiveId( int diveId )
+  {
+    SPX42ReadLogListArrayAdapter rAdapter;
+    ReadLogItemObj rlo;
+    int idx;
+    //
+    rAdapter = ( SPX42ReadLogListArrayAdapter )graphLogsListView.getAdapter();
+    rAdapter.clearMarkedItems();
+    // alle Einträge nach DBID durchsuchen
+    for( idx = 0; idx < rAdapter.getCount(); idx++ )
+    {
+      rlo = rAdapter.getItem( idx );
+      if( rlo.dbId == diveId )
+      {
+        rAdapter.setMarked( idx, true );
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "setDiveAdapterForDiveId: marked IDX <" + idx + ">" );
+        break;
+      }
+    }
   }
 
   @Override
   public void onAttach( Activity activity )
   {
     super.onAttach( activity );
-    runningActivity = activity;
+    runningActivity = ( MainActivity )activity;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
     //
     // die Datenbank öffnen
@@ -372,17 +422,6 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
       Log.e( TAG, "onCreateView: container is NULL ..." );
       return( null );
     }
-    //
-    // wenn die laufende Activity eine AreaDetailActivity ist, dann gibts das View schon
-    //
-    // if( runningActivity instanceof AreaDetailActivity )
-    // {
-    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
-    // return( null );
-    // }
-    //
-    // Verbindungsseite via twoPane ausgewählt
-    //
     rootView = makeGraphSelectionView( inflater, container );
     return rootView;
   }
@@ -391,7 +430,26 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   public void onDestroy()
   {
     super.onDestroy();
-    ( ( MainActivity )runningActivity ).removeServiceListener( this );
+    runningActivity.removeServiceListener( this );
+  }
+
+  @Override
+  public void onDetach()
+  {
+    super.onDetach();
+    Bundle arguments = getArguments();
+    //
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_ID ) )
+    {
+      // Es gibt einen Eintrag für den Gewählten Menüpunkt
+      if( arguments.getBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false ) )
+      {
+        // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
+        // und kennzeichnen
+        arguments.putBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false );
+        runningActivity.fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
+      }
+    }
   }
 
   /**
@@ -421,9 +479,12 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
    */
   public void onDialogPositive( DialogFragment dialog )
   {
+    Bundle arguments;
+    //
     if( ApplicationDEBUG.DEBUG ) Log.v( TAG, "Positive dialog click!" );
     if( dialog instanceof SelectDeviceDialogFragment )
     {
+      arguments = getArguments();
       SelectDeviceDialogFragment deviceDialog = ( SelectDeviceDialogFragment )dialog;
       selectedDeviceId = deviceDialog.getSelectedDeviceId();
       selectedDeviceAlias = logManager.getAliasForId( selectedDeviceId );
@@ -435,10 +496,24 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
       //
       if( selectedDeviceId > 0 )
       {
+        //
+        // wenn ein gerät gewählt wurde, speicher das gleich in den Argumenten
+        //
+        if( arguments != null )
+        {
+          arguments.putInt( ProjectConst.ARG_SELECTED_DEVICE, selectedDeviceId );
+        }
         fillListAdapter( selectedDeviceId );
       }
       else
       {
+        //
+        // Tja, Einstellunge entfernen
+        //
+        if( arguments != null )
+        {
+          arguments.remove( ProjectConst.ARG_SELECTED_DEVICE );
+        }
         // Das wird nix, kein Gerät ausgewählt
         if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "no device selected -> note to user" );
         UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_no_device_selected_header ), runningActivity
@@ -451,6 +526,13 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
       //
       if( graphLogsListView.getAdapter().isEmpty() )
       {
+        //
+        // Tja, Einstellunge entfernen
+        //
+        if( arguments != null )
+        {
+          arguments.remove( ProjectConst.ARG_SELECTED_DEVICE );
+        }
         // Das wird auch nix, Keine Einträge in der Datenbank
         if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "no logs foir device -> note to user" );
         UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_not_log_entrys_header ), runningActivity
@@ -488,12 +570,14 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   @Override
   public void onItemClick( AdapterView<?> parent, View clickedView, int position, long id )
   {
+    Bundle arguments;
     SPX42ReadLogListArrayAdapter rlAdapter = null;
     //
     // Die Liste der Logs
     //
     if( parent.equals( graphLogsListView ) )
     {
+      arguments = getArguments();
       rlAdapter = ( SPX42ReadLogListArrayAdapter )graphLogsListView.getAdapter();
       //
       // mache die Markierung auch im View (das wird ja sonst nicht automatisch aktualisiert)
@@ -523,6 +607,15 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
       rlAdapter.setMarked( position, true );
       ImageView ivMarked = ( ImageView )clickedView.findViewById( R.id.readLogMarkedIconView );
       ivMarked.setImageResource( R.drawable.circle_full_green );
+      //
+      // Tja, Einstellung merken
+      //
+      if( ( arguments != null ) && ( !rlAdapter.getMarkedItems().isEmpty() ) )
+      {
+        int idx = rlAdapter.getMarkedItems().firstElement();
+        ReadLogItemObj rlo = rlAdapter.getItem( idx );
+        arguments.putInt( ProjectConst.ARG_SELECTED_DIVE, rlo.dbId );
+      }
     }
   }
 
@@ -533,7 +626,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause..." );
     // handler loeschen
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
-    ( ( MainActivity )runningActivity ).removeServiceListener( this );
+    runningActivity.removeServiceListener( this );
   }
 
   /**
@@ -567,7 +660,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     //
     // Service Listener setzen
     //
-    ( ( MainActivity )runningActivity ).addServiceListener( this );
+    runningActivity.addServiceListener( this );
   }
 
   /**
@@ -586,14 +679,12 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     // Logs grafisch darstellen, dazu neues Frame aufrufen
     //
     Bundle arguments = new Bundle();
-    arguments.putString( ProjectConst.ARG_ITEM_CONTENT, getString( R.string.progitem_loggraph ) );
-    arguments.putInt( ProjectConst.ARG_ITEM_ID, R.string.progitem_loggraph );
-    arguments.putBoolean( ProjectConst.ARG_ITEM_GRAPHEXTRA, true );
-    arguments.putInt( ProjectConst.ARG_ITEM_DBID, dbId );
+    arguments.putString( ProjectConst.ARG_ITEM_CONTENT, getString( R.string.progitem_loggraph_detail ) );
+    arguments.putInt( ProjectConst.ARG_ITEM_ID, R.string.progitem_loggraph_detail );
+    arguments.putBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, true );
+    arguments.putInt( ProjectConst.ARG_DBID, dbId );
     Log.i( TAG, "viewSelectedLogItem:..." );
-    SPX42LogGraphFragment lgf = new SPX42LogGraphFragment();
-    lgf.setArguments( arguments );
-    runningActivity.getActionBar().setTitle( R.string.graphlog_header );
-    getFragmentManager().beginTransaction().replace( R.id.main_container, lgf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+    runningActivity.fillCallStack( R.string.progitem_loggraph_detail, arguments );
+    runningActivity.callPReferedFragment();
   }
 }

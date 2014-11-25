@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Stack;
 import java.util.Vector;
 
 import org.joda.time.DateTime;
@@ -54,7 +55,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.View;
 import android.widget.Toast;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
@@ -70,6 +70,7 @@ import de.dmarcini.submatix.android4.full.exceptions.FirmwareNotSupportetExcepti
 import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
 import de.dmarcini.submatix.android4.full.interfaces.INavigationDrawerCallbacks;
 import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
+import de.dmarcini.submatix.android4.full.utils.FragmentCallStackEntry;
 import de.dmarcini.submatix.android4.full.utils.GasUpdateEntity;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 import de.dmarcini.submatix.android4.full.utils.SPX42AliasManager;
@@ -105,32 +106,33 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     return( currentStyleId );
   }
 
-  private static String                       TAG                   = MainActivity.class.getSimpleName();
-  private static final String                 SERVICENAME           = BlueThoothComService.class.getCanonicalName();
-  private static final String                 PACKAGENAME           = BlueThoothComService.class.getPackage().getName();
-  private static final String                 FIRSTTIME             = "keyFirstTimeInitiated";
-  private static final String                 PREFVERSION           = "keyPreferencesVersion";
-  private static Vector<String[]>             dirEntryCache         = new Vector<String[]>();
-  private static boolean                      dirCacheIsFilling     = true;
-  private static String[]                     deviceUnis            = null;
-  private BlueThoothComService                mService              = null;
-  private LocalBinder                         binder                = null;
-  private final ArrayList<IBtServiceListener> serviceListener       = new ArrayList<IBtServiceListener>();
-  private volatile boolean                    mIsBound              = false;
-  private static int                          currentStyleId        = R.style.AppDarkTheme;
-  private NavigatorFragment                   appNavigatorFragment;
-  private CharSequence                        mTitle;                                                                      // die Titelzeile
-  protected static File                       databaseDir           = null;
-  protected static SPX42Config                spxConfig             = new SPX42Config();                                   // Da werden SPX-Spezifische Sachen gespeichert
-  protected static BluetoothAdapter           mBtAdapter            = null;
-  protected static float                      ackuValue             = 0.0F;
-  protected static boolean                    wasRestartForNewTheme = false;                                               // War es ein restsart mit neuem Thema?
+  private static String                          TAG                   = MainActivity.class.getSimpleName();
+  private static final String                    SERVICENAME           = BlueThoothComService.class.getCanonicalName();
+  private static final String                    PACKAGENAME           = BlueThoothComService.class.getPackage().getName();
+  private static final String                    FIRSTTIME             = "keyFirstTimeInitiated";
+  private static final String                    PREFVERSION           = "keyPreferencesVersion";
+  private static Vector<String[]>                dirEntryCache         = new Vector<String[]>();
+  private static boolean                         dirCacheIsFilling     = true;
+  private static String[]                        deviceUnis            = null;
+  private BlueThoothComService                   mService              = null;
+  private LocalBinder                            binder                = null;
+  private final ArrayList<IBtServiceListener>    serviceListener       = new ArrayList<IBtServiceListener>();
+  private volatile boolean                       mIsBound              = false;
+  private static int                             currentStyleId        = R.style.AppDarkTheme;
+  private NavigatorFragment                      appNavigatorFragment;
+  private CharSequence                           mTitle;                                                                      // die Titelzeile
+  protected static File                          databaseDir           = null;
+  protected static SPX42Config                   spxConfig             = new SPX42Config();                                   // Da werden SPX-Spezifische Sachen gespeichert
+  protected static BluetoothAdapter              mBtAdapter            = null;
+  protected static float                         ackuValue             = 0.0F;
+  protected static boolean                       wasRestartForNewTheme = false;                                               // War es ein restsart mit neuem Thema?
+  protected static Stack<FragmentCallStackEntry> fragmentCallStack     = new Stack<FragmentCallStackEntry>();
   @SuppressWarnings( "javadoc" )
-  public static DateTimeFormatter             localTimeFormatter    = DateTimeFormat.forPattern( "yyyy-MM-dd - HH:mm:ss" );
+  public static DateTimeFormatter                localTimeFormatter    = DateTimeFormat.forPattern( "yyyy-MM-dd - HH:mm:ss" );
   /**
    * Global verfügbarer Alias Manager, Zuordnung Gerät <-> Alias
    */
-  public static SPX42AliasManager             aliasManager          = null;
+  public static SPX42AliasManager                aliasManager          = null;
   //
   //@formatter:off
   //
@@ -481,6 +483,187 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   }
 
   /**
+   * Eigentliche Funktion zum erzeugen und anzeigen der Fragmente ( Funktionsseiten ) vom Stack
+   *
+   * Project: SubmatixBTAndroid4 Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 24.11.2014
+   * 
+   */
+  protected void callPReferedFragment()
+  {
+    boolean isOnline = false;
+    Bundle arguments;
+    FragmentCallStackEntry fcEntry;
+    int nId = -1;
+    //
+    if( fragmentCallStack.isEmpty() )
+    {
+      // TODO: Sinnvoll abbrechen
+      Log.e( TAG, "fragment call stack is empty! ALERT!" );
+      return;
+    }
+    //
+    // den Eintrag entfernen
+    //
+    fcEntry = fragmentCallStack.pop();
+    nId = fcEntry.getId();
+    arguments = fcEntry.getBundle();
+    //
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d( TAG,
+              String.format( "callPReferedFragment: call: %s, toStackOnDetach: %b, stack depth: %d", ContentSwitcher.getProgItemForId( nId ).content,
+                      arguments.getBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false ), fragmentCallStack.size() ) );
+    }
+    //
+    // sind wir online?
+    //
+    if( getConnectionStatus() == ProjectConst.CONN_STATE_CONNECTED )
+    {
+      isOnline = true;
+    }
+    //
+    // das richtige Icon setzen
+    //
+    if( isOnline )
+    {
+      getActionBar().setLogo( ContentSwitcher.getProgItemForId( nId ).resIdOnline );
+    }
+    else
+    {
+      // wenn der SPX OFFLINE ist, nur OFFLINE Funktionen freigeben
+      getActionBar().setLogo( ContentSwitcher.getProgItemForId( nId ).resIdOffline );
+    }
+    //
+    // jetzt das richtige Fragment auswählen und aktivieren
+    //
+    switch ( nId )
+    {
+      case R.string.progitem_config:
+        if( isOnline )
+        {
+          //
+          // Der Benutzer wählt den Konfigurationseintrag für den SPX
+          //
+          Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42PreferencesFragment..." );
+          SPX42PreferencesFragment cFragment = new SPX42PreferencesFragment();
+          cFragment.setArguments( arguments );
+          mTitle = getString( R.string.conf_headline );
+          getFragmentManager().beginTransaction().replace( R.id.main_container, cFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+        }
+        break;
+      //
+      case R.string.progitem_progpref:
+        //
+        // der Benutzer will Programmeinstellungen setzen
+        //
+        Log.i( TAG, "onNavigationDrawerItemSelected: create ProgramPreferencesFragment..." );
+        ProgramPreferencesFragment ppFragment = new ProgramPreferencesFragment();
+        ppFragment.setArguments( arguments );
+        mTitle = getString( R.string.conf_prog_headline );
+        getFragmentManager().beginTransaction().replace( R.id.main_container, ppFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+        break;
+      //
+      case R.string.progitem_gaslist:
+        if( isOnline )
+        {
+          //
+          // der Benutzer wählt den Gaslisten Editmode
+          //
+          Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42GaslistPreferencesFragment..." );
+          SPX42GaslistPreferencesFragment glFragment = new SPX42GaslistPreferencesFragment();
+          glFragment.setArguments( arguments );
+          mTitle = getString( R.string.gaslist_headline );
+          getFragmentManager().beginTransaction().replace( R.id.main_container, glFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+        }
+        break;
+      //
+      case R.string.progitem_about:
+        //
+        // Das ÜBER das Programm-Ding
+        //
+        Log.i( TAG, "onNavigationDrawerItemSelected: create ProgramAboutFragment..." );
+        ProgramAboutFragment aboutFragment = new ProgramAboutFragment();
+        mTitle = getString( R.string.about_headline );
+        aboutFragment.setArguments( arguments );
+        getFragmentManager().beginTransaction().replace( R.id.main_container, aboutFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+        break;
+      //
+      case R.string.progitem_logging:
+        //
+        // Log vom SPX-lesen
+        //
+        if( isOnline )
+        {
+          Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42ReadLogFragment..." );
+          SPX42ReadLogFragment readLogFragment = ( new SPX42ReadLogFragment() );
+          mTitle = getString( R.string.logread_headline );
+          readLogFragment.setArguments( arguments );
+          getFragmentManager().beginTransaction().replace( R.id.main_container, readLogFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+        }
+        break;
+      //
+      case R.string.progitem_loggraph:
+        //
+        // Logs grafisch darstellen
+        //
+        Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42LogGraphSelectFragment..." );
+        SPX42LogGraphSelectFragment lgsf = new SPX42LogGraphSelectFragment();
+        lgsf.setArguments( arguments );
+        mTitle = getString( R.string.graphlog_header );
+        getFragmentManager().beginTransaction().replace( R.id.main_container, lgsf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+        break;
+      //
+      case R.string.progitem_loggraph_detail:
+        //
+        // Logs detailiert darstellen
+        //
+        Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42LogGraphDetailFragment..." );
+        SPX42LogGraphDetailFragment lgdf = new SPX42LogGraphDetailFragment();
+        lgdf.setArguments( arguments );
+        mTitle = getString( R.string.graphlog_header );
+        getFragmentManager().beginTransaction().replace( R.id.main_container, lgdf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+        break;
+      //
+      case R.string.progitem_export:
+        //
+        // Logs exportieren
+        //
+        Log.i( TAG, "onNavigationDrawerItemSelected: startSPXExportLogFragment..." );
+        SPX42ExportLogFragment elf = new SPX42ExportLogFragment();
+        elf.setArguments( arguments );
+        mTitle = getString( R.string.export_header );
+        getFragmentManager().beginTransaction().replace( R.id.main_container, elf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+        break;
+      //
+      case R.string.progitem_spx_status:
+        if( isOnline )
+        {
+          //
+          // Eine Statussetie des SPX anzeigen
+          //
+          Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42HealthFragment..." );
+          SPX42HealthFragment hef = new SPX42HealthFragment();
+          hef.setArguments( arguments );
+          mTitle = getString( R.string.health_header );
+          getFragmentManager().beginTransaction().replace( R.id.main_container, hef ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+        }
+        break;
+      //
+      default:
+        Log.w( TAG, "Not programitem found for <" + nId + ">" );
+      case R.string.progitem_connect:
+        Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42ConnectFragment" );
+        SPX42ConnectFragment defaultFragment = new SPX42ConnectFragment();
+        mTitle = getString( R.string.connect_headline );
+        defaultFragment.setArguments( arguments );
+        getFragmentManager().beginTransaction().replace( R.id.main_container, defaultFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+    }
+    Log.v( TAG, "onNavigationDrawerItemSelected:...OK" );
+  }
+
+  /**
    * 
    * Service binden, ggf starten
    * 
@@ -604,6 +787,24 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         mIsBound = false;
         Log.v( TAG, "doUnbindService...OK" );
       }
+    }
+  }
+
+  void fillCallStack( int nId, Bundle arguments )
+  {
+    // zuerst den Stack nicht über Gebühr wachsen lassen!
+    if( fragmentCallStack.size() > ProjectConst.BACK_KEY_STACKSIZE )
+    {
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "fillCallStack: fragment call stack ist full, delete last entry!" );
+      fragmentCallStack.remove( 0 );
+    }
+    // und obenauf den aktuellen Inhalt
+    fragmentCallStack.push( new FragmentCallStackEntry( nId, arguments ) );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d( TAG,
+              String.format( "fillCallStack: Fill: %s, toStackOnDetach: %b, stack depth: %d", ContentSwitcher.getProgItemForId( nId ).content,
+                      arguments.getBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false ), fragmentCallStack.size() ) );
     }
   }
 
@@ -857,20 +1058,30 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     ContentSwitcher.clearItems();
     //
     // irgendeine Kennung muss der String bekommen, also gibts halt die String-ID
-    //
-    ContentSwitcher
-            .addItem( new ProgItem( R.string.progitem_connect, R.drawable.bluetooth_icon_bw, R.drawable.bluetooth_icon_color, getString( R.string.progitem_connect ), true ) );
-    ContentSwitcher
-            .addItem( new ProgItem( R.string.progitem_spx_status, R.drawable.spx_health_icon, R.drawable.spx_health_icon, getString( R.string.progitem_spx_status ), false ) );
-    ContentSwitcher.addItem( new ProgItem( R.string.progitem_config, R.drawable.spx_toolbox_offline, R.drawable.spx_toolbox_online, getString( R.string.progitem_config ), false ) );
-    ContentSwitcher.addItem( new ProgItem( R.string.progitem_gaslist, R.drawable.gasedit_offline, R.drawable.gasedit_online, getString( R.string.progitem_gaslist ), false ) );
-    ContentSwitcher.addItem( new ProgItem( R.string.progitem_logging, R.drawable.logging_offline, R.drawable.logging_online, getString( R.string.progitem_logging ), false ) );
-    ContentSwitcher.addItem( new ProgItem( R.string.progitem_loggraph, R.drawable.graphsbar_online, R.drawable.graphsbar_online, getString( R.string.progitem_loggraph ), true ) );
-    ContentSwitcher.addItem( new ProgItem( R.string.progitem_export, R.drawable.export_offline, R.drawable.export_online, getString( R.string.progitem_export ), true ) );
-    ContentSwitcher
-            .addItem( new ProgItem( R.string.progitem_progpref, R.drawable.app_toolbox_offline, R.drawable.app_toolbox_online, getString( R.string.progitem_progpref ), true ) );
-    ContentSwitcher.addItem( new ProgItem( R.string.progitem_about, R.drawable.yin_yang, R.drawable.yin_yang, getString( R.string.progitem_about ), true ) );
-    ContentSwitcher.addItem( new ProgItem( R.string.progitem_exit, R.drawable.shutoff, R.drawable.shutoff, getString( R.string.progitem_exit ), true ) );
+    //@formatter:off
+    ContentSwitcher.addItem( 
+            new ProgItem( R.string.progitem_connect, R.drawable.bluetooth_icon_bw, R.drawable.bluetooth_icon_color, getString( R.string.progitem_connect ), true, false ) );
+    ContentSwitcher.addItem( 
+            new ProgItem( R.string.progitem_spx_status, R.drawable.spx_health_icon, R.drawable.spx_health_icon, getString( R.string.progitem_spx_status ), false, false ) );
+    ContentSwitcher.addItem( 
+            new ProgItem( R.string.progitem_config, R.drawable.spx_toolbox_offline, R.drawable.spx_toolbox_online, getString( R.string.progitem_config ), false, false ) );
+    ContentSwitcher.addItem( 
+            new ProgItem( R.string.progitem_gaslist, R.drawable.gasedit_offline, R.drawable.gasedit_online, getString( R.string.progitem_gaslist ), false, false ) );
+    ContentSwitcher.addItem( 
+            new ProgItem( R.string.progitem_logging, R.drawable.logging_offline, R.drawable.logging_online, getString( R.string.progitem_logging ), false, false ) );
+    ContentSwitcher.addItem( 
+            new ProgItem( R.string.progitem_loggraph, R.drawable.graphsbar_online, R.drawable.graphsbar_online, getString( R.string.progitem_loggraph ), true, false ) );
+    ContentSwitcher.addItem( 
+            new ProgItem( R.string.progitem_loggraph_detail, R.drawable.graphsbar_online, R.drawable.graphsbar_online,getString( R.string.progitem_loggraph_detail ), true, true ) );
+    ContentSwitcher.addItem( 
+            new ProgItem( R.string.progitem_export, R.drawable.export_offline, R.drawable.export_online, getString( R.string.progitem_export ), true, false ) );
+    ContentSwitcher.addItem( 
+            new ProgItem( R.string.progitem_progpref, R.drawable.app_toolbox_offline, R.drawable.app_toolbox_online, getString( R.string.progitem_progpref ), true, false ) );
+    ContentSwitcher.addItem( 
+            new ProgItem( R.string.progitem_about, R.drawable.yin_yang, R.drawable.yin_yang, getString( R.string.progitem_about ), true, false ) );
+    ContentSwitcher.addItem( 
+            new ProgItem( R.string.progitem_exit, R.drawable.shutoff, R.drawable.shutoff, getString( R.string.progitem_exit ), true, false ) );
+    //@formatter:on
   }
 
   /**
@@ -1234,7 +1445,6 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       ProgItem pItem = ContentSwitcher.getProgItemForId( R.string.progitem_about );
       arguments.putString( ProjectConst.ARG_ITEM_CONTENT, pItem.content );
       arguments.putInt( ProjectConst.ARG_ITEM_ID, pItem.nId );
-      arguments.putBoolean( ProjectConst.ARG_ITEM_GRAPHEXTRA, false );
       ProgramPreferencesFragment ppFragment = new ProgramPreferencesFragment();
       ppFragment.setArguments( arguments );
       getActionBar().setTitle( R.string.conf_prog_headline );
@@ -1246,6 +1456,8 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       //
       // Kein Neustart mit neuem Thema
       //
+      // aufrufstack leeren
+      fragmentCallStack.clear();
       appNavigatorFragment = ( NavigatorFragment )getFragmentManager().findFragmentById( R.id.navi_drawer );
       mTitle = getTitle();
       Log.v( TAG, "onCreate: set navigation drawer..." );
@@ -1259,7 +1471,8 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       ProgItem pItem = ContentSwitcher.getProgItemForId( R.string.progitem_about );
       arguments.putString( ProjectConst.ARG_ITEM_CONTENT, pItem.content );
       arguments.putInt( ProjectConst.ARG_ITEM_ID, pItem.nId );
-      arguments.putBoolean( ProjectConst.ARG_ITEM_GRAPHEXTRA, false );
+      // Aufrufstack befüllen
+      fillCallStack( pItem.nId, arguments );
       Log.i( TAG, "onCreate: create ProgramAbountFragment" );
       ProgramAboutFragment defaultFragment = new ProgramAboutFragment();
       mTitle = getString( R.string.about_headline );
@@ -1422,29 +1635,24 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   @Override
   public boolean onKeyDown( int keyCode, KeyEvent event )
   {
-    DrawerLayout dLayout;
+    //
+    // Ist es ZURÜCK?
     //
     if( ( keyCode == KeyEvent.KEYCODE_BACK ) )
     {
       Log.v( TAG, "onKeyDown: BACK pressed!" );
-      dLayout = ( DrawerLayout )findViewById( R.id.drawer_layout );
-      if( dLayout != null )
+      if( fragmentCallStack.isEmpty() )
       {
-        View containerView = findViewById( R.id.navi_drawer );
-        if( dLayout.isDrawerOpen( containerView ) )
-        {
-          // Was mach ich, wenn das schon offen ist?
-          Log.v( TAG, "onKeyDown:BACK pressed => navigator is open, ask user for exit." );
-          AreYouSureDialogFragment sureDial = new AreYouSureDialogFragment( getString( R.string.dialog_sure_exit ) );
-          sureDial.show( getFragmentManager().beginTransaction(), "programexit" );
-        }
-        else
-        {
-          Log.v( TAG, "onKeyDown:BACK pressed => open navigator" );
-          dLayout.openDrawer( containerView );
-        }
+        // in diesem Fall frag mal den user ob er wirklich beenden will
+        Log.v( TAG, "onKeyDown:BACK pressed => navigator is open, ask user for exit." );
+        AreYouSureDialogFragment sureDial = new AreYouSureDialogFragment( getString( R.string.dialog_sure_exit ) );
+        sureDial.show( getFragmentManager().beginTransaction(), "programexit" );
       }
-      return false;
+      else
+      {
+        // dann rufe mal den Stack auf
+        callPReferedFragment();
+      }
     }
     return false;
   }
@@ -1459,7 +1667,6 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void onNavigationDrawerItemSelected( ContentSwitcher.ProgItem pItem )
   {
     Bundle arguments = new Bundle();
-    boolean isOnline = false;
     //
     Log.v( TAG, String.format( "onNavigationDrawerItemSelected: id: <%d>, content: <%s>...", pItem.nId, pItem.content ) );
     //
@@ -1467,7 +1674,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     //
     arguments.putString( ProjectConst.ARG_ITEM_CONTENT, pItem.content );
     arguments.putInt( ProjectConst.ARG_ITEM_ID, pItem.nId );
-    arguments.putBoolean( ProjectConst.ARG_ITEM_GRAPHEXTRA, false );
+    arguments.putBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, true ); // das Fragment soll sich im Stack verewigen
     //
     // wenn EXIT angeordnet wurde
     //
@@ -1480,140 +1687,10 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         sureDial.show( getFragmentManager().beginTransaction(), "programexit" );
         return;
     }
-    //
-    // sind wir online?
-    //
-    if( getConnectionStatus() == ProjectConst.CONN_STATE_CONNECTED )
-    {
-      isOnline = true;
-    }
-    //
-    // das richti8ge Icon setzen
-    //
-    if( isOnline )
-    {
-      getActionBar().setLogo( pItem.resIdOnline );
-    }
-    else
-    {
-      // wenn der SPX OFFLINE ist, nur OFFLINE Funktionen freigeben
-      getActionBar().setLogo( pItem.resIdOffline );
-    }
-    //
-    // jetzt das richtige Fragment auswählen und aktivieren
-    //
-    switch ( pItem.nId )
-    {
-      case R.string.progitem_config:
-        if( isOnline )
-        {
-          //
-          // Der Benutzer wählt den Konfigurationseintrag für den SPX
-          //
-          Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42PreferencesFragment..." );
-          SPX42PreferencesFragment cFragment = new SPX42PreferencesFragment();
-          cFragment.setArguments( arguments );
-          mTitle = getString( R.string.conf_headline );
-          getFragmentManager().beginTransaction().replace( R.id.main_container, cFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
-        }
-        break;
-      //
-      case R.string.progitem_progpref:
-        //
-        // der Benutzer will Programmeinstellungen setzen
-        //
-        Log.i( TAG, "onNavigationDrawerItemSelected: create ProgramPreferencesFragment..." );
-        ProgramPreferencesFragment ppFragment = new ProgramPreferencesFragment();
-        ppFragment.setArguments( arguments );
-        mTitle = getString( R.string.conf_prog_headline );
-        getFragmentManager().beginTransaction().replace( R.id.main_container, ppFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
-        break;
-      //
-      case R.string.progitem_gaslist:
-        if( isOnline )
-        {
-          //
-          // der Benutzer wählt den Gaslisten Editmode
-          //
-          Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42GaslistPreferencesFragment..." );
-          SPX42GaslistPreferencesFragment glFragment = new SPX42GaslistPreferencesFragment();
-          glFragment.setArguments( arguments );
-          mTitle = getString( R.string.gaslist_headline );
-          getFragmentManager().beginTransaction().replace( R.id.main_container, glFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
-        }
-        break;
-      //
-      case R.string.progitem_about:
-        //
-        // Das ÜBER das Programm-Ding
-        //
-        Log.i( TAG, "onNavigationDrawerItemSelected: create ProgramAboutFragment..." );
-        ProgramAboutFragment aboutFragment = new ProgramAboutFragment();
-        mTitle = getString( R.string.about_headline );
-        aboutFragment.setArguments( arguments );
-        getFragmentManager().beginTransaction().replace( R.id.main_container, aboutFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
-        break;
-      //
-      case R.string.progitem_logging:
-        //
-        // Log vom SPX-lesen
-        //
-        if( isOnline )
-        {
-          Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42ReadLogFragment..." );
-          SPX42ReadLogFragment readLogFragment = ( new SPX42ReadLogFragment() );
-          mTitle = getString( R.string.logread_headline );
-          readLogFragment.setArguments( arguments );
-          getFragmentManager().beginTransaction().replace( R.id.main_container, readLogFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
-        }
-        break;
-      //
-      case R.string.progitem_loggraph:
-        //
-        // Logs grafisch darstellen
-        //
-        Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42LogGraphSelectFragment..." );
-        SPX42LogGraphSelectFragment lgf = new SPX42LogGraphSelectFragment();
-        lgf.setArguments( arguments );
-        mTitle = getString( R.string.graphlog_header );
-        getFragmentManager().beginTransaction().replace( R.id.main_container, lgf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
-        break;
-      //
-      case R.string.progitem_export:
-        //
-        // Logs exportieren
-        //
-        Log.i( TAG, "onNavigationDrawerItemSelected: startSPXExportLogFragment..." );
-        SPX42ExportLogFragment elf = new SPX42ExportLogFragment();
-        elf.setArguments( arguments );
-        mTitle = getString( R.string.export_header );
-        getFragmentManager().beginTransaction().replace( R.id.main_container, elf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
-        break;
-      //
-      case R.string.progitem_spx_status:
-        if( isOnline )
-        {
-          //
-          // Eine Statussetie des SPX anzeigen
-          //
-          Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42HealthFragment..." );
-          SPX42HealthFragment hef = new SPX42HealthFragment();
-          hef.setArguments( arguments );
-          mTitle = getString( R.string.health_header );
-          getFragmentManager().beginTransaction().replace( R.id.main_container, hef ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
-        }
-        break;
-      //
-      default:
-        Log.w( TAG, "Not programitem found for <" + pItem.nId + ">" );
-      case R.string.progitem_connect:
-        Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42ConnectFragment" );
-        SPX42ConnectFragment defaultFragment = new SPX42ConnectFragment();
-        mTitle = getString( R.string.connect_headline );
-        defaultFragment.setArguments( arguments );
-        getFragmentManager().beginTransaction().replace( R.id.main_container, defaultFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
-    }
-    Log.v( TAG, "onNavigationDrawerItemSelected:...OK" );
+    // Aufrufstack befüllen
+    fillCallStack( pItem.nId, arguments );
+    // und anzeigen
+    callPReferedFragment();
   }
 
   @Override
@@ -1659,10 +1736,12 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    * @param pItem
    *          ProgrammItem Eintrag des selektieren Menüpunktes
    */
-  public void onSectionAttached( ContentSwitcher.ProgItem pItem )
+  public void onSectionAttached( String pItem )
   {
-    Log.v( TAG, String.format( Locale.getDefault(), "onSectionAttached: fragment for  <%s>...", pItem.content ) );
-    mTitle = pItem.content;
+    Log.v( TAG, String.format( Locale.getDefault(), "onSectionAttached: fragment for  <%s>...", pItem ) );
+    getActionBar().setDisplayShowTitleEnabled( true );
+    mTitle = pItem;
+    getActionBar().setTitle( mTitle );
     Log.v( TAG, "onSectionAttached: OK" );
   }
 

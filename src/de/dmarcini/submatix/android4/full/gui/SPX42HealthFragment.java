@@ -49,7 +49,7 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
 {
   @SuppressWarnings( "javadoc" )
   public static final String TAG                       = SPX42HealthFragment.class.getSimpleName();
-  private Activity           runningActivity           = null;
+  private MainActivity       runningActivity           = null;
   private TextView           ackuVoltageTextView       = null;
   private TextView           serialNumberTextView      = null;
   private TextView           firmwareVersionTextView   = null;
@@ -59,18 +59,149 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
   private TextView           licenseIndividualTextView = null;
 
   @Override
+  public void handleMessages( int what, BtServiceMessage msg )
+  {
+    switch ( what )
+    {
+      case ProjectConst.MESSAGE_TICK:
+        break;
+      // ################################################################
+      // OnConnect Meldung
+      // ################################################################
+      case ProjectConst.MESSAGE_CONNECTED:
+        msgConnected( msg );
+        break;
+      // ################################################################
+      // OnAlive
+      // ################################################################
+      case ProjectConst.MESSAGE_SPXALIVE:
+        msgRecivedAlive( msg );
+        break;
+      // ################################################################
+      // DEFAULT
+      // ################################################################
+      default:
+        if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "unknown messsage with id <" + what + "> recived!" );
+    }
+  }
+
+  @Override
+  public void msgConnected( BtServiceMessage msg )
+  {
+    Resources res = runningActivity.getResources();
+    float ackuValue = MainActivity.ackuValue;
+    //
+    // Fülle die Textfelder mit aktuellen Werten
+    //
+    ackuVoltageTextView.setText( String.format( runningActivity.getResources().getString( R.string.health_acku_volatage ), ackuValue ) );
+    //
+    // Ackuspannung mit Farbe hinterlegen (grün SUPI, gelb, NAJA, rot, sollte nicht mehr tauchen gehen
+    // grün ( oberhalb 3.6 Volt ) ROT 2,5 Volt
+    // grün ggrößer 3,6 Volt
+    // gelb 3,1 bis 3,6 volt
+    // rot kleiner 3,6 Volt
+    if( ackuValue > 3.6F )
+    {
+      ackuVoltageTextView.setTextColor( res.getColor( R.color.acku_good_value ) );
+    }
+    else if( ackuValue > 3.1F )
+    {
+      ackuVoltageTextView.setTextColor( res.getColor( R.color.acku_mid_value ) );
+    }
+    else
+    {
+      ackuVoltageTextView.setTextColor( res.getColor( R.color.acku_low_value ) );
+    }
+    // Beschriftungen
+    serialNumberTextView.setText( MainActivity.spxConfig.getSerial() );
+    firmwareVersionTextView.setText( MainActivity.spxConfig.getFirmwareVersion() );
+    switch ( MainActivity.spxConfig.getLicenseState() )
+    {
+      case ProjectConst.SPX_LICENSE_FULLTX:
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX MIX License : FULL TRIMIX licensed" );
+        licenseTMXTextView.setText( res.getString( R.string.health_license_enable ) );
+        licenseTMXTextView.setTextColor( res.getColor( R.color.licenseEnabled ) );
+      case ProjectConst.SPX_LICENSE_NORMOXICTX:
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX MIX License : NORMOXIX TRIMIX licensed" );
+        licenseNTMXTextView.setText( res.getString( R.string.health_license_enable ) );
+        licenseNTMXTextView.setTextColor( res.getColor( R.color.licenseEnabled ) );
+      case ProjectConst.SPX_LICENSE_NITROX:
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX MIX License : NITROX licensed" );
+        licenseNitroxTextView.setText( res.getString( R.string.health_license_enable ) );
+        licenseNitroxTextView.setTextColor( res.getColor( R.color.licenseEnabled ) );
+        break;
+      default:
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX MIX License : UNKNOWN" );
+    }
+    //
+    // jetzt noch den Individual-Lizenzsatatus erfragen
+    //
+    if( 1 == MainActivity.spxConfig.getCustomEnabled() )
+    {
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX CUSTOM License : licensed" );
+      licenseIndividualTextView.setText( res.getString( R.string.health_license_enable ) );
+      licenseIndividualTextView.setTextColor( res.getColor( R.color.licenseEnabled ) );
+    }
+  }
+
+  @Override
+  public void msgConnectError( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgConnecting( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgDisconnected( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgRecivedAlive( BtServiceMessage msg )
+  {
+    ackuVoltageTextView.setText( String.format( runningActivity.getResources().getString( R.string.health_acku_volatage ), MainActivity.ackuValue ) );
+  }
+
+  @Override
+  public void msgRecivedTick( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
+  public void msgReciveWriteTmeout( BtServiceMessage msg )
+  {
+    // TODO Automatisch generierter Methodenstub
+  }
+
+  @Override
   public void onActivityCreated( Bundle bundle )
   {
     super.onActivityCreated( bundle );
-    runningActivity = getActivity();
+    runningActivity = ( MainActivity )getActivity();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
+    Bundle arguments = getArguments();
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    {
+      runningActivity.onSectionAttached( arguments.getString( ProjectConst.ARG_ITEM_CONTENT ) );
+    }
+    else
+    {
+      Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+    }
   }
 
   @Override
   public void onAttach( Activity activity )
   {
     super.onAttach( activity );
-    runningActivity = activity;
+    runningActivity = ( MainActivity )activity;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
   }
 
@@ -138,6 +269,25 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
   }
 
   @Override
+  public void onDetach()
+  {
+    super.onDetach();
+    Bundle arguments = getArguments();
+    //
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_ID ) )
+    {
+      // Es gibt einen Eintrag für den Gewählten Menüpunkt
+      if( arguments.getBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false ) )
+      {
+        // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
+        // und kennzeichnen
+        arguments.putBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false );
+        runningActivity.fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
+      }
+    }
+  }
+
+  @Override
   public void onPause()
   {
     super.onPause();
@@ -146,7 +296,7 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
     // die abgeleiteten Objekte führen das auch aus
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
-    ( ( MainActivity )runningActivity ).removeServiceListener( this );
+    runningActivity.removeServiceListener( this );
   }
 
   /**
@@ -157,7 +307,7 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
   {
     super.onResume();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
-    ( ( MainActivity )runningActivity ).addServiceListener( this );
+    runningActivity.addServiceListener( this );
     // if( runningActivity instanceof AreaDetailActivity )
     // {
     // //
@@ -172,127 +322,5 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
     // licenseIndividualTextView = ( TextView )runningActivity.findViewById( R.id.licenseIndividualTextView );
     // //
     // }
-  }
-
-  @Override
-  public void handleMessages( int what, BtServiceMessage msg )
-  {
-    switch ( what )
-    {
-      case ProjectConst.MESSAGE_TICK:
-        break;
-      // ################################################################
-      // OnConnect Meldung
-      // ################################################################
-      case ProjectConst.MESSAGE_CONNECTED:
-        msgConnected( msg );
-        break;
-      // ################################################################
-      // OnAlive
-      // ################################################################
-      case ProjectConst.MESSAGE_SPXALIVE:
-        msgRecivedAlive( msg );
-        break;
-      // ################################################################
-      // DEFAULT
-      // ################################################################
-      default:
-        if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "unknown messsage with id <" + what + "> recived!" );
-    }
-  }
-
-  @Override
-  public void msgConnecting( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void msgConnected( BtServiceMessage msg )
-  {
-    Resources res = runningActivity.getResources();
-    float ackuValue = MainActivity.ackuValue;
-    //
-    // Fülle die Textfelder mit aktuellen Werten
-    //
-    ackuVoltageTextView.setText( String.format( runningActivity.getResources().getString( R.string.health_acku_volatage ), ackuValue ) );
-    //
-    // Ackuspannung mit Farbe hinterlegen (grün SUPI, gelb, NAJA, rot, sollte nicht mehr tauchen gehen
-    // grün ( oberhalb 3.6 Volt ) ROT 2,5 Volt
-    // grün ggrößer 3,6 Volt
-    // gelb 3,1 bis 3,6 volt
-    // rot kleiner 3,6 Volt
-    if( ackuValue > 3.6F )
-    {
-      ackuVoltageTextView.setTextColor( res.getColor( R.color.acku_good_value ) );
-    }
-    else if( ackuValue > 3.1F )
-    {
-      ackuVoltageTextView.setTextColor( res.getColor( R.color.acku_mid_value ) );
-    }
-    else
-    {
-      ackuVoltageTextView.setTextColor( res.getColor( R.color.acku_low_value ) );
-    }
-    // Beschriftungen
-    serialNumberTextView.setText( MainActivity.spxConfig.getSerial() );
-    firmwareVersionTextView.setText( MainActivity.spxConfig.getFirmwareVersion() );
-    switch ( MainActivity.spxConfig.getLicenseState() )
-    {
-      case ProjectConst.SPX_LICENSE_FULLTX:
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX MIX License : FULL TRIMIX licensed" );
-        licenseTMXTextView.setText( res.getString( R.string.health_license_enable ) );
-        licenseTMXTextView.setTextColor( res.getColor( R.color.licenseEnabled ) );
-      case ProjectConst.SPX_LICENSE_NORMOXICTX:
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX MIX License : NORMOXIX TRIMIX licensed" );
-        licenseNTMXTextView.setText( res.getString( R.string.health_license_enable ) );
-        licenseNTMXTextView.setTextColor( res.getColor( R.color.licenseEnabled ) );
-      case ProjectConst.SPX_LICENSE_NITROX:
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX MIX License : NITROX licensed" );
-        licenseNitroxTextView.setText( res.getString( R.string.health_license_enable ) );
-        licenseNitroxTextView.setTextColor( res.getColor( R.color.licenseEnabled ) );
-        break;
-      default:
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX MIX License : UNKNOWN" );
-    }
-    //
-    // jetzt noch den Individual-Lizenzsatatus erfragen
-    //
-    if( 1 == MainActivity.spxConfig.getCustomEnabled() )
-    {
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX CUSTOM License : licensed" );
-      licenseIndividualTextView.setText( res.getString( R.string.health_license_enable ) );
-      licenseIndividualTextView.setTextColor( res.getColor( R.color.licenseEnabled ) );
-    }
-  }
-
-  @Override
-  public void msgDisconnected( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void msgRecivedTick( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void msgRecivedAlive( BtServiceMessage msg )
-  {
-    ackuVoltageTextView.setText( String.format( runningActivity.getResources().getString( R.string.health_acku_volatage ), MainActivity.ackuValue ) );
-  }
-
-  @Override
-  public void msgConnectError( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
-  }
-
-  @Override
-  public void msgReciveWriteTmeout( BtServiceMessage msg )
-  {
-    // TODO Automatisch generierter Methodenstub
   }
 }

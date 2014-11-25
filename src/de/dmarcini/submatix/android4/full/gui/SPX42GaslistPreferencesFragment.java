@@ -66,13 +66,97 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   private static final Pattern                 fieldPatternKdo   = Pattern.compile( "~\\d+" );
   private String                               gasKeyTemplate    = null;
   private String                               gasKeyStub        = null;
-  private Activity                             runningActivity   = null;
+  private MainActivity                         runningActivity   = null;
   private boolean                              ignorePrefChange  = false;
   private CommToast                            theToast          = null;
   private String                               diluent1String, diluent2String, noDiluent, bailoutString;
   private int                                  waitForGasNumber  = 0;
   private int                                  waitForGasOkCount = 0;
   private final ArrayList<GasPickerPreference> gasPrefs          = new ArrayList<GasPickerPreference>();
+
+  /**
+   * 
+   * Diluent setzen in einer Preference. Immer nur einmal D1 und einmal D2 möglich!
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * 
+   * Stand: 23.07.2013
+   * 
+   * @param idx
+   * @return
+   */
+  private Vector<Integer> checkDiluentSets( int gasNr )
+  {
+    SPX42GasParms gasParms;
+    Boolean prefD1, prefD2;
+    // Boolean wasD1, wasD2;
+    Boolean wasChanged;
+    GasPickerPreference gpp;
+    Vector<Integer> toChange = new Vector<Integer>();
+    //
+    // Werte vom aktuellen Gas merken und Vorbereitungen
+    //
+    gpp = gasPrefs.get( gasNr );
+    gasParms = gpp.getValue();
+    prefD1 = gasParms.d1;
+    prefD2 = gasParms.d2;
+    //
+    // Alle Gase durchackern
+    //
+    for( int idx = 0; idx < 8; idx++ )
+    {
+      wasChanged = false;
+      try
+      {
+        // mein gas brauch ich nicht beackern
+        if( idx == gasNr ) continue;
+        // Preferenzen lesen
+        gpp = gasPrefs.get( idx );
+        gasParms = gpp.getValue();
+        // Diluent 1 checken
+        if( gasParms.d1 )
+        {
+          // wenn beide true sind, ist was schief
+          if( prefD1 && gasParms.d1 )
+          {
+            // ups, das muss korrigiert werden!
+            if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "checkDiluentSets: gas number <%d> was diluent 1 changed, write to Preference", idx ) );
+            wasChanged = true;
+            gasParms.d1 = false;
+          }
+        }
+        // Diluent 2 checken
+        if( gasParms.d2 )
+        {
+          // wenn beide true sind, ist was schief
+          if( prefD2 && gasParms.d2 )
+          {
+            // ups, das muss korrigiert werden!
+            if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "checkDiluentSets: gas number <%d> was diluent 2 changed, write to Preference", idx ) );
+            wasChanged = true;
+            gasParms.d2 = false;
+          }
+        }
+        //
+        // wenn was verändert wurde, Values setzen
+        //
+        if( wasChanged )
+        {
+          gpp.setValue( gasParms );
+          setGasSummary( idx );
+          toChange.add( idx );
+        }
+        // setGasSummary( idx );
+      }
+      catch( IndexOutOfBoundsException ex )
+      {
+        Log.e( TAG, "setDiluent: no gasPreference for index! <" + ex.getLocalizedMessage() + ">" );
+        return( null );
+      }
+    }
+    return( toChange );
+  }
 
   @Override
   public void handleMessages( int what, BtServiceMessage smsg )
@@ -147,7 +231,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   public void msgConnected( BtServiceMessage msg )
   {
     Log.v( TAG, "msgConnected()...ask for SPX config..." );
-    MainActivity fActivity = ( MainActivity )runningActivity;
+    MainActivity fActivity = runningActivity;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgConnected(): ask for SPX config..." );
     // Dialog schliesen, wenn geöffnet
     theToast.dismissDial();
@@ -353,13 +437,28 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     // wieder mitarbeiten
     //
     ignorePrefChange = false;
+  };
+
+  @Override
+  public void onActivityCreated( Bundle savedInstanceState )
+  {
+    super.onActivityCreated( savedInstanceState );
+    Bundle arguments = getArguments();
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    {
+      runningActivity.onSectionAttached( arguments.getString( ProjectConst.ARG_ITEM_CONTENT ) );
+    }
+    else
+    {
+      Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+    }
   }
 
   @Override
   public void onAttach( Activity activity )
   {
     super.onAttach( activity );
-    runningActivity = activity;
+    runningActivity = ( MainActivity )activity;
     Log.w( TAG, "ATTACH" );
   }
 
@@ -404,6 +503,25 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   }
 
   @Override
+  public void onDetach()
+  {
+    super.onDetach();
+    Bundle arguments = getArguments();
+    //
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_ID ) )
+    {
+      // Es gibt einen Eintrag für den Gewählten Menüpunkt
+      if( arguments.getBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false ) )
+      {
+        // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
+        // und kennzeichnen
+        arguments.putBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false );
+        runningActivity.fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
+      }
+    }
+  }
+
+  @Override
   public boolean onOptionsItemSelected( MenuItem item )
   {
     switch ( item.getItemId() )
@@ -428,7 +546,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     //
     getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener( this );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause(): clear service listener for preferences fragment..." );
-    ( ( MainActivity )runningActivity ).removeServiceListener( this );
+    runningActivity.removeServiceListener( this );
   }
 
   @Override
@@ -444,7 +562,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     waitForGasOkCount = 0;
     waitForGasNumber = 0;
     // Service Listener setzen
-    MainActivity fActivity = ( MainActivity )runningActivity;
+    MainActivity fActivity = runningActivity;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume(): set service listener for preferences fragment..." );
     fActivity.addServiceListener( this );
   }
@@ -512,7 +630,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onSharedPreferenceChanged: gas to update to list: <" + gasNr + ">" );
       gasUpdates.add( new GasUpdateEntity( gasNr, gasParms ) );
     }
-    MainActivity fActivity = ( MainActivity )runningActivity;
+    MainActivity fActivity = runningActivity;
     ignorePrefChange = true;
     // wie viele ACK muss ich abwarten?
     waitForGasOkCount = waitForGasNumber = gasUpdates.size();
@@ -637,89 +755,5 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
       Log.d( TAG, String.format( "setGasSummary: gas number <%02d> has O2 <%02d%%>, MOD: %f ", gasNr, gasParms.o2, GasUtilitys.getMODForGasMetric( gasParms.o2 ) ) );
     gpp.setSummary( String.format( getResources().getString( R.string.conf_gaslist_summary_first ), gasNr + 1, gasName, Math.round( GasUtilitys.getMODForGasMetric( gasParms.o2 ) ) ) );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "setGasSummary: gas number <%02d> has now summary <%s>", gasNr, gasName ) );
-  }
-
-  /**
-   * 
-   * Diluent setzen in einer Preference. Immer nur einmal D1 und einmal D2 möglich!
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * 
-   * Stand: 23.07.2013
-   * 
-   * @param idx
-   * @return
-   */
-  private Vector<Integer> checkDiluentSets( int gasNr )
-  {
-    SPX42GasParms gasParms;
-    Boolean prefD1, prefD2;
-    // Boolean wasD1, wasD2;
-    Boolean wasChanged;
-    GasPickerPreference gpp;
-    Vector<Integer> toChange = new Vector<Integer>();
-    //
-    // Werte vom aktuellen Gas merken und Vorbereitungen
-    //
-    gpp = gasPrefs.get( gasNr );
-    gasParms = gpp.getValue();
-    prefD1 = gasParms.d1;
-    prefD2 = gasParms.d2;
-    //
-    // Alle Gase durchackern
-    //
-    for( int idx = 0; idx < 8; idx++ )
-    {
-      wasChanged = false;
-      try
-      {
-        // mein gas brauch ich nicht beackern
-        if( idx == gasNr ) continue;
-        // Preferenzen lesen
-        gpp = gasPrefs.get( idx );
-        gasParms = gpp.getValue();
-        // Diluent 1 checken
-        if( gasParms.d1 )
-        {
-          // wenn beide true sind, ist was schief
-          if( prefD1 && gasParms.d1 )
-          {
-            // ups, das muss korrigiert werden!
-            if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "checkDiluentSets: gas number <%d> was diluent 1 changed, write to Preference", idx ) );
-            wasChanged = true;
-            gasParms.d1 = false;
-          }
-        }
-        // Diluent 2 checken
-        if( gasParms.d2 )
-        {
-          // wenn beide true sind, ist was schief
-          if( prefD2 && gasParms.d2 )
-          {
-            // ups, das muss korrigiert werden!
-            if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "checkDiluentSets: gas number <%d> was diluent 2 changed, write to Preference", idx ) );
-            wasChanged = true;
-            gasParms.d2 = false;
-          }
-        }
-        //
-        // wenn was verändert wurde, Values setzen
-        //
-        if( wasChanged )
-        {
-          gpp.setValue( gasParms );
-          setGasSummary( idx );
-          toChange.add( idx );
-        }
-        // setGasSummary( idx );
-      }
-      catch( IndexOutOfBoundsException ex )
-      {
-        Log.e( TAG, "setDiluent: no gasPreference for index! <" + ex.getLocalizedMessage() + ">" );
-        return( null );
-      }
-    }
-    return( toChange );
   }
 }
