@@ -170,11 +170,12 @@ public final class ProjectConst
   public static final int GASNAMECOLOR_NONORMOXIC       = Color.MAGENTA;
   
   // Android: Parameterbezeichnug für Programmmenü-Id
-  public static final String ARG_ITEM_ID                = "de.dmarcini.submatix.android4.full.progitem_item_id";
-  public static final String ARG_ITEM_CONTENT           = "de.dmarcini.submatix.android4.full.progitem_item_content";
-  //public static final String ARG_ITEM_GRAPHEXTRA        = "de.dmarcini.submatix.android4.full.progitem_item_graphextra";
-  public static final String ARG_ITEM_DBID              = "de.dmarcini.submatix.android4.full.progitem_item_dbid";
-  public static final String ARG_ITEM_TOSTACKONDETACH   = "de.dmarcini.submatix.android4.full.progitem_item_to_stack_on_detach";
+  public static final String ARG_ITEM_ID                = "arg.progitem_item_id";
+  public static final String ARG_ITEM_CONTENT           = "arg.progitem_item_content";
+  public static final String ARG_DBID                   = "arg.dbid";
+  public static final String ARG_TOSTACK_ONDETACH       = "arg.to_stack_on_detach";
+  public static final String ARG_SELECTED_DEVICE        = "arg.selected_device";
+  public static final String ARG_SELECTED_DIVE          = "arg.selected_dive";
   
   
   // Android: ID für Intentrequests

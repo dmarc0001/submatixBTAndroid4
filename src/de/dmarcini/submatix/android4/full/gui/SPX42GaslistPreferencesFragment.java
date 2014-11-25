@@ -511,11 +511,11 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_ID ) )
     {
       // Es gibt einen Eintrag für den Gewählten Menüpunkt
-      if( arguments.getBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, false ) )
+      if( arguments.getBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false ) )
       {
         // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
         // und kennzeichnen
-        arguments.putBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, false );
+        arguments.putBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false );
         runningActivity.fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
       }
     }

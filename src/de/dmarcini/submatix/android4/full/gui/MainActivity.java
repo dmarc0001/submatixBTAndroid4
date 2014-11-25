@@ -514,7 +514,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     {
       Log.d( TAG,
               String.format( "callPReferedFragment: call: %s, toStackOnDetach: %b, stack depth: %d", ContentSwitcher.getProgItemForId( nId ).content,
-                      arguments.getBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, false ), fragmentCallStack.size() ) );
+                      arguments.getBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false ), fragmentCallStack.size() ) );
     }
     //
     // sind wir online?
@@ -614,15 +614,16 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         mTitle = getString( R.string.graphlog_header );
         getFragmentManager().beginTransaction().replace( R.id.main_container, lgsf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
         break;
+      //
       case R.string.progitem_loggraph_detail:
         //
-        // Logs detailiert darstellen (wird hier nur bei BACK genutzt)
+        // Logs detailiert darstellen
         //
-        Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42LogGraphFragment..." );
-        SPX42LogGraphFragment lgf = new SPX42LogGraphFragment();
-        lgf.setArguments( arguments );
+        Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42LogGraphDetailFragment..." );
+        SPX42LogGraphDetailFragment lgdf = new SPX42LogGraphDetailFragment();
+        lgdf.setArguments( arguments );
         mTitle = getString( R.string.graphlog_header );
-        getFragmentManager().beginTransaction().replace( R.id.main_container, lgf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+        getFragmentManager().beginTransaction().replace( R.id.main_container, lgdf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
         break;
       //
       case R.string.progitem_export:
@@ -803,7 +804,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     {
       Log.d( TAG,
               String.format( "fillCallStack: Fill: %s, toStackOnDetach: %b, stack depth: %d", ContentSwitcher.getProgItemForId( nId ).content,
-                      arguments.getBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, false ), fragmentCallStack.size() ) );
+                      arguments.getBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false ), fragmentCallStack.size() ) );
     }
   }
 
@@ -1673,7 +1674,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     //
     arguments.putString( ProjectConst.ARG_ITEM_CONTENT, pItem.content );
     arguments.putInt( ProjectConst.ARG_ITEM_ID, pItem.nId );
-    arguments.putBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, true ); // das Fragment soll sich im Stack verewigen
+    arguments.putBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, true ); // das Fragment soll sich im Stack verewigen
     //
     // wenn EXIT angeordnet wurde
     //

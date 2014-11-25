@@ -362,10 +362,6 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   {
     super.onCreate( savedInstanceState );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
-    if( getActivity().getIntent().getBooleanExtra( "BACKKEY", false ) )
-    {
-      // TODO: hier muss ich dann was machen
-    }
   }
 
   /**
@@ -384,17 +380,6 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
       Log.e( TAG, "onCreateView: container is NULL ..." );
       return( null );
     }
-    //
-    // wenn die laufende Activity eine AreaDetailActivity ist, dann gibts das View schon
-    //
-    // if( runningActivity instanceof AreaDetailActivity )
-    // {
-    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
-    // return( null );
-    // }
-    //
-    // Verbindungsseite via twoPane ausgewählt
-    //
     rootView = makeGraphSelectionView( inflater, container );
     return rootView;
   }
@@ -415,12 +400,12 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_ID ) )
     {
       // Es gibt einen Eintrag für den Gewählten Menüpunkt
-      if( arguments.getBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, false ) )
+      if( arguments.getBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false ) )
       {
         // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
         // und kennzeichnen
         // TODO: Merken, welche Auswahl ich hatte
-        arguments.putBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, false );
+        arguments.putBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false );
         runningActivity.fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
       }
     }
@@ -620,7 +605,8 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     Bundle arguments = new Bundle();
     arguments.putString( ProjectConst.ARG_ITEM_CONTENT, getString( R.string.progitem_loggraph_detail ) );
     arguments.putInt( ProjectConst.ARG_ITEM_ID, R.string.progitem_loggraph_detail );
-    arguments.putInt( ProjectConst.ARG_ITEM_DBID, dbId );
+    arguments.putBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, true );
+    arguments.putInt( ProjectConst.ARG_DBID, dbId );
     Log.i( TAG, "viewSelectedLogItem:..." );
     runningActivity.fillCallStack( R.string.progitem_loggraph_detail, arguments );
     runningActivity.callPReferedFragment();

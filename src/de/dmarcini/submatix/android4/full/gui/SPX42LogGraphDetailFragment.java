@@ -56,10 +56,10 @@ import de.dmarcini.submatix.android4.full.utils.SPX42LogManager;
  * 
  *         Stand: 25.11.2014
  */
-public class SPX42LogGraphFragment extends Fragment implements IBtServiceListener
+public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceListener
 {
   @SuppressWarnings( "javadoc" )
-  public static final String TAG               = SPX42LogGraphFragment.class.getSimpleName();
+  public static final String TAG               = SPX42LogGraphDetailFragment.class.getSimpleName();
   protected ProgressDialog   progressDialog    = null;
   private SPX42LogManager    logManager        = null;
   private MainActivity       runningActivity   = null;
@@ -236,7 +236,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
     super.onCreate( savedInstanceState );
     runningActivity.getWindow().setFlags( WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN );
-    dbId = getArguments().getInt( ProjectConst.ARG_ITEM_DBID, -1 );
+    dbId = getArguments().getInt( ProjectConst.ARG_DBID, -1 );
     if( ApplicationDEBUG.DEBUG ) Log.e( TAG, "onCreate... DBID=<" + dbId + ">" );
   }
 
@@ -279,11 +279,11 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_ID ) )
     {
       // Es gibt einen Eintrag für den Gewählten Menüpunkt
-      if( arguments.getBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, false ) )
+      if( arguments.getBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false ) )
       {
         // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
         // und kennzeichnen
-        arguments.putBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, false );
+        arguments.putBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false );
         runningActivity.fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
       }
     }
