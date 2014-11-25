@@ -31,6 +31,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
@@ -47,20 +48,19 @@ import de.dmarcini.submatix.android4.full.utils.SPX42LogManager;
 
 /**
  * 
- * Ein Detsailfragment, welches die Verbindung mit dem SPX Managed
+ * Zeige Logs grafisch an!
  * 
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
  * 
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
  * 
- *         Stand: 01.02.2014
+ *         Stand: 25.11.2014
  */
 public class SPX42LogGraphFragment extends Fragment implements IBtServiceListener
 {
   @SuppressWarnings( "javadoc" )
   public static final String TAG               = SPX42LogGraphFragment.class.getSimpleName();
   protected ProgressDialog   progressDialog    = null;
-  // private CommToast theToast = null;
   private SPX42LogManager    logManager        = null;
   private MainActivity       runningActivity   = null;
   private int                dbId              = -1;
@@ -233,8 +233,9 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
   @Override
   public void onCreate( Bundle savedInstanceState )
   {
-    super.onCreate( savedInstanceState );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
+    super.onCreate( savedInstanceState );
+    runningActivity.getWindow().setFlags( WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN );
     dbId = getArguments().getInt( ProjectConst.ARG_ITEM_DBID, -1 );
     if( ApplicationDEBUG.DEBUG ) Log.e( TAG, "onCreate... DBID=<" + dbId + ">" );
   }
@@ -282,7 +283,6 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
       {
         // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
         // und kennzeichnen
-        arguments.putInt( ProjectConst.ARG_ITEM_DBID, dbId );
         arguments.putBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, false );
         runningActivity.fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
       }

@@ -510,6 +510,13 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     nId = fcEntry.getId();
     arguments = fcEntry.getBundle();
     //
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d( TAG,
+              String.format( "callPReferedFragment: call: %s, toStackOnDetach: %b, stack depth: %d", ContentSwitcher.getProgItemForId( nId ).content,
+                      arguments.getBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, false ), fragmentCallStack.size() ) );
+    }
+    //
     // sind wir online?
     //
     if( getConnectionStatus() == ProjectConst.CONN_STATE_CONNECTED )
@@ -517,7 +524,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       isOnline = true;
     }
     //
-    // das richti8ge Icon setzen
+    // das richtige Icon setzen
     //
     if( isOnline )
     {
@@ -602,7 +609,17 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         // Logs grafisch darstellen
         //
         Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42LogGraphSelectFragment..." );
-        SPX42LogGraphSelectFragment lgf = new SPX42LogGraphSelectFragment();
+        SPX42LogGraphSelectFragment lgsf = new SPX42LogGraphSelectFragment();
+        lgsf.setArguments( arguments );
+        mTitle = getString( R.string.graphlog_header );
+        getFragmentManager().beginTransaction().replace( R.id.main_container, lgsf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+        break;
+      case R.string.progitem_loggraph_detail:
+        //
+        // Logs detailiert darstellen (wird hier nur bei BACK genutzt)
+        //
+        Log.i( TAG, "onNavigationDrawerItemSelected: create SPX42LogGraphFragment..." );
+        SPX42LogGraphFragment lgf = new SPX42LogGraphFragment();
         lgf.setArguments( arguments );
         mTitle = getString( R.string.graphlog_header );
         getFragmentManager().beginTransaction().replace( R.id.main_container, lgf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
@@ -782,6 +799,12 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     }
     // und obenauf den aktuellen Inhalt
     fragmentCallStack.push( new FragmentCallStackEntry( nId, arguments ) );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d( TAG,
+              String.format( "fillCallStack: Fill: %s, toStackOnDetach: %b, stack depth: %d", ContentSwitcher.getProgItemForId( nId ).content,
+                      arguments.getBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, false ), fragmentCallStack.size() ) );
+    }
   }
 
   @Override
@@ -1034,20 +1057,30 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     ContentSwitcher.clearItems();
     //
     // irgendeine Kennung muss der String bekommen, also gibts halt die String-ID
-    //
-    ContentSwitcher
-            .addItem( new ProgItem( R.string.progitem_connect, R.drawable.bluetooth_icon_bw, R.drawable.bluetooth_icon_color, getString( R.string.progitem_connect ), true ) );
-    ContentSwitcher
-            .addItem( new ProgItem( R.string.progitem_spx_status, R.drawable.spx_health_icon, R.drawable.spx_health_icon, getString( R.string.progitem_spx_status ), false ) );
-    ContentSwitcher.addItem( new ProgItem( R.string.progitem_config, R.drawable.spx_toolbox_offline, R.drawable.spx_toolbox_online, getString( R.string.progitem_config ), false ) );
-    ContentSwitcher.addItem( new ProgItem( R.string.progitem_gaslist, R.drawable.gasedit_offline, R.drawable.gasedit_online, getString( R.string.progitem_gaslist ), false ) );
-    ContentSwitcher.addItem( new ProgItem( R.string.progitem_logging, R.drawable.logging_offline, R.drawable.logging_online, getString( R.string.progitem_logging ), false ) );
-    ContentSwitcher.addItem( new ProgItem( R.string.progitem_loggraph, R.drawable.graphsbar_online, R.drawable.graphsbar_online, getString( R.string.progitem_loggraph ), true ) );
-    ContentSwitcher.addItem( new ProgItem( R.string.progitem_export, R.drawable.export_offline, R.drawable.export_online, getString( R.string.progitem_export ), true ) );
-    ContentSwitcher
-            .addItem( new ProgItem( R.string.progitem_progpref, R.drawable.app_toolbox_offline, R.drawable.app_toolbox_online, getString( R.string.progitem_progpref ), true ) );
-    ContentSwitcher.addItem( new ProgItem( R.string.progitem_about, R.drawable.yin_yang, R.drawable.yin_yang, getString( R.string.progitem_about ), true ) );
-    ContentSwitcher.addItem( new ProgItem( R.string.progitem_exit, R.drawable.shutoff, R.drawable.shutoff, getString( R.string.progitem_exit ), true ) );
+    //@formatter:off
+    ContentSwitcher.addItem( 
+            new ProgItem( R.string.progitem_connect, R.drawable.bluetooth_icon_bw, R.drawable.bluetooth_icon_color, getString( R.string.progitem_connect ), true, false ) );
+    ContentSwitcher.addItem( 
+            new ProgItem( R.string.progitem_spx_status, R.drawable.spx_health_icon, R.drawable.spx_health_icon, getString( R.string.progitem_spx_status ), false, false ) );
+    ContentSwitcher.addItem( 
+            new ProgItem( R.string.progitem_config, R.drawable.spx_toolbox_offline, R.drawable.spx_toolbox_online, getString( R.string.progitem_config ), false, false ) );
+    ContentSwitcher.addItem( 
+            new ProgItem( R.string.progitem_gaslist, R.drawable.gasedit_offline, R.drawable.gasedit_online, getString( R.string.progitem_gaslist ), false, false ) );
+    ContentSwitcher.addItem( 
+            new ProgItem( R.string.progitem_logging, R.drawable.logging_offline, R.drawable.logging_online, getString( R.string.progitem_logging ), false, false ) );
+    ContentSwitcher.addItem( 
+            new ProgItem( R.string.progitem_loggraph, R.drawable.graphsbar_online, R.drawable.graphsbar_online, getString( R.string.progitem_loggraph ), true, false ) );
+    ContentSwitcher.addItem( 
+            new ProgItem( R.string.progitem_loggraph_detail, R.drawable.graphsbar_online, R.drawable.graphsbar_online,getString( R.string.progitem_loggraph_detail ), true, true ) );
+    ContentSwitcher.addItem( 
+            new ProgItem( R.string.progitem_export, R.drawable.export_offline, R.drawable.export_online, getString( R.string.progitem_export ), true, false ) );
+    ContentSwitcher.addItem( 
+            new ProgItem( R.string.progitem_progpref, R.drawable.app_toolbox_offline, R.drawable.app_toolbox_online, getString( R.string.progitem_progpref ), true, false ) );
+    ContentSwitcher.addItem( 
+            new ProgItem( R.string.progitem_about, R.drawable.yin_yang, R.drawable.yin_yang, getString( R.string.progitem_about ), true, false ) );
+    ContentSwitcher.addItem( 
+            new ProgItem( R.string.progitem_exit, R.drawable.shutoff, R.drawable.shutoff, getString( R.string.progitem_exit ), true, false ) );
+    //@formatter:on
   }
 
   /**
@@ -1411,7 +1444,6 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       ProgItem pItem = ContentSwitcher.getProgItemForId( R.string.progitem_about );
       arguments.putString( ProjectConst.ARG_ITEM_CONTENT, pItem.content );
       arguments.putInt( ProjectConst.ARG_ITEM_ID, pItem.nId );
-      arguments.putBoolean( ProjectConst.ARG_ITEM_GRAPHEXTRA, false );
       ProgramPreferencesFragment ppFragment = new ProgramPreferencesFragment();
       ppFragment.setArguments( arguments );
       getActionBar().setTitle( R.string.conf_prog_headline );
@@ -1438,7 +1470,6 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       ProgItem pItem = ContentSwitcher.getProgItemForId( R.string.progitem_about );
       arguments.putString( ProjectConst.ARG_ITEM_CONTENT, pItem.content );
       arguments.putInt( ProjectConst.ARG_ITEM_ID, pItem.nId );
-      arguments.putBoolean( ProjectConst.ARG_ITEM_GRAPHEXTRA, false );
       // Aufrufstack befüllen
       fillCallStack( pItem.nId, arguments );
       Log.i( TAG, "onCreate: create ProgramAbountFragment" );
@@ -1611,12 +1642,14 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       Log.v( TAG, "onKeyDown: BACK pressed!" );
       if( fragmentCallStack.isEmpty() )
       {
+        // in diesem Fall frag mal den user ob er wirklich beenden will
         Log.v( TAG, "onKeyDown:BACK pressed => navigator is open, ask user for exit." );
         AreYouSureDialogFragment sureDial = new AreYouSureDialogFragment( getString( R.string.dialog_sure_exit ) );
         sureDial.show( getFragmentManager().beginTransaction(), "programexit" );
       }
       else
       {
+        // dann rufe mal den Stack auf
         callPReferedFragment();
       }
     }
@@ -1640,8 +1673,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     //
     arguments.putString( ProjectConst.ARG_ITEM_CONTENT, pItem.content );
     arguments.putInt( ProjectConst.ARG_ITEM_ID, pItem.nId );
-    arguments.putBoolean( ProjectConst.ARG_ITEM_GRAPHEXTRA, false );
-    arguments.putBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, true );
+    arguments.putBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, true ); // das Fragment soll sich im Stack verewigen
     //
     // wenn EXIT angeordnet wurde
     //

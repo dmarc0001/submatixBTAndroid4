@@ -867,6 +867,26 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     return( rootView );
   }
 
+  @Override
+  public void onDetach()
+  {
+    super.onDetach();
+    Bundle arguments = getArguments();
+    //
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_ID ) )
+    {
+      // Es gibt einen Eintrag für den Gewählten Menüpunkt
+      if( arguments.getBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, false ) )
+      {
+        // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
+        // und kennzeichnen
+        // TODO: Merke mir, wo ich hier war!
+        arguments.putBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, false );
+        runningActivity.fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
+      }
+    }
+  }
+
   /**
    * 
    * Wenn der Dialog Positiv abgeschlossen wurde (OKO oder ähnlich)

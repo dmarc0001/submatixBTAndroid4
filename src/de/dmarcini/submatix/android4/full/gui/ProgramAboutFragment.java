@@ -75,6 +75,8 @@ public class ProgramAboutFragment extends Fragment
     {
       Log.e( TAG, "onActivityCreated: gui objects not allocated!" );
     }
+    // den Titel in der Actionbar setzten
+    //
     Bundle arguments = getArguments();
     if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
     {
@@ -135,8 +137,12 @@ public class ProgramAboutFragment extends Fragment
     //
     if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_ID ) )
     {
+      // Es gibt einen Eintrag für den Gewählten Menüpunkt
       if( arguments.getBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, false ) )
       {
+        // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
+        // und kennzeichnen
+        arguments.putBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, false );
         runningActivity.fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
       }
     }

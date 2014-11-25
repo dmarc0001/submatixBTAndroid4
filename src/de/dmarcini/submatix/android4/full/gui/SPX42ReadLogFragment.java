@@ -651,29 +651,6 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
       Log.e( TAG, "onCreateView: container is NULL ..." );
       return( null );
     }
-    //
-    // wenn die laufende Activity eine AreaDetailActivity ist, dann gibts das View schon
-    //
-    // if( runningActivity instanceof AreaDetailActivity )
-    // {
-    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
-    // //
-    // // Objekte lokalisieren, Verbindungsseite ist von onePane Mode
-    // //
-    // mainListView = ( ListView )runningActivity.findViewById( R.id.readLogDirListView );
-    // mainListView.setChoiceMode( AbsListView.CHOICE_MODE_MULTIPLE );
-    // readDirButton = ( Button )runningActivity.findViewById( R.id.readLogDirButton );
-    // //
-    // // Einstellung(en) lesen und Oberfläche einstellen
-    // //
-    // makeShowEntryPreferences();
-    // showAllLogEntrys = getShowAllEntrysFromPrefs();
-    // return( null );
-    // }
-    //
-    // Verbindungsseite via twoPane ausgewählt
-    //
-    //
     // View aus Resource laden
     //
     rootView = inflater.inflate( R.layout.fragment_read_log, container, false );
@@ -688,6 +665,25 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     //
     makeShowEntryPreferences();
     return( rootView );
+  }
+
+  @Override
+  public void onDetach()
+  {
+    super.onDetach();
+    Bundle arguments = getArguments();
+    //
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_ID ) )
+    {
+      // Es gibt einen Eintrag für den Gewählten Menüpunkt
+      if( arguments.getBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, false ) )
+      {
+        // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
+        // und kennzeichnen
+        arguments.putBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, false );
+        runningActivity.fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
+      }
+    }
   }
 
   /**

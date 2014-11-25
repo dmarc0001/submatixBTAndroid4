@@ -27,7 +27,6 @@ import java.util.Vector;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
@@ -407,6 +406,26 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     runningActivity.removeServiceListener( this );
   }
 
+  @Override
+  public void onDetach()
+  {
+    super.onDetach();
+    Bundle arguments = getArguments();
+    //
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_ID ) )
+    {
+      // Es gibt einen Eintrag für den Gewählten Menüpunkt
+      if( arguments.getBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, false ) )
+      {
+        // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
+        // und kennzeichnen
+        // TODO: Merken, welche Auswahl ich hatte
+        arguments.putBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, false );
+        runningActivity.fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
+      }
+    }
+  }
+
   /**
    * 
    * Wenn der Dialog Positiv abgeschlossen wurde (OKO oder ähnlich)
@@ -599,14 +618,11 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     // Logs grafisch darstellen, dazu neues Frame aufrufen
     //
     Bundle arguments = new Bundle();
-    arguments.putString( ProjectConst.ARG_ITEM_CONTENT, getString( R.string.progitem_loggraph ) );
-    arguments.putInt( ProjectConst.ARG_ITEM_ID, R.string.progitem_loggraph );
-    arguments.putBoolean( ProjectConst.ARG_ITEM_GRAPHEXTRA, true );
+    arguments.putString( ProjectConst.ARG_ITEM_CONTENT, getString( R.string.progitem_loggraph_detail ) );
+    arguments.putInt( ProjectConst.ARG_ITEM_ID, R.string.progitem_loggraph_detail );
     arguments.putInt( ProjectConst.ARG_ITEM_DBID, dbId );
     Log.i( TAG, "viewSelectedLogItem:..." );
-    SPX42LogGraphFragment lgf = new SPX42LogGraphFragment();
-    lgf.setArguments( arguments );
-    runningActivity.getActionBar().setTitle( R.string.graphlog_header );
-    getFragmentManager().beginTransaction().replace( R.id.main_container, lgf ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
+    runningActivity.fillCallStack( R.string.progitem_loggraph_detail, arguments );
+    runningActivity.callPReferedFragment();
   }
 }
