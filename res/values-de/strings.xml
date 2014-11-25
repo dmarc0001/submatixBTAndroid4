@@ -299,7 +299,7 @@
     <!-- ### Kategorie Anderes ### -->
     <string name="conf_prog_others_header">"SONSTIGES"</string>
     <!-- BT disable on exit?  -->
-    <string name="conf_prog_others_bt_disable_bt_header">"BT deakitvieren"</string>
+    <string name="conf_prog_others_bt_disable_bt_header">"BT deaktivieren"</string>
     <string name="conf_prog_others_on_disable_bt">"aus"</string>
     <string name="conf_prog_others_off_disable_bt">"aktiv"</string>
     <string name="conf_prog_others_on_disable_bt_summary">"BT beim Beenden deaktivieren"</string>
