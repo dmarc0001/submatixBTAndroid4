@@ -62,7 +62,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
   protected ProgressDialog   progressDialog    = null;
   // private CommToast theToast = null;
   private SPX42LogManager    logManager        = null;
-  private Activity           runningActivity   = null;
+  private MainActivity       runningActivity   = null;
   private int                dbId              = -1;
   private SPX42LogGraphView  sPX42LogGraphView = null;
 
@@ -149,15 +149,24 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
   public void onActivityCreated( Bundle bundle )
   {
     super.onActivityCreated( bundle );
-    runningActivity = getActivity();
+    runningActivity = ( MainActivity )getActivity();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
+    Bundle arguments = getArguments();
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    {
+      runningActivity.onSectionAttached( arguments.getString( ProjectConst.ARG_ITEM_CONTENT ) );
+    }
+    else
+    {
+      Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+    }
   }
 
   @Override
   public void onAttach( Activity activity )
   {
     super.onAttach( activity );
-    runningActivity = activity;
+    runningActivity = ( MainActivity )activity;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
     //
     // die Datenbank öffnen
@@ -218,7 +227,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
   public void onDestroy()
   {
     super.onDestroy();
-    ( ( MainActivity )runningActivity ).removeServiceListener( this );
+    runningActivity.removeServiceListener( this );
   }
 
   @Override
@@ -228,7 +237,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause..." );
     // handler loeschen
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
-    ( ( MainActivity )runningActivity ).removeServiceListener( this );
+    runningActivity.removeServiceListener( this );
   }
 
   /**
@@ -242,7 +251,7 @@ public class SPX42LogGraphFragment extends Fragment implements IBtServiceListene
     //
     // Service Listener setzen
     //
-    ( ( MainActivity )runningActivity ).addServiceListener( this );
+    runningActivity.addServiceListener( this );
     makeGraphForDive();
   }
 

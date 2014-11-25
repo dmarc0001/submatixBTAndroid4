@@ -100,7 +100,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
 {
   private static final String        TAG                 = SPX42ExportLogFragment.class.getSimpleName();
   private final Pattern              mailPattern         = Pattern.compile( ProjectConst.PATTERN_EMAIL );
-  private Activity                   runningActivity     = null;
+  private MainActivity               runningActivity     = null;
   private ListView                   mainListView        = null;
   private SPX42LogManager            logManager          = null;
   private int                        selectedDeviceId    = -1;
@@ -648,7 +648,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
   public void onActivityCreated( Bundle bundle )
   {
     super.onActivityCreated( bundle );
-    runningActivity = getActivity();
+    runningActivity = ( MainActivity )getActivity();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
     try
     {
@@ -657,6 +657,15 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     catch( NullPointerException ex )
     {
       Log.e( TAG, "onActivityCreated: gui objects not allocated!" );
+    }
+    Bundle arguments = getArguments();
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    {
+      runningActivity.onSectionAttached( arguments.getString( ProjectConst.ARG_ITEM_CONTENT ) );
+    }
+    else
+    {
+      Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
     }
   }
 
@@ -678,7 +687,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
   public void onAttach( Activity activity )
   {
     super.onAttach( activity );
-    runningActivity = activity;
+    runningActivity = ( MainActivity )activity;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
     //
     // die Haupt-Mailadresse holen, wenn vorhanden
@@ -1034,7 +1043,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     super.onPause();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause..." );
     // Listener abmelden
-    ( ( MainActivity )runningActivity ).removeServiceListener( this );
+    runningActivity.removeServiceListener( this );
   }
 
   @Override
@@ -1043,7 +1052,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     super.onResume();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
     // Listener aktivieren
-    ( ( MainActivity )runningActivity ).addServiceListener( this );
+    runningActivity.addServiceListener( this );
     mainListView.setOnItemClickListener( this );
     changeDeviceButton = ( Button )runningActivity.findViewById( R.id.changeDeviceButton );
     changeDeviceButton.setOnClickListener( this );
@@ -1063,7 +1072,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
       selectedDeviceAlias = null;
     }
     // Listener aktivieren
-    ( ( MainActivity )runningActivity ).addServiceListener( this );
+    runningActivity.addServiceListener( this );
   }
 
   /**

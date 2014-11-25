@@ -75,7 +75,7 @@ import de.dmarcini.submatix.android4.full.utils.SPX42ReadLogListArrayAdapter;
 public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener, OnItemClickListener, OnClickListener
 {
   private static final String          TAG                 = SPX42ReadLogFragment.class.getSimpleName();
-  private Activity                     runningActivity     = null;
+  private MainActivity                 runningActivity     = null;
   private ListView                     mainListView        = null;
   private Button                       readDirButton       = null;
   private SPX42LogManager              logManager          = null;
@@ -357,7 +357,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
           {
             currPositionOnItems = items.remove( 0 );
             ReadLogItemObj dirItem = logListAdapter.getItem( currPositionOnItems );
-            ( ( MainActivity )runningActivity ).askForLogDetail( dirItem.numberOnSPX );
+            runningActivity.askForLogDetail( dirItem.numberOnSPX );
           }
           else
           {
@@ -419,8 +419,8 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     {
       // TextView tv = new TextView( getActivity().getApplicationContext() );
       LayoutInflater mInflater = ( LayoutInflater )getActivity().getApplicationContext().getSystemService( Activity.LAYOUT_INFLATER_SERVICE );
-      View headerView = mInflater.inflate( R.layout.read_log_show_not_all_view_header, null, false );
-      View footerView = mInflater.inflate( R.layout.read_log_show_not_all_view_footer, null, false );
+      View headerView = mInflater.inflate( R.layout.read_log_show_not_all_view_header, ( ViewGroup )null, false );
+      View footerView = mInflater.inflate( R.layout.read_log_show_not_all_view_footer, ( ViewGroup )null, false );
       mainListView.addHeaderView( headerView );
       mainListView.addFooterView( footerView );
     }
@@ -434,8 +434,8 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     //
     logListAdapter.clear();
     // Logdirectory lesen
-    ( ( MainActivity )runningActivity ).aksForUnitsFromSPX42();
-    ( ( MainActivity )runningActivity ).askForLogDirectoryFromSPX();
+    runningActivity.aksForUnitsFromSPX42();
+    runningActivity.askForLogDirectoryFromSPX();
     openWaitDial( 0, String.format( runningActivity.getResources().getString( R.string.logread_please_wait_dialog_header ), 1 ) );
     countDirEntrys = 0;
     if( pd != null )
@@ -549,7 +549,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   public void onActivityCreated( Bundle bundle )
   {
     super.onActivityCreated( bundle );
-    runningActivity = getActivity();
+    runningActivity = ( MainActivity )getActivity();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
     try
     {
@@ -561,13 +561,22 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     {
       Log.e( TAG, "onActivityCreated: gui objects not allocated!" );
     }
+    Bundle arguments = getArguments();
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    {
+      runningActivity.onSectionAttached( arguments.getString( ProjectConst.ARG_ITEM_CONTENT ) );
+    }
+    else
+    {
+      Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+    }
   }
 
   @Override
   public void onAttach( Activity activity )
   {
     super.onAttach( activity );
-    runningActivity = activity;
+    runningActivity = ( MainActivity )activity;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
     //
     // die Datenbank öffnen
@@ -615,7 +624,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
       //
       currPositionOnItems = items.remove( 0 );
       ReadLogItemObj dirItem = logListAdapter.getItem( currPositionOnItems );
-      ( ( MainActivity )runningActivity ).askForLogDetail( dirItem.numberOnSPX );
+      runningActivity.askForLogDetail( dirItem.numberOnSPX );
     }
   }
 
@@ -718,7 +727,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     // die abgeleiteten Objekte führen das auch aus
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
-    ( ( MainActivity )runningActivity ).removeServiceListener( this );
+    runningActivity.removeServiceListener( this );
   }
 
   /**
@@ -730,7 +739,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     super.onResume();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
     // Listener aktivieren
-    ( ( MainActivity )runningActivity ).addServiceListener( this );
+    runningActivity.addServiceListener( this );
     mainListView.setOnItemClickListener( this );
     readDirButton = ( Button )runningActivity.findViewById( R.id.readLogDirButton );
     readDirButton.setOnClickListener( this );

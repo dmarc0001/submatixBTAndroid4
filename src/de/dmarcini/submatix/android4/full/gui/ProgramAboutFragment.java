@@ -31,6 +31,7 @@ import android.widget.TextView;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.utils.BuildVersion;
+import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 
 /**
  * 
@@ -46,7 +47,7 @@ public class ProgramAboutFragment extends Fragment
 {
   @SuppressWarnings( "javadoc" )
   public static final String TAG                     = ProgramAboutFragment.class.getSimpleName();
-  private Activity           runningActivity         = null;
+  private MainActivity       runningActivity         = null;
   private TextView           aboutVersionTextView    = null;
   private TextView           aboutProgrammerTextView = null;
   private TextView           aboutBuildTextView      = null;
@@ -56,7 +57,8 @@ public class ProgramAboutFragment extends Fragment
   public void onActivityCreated( Bundle bundle )
   {
     super.onActivityCreated( bundle );
-    runningActivity = getActivity();
+    runningActivity = ( MainActivity )getActivity();
+    //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
     try
     {
@@ -73,13 +75,22 @@ public class ProgramAboutFragment extends Fragment
     {
       Log.e( TAG, "onActivityCreated: gui objects not allocated!" );
     }
+    Bundle arguments = getArguments();
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    {
+      runningActivity.onSectionAttached( arguments.getString( ProjectConst.ARG_ITEM_CONTENT ) );
+    }
+    else
+    {
+      Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+    }
   }
 
   @Override
   public void onAttach( Activity activity )
   {
     super.onAttach( activity );
-    runningActivity = activity;
+    runningActivity = ( MainActivity )activity;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
   }
 
@@ -114,5 +125,20 @@ public class ProgramAboutFragment extends Fragment
     //
     rootView = inflater.inflate( R.layout.fragment_about, container, false );
     return rootView;
+  }
+
+  @Override
+  public void onDetach()
+  {
+    super.onDetach();
+    Bundle arguments = getArguments();
+    //
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_ID ) )
+    {
+      if( arguments.getBoolean( ProjectConst.ARG_ITEM_TOSTACKONDETACH, false ) )
+      {
+        runningActivity.fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
+      }
+    }
   }
 }

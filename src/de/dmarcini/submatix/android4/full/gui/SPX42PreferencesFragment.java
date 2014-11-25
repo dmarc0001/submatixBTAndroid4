@@ -63,7 +63,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
 {
   private static final String  TAG                          = SPX42PreferencesFragment.class.getSimpleName();
   private static final int     maxEvents                    = 12;
-  private Activity             runningActivity              = null;
+  private MainActivity         runningActivity              = null;
   private static final Pattern fieldPatternKdo              = Pattern.compile( "~\\d+" );
   // Schlüsselwerte für Presets
   private static final String  setpointAuto                 = "keySetpointAutosetpointDepth";
@@ -325,7 +325,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   public void msgConnected( BtServiceMessage msg )
   {
     Log.v( TAG, "msgConnected()...ask for SPX config..." );
-    MainActivity fActivity = ( MainActivity )runningActivity;
+    MainActivity fActivity = runningActivity;
     // Dialog schliesen, wenn geöffnet
     theToast.dismissDial();
     theToast.openWaitDial( maxEvents, getActivity().getResources().getString( R.string.dialog_please_wait_title ),
@@ -1111,10 +1111,27 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   }
 
   @Override
+  public void onActivityCreated( Bundle bundle )
+  {
+    super.onActivityCreated( bundle );
+    runningActivity = ( MainActivity )getActivity();
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
+    Bundle arguments = getArguments();
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    {
+      runningActivity.onSectionAttached( arguments.getString( ProjectConst.ARG_ITEM_CONTENT ) );
+    }
+    else
+    {
+      Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+    }
+  }
+
+  @Override
   public void onAttach( Activity activity )
   {
     super.onAttach( activity );
-    runningActivity = activity;
+    runningActivity = ( MainActivity )activity;
     Log.w( TAG, "ATTACH" );
   }
 
@@ -1207,7 +1224,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener( this );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause(): clear service listener for preferences fragment..." );
-    ( ( MainActivity )runningActivity ).removeServiceListener( this );
+    runningActivity.removeServiceListener( this );
   }
 
   @Override
@@ -1221,7 +1238,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener( this );
     ignorePrefChange = true;
     // Service Listener setzen
-    MainActivity fActivity = ( MainActivity )runningActivity;
+    MainActivity fActivity = runningActivity;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume(): set service listener for preferences fragment..." );
     fActivity.addServiceListener( this );
   }
@@ -1479,7 +1496,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     //
     sP = lP.findIndexOfValue( lP.getValue() );
     //
-    MainActivity fActivity = ( MainActivity )runningActivity;
+    MainActivity fActivity = runningActivity;
     ignorePrefChange = true;
     try
     {
@@ -1588,7 +1605,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     {
       deepStops = 0;
     }
-    MainActivity fActivity = ( MainActivity )runningActivity;
+    MainActivity fActivity = runningActivity;
     ignorePrefChange = true;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "sendDecoPrefs: write deco prefs via runningActivity..." );
     try
@@ -1641,7 +1658,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     orient = lP.findIndexOfValue( lP.getValue() );
     if( orient == -1 ) orient = 0;
     //
-    MainActivity fActivity = ( MainActivity )runningActivity;
+    MainActivity fActivity = runningActivity;
     ignorePrefChange = true;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "sendDisplayPrefs: write display prefs via runningActivity lum:%d, orient:%d...", lumin, orient ) );
     try
@@ -1774,7 +1791,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       tempStick = lP.findIndexOfValue( lP.getValue() );
     }
     //
-    MainActivity fActivity = ( MainActivity )runningActivity;
+    MainActivity fActivity = runningActivity;
     ignorePrefChange = true;
     if( ApplicationDEBUG.DEBUG )
       Log.d( TAG, String.format( "sendIndividualPrefs: write individual prefs via runningActivity :<SE:%d, PS:%d, SC:%d, SN:%d, LI:%d, TS:%d>...", sensorsOff, pscrOff,
@@ -1868,7 +1885,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       isFreshwater = 0;
     }
     //
-    MainActivity fActivity = ( MainActivity )runningActivity;
+    MainActivity fActivity = runningActivity;
     ignorePrefChange = true;
     if( ApplicationDEBUG.DEBUG )
       Log.d( TAG, String.format( "sendUnitPrefs: write display prefs via runningActivity temp:%d, depth:%d, freshwater:%d...", isTempImperial, isDepthImperial, isFreshwater ) );
@@ -1915,25 +1932,6 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     {
       setIndividualsSummary();
     }
-  }
-
-  /**
-   * 
-   * Setze Summary für Autosetpoint
-   * 
-   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
-   * 
-   * Stand: 02.01.2014
-   */
-  private void setSetpointSummarys()
-  {
-    ListPreference lP = null;
-    //
-    lP = ( ListPreference )getPreferenceScreen().findPreference( setpointAuto );
-    lP.setSummary( String.format( getResources().getString( R.string.conf_autoset_summary ), lP.getEntry() ) );
-    //
-    lP = ( ListPreference )getPreferenceScreen().findPreference( setpointHigh );
-    lP.setSummary( String.format( getResources().getString( R.string.conf_highset_summary ), lP.getEntry() ) );
   }
 
   /**
@@ -2033,7 +2031,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   private void setDecoGradientsPreset( int[] presetCandidate )
   {
     ListPreference lP;
-    String presetCandidateStr = String.format( "%02d:%02d", presetCandidate[0], presetCandidate[1] );
+    String presetCandidateStr = String.format( Locale.ENGLISH, "%02d:%02d", presetCandidate[0], presetCandidate[1] );
     int i;
     //
     // in die Voreinstellungen übertragen, wenn es ein Preset ist
@@ -2201,5 +2199,24 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       lPL.setEntryValues( R.array.displayLuminanceValuesArray );
     }
     return( true );
+  }
+
+  /**
+   * 
+   * Setze Summary für Autosetpoint
+   * 
+   * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
+   * 
+   * Stand: 02.01.2014
+   */
+  private void setSetpointSummarys()
+  {
+    ListPreference lP = null;
+    //
+    lP = ( ListPreference )getPreferenceScreen().findPreference( setpointAuto );
+    lP.setSummary( String.format( getResources().getString( R.string.conf_autoset_summary ), lP.getEntry() ) );
+    //
+    lP = ( ListPreference )getPreferenceScreen().findPreference( setpointHigh );
+    lP.setSummary( String.format( getResources().getString( R.string.conf_highset_summary ), lP.getEntry() ) );
   }
 }

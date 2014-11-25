@@ -73,7 +73,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   private SPX42LogManager    logManager              = null;
   private int                selectedDeviceId        = -1;
   private String             selectedDeviceAlias     = null;
-  private Activity           runningActivity;
+  private MainActivity       runningActivity;
   private Button             changeGraphDeviceButton = null;
   private Button             graphLogsButton         = null;
   private ListView           graphLogsListView       = null;
@@ -254,7 +254,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   public void onActivityCreated( Bundle bundle )
   {
     super.onActivityCreated( bundle );
-    runningActivity = getActivity();
+    runningActivity = ( MainActivity )getActivity();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
     try
     {
@@ -269,13 +269,22 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     {
       Log.e( TAG, "onActivityCreated: gui objects not allocated!" );
     }
+    Bundle arguments = getArguments();
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    {
+      runningActivity.onSectionAttached( arguments.getString( ProjectConst.ARG_ITEM_CONTENT ) );
+    }
+    else
+    {
+      Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+    }
   }
 
   @Override
   public void onAttach( Activity activity )
   {
     super.onAttach( activity );
-    runningActivity = activity;
+    runningActivity = ( MainActivity )activity;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
     //
     // die Datenbank öffnen
@@ -354,6 +363,10 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   {
     super.onCreate( savedInstanceState );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
+    if( getActivity().getIntent().getBooleanExtra( "BACKKEY", false ) )
+    {
+      // TODO: hier muss ich dann was machen
+    }
   }
 
   /**
@@ -391,7 +404,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   public void onDestroy()
   {
     super.onDestroy();
-    ( ( MainActivity )runningActivity ).removeServiceListener( this );
+    runningActivity.removeServiceListener( this );
   }
 
   /**
@@ -533,7 +546,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause..." );
     // handler loeschen
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
-    ( ( MainActivity )runningActivity ).removeServiceListener( this );
+    runningActivity.removeServiceListener( this );
   }
 
   /**
@@ -567,7 +580,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     //
     // Service Listener setzen
     //
-    ( ( MainActivity )runningActivity ).addServiceListener( this );
+    runningActivity.addServiceListener( this );
   }
 
   /**

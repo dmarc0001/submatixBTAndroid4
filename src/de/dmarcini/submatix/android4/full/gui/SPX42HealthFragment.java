@@ -49,7 +49,7 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
 {
   @SuppressWarnings( "javadoc" )
   public static final String TAG                       = SPX42HealthFragment.class.getSimpleName();
-  private Activity           runningActivity           = null;
+  private MainActivity       runningActivity           = null;
   private TextView           ackuVoltageTextView       = null;
   private TextView           serialNumberTextView      = null;
   private TextView           firmwareVersionTextView   = null;
@@ -62,15 +62,24 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
   public void onActivityCreated( Bundle bundle )
   {
     super.onActivityCreated( bundle );
-    runningActivity = getActivity();
+    runningActivity = ( MainActivity )getActivity();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
+    Bundle arguments = getArguments();
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    {
+      runningActivity.onSectionAttached( arguments.getString( ProjectConst.ARG_ITEM_CONTENT ) );
+    }
+    else
+    {
+      Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+    }
   }
 
   @Override
   public void onAttach( Activity activity )
   {
     super.onAttach( activity );
-    runningActivity = activity;
+    runningActivity = ( MainActivity )activity;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
   }
 
@@ -146,7 +155,7 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
     // die abgeleiteten Objekte führen das auch aus
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
-    ( ( MainActivity )runningActivity ).removeServiceListener( this );
+    runningActivity.removeServiceListener( this );
   }
 
   /**
@@ -157,7 +166,7 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
   {
     super.onResume();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
-    ( ( MainActivity )runningActivity ).addServiceListener( this );
+    runningActivity.addServiceListener( this );
     // if( runningActivity instanceof AreaDetailActivity )
     // {
     // //

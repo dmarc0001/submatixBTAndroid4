@@ -40,6 +40,7 @@ import android.view.MenuItem;
 import android.view.View;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
+import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 
 /**
  * 
@@ -73,6 +74,21 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener( this );
     Log.v( TAG, "onCreate: add Resouce...OK" );
   }
+
+  @Override
+  public void onActivityCreated( Bundle savedInstanceState )
+  {
+    super.onActivityCreated( savedInstanceState );
+    Bundle arguments = getArguments();
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    {
+      ( ( MainActivity )getActivity() ).onSectionAttached( arguments.getString( ProjectConst.ARG_ITEM_CONTENT ) );
+    }
+    else
+    {
+      Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+    }
+  };
 
   @Override
   public void onResume()
