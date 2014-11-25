@@ -26,6 +26,7 @@
     <string name="progitem_gaslist">Gases editing</string>
     <string name="progitem_logging">Logfiles read</string>
     <string name="progitem_loggraph">Visualize logs</string>
+    <string name="progitem_loggraph_detail">Visualize logs detail</string>
     <string name="progitem_export">Export logs</string>
     <string name="progitem_progpref">Program prefs</string>
     <string name="progitem_about">About program</string>
@@ -309,15 +310,6 @@
     <string name="conf_prog_others_off_light">light</string>
     <string name="conf_prog_others_on_dark_summary">app theme DARK selected</string>
     <string name="conf_prog_others_off_light_summary">app theme LIGHT selected</string>
-    <!--  ### Kategorie Einstellungen Log Grafik ### -->
-    <!--  Sichtbarkeit der Überschrift -->
-    <string name="conf_prog_graph_screen_headline_headline">Headline (small screens)</string>
-    <string name="conf_prog_graph_screen_header">graphical log screen</string>
-    <string name="conf_prog_graph_screen_headline_on_summary">show headline</string>
-    <string name="conf_prog_graph_screen_headline_off_summary">hide headline</string>    
-    <string name="conf_prog_graph_screen_headline_on">show</string>
-    <string name="conf_prog_graph_screen_headline_off">hide</string>
-    
     
     <!--  Strings für ConnectSeite  -->
     <string name="connect_togglebtn_disconn">OFF</string>
