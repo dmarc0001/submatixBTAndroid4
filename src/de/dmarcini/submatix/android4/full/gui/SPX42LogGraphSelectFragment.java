@@ -272,10 +272,52 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
     {
       runningActivity.onSectionAttached( arguments.getString( ProjectConst.ARG_ITEM_CONTENT ) );
+      if( arguments.containsKey( ProjectConst.ARG_SELECTED_DEVICE ) )
+      {
+        // Gerät vorselektieren
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: marked device <" + arguments.getInt( ProjectConst.ARG_SELECTED_DEVICE ) + ">" );
+        fillListAdapter( arguments.getInt( ProjectConst.ARG_SELECTED_DEVICE ) );
+        if( arguments.containsKey( ProjectConst.ARG_SELECTED_DIVE ) )
+        {
+          // Dive vorselektieren
+          setDiveAdapterForDiveId( arguments.getInt( ProjectConst.ARG_SELECTED_DIVE ) );
+        }
+      }
     }
     else
     {
       Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+    }
+  }
+
+  /**
+   * 
+   * Suche und selektiere ggf. den vorgemerkten Dive
+   *
+   * Project: SubmatixBTAndroid4 Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 25.11.2014
+   * 
+   * @param diveId
+   */
+  private void setDiveAdapterForDiveId( int diveId )
+  {
+    SPX42ReadLogListArrayAdapter rAdapter;
+    ReadLogItemObj rlo;
+    int idx;
+    //
+    rAdapter = ( SPX42ReadLogListArrayAdapter )graphLogsListView.getAdapter();
+    rAdapter.clearMarkedItems();
+    // alle Einträge nach DBID durchsuchen
+    for( idx = 0; idx < rAdapter.getCount(); idx++ )
+    {
+      rlo = rAdapter.getItem( idx );
+      if( rlo.dbId == diveId )
+      {
+        rAdapter.setMarked( idx, true );
+        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "setDiveAdapterForDiveId: marked IDX <" + idx + ">" );
+        break;
+      }
     }
   }
 
@@ -404,7 +446,6 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
       {
         // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
         // und kennzeichnen
-        // TODO: Merken, welche Auswahl ich hatte
         arguments.putBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false );
         runningActivity.fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
       }
@@ -438,9 +479,12 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
    */
   public void onDialogPositive( DialogFragment dialog )
   {
+    Bundle arguments;
+    //
     if( ApplicationDEBUG.DEBUG ) Log.v( TAG, "Positive dialog click!" );
     if( dialog instanceof SelectDeviceDialogFragment )
     {
+      arguments = getArguments();
       SelectDeviceDialogFragment deviceDialog = ( SelectDeviceDialogFragment )dialog;
       selectedDeviceId = deviceDialog.getSelectedDeviceId();
       selectedDeviceAlias = logManager.getAliasForId( selectedDeviceId );
@@ -452,10 +496,24 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
       //
       if( selectedDeviceId > 0 )
       {
+        //
+        // wenn ein gerät gewählt wurde, speicher das gleich in den Argumenten
+        //
+        if( arguments != null )
+        {
+          arguments.putInt( ProjectConst.ARG_SELECTED_DEVICE, selectedDeviceId );
+        }
         fillListAdapter( selectedDeviceId );
       }
       else
       {
+        //
+        // Tja, Einstellunge entfernen
+        //
+        if( arguments != null )
+        {
+          arguments.remove( ProjectConst.ARG_SELECTED_DEVICE );
+        }
         // Das wird nix, kein Gerät ausgewählt
         if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "no device selected -> note to user" );
         UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_no_device_selected_header ), runningActivity
@@ -468,6 +526,13 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
       //
       if( graphLogsListView.getAdapter().isEmpty() )
       {
+        //
+        // Tja, Einstellunge entfernen
+        //
+        if( arguments != null )
+        {
+          arguments.remove( ProjectConst.ARG_SELECTED_DEVICE );
+        }
         // Das wird auch nix, Keine Einträge in der Datenbank
         if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "no logs foir device -> note to user" );
         UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_not_log_entrys_header ), runningActivity
@@ -505,12 +570,14 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   @Override
   public void onItemClick( AdapterView<?> parent, View clickedView, int position, long id )
   {
+    Bundle arguments;
     SPX42ReadLogListArrayAdapter rlAdapter = null;
     //
     // Die Liste der Logs
     //
     if( parent.equals( graphLogsListView ) )
     {
+      arguments = getArguments();
       rlAdapter = ( SPX42ReadLogListArrayAdapter )graphLogsListView.getAdapter();
       //
       // mache die Markierung auch im View (das wird ja sonst nicht automatisch aktualisiert)
@@ -540,6 +607,15 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
       rlAdapter.setMarked( position, true );
       ImageView ivMarked = ( ImageView )clickedView.findViewById( R.id.readLogMarkedIconView );
       ivMarked.setImageResource( R.drawable.circle_full_green );
+      //
+      // Tja, Einstellung merken
+      //
+      if( ( arguments != null ) && ( !rlAdapter.getMarkedItems().isEmpty() ) )
+      {
+        int idx = rlAdapter.getMarkedItems().firstElement();
+        ReadLogItemObj rlo = rlAdapter.getItem( idx );
+        arguments.putInt( ProjectConst.ARG_SELECTED_DIVE, rlo.dbId );
+      }
     }
   }
 

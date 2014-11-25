@@ -392,7 +392,7 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * 
    * Stand: 04.01.2014
    */
-  public void clearMaredItems()
+  public void clearMarkedItems()
   {
     for( int i = 0; i < getCount(); i++ )
     {
