@@ -58,7 +58,6 @@ public class ArrayAdapterWithPics extends ArrayAdapter<ContentSwitcher.ProgItem>
   private int     themeId  = R.style.AppDarkTheme;
   private boolean isOnline = false;                ;
 
-  // R.drawable.activated_red_icon_color;
   /**
    * Mein Konstruktor Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
    * 
