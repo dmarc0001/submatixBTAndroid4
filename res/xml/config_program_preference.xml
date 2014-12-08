@@ -20,7 +20,7 @@
     <de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory
         android:key="keyProgData"
         android:title="@string/conf_prog_filesystem" >
-        <EditTextPreference
+        <Preference
             android:defaultValue="null"
             android:key="keyProgDataDirectory"
             android:title="@string/conf_prog_datadir" />
