@@ -64,9 +64,11 @@ import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.content.ContentSwitcher;
 import de.dmarcini.submatix.android4.full.content.ContentSwitcher.ProgItem;
 import de.dmarcini.submatix.android4.full.dialogs.AreYouSureDialogFragment;
+import de.dmarcini.submatix.android4.full.dialogs.DatabaseFileDialog;
 import de.dmarcini.submatix.android4.full.dialogs.EditAliasDialogFragment;
 import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
 import de.dmarcini.submatix.android4.full.exceptions.FirmwareNotSupportetException;
+import de.dmarcini.submatix.android4.full.exceptions.NoWritableDatabaseDirException;
 import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
 import de.dmarcini.submatix.android4.full.interfaces.INavigationDrawerCallbacks;
 import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
@@ -499,8 +501,12 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     //
     if( fragmentCallStack.isEmpty() )
     {
-      // TODO: Sinnvoll abbrechen
-      Log.e( TAG, "fragment call stack is empty! ALERT!" );
+      //
+      // Wenn der Stack leer ist, den User fragen ob er beenden will
+      //
+      Log.v( TAG, "onNavigationDrawerItemSelected: make dialog for USER..." );
+      AreYouSureDialogFragment sureDial = new AreYouSureDialogFragment( getString( R.string.dialog_sure_exit ) );
+      sureDial.show( getFragmentManager().beginTransaction(), "programexit" );
       return;
     }
     //
@@ -661,6 +667,40 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         getFragmentManager().beginTransaction().replace( R.id.main_container, defaultFragment ).setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE ).commit();
     }
     Log.v( TAG, "onNavigationDrawerItemSelected:...OK" );
+  }
+
+  /**
+   * 
+   * Checke und lege ggf das Datenverzeichnis an
+   *
+   * Project: SubmatixBTAndroid4 Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 08.12.2014
+   * 
+   * @param dDir
+   * @throws NoWritableDatabaseDirException
+   */
+  private void checkDatabaseDir( File dDir ) throws NoWritableDatabaseDirException
+  {
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "checkDatabaseDir: check if Directory exist and is writable..." );
+    if( dDir != null )
+    {
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "checkDatabaseDir: Directory exist.." );
+      if( !dDir.exists() )
+      {
+        Log.i( TAG, "checkDatabaseDir: create database root dir..." );
+        if( !dDir.mkdirs() ) dDir = null;
+      }
+    }
+    //
+    // Ist das Datenbankverzeichnis da?
+    //
+    if( dDir == null || !dDir.canWrite() )
+    {
+      Log.e( TAG, "checkDatabaseDir: database directory not set! User must select one!" );
+      if( dDir == null ) throw new NoWritableDatabaseDirException( getString( R.string.dialog_error_database_no_dir ) );
+      if( !dDir.canWrite() ) throw new NoWritableDatabaseDirException( getString( R.string.dialog_error_database_not_writable ) );
+    }
   }
 
   /**
@@ -910,7 +950,10 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       dataBaseRoot = new File( extSdCard + File.separator + ProjectConst.APPROOTDIR );
       return( dataBaseRoot );
     }
-    return( null );
+    else
+    {
+      return( null );
+    }
   }
 
   @Override
@@ -1512,15 +1555,15 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void onDialogNegativeClick( DialogFragment dialog )
   {
     Log.v( TAG, "Negative dialog click!" );
+    if( dialog.getTag().matches( "set_database_directory" ) )
+    {
+      dialog.dismiss();
+      recreate();
+      return;
+    }
     mHandler.obtainMessage( ProjectConst.MESSAGE_DIALOG_NEGATIVE, new BtServiceMessage( ProjectConst.MESSAGE_DIALOG_NEGATIVE, dialog ) ).sendToTarget();
   }
 
-  /**
-   * Wird ein dialog Positiv beendet (ja oder Ok...)
-   * 
-   * @see de.dmarcini.submatix.android4.full.dialogs.AreYouSureDialogFragment.INoticeDialogListener#onDialogPositive(android.app.DialogFragment)
-   * @param dialog
-   */
   /**
    * 
    * Eine positive Erwiderung auf ein Formular
@@ -1594,7 +1637,18 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     {
       if( dialog.getTag().matches( "noMailaddrWarning" ) )
       {
+        dialog.dismiss();
         // Warung wegen fehlender Mailadresse, einfach diese Meldung ignorieren
+        return;
+      }
+      if( dialog.getTag().matches( "database_directory_alert" ) )
+      {
+        //
+        // Nochmal die Dateiauswahlbox zeigen
+        //
+        dialog.dismiss();
+        DatabaseFileDialog dl = new DatabaseFileDialog( databaseDir );
+        dl.show( getFragmentManager(), "set_database_directory" );
         return;
       }
       if( dialog.getTag().matches( "abortProgram" ) )
@@ -1623,6 +1677,78 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
           aliasManager = null;
         }
         finish();
+      }
+    }
+    else if( dialog instanceof DatabaseFileDialog )
+    {
+      if( dialog.getTag().matches( "set_database_directory" ) || dialog.getTag().matches( "set_database_directory_pref" ) )
+      {
+        //
+        // Ok, das verlief positiv
+        //
+        File currPath = ( ( DatabaseFileDialog )dialog ).getCurrDir();
+        dialog.dismiss();
+        if( currPath != null )
+        {
+          //
+          // Ja, es gibt einen Pfad
+          //
+          if( currPath.getAbsolutePath().endsWith( ProjectConst.APPROOTDIR ) )
+          {
+            // Ok, das ist ein schon vorhandenes Verzeichnis
+            databaseDir = currPath;
+          }
+          else
+          {
+            databaseDir = new File( currPath.getAbsolutePath() + File.separator + ProjectConst.APPROOTDIR );
+          }
+        }
+        else
+        {
+          //
+          // Nein, es gibt keinen Pfad
+          //
+          databaseDir = null;
+          UserAlertDialogFragment alrt = new UserAlertDialogFragment( getString( R.string.dialog_error_database_dir_header ), getString( R.string.dialog_error_database_no_dir ) );
+          alrt.show( getFragmentManager(), "database_directory_alert" );
+          return;
+        }
+        try
+        {
+          checkDatabaseDir( databaseDir );
+        }
+        catch( NoWritableDatabaseDirException ex )
+        {
+          UserAlertDialogFragment alrt = new UserAlertDialogFragment( getString( R.string.dialog_error_database_dir_header ), ex.getLocalizedMessage() );
+          alrt.show( getFragmentManager(), "database_directory_alert" );
+          return;
+        }
+        //
+        // Daten in Prefs und Main schreiben
+        //
+        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences( this );
+        SharedPreferences.Editor editor = sPref.edit();
+        editor.putString( "keyProgDataDirectory", databaseDir.getAbsolutePath() );
+        if( editor.commit() )
+        {
+          if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "wrote database-file preference to storeage." );
+        }
+        else
+        {
+          Log.e( TAG, "CAN'T wrote preference to storage." );
+        }
+        //
+        // Die Datenbank schließen, wenn geöffnet
+        //
+        if( aliasManager != null )
+        {
+          aliasManager.close();
+          aliasManager = null;
+        }
+        if( dialog.getTag().matches( "set_database_directory" ) )
+        {
+          recreate();
+        }
       }
     }
     // hat sonst irgendwer Verwendung dafür?
@@ -1714,6 +1840,15 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         return;
       }
     }
+    //
+    // Ist das Datenbankverzeichnis da?
+    //
+    if( databaseDir == null || !databaseDir.canWrite() )
+    {
+      DatabaseFileDialog dl = new DatabaseFileDialog( Environment.getExternalStorageDirectory() );
+      dl.show( getFragmentManager(), "set_database_directory" );
+    }
+    //
     if( !mBtAdapter.isEnabled() )
     {
       // Eh, kein BT erlaubt!
@@ -1835,22 +1970,15 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       Log.w( TAG, "onCreate: pref version not found == make first time preferences..." );
       setDefaultPreferences();
     }
-    //
-    // Verzeichnis für Datenbanken etc
-    //
-    databaseDir = new File( sPref.getString( "keyProgDataDirectory", getDatabaseDir().getAbsolutePath() ) );
-    if( databaseDir != null )
-    {
-      if( !databaseDir.exists() )
-      {
-        Log.i( TAG, "onCreate: create database root dir..." );
-        if( !databaseDir.mkdirs() ) databaseDir = null;
-      }
-    }
     if( sPref.contains( "keyProgUnitsTimeFormat" ) )
     {
       localTimeFormatter = DateTimeFormat.forPattern( sPref.getString( "keyProgUnitsTimeFormat", "yyyy/dd/MM - hh:mm:ss a" ) );
     }
+    //
+    // Verzeichnis für Datenbanken etc
+    // Suche den Datenbankpfad aus den Preferenzen oder, falls nicht vorhanden aus getDatabaseDir
+    //
+    databaseDir = new File( sPref.getString( "keyProgDataDirectory", getDatabaseDir().getAbsolutePath() ) );
   }
 
   /**
