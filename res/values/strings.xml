@@ -15,6 +15,7 @@
     <string name="app_programmer_name">programm by: Dirk Marciniak</string>
     <string name="app_unit_depth_metric">meters</string>
     <string name="app_unit_minute">min</string>
+    <string name="app_empty"> </string>
     
     <!-- About Frame  -->
     <string name="about_headline">About SubmatixBTLogger</string>
@@ -79,6 +80,9 @@
     <string name="dialog_save_button">Save</string>
     <string name="dialog_sqlite_error_header">Database ERROR</string>
     <string name="dialog_sqlite_nodatabase_error">no database found or\ndatabase can not open/create!\nprogram must abort!</string>
+    <string name="dialog_error_database_dir_header">Database directory</string>
+    <string name="dialog_error_database_no_dir">Not an database directory selected!</string>
+    <string name="dialog_error_database_not_writable">Database directory not writable!</string>
     <string name="dialog_device_select_title">Select Device for exports</string>
     <string name="dialog_device_select_button">Select</string>
     <string name="dialog_not_mail_exist_header">No Mail in prefs</string>
@@ -101,6 +105,7 @@
     <string name="dialog_no_pin_errmsg">Device\n\"%s\"\nis not paired yet.\nPlease do it in device BT Options.</string>
     <string name="dialog_get_pin_msg">Get PIN for Device\n\"%s\"</string>
     <string name="dialog_pin_wrong_format">PIN has wrong format! Retry?\n(device: \"%s\")</string>
+    <string name="dialog_file_select_no_data">No data!</string>
     
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title" formatted="false">Searching BT Devices..</string>
