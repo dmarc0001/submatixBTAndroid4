@@ -355,6 +355,7 @@ public class SPX42LogManager extends SPX42AliasManager
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getDiveHeader: OK" );
       return( diveHeader );
     }
+    cu.close();
     return( null );
   }
 
@@ -466,6 +467,7 @@ public class SPX42LogManager extends SPX42AliasManager
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getDiveListForDevice: OK" );
       return( diveHeadList );
     }
+    cu.close();
     return( null );
   }
 
@@ -522,7 +524,7 @@ public class SPX42LogManager extends SPX42AliasManager
       DateTime startDateTime = new DateTime( startTm );
       String detailText = String.format( res.getString( R.string.logread_saved_format ), cu.getInt( 9 ) / 10.0, res.getString( R.string.app_unit_depth_metric ),
               cu.getInt( 11 ) / 60, cu.getInt( 11 ) % 60 );
-      String itemName = String.format( "#%03d: %s", cu.getInt( 2 ), startDateTime.toString( MainActivity.localTimeFormatter ) );
+      String itemName = String.format( Locale.ENGLISH, "#%03d: %s", cu.getInt( 2 ), startDateTime.toString( MainActivity.localTimeFormatter ) );
       rlo.isSaved = true;
       rlo.itemName = itemName;
       rlo.itemNameOnSPX = cu.getString( 3 );
@@ -553,6 +555,7 @@ public class SPX42LogManager extends SPX42AliasManager
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "getLogObjForDbId: OK" );
       return( rlo );
     }
+    cu.close();
     return( null );
   }
 

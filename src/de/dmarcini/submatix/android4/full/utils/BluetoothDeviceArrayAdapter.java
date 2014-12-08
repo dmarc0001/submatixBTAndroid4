@@ -59,6 +59,7 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
     public TextView  txtTitle;
   }
 
+  @SuppressWarnings( "unused" )
   private static final String TAG               = BluetoothDeviceArrayAdapter.class.getSimpleName();
   private int                 themeId           = R.style.AppDarkTheme;
   @SuppressWarnings( "javadoc" )

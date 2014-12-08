@@ -16,6 +16,7 @@ import android.view.View;
  *
  *         Stand: 07.11.2014
  */
+@SuppressWarnings( "deprecation" )
 public class NaviActionBarDrawerToggle extends ActionBarDrawerToggle
 {
   /**
