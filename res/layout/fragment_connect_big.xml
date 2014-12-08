@@ -34,11 +34,13 @@
             android:contentDescription="@string/spacer_string" />
 
         <Spinner
+            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/connectBlueToothDeviceSpinner"
             android:layout_width="match_parent"
             android:layout_weight="0.4" />
 
         <ImageButton
+            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/connectButton"
             android:layout_height="match_parent"
             android:layout_weight="0.2"
@@ -67,6 +69,7 @@
             android:contentDescription="@string/spacer_string"/>
 
         <Button
+            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/connectDiscoverButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -95,6 +98,7 @@
             android:contentDescription="@string/spacer_string"/>
 
         <Button
+            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/connectAliasEditButton"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

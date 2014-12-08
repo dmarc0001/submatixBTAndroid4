@@ -57,20 +57,20 @@
         <NumberPicker
             android:id="@+id/o2NumberPicker"
             android:layout_column="0"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
             android:layout_row="1" >
         </NumberPicker>
     
         <NumberPicker
             android:id="@+id/heNumberPicker"
             android:layout_column="1"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
             android:layout_row="1" />
     
         <NumberPicker
             android:id="@+id/n2NumberPicker"
             android:layout_column="2"
-            android:layout_gravity="left"
+            android:layout_gravity="start"
             android:layout_row="1" />
     
         <!-- Ende der Reihen... -->
@@ -87,21 +87,21 @@
         android:id="@+id/diluent1CheckBox"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="left"
+        android:layout_gravity="start"
         android:text="@string/conf_gaslist_diluent1" />
     
     <CheckBox
         android:id="@+id/diluent2CheckBox"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="left"
+        android:layout_gravity="start"
         android:text="@string/conf_gaslist_diluent2" />
  
     <CheckBox
         android:id="@+id/bailoutCheckBox"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="left"
+        android:layout_gravity="start"
         android:text="@string/conf_gaslist_bailout" />
     </LinearLayout>
     

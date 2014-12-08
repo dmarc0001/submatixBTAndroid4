@@ -18,6 +18,7 @@
         android:drawSelectorOnTop="false" />
 
     <LinearLayout
+        style="?android:attr/buttonBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -25,6 +26,7 @@
         android:paddingRight="8dp" >
 
         <Button
+            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/changeDeviceButton"
             android:layout_width="220dp"
             android:layout_height="120dp"
@@ -37,6 +39,7 @@
             android:textColor="@color/exportDeviceButton.textColor" />
 
         <Button
+            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/exportLogsButton"
             android:layout_width="220dp"
             android:layout_height="120dp"
@@ -49,6 +52,7 @@
             android:textColor="@color/exportLogsButton.textColor" />
         
         <Button
+            style="?android:attr/buttonBarButtonStyle"
             android:id="@+id/exportDeleteButton"
             android:layout_width="220dp"
             android:layout_height="120dp"

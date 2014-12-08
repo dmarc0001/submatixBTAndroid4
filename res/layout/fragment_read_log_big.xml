@@ -17,6 +17,7 @@
         android:drawSelectorOnTop="false" />
     
     <Button
+        style="?android:attr/buttonBarButtonStyle"
         android:id="@+id/readLogDirButton"
         android:layout_width="220dp"
         android:layout_height="220dp"
