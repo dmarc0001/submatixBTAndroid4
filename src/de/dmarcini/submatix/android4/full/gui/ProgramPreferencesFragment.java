@@ -29,9 +29,11 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
@@ -40,6 +42,9 @@ import android.view.MenuItem;
 import android.view.View;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
+import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
+import de.dmarcini.submatix.android4.full.dialogs.DatabaseFileDialog;
+import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 
 /**
@@ -53,9 +58,11 @@ import de.dmarcini.submatix.android4.full.utils.ProjectConst;
  *         Stand: 10.11.2013
  * 
  */
-public class ProgramPreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener
+public class ProgramPreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener, OnPreferenceClickListener, IBtServiceListener
 {
-  private static final String TAG = ProgramPreferencesFragment.class.getSimpleName();
+  private static final String TAG          = ProgramPreferencesFragment.class.getSimpleName();
+  private static final String DATA_DIR_KEY = "keyProgDataDirectory";
+  private SharedPreferences   sPref        = null;
 
   @Override
   public void onCreate( Bundle savedInstanceState )
@@ -71,7 +78,8 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     //
     // setze Listener, der überwacht, wenn Preferenzen geändert wurden
     //
-    getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener( this );
+    sPref = getPreferenceManager().getSharedPreferences();
+    sPref.registerOnSharedPreferenceChangeListener( this );
     Log.v( TAG, "onCreate: add Resouce...OK" );
   }
 
@@ -90,6 +98,14 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     {
       Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
     }
+    //
+    // Callback, wenn das Verzeichnis angeklickt werden soll
+    //
+    Preference pref = getPreferenceScreen().findPreference( DATA_DIR_KEY );
+    if( pref != null )
+    {
+      pref.setOnPreferenceClickListener( this );
+    }
   };
 
   @Override
@@ -99,6 +115,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     Log.v( TAG, "onResume()" );
     PreferenceScreen ps = getPreferenceScreen();
     Log.v( TAG, "this preferencescreen has <" + ps.getPreferenceCount() + "> preferenes." );
+    ( ( MainActivity )getActivity() ).addServiceListener( this );
   }
 
   @Override
@@ -108,7 +125,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     //
     // den Change-Listener abbestellen ;-)
     //
-    getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener( this );
+    sPref.unregisterOnSharedPreferenceChangeListener( this );
   }
 
   @Override
@@ -150,6 +167,8 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
   {
     super.onPause();
     Log.v( TAG, "onPause..." );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
+    ( ( MainActivity )getActivity() ).removeServiceListener( this );
   }
 
   @Override
@@ -198,16 +217,16 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
       //
       // Datenverzeichnis
       //
-      if( key.equals( "keyProgDataDirectory" ) )
-      {
-        MainActivity.databaseDir = new File( tP.getText() );
-        if( !MainActivity.databaseDir.exists() )
-        {
-          Log.i( TAG, "onCreate: create database root dir..." );
-          if( !MainActivity.databaseDir.mkdirs() ) MainActivity.databaseDir = null;
-        }
-        tP.setSummary( String.format( res.getString( R.string.conf_prog_datadir_summary ), tP.getText() ) );
-      }
+      // if( key.equals( DATA_DIR_KEY ) )
+      // {
+      // MainActivity.databaseDir = new File( tP.getText() );
+      // if( !MainActivity.databaseDir.exists() )
+      // {
+      // Log.i( TAG, "onCreate: create database root dir..." );
+      // if( !MainActivity.databaseDir.mkdirs() ) MainActivity.databaseDir = null;
+      // }
+      // tP.setSummary( String.format( res.getString( R.string.conf_prog_datadir_summary ), tP.getText() ) );
+      // }
       //
       // Hauptmailadresse
       //
@@ -238,6 +257,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
           setThemeForApp();
         }
       }
+      // TODO: bei Änderung der des Datenverzeichnis Summary anpassen
     }
   }
 
@@ -273,28 +293,35 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
   {
     ListPreference lP = null;
     EditTextPreference tP = null;
+    Preference pP = null;
     String temp = null;
     PreferenceScreen pS = getPreferenceScreen();
     Resources res = getResources();
-    // SharedPreferences shared = getPreferenceManager().getSharedPreferences();
     //
     //
     // Zeitformat
     //
+    sPref = getPreferenceManager().getSharedPreferences();
     lP = ( ListPreference )pS.findPreference( "keyProgUnitsTimeFormat" );
     lP.setSummary( String.format( res.getString( R.string.conf_prog_temp_units_summary ), lP.getEntry() ) );
     //
     // Datenverzeichnis
+    // zunächst die Voreinstellungen finden
     //
-    tP = ( EditTextPreference )pS.findPreference( "keyProgDataDirectory" );
-    temp = tP.getText();
-    if( ( temp != null ) && ( !temp.isEmpty() ) )
+    if( sPref.contains( DATA_DIR_KEY ) )
     {
-      tP.setSummary( String.format( res.getString( R.string.conf_prog_datadir_summary ), temp ) );
-    }
-    else
-    {
-      tP.setSummary( String.format( res.getString( R.string.conf_prog_datadir_summary ), "." ) );
+      // auf dem Screen die Voreinstellung finden
+      pP = pS.findPreference( DATA_DIR_KEY );
+      // Die Voreinstellung lesen
+      temp = sPref.getString( DATA_DIR_KEY, "/" );
+      if( ( temp != null ) && ( !temp.isEmpty() ) )
+      {
+        pP.setSummary( String.format( res.getString( R.string.conf_prog_datadir_summary ), temp ) );
+      }
+      else
+      {
+        pP.setSummary( String.format( res.getString( R.string.conf_prog_datadir_summary ), "." ) );
+      }
     }
     //
     // Haupt Mailadresse
@@ -360,4 +387,97 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
       }
     }
   }
+
+  /**
+   * 
+   * Wenn eine Preference angeklickt wird
+   *
+   * Project: SubmatixBTAndroid4 Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 07.12.2014
+   * 
+   * @param preference
+   * @return true, wenn der Klick bearbeitet wurde
+   */
+  @Override
+  public boolean onPreferenceClick( Preference preference )
+  {
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPreferenceClick: Klicked" );
+    //
+    // ist das die Datenverzeichnis-Preferenz?
+    //
+    if( preference.getKey().equals( DATA_DIR_KEY ) )
+    {
+      DatabaseFileDialog dl = new DatabaseFileDialog( new File( sPref.getString( DATA_DIR_KEY, Environment.getExternalStorageDirectory().getAbsolutePath() ) ) );
+      dl.show( getFragmentManager(), "set_database_directory_pref" );
+      return( true );
+    }
+    return( false );
+  }
+
+  @Override
+  public void handleMessages( int what, BtServiceMessage smsg )
+  {
+    // was war denn los? Welche Nachricht kam rein?
+    switch ( what )
+    {
+    //
+    // ################################################################
+    // Dialog Abgebrochen
+    // ################################################################
+      case ProjectConst.MESSAGE_DIALOG_NEGATIVE:
+        if( smsg.getContainer() instanceof DatabaseFileDialog )
+        {
+          DatabaseFileDialog dl = ( DatabaseFileDialog )smsg.getContainer();
+          dl.dismiss();
+        }
+        break;
+      // ################################################################
+      // Dialog Abgebrochen
+      // ################################################################
+      case ProjectConst.MESSAGE_DIALOG_POSITIVE:
+        if( smsg.getContainer() instanceof DatabaseFileDialog )
+        {
+          //
+          // Alle Aktionen in MainActivity abgearbeitet, jetzt noch Zusätzlich
+          // die Summary machen
+          //
+          Preference pP;
+          PreferenceScreen pS = getPreferenceScreen();
+          // auf dem Screen die Voreinstellung finden
+          pP = pS.findPreference( DATA_DIR_KEY );
+          // Die Summary schreiben
+          pP.setSummary( String.format( getResources().getString( R.string.conf_prog_datadir_summary ), MainActivity.databaseDir.getAbsolutePath() ) );
+        }
+        break;
+    }
+  }
+
+  @Override
+  public void msgConnecting( BtServiceMessage msg )
+  {}
+
+  @Override
+  public void msgConnected( BtServiceMessage msg )
+  {}
+
+  @Override
+  public void msgDisconnected( BtServiceMessage msg )
+  {}
+
+  @Override
+  public void msgRecivedTick( BtServiceMessage msg )
+  {}
+
+  @Override
+  public void msgRecivedAlive( BtServiceMessage msg )
+  {}
+
+  @Override
+  public void msgConnectError( BtServiceMessage msg )
+  {}
+
+  @Override
+  public void msgReciveWriteTmeout( BtServiceMessage msg )
+  {}
 }
