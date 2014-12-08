@@ -353,7 +353,6 @@ public class DataSQLHelper extends SQLiteOpenHelper
    * @param newVersion
    *          eventuell neue Version Der Datenbank
    */
-  @SuppressWarnings( "resource" )
   @Override
   public void onUpgrade( SQLiteDatabase db, int oldVersion, int newVersion )
   {
