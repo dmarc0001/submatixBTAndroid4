@@ -1633,10 +1633,16 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       { editDialog.getDeviceName(), editDialog.getAliasName(), editDialog.getMac(), editDialog.getPin() } ) ).sendToTarget();
     }
     //
-    // Sollte die APP geschlossen werden?
+    // ALERT Dialog?
     //
     else if( dialog instanceof UserAlertDialogFragment )
     {
+      if( dialog.getTag().matches( "notingSelectedWarning" ) )
+      {
+        dialog.dismiss();
+        // Warung wegen keine Auswahl (leer) getrroffen, ignorieren
+        return;
+      }
       if( dialog.getTag().matches( "noMailaddrWarning" ) )
       {
         dialog.dismiss();
@@ -1655,6 +1661,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       }
       if( dialog.getTag().matches( "abortProgram" ) )
       {
+        //
+        // Die App soll beendet werden (ABORT)
+        //
         Log.e( TAG, "will close app..." );
         Toast.makeText( this, R.string.toast_exit, Toast.LENGTH_SHORT ).show();
         if( BluetoothAdapter.getDefaultAdapter() != null )
