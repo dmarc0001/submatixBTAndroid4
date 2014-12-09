@@ -40,6 +40,7 @@ import android.view.View;
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
+import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
 import de.dmarcini.submatix.android4.full.exceptions.FirmwareNotSupportetException;
 import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
 import de.dmarcini.submatix.android4.full.utils.CommToast;
@@ -73,6 +74,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   private int                                  waitForGasNumber  = 0;
   private int                                  waitForGasOkCount = 0;
   private final ArrayList<GasPickerPreference> gasPrefs          = new ArrayList<GasPickerPreference>();
+  private String                               fragmentTitle     = "unknown";
 
   /**
    * 
@@ -443,14 +445,27 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   public void onActivityCreated( Bundle savedInstanceState )
   {
     super.onActivityCreated( savedInstanceState );
+    //
+    // den Titel in der Actionbar setzten
+    // Aufruf via create
+    //
     Bundle arguments = getArguments();
     if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
     {
-      runningActivity.onSectionAttached( arguments.getString( ProjectConst.ARG_ITEM_CONTENT ) );
+      fragmentTitle = arguments.getString( ProjectConst.ARG_ITEM_CONTENT );
+      runningActivity.onSectionAttached( fragmentTitle );
     }
     else
     {
       Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+    }
+    //
+    // im Falle eines restaurierten Frames
+    //
+    if( savedInstanceState != null && savedInstanceState.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    {
+      fragmentTitle = savedInstanceState.getString( ProjectConst.ARG_ITEM_CONTENT );
+      runningActivity.onSectionAttached( fragmentTitle );
     }
   }
 
@@ -503,25 +518,6 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   }
 
   @Override
-  public void onDetach()
-  {
-    super.onDetach();
-    Bundle arguments = getArguments();
-    //
-    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_ID ) )
-    {
-      // Es gibt einen Eintrag für den Gewählten Menüpunkt
-      if( arguments.getBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false ) )
-      {
-        // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
-        // und kennzeichnen
-        arguments.putBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false );
-        runningActivity.fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
-      }
-    }
-  }
-
-  @Override
   public boolean onOptionsItemSelected( MenuItem item )
   {
     switch ( item.getItemId() )
@@ -565,6 +561,14 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     MainActivity fActivity = runningActivity;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume(): set service listener for preferences fragment..." );
     fActivity.addServiceListener( this );
+  }
+
+  @Override
+  public void onSaveInstanceState( Bundle savedInstanceState )
+  {
+    super.onSaveInstanceState( savedInstanceState );
+    fragmentTitle = savedInstanceState.getString( ProjectConst.ARG_ITEM_CONTENT );
+    savedInstanceState.putString( ProjectConst.ARG_ITEM_CONTENT, fragmentTitle );
   }
 
   @Override
@@ -640,8 +644,8 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     }
     catch( FirmwareNotSupportetException ex )
     {
-      // TODO GEneriere Fehlermeldung an User
-      ex.printStackTrace();
+      UserAlertDialogFragment dialog = new UserAlertDialogFragment( getString( R.string.dialog_firmware_not_supportet_header ), getString( R.string.dialog_firmware_not_supportet ) );
+      dialog.show( getFragmentManager(), "firmware_not_supportet_error" );
     }
     Log.v( TAG, "onSharedPreferenceChanged....OK" );
   }

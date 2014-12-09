@@ -60,9 +60,112 @@ import de.dmarcini.submatix.android4.full.utils.ProjectConst;
  */
 public class ProgramPreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener, OnPreferenceClickListener, IBtServiceListener
 {
-  private static final String TAG          = ProgramPreferencesFragment.class.getSimpleName();
-  private static final String DATA_DIR_KEY = "keyProgDataDirectory";
-  private SharedPreferences   sPref        = null;
+  private static final String TAG           = ProgramPreferencesFragment.class.getSimpleName();
+  private static final String DATA_DIR_KEY  = "keyProgDataDirectory";
+  private SharedPreferences   sPref         = null;
+  private String              fragmentTitle = "unknown";
+
+  @Override
+  public void handleMessages( int what, BtServiceMessage smsg )
+  {
+    // was war denn los? Welche Nachricht kam rein?
+    switch ( what )
+    {
+    //
+    // ################################################################
+    // Dialog Abgebrochen
+    // ################################################################
+      case ProjectConst.MESSAGE_DIALOG_NEGATIVE:
+        if( smsg.getContainer() instanceof DatabaseFileDialog )
+        {
+          DatabaseFileDialog dl = ( DatabaseFileDialog )smsg.getContainer();
+          dl.dismiss();
+        }
+        break;
+      // ################################################################
+      // Dialog Abgebrochen
+      // ################################################################
+      case ProjectConst.MESSAGE_DIALOG_POSITIVE:
+        if( smsg.getContainer() instanceof DatabaseFileDialog )
+        {
+          //
+          // Alle Aktionen in MainActivity abgearbeitet, jetzt noch Zusätzlich
+          // die Summary machen
+          //
+          Preference pP;
+          PreferenceScreen pS = getPreferenceScreen();
+          // auf dem Screen die Voreinstellung finden
+          pP = pS.findPreference( DATA_DIR_KEY );
+          // Die Summary schreiben
+          pP.setSummary( String.format( getResources().getString( R.string.conf_prog_datadir_summary ), MainActivity.databaseDir.getAbsolutePath() ) );
+        }
+        break;
+    }
+  }
+
+  @Override
+  public void msgConnected( BtServiceMessage msg )
+  {}
+
+  @Override
+  public void msgConnectError( BtServiceMessage msg )
+  {}
+
+  @Override
+  public void msgConnecting( BtServiceMessage msg )
+  {}
+
+  @Override
+  public void msgDisconnected( BtServiceMessage msg )
+  {}
+
+  @Override
+  public void msgRecivedAlive( BtServiceMessage msg )
+  {}
+
+  @Override
+  public void msgRecivedTick( BtServiceMessage msg )
+  {}
+
+  @Override
+  public void msgReciveWriteTmeout( BtServiceMessage msg )
+  {}
+
+  @Override
+  public void onActivityCreated( Bundle savedInstanceState )
+  {
+    super.onActivityCreated( savedInstanceState );
+    //
+    // den Titel in der Actionbar setzten
+    // Aufruf via create
+    //
+    Bundle arguments = getArguments();
+    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    {
+      fragmentTitle = arguments.getString( ProjectConst.ARG_ITEM_CONTENT );
+      ( ( MainActivity )getActivity() ).onSectionAttached( fragmentTitle );
+    }
+    else
+    {
+      Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+    }
+    //
+    // im Falle eines restaurierten Frames
+    //
+    if( savedInstanceState != null && savedInstanceState.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    {
+      fragmentTitle = savedInstanceState.getString( ProjectConst.ARG_ITEM_CONTENT );
+      ( ( MainActivity )getActivity() ).onSectionAttached( fragmentTitle );
+    }
+    //
+    // Callback, wenn das Verzeichnis angeklickt werden soll
+    //
+    Preference pref = getPreferenceScreen().findPreference( DATA_DIR_KEY );
+    if( pref != null )
+    {
+      pref.setOnPreferenceClickListener( this );
+    }
+  }
 
   @Override
   public void onCreate( Bundle savedInstanceState )
@@ -84,41 +187,6 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
   }
 
   @Override
-  public void onActivityCreated( Bundle savedInstanceState )
-  {
-    super.onActivityCreated( savedInstanceState );
-    Bundle arguments = getArguments();
-    // Wenn eine Überschrift vorhanden ist
-    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
-    {
-      // Übergib die Überschrift für die ActionBar
-      ( ( MainActivity )getActivity() ).onSectionAttached( arguments.getString( ProjectConst.ARG_ITEM_CONTENT ) );
-    }
-    else
-    {
-      Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
-    }
-    //
-    // Callback, wenn das Verzeichnis angeklickt werden soll
-    //
-    Preference pref = getPreferenceScreen().findPreference( DATA_DIR_KEY );
-    if( pref != null )
-    {
-      pref.setOnPreferenceClickListener( this );
-    }
-  };
-
-  @Override
-  public void onResume()
-  {
-    super.onResume();
-    Log.v( TAG, "onResume()" );
-    PreferenceScreen ps = getPreferenceScreen();
-    Log.v( TAG, "this preferencescreen has <" + ps.getPreferenceCount() + "> preferenes." );
-    ( ( MainActivity )getActivity() ).addServiceListener( this );
-  }
-
-  @Override
   public void onDestroy()
   {
     super.onDestroy();
@@ -126,25 +194,6 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     // den Change-Listener abbestellen ;-)
     //
     sPref.unregisterOnSharedPreferenceChangeListener( this );
-  }
-
-  @Override
-  public void onDetach()
-  {
-    super.onDetach();
-    Bundle arguments = getArguments();
-    //
-    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_ID ) )
-    {
-      // Es gibt einen Eintrag für den Gewählten Menüpunkt
-      if( arguments.getBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false ) )
-      {
-        // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
-        // und kennzeichnen
-        arguments.putBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false );
-        ( ( MainActivity )getActivity() ).fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
-      }
-    }
   }
 
   @Override
@@ -169,6 +218,51 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     Log.v( TAG, "onPause..." );
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
     ( ( MainActivity )getActivity() ).removeServiceListener( this );
+  }
+
+  /**
+   * 
+   * Wenn eine Preference angeklickt wird
+   *
+   * Project: SubmatixBTAndroid4 Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 07.12.2014
+   * 
+   * @param preference
+   * @return true, wenn der Klick bearbeitet wurde
+   */
+  @Override
+  public boolean onPreferenceClick( Preference preference )
+  {
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPreferenceClick: Klicked" );
+    //
+    // ist das die Datenverzeichnis-Preferenz?
+    //
+    if( preference.getKey().equals( DATA_DIR_KEY ) )
+    {
+      DatabaseFileDialog dl = new DatabaseFileDialog( new File( sPref.getString( DATA_DIR_KEY, Environment.getExternalStorageDirectory().getAbsolutePath() ) ) );
+      dl.show( getFragmentManager(), "set_database_directory_pref" );
+      return( true );
+    }
+    return( false );
+  }
+
+  @Override
+  public void onResume()
+  {
+    super.onResume();
+    Log.v( TAG, "onResume()" );
+    PreferenceScreen ps = getPreferenceScreen();
+    Log.v( TAG, "this preferencescreen has <" + ps.getPreferenceCount() + "> preferenes." );
+    ( ( MainActivity )getActivity() ).addServiceListener( this );
+  }
+
+  @Override
+  public void onSaveInstanceState( Bundle savedInstanceState )
+  {
+    super.onSaveInstanceState( savedInstanceState );
+    fragmentTitle = savedInstanceState.getString( ProjectConst.ARG_ITEM_CONTENT );
+    savedInstanceState.putString( ProjectConst.ARG_ITEM_CONTENT, fragmentTitle );
   }
 
   @Override
@@ -261,23 +355,41 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     }
   }
 
-  /**
-   * 
-   * Starte die App neu mit dem neuen Theme und voreingestellt die Preferencen
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * 
-   * Stand: 07.01.2013
-   */
-  private void setThemeForApp()
+  @Override
+  public void onViewCreated( View view, Bundle savedInstanceState )
   {
-    //
-    // Bescheid geben füer Restart
-    //
-    MainActivity.wasRestartForNewTheme = true;
-    Log.i( TAG, "setThemeForApp: activity recreate..." );
-    getActivity().recreate();
+    super.onViewCreated( view, savedInstanceState );
+    Log.v( TAG, "onViewCreated..." );
+    PreferenceScreen ps = getPreferenceScreen();
+    Log.v( TAG, "this preferencescreen has <" + ps.getPreferenceCount() + "> preferenes." );
+    for( int groupIdx = 0; groupIdx < ps.getPreferenceCount(); groupIdx++ )
+    {
+      PreferenceGroup pg = ( PreferenceGroup )ps.getPreference( groupIdx );
+      Log.v( TAG, String.format( "The Group <%s> has %d preferences", pg.getTitle(), pg.getPreferenceCount() ) );
+      for( int prefIdx = 0; prefIdx < pg.getPreferenceCount(); prefIdx++ )
+      {
+        Preference pref = pg.getPreference( prefIdx );
+        Log.v( TAG, String.format( "The Preference <%s> is number %d", pref.getTitle(), prefIdx ) );
+        // jede ungerade Zeile färben
+        if( prefIdx % 2 > 0 )
+        {
+          if( MainActivity.getAppStyle() == R.style.AppDarkTheme )
+          {
+            // dunkles Thema
+            pref.setLayoutResource( R.layout.preference_dark );
+          }
+          else
+          {
+            // helles Thema
+            pref.setLayoutResource( R.layout.preference_light );
+          }
+        }
+        else
+        {
+          pref.setLayoutResource( R.layout.preference );
+        }
+      }
+    }
   }
 
   /**
@@ -351,133 +463,22 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     }
   }
 
-  @Override
-  public void onViewCreated( View view, Bundle savedInstanceState )
-  {
-    super.onViewCreated( view, savedInstanceState );
-    Log.v( TAG, "onViewCreated..." );
-    PreferenceScreen ps = getPreferenceScreen();
-    Log.v( TAG, "this preferencescreen has <" + ps.getPreferenceCount() + "> preferenes." );
-    for( int groupIdx = 0; groupIdx < ps.getPreferenceCount(); groupIdx++ )
-    {
-      PreferenceGroup pg = ( PreferenceGroup )ps.getPreference( groupIdx );
-      Log.v( TAG, String.format( "The Group <%s> has %d preferences", pg.getTitle(), pg.getPreferenceCount() ) );
-      for( int prefIdx = 0; prefIdx < pg.getPreferenceCount(); prefIdx++ )
-      {
-        Preference pref = pg.getPreference( prefIdx );
-        Log.v( TAG, String.format( "The Preference <%s> is number %d", pref.getTitle(), prefIdx ) );
-        // jede ungerade Zeile färben
-        if( prefIdx % 2 > 0 )
-        {
-          if( MainActivity.getAppStyle() == R.style.AppDarkTheme )
-          {
-            // dunkles Thema
-            pref.setLayoutResource( R.layout.preference_dark );
-          }
-          else
-          {
-            // helles Thema
-            pref.setLayoutResource( R.layout.preference_light );
-          }
-        }
-        else
-        {
-          pref.setLayoutResource( R.layout.preference );
-        }
-      }
-    }
-  }
-
   /**
    * 
-   * Wenn eine Preference angeklickt wird
-   *
-   * Project: SubmatixBTAndroid4 Package: de.dmarcini.submatix.android4.full.gui
+   * Starte die App neu mit dem neuen Theme und voreingestellt die Preferencen
    * 
-   * Stand: 07.12.2014
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    * 
-   * @param preference
-   * @return true, wenn der Klick bearbeitet wurde
+   * 
+   * Stand: 07.01.2013
    */
-  @Override
-  public boolean onPreferenceClick( Preference preference )
+  private void setThemeForApp()
   {
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPreferenceClick: Klicked" );
     //
-    // ist das die Datenverzeichnis-Preferenz?
+    // Bescheid geben füer Restart
     //
-    if( preference.getKey().equals( DATA_DIR_KEY ) )
-    {
-      DatabaseFileDialog dl = new DatabaseFileDialog( new File( sPref.getString( DATA_DIR_KEY, Environment.getExternalStorageDirectory().getAbsolutePath() ) ) );
-      dl.show( getFragmentManager(), "set_database_directory_pref" );
-      return( true );
-    }
-    return( false );
+    MainActivity.wasRestartForNewTheme = true;
+    Log.i( TAG, "setThemeForApp: activity recreate..." );
+    getActivity().recreate();
   }
-
-  @Override
-  public void handleMessages( int what, BtServiceMessage smsg )
-  {
-    // was war denn los? Welche Nachricht kam rein?
-    switch ( what )
-    {
-    //
-    // ################################################################
-    // Dialog Abgebrochen
-    // ################################################################
-      case ProjectConst.MESSAGE_DIALOG_NEGATIVE:
-        if( smsg.getContainer() instanceof DatabaseFileDialog )
-        {
-          DatabaseFileDialog dl = ( DatabaseFileDialog )smsg.getContainer();
-          dl.dismiss();
-        }
-        break;
-      // ################################################################
-      // Dialog Abgebrochen
-      // ################################################################
-      case ProjectConst.MESSAGE_DIALOG_POSITIVE:
-        if( smsg.getContainer() instanceof DatabaseFileDialog )
-        {
-          //
-          // Alle Aktionen in MainActivity abgearbeitet, jetzt noch Zusätzlich
-          // die Summary machen
-          //
-          Preference pP;
-          PreferenceScreen pS = getPreferenceScreen();
-          // auf dem Screen die Voreinstellung finden
-          pP = pS.findPreference( DATA_DIR_KEY );
-          // Die Summary schreiben
-          pP.setSummary( String.format( getResources().getString( R.string.conf_prog_datadir_summary ), MainActivity.databaseDir.getAbsolutePath() ) );
-        }
-        break;
-    }
-  }
-
-  @Override
-  public void msgConnecting( BtServiceMessage msg )
-  {}
-
-  @Override
-  public void msgConnected( BtServiceMessage msg )
-  {}
-
-  @Override
-  public void msgDisconnected( BtServiceMessage msg )
-  {}
-
-  @Override
-  public void msgRecivedTick( BtServiceMessage msg )
-  {}
-
-  @Override
-  public void msgRecivedAlive( BtServiceMessage msg )
-  {}
-
-  @Override
-  public void msgConnectError( BtServiceMessage msg )
-  {}
-
-  @Override
-  public void msgReciveWriteTmeout( BtServiceMessage msg )
-  {}
 }

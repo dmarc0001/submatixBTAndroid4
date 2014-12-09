@@ -94,130 +94,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   private boolean                      isUnitImperial      = false;
   private boolean                      showAllLogEntrys    = true;
   private int                          countDirEntrys      = 0;
-
-  /**
-   * 
-   * Bearbeite die Nachricht über einen Logeintrag
-   * 
-   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
-   * 
-   * 
-   * Stand: 06.08.2013
-   * 
-   * @param msg
-   */
-  private void msgComputeDirentry( BtServiceMessage msg )
-  {
-    // Fields
-    // 0 => Nummer
-    // 1 => Filename
-    // 2 => Max Nummer
-    String[] fields;
-    String fileName;
-    int dbId = -1;
-    String detailText;
-    int number, max;
-    int day, month, year, hour, minute, second;
-    boolean isSaved = false;
-    Resources res = runningActivity.getResources();
-    //
-    if( !( msg.getContainer() instanceof String[] ) )
-    {
-      Log.e( TAG, "Message container not an String ARRAY!" );
-      return;
-    }
-    fields = ( String[] )msg.getContainer();
-    if( fields.length < 3 )
-    {
-      Log.e( TAG, "recived message for logdir has lower than 3 fields. It is wrong! Abort!" );
-      return;
-    }
-    // Wandel die Nummerierung in Integer um
-    try
-    {
-      number = Integer.parseInt( fields[0], 16 );
-      max = Integer.parseInt( fields[2], 16 );
-    }
-    catch( NumberFormatException ex )
-    {
-      Log.e( TAG, "Fail to convert Hex to int: " + ex.getLocalizedMessage() );
-      return;
-    }
-    // Alles gelesen: Fertich
-    if( number == max )
-    {
-      countDirEntrys = 0;
-      if( pd != null )
-      {
-        pd.dismiss();
-      }
-      return;
-    }
-    fileName = fields[1];
-    // verwandle die Dateiangabe in eine lesbare Datumsangabe
-    // Format des Strings ist ja
-    // TAG_MONAT_JAHR_STUNDE_MINUTE_SEKUNDE
-    // des Beginns der Aufzeichnung
-    fields = fieldPatternUnderln.split( fields[1] );
-    try
-    {
-      day = Integer.parseInt( fields[0] );
-      month = Integer.parseInt( fields[1] );
-      year = Integer.parseInt( fields[2] ) + 2000;
-      hour = Integer.parseInt( fields[3] );
-      minute = Integer.parseInt( fields[4] );
-      second = Integer.parseInt( fields[5] );
-    }
-    catch( NumberFormatException ex )
-    {
-      Log.e( TAG, "Fail to convert Hex to int: " + ex.getLocalizedMessage() );
-      return;
-    }
-    // So, die Angaben des SPX sind immer im Localtime-Format
-    // daher werde ich die auch so interpretieren
-    // Die Funktion macht das in der default-Lokalzone, sollte also
-    // da sein, wo der SPX auch ist... (schwieriges Thema)
-    DateTime tm = new DateTime( year, month, day, hour, minute, second );
-    //
-    // Jetzt ist der Zeitpunkt, die Datenbank zu befragen, ob das Logteilchen schon gesichert ist
-    //
-    isSaved = logManager.isLogInDatabase( MainActivity.spxConfig.getSerial(), fileName );
-    if( isSaved )
-    {
-      if( showAllLogEntrys )
-      {
-        SPX42DiveHeadData diveHead = logManager.getDiveHeader( MainActivity.spxConfig.getSerial(), fileName );
-        detailText = makeDetailText( diveHead );
-        dbId = diveHead.diveId;
-        //
-        // jetzt eintagen in die Anzeige
-        //
-        ReadLogItemObj rlio = new ReadLogItemObj( isSaved, String.format( "#%03d: %s", number, tm.toString( MainActivity.localTimeFormatter ) ), fileName, detailText, dbId,
-                number, tm.getMillis() );
-        // Eintrag an den Anfang stellen
-        logListAdapter.insert( rlio, 0 );
-      }
-      else
-      {
-        if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "ignore saved log while \"show all logitems\" is not set..." );
-      }
-    }
-    else
-    {
-      detailText = res.getString( R.string.logread_not_saved_yet_msg );
-      //
-      // jetzt eintagen in die Anzeige
-      //
-      ReadLogItemObj rlio = new ReadLogItemObj( isSaved, String.format( "#%03d: %s", number, tm.toString( MainActivity.localTimeFormatter ) ), fileName, detailText, dbId, number,
-              tm.getMillis() );
-      // Eintrag an den Anfang stellen
-      logListAdapter.insert( rlio, 0 );
-    }
-    if( pd != null )
-    {
-      pd.setMessage( String.format( runningActivity.getResources().getString( R.string.logread_please_wait_dialog_directory ), ++countDirEntrys ) );
-    }
-  }
+  private String                       fragmentTitle;
 
   /**
    * 
@@ -426,6 +303,130 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     }
   }
 
+  /**
+   * 
+   * Bearbeite die Nachricht über einen Logeintrag
+   * 
+   * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
+   * 
+   * 
+   * Stand: 06.08.2013
+   * 
+   * @param msg
+   */
+  private void msgComputeDirentry( BtServiceMessage msg )
+  {
+    // Fields
+    // 0 => Nummer
+    // 1 => Filename
+    // 2 => Max Nummer
+    String[] fields;
+    String fileName;
+    int dbId = -1;
+    String detailText;
+    int number, max;
+    int day, month, year, hour, minute, second;
+    boolean isSaved = false;
+    Resources res = runningActivity.getResources();
+    //
+    if( !( msg.getContainer() instanceof String[] ) )
+    {
+      Log.e( TAG, "Message container not an String ARRAY!" );
+      return;
+    }
+    fields = ( String[] )msg.getContainer();
+    if( fields.length < 3 )
+    {
+      Log.e( TAG, "recived message for logdir has lower than 3 fields. It is wrong! Abort!" );
+      return;
+    }
+    // Wandel die Nummerierung in Integer um
+    try
+    {
+      number = Integer.parseInt( fields[0], 16 );
+      max = Integer.parseInt( fields[2], 16 );
+    }
+    catch( NumberFormatException ex )
+    {
+      Log.e( TAG, "Fail to convert Hex to int: " + ex.getLocalizedMessage() );
+      return;
+    }
+    // Alles gelesen: Fertich
+    if( number == max )
+    {
+      countDirEntrys = 0;
+      if( pd != null )
+      {
+        pd.dismiss();
+      }
+      return;
+    }
+    fileName = fields[1];
+    // verwandle die Dateiangabe in eine lesbare Datumsangabe
+    // Format des Strings ist ja
+    // TAG_MONAT_JAHR_STUNDE_MINUTE_SEKUNDE
+    // des Beginns der Aufzeichnung
+    fields = fieldPatternUnderln.split( fields[1] );
+    try
+    {
+      day = Integer.parseInt( fields[0] );
+      month = Integer.parseInt( fields[1] );
+      year = Integer.parseInt( fields[2] ) + 2000;
+      hour = Integer.parseInt( fields[3] );
+      minute = Integer.parseInt( fields[4] );
+      second = Integer.parseInt( fields[5] );
+    }
+    catch( NumberFormatException ex )
+    {
+      Log.e( TAG, "Fail to convert Hex to int: " + ex.getLocalizedMessage() );
+      return;
+    }
+    // So, die Angaben des SPX sind immer im Localtime-Format
+    // daher werde ich die auch so interpretieren
+    // Die Funktion macht das in der default-Lokalzone, sollte also
+    // da sein, wo der SPX auch ist... (schwieriges Thema)
+    DateTime tm = new DateTime( year, month, day, hour, minute, second );
+    //
+    // Jetzt ist der Zeitpunkt, die Datenbank zu befragen, ob das Logteilchen schon gesichert ist
+    //
+    isSaved = logManager.isLogInDatabase( MainActivity.spxConfig.getSerial(), fileName );
+    if( isSaved )
+    {
+      if( showAllLogEntrys )
+      {
+        SPX42DiveHeadData diveHead = logManager.getDiveHeader( MainActivity.spxConfig.getSerial(), fileName );
+        detailText = makeDetailText( diveHead );
+        dbId = diveHead.diveId;
+        //
+        // jetzt eintagen in die Anzeige
+        //
+        ReadLogItemObj rlio = new ReadLogItemObj( isSaved, String.format( "#%03d: %s", number, tm.toString( MainActivity.localTimeFormatter ) ), fileName, detailText, dbId,
+                number, tm.getMillis() );
+        // Eintrag an den Anfang stellen
+        logListAdapter.insert( rlio, 0 );
+      }
+      else
+      {
+        if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "ignore saved log while \"show all logitems\" is not set..." );
+      }
+    }
+    else
+    {
+      detailText = res.getString( R.string.logread_not_saved_yet_msg );
+      //
+      // jetzt eintagen in die Anzeige
+      //
+      ReadLogItemObj rlio = new ReadLogItemObj( isSaved, String.format( "#%03d: %s", number, tm.toString( MainActivity.localTimeFormatter ) ), fileName, detailText, dbId, number,
+              tm.getMillis() );
+      // Eintrag an den Anfang stellen
+      logListAdapter.insert( rlio, 0 );
+    }
+    if( pd != null )
+    {
+      pd.setMessage( String.format( runningActivity.getResources().getString( R.string.logread_please_wait_dialog_directory ), ++countDirEntrys ) );
+    }
+  }
+
   @Override
   public void msgConnected( BtServiceMessage msg )
   {
@@ -546,9 +547,9 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   {}
 
   @Override
-  public void onActivityCreated( Bundle bundle )
+  public void onActivityCreated( Bundle savedInstanceState )
   {
-    super.onActivityCreated( bundle );
+    super.onActivityCreated( savedInstanceState );
     runningActivity = ( MainActivity )getActivity();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
     try
@@ -561,14 +562,27 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     {
       Log.e( TAG, "onActivityCreated: gui objects not allocated!" );
     }
+    //
+    // den Titel in der Actionbar setzten
+    // Aufruf via create
+    //
     Bundle arguments = getArguments();
     if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
     {
-      runningActivity.onSectionAttached( arguments.getString( ProjectConst.ARG_ITEM_CONTENT ) );
+      fragmentTitle = arguments.getString( ProjectConst.ARG_ITEM_CONTENT );
+      runningActivity.onSectionAttached( fragmentTitle );
     }
     else
     {
       Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+    }
+    //
+    // im Falle eines restaurierten Frames
+    //
+    if( savedInstanceState != null && savedInstanceState.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    {
+      fragmentTitle = savedInstanceState.getString( ProjectConst.ARG_ITEM_CONTENT );
+      runningActivity.onSectionAttached( fragmentTitle );
     }
   }
 
@@ -667,25 +681,6 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     return( rootView );
   }
 
-  @Override
-  public void onDetach()
-  {
-    super.onDetach();
-    Bundle arguments = getArguments();
-    //
-    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_ID ) )
-    {
-      // Es gibt einen Eintrag für den Gewählten Menüpunkt
-      if( arguments.getBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false ) )
-      {
-        // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
-        // und kennzeichnen
-        arguments.putBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false );
-        runningActivity.fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
-      }
-    }
-  }
-
   /**
    * Für das Klicken auf einen Directory Eintrag
    */
@@ -740,6 +735,14 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     readDirButton = ( Button )runningActivity.findViewById( R.id.readLogDirButton );
     readDirButton.setOnClickListener( this );
     setEventsEnabled( false );
+  }
+
+  @Override
+  public void onSaveInstanceState( Bundle savedInstanceState )
+  {
+    super.onSaveInstanceState( savedInstanceState );
+    fragmentTitle = savedInstanceState.getString( ProjectConst.ARG_ITEM_CONTENT );
+    savedInstanceState.putString( ProjectConst.ARG_ITEM_CONTENT, fragmentTitle );
   }
 
   /**

@@ -65,6 +65,7 @@ public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceL
   private MainActivity       runningActivity   = null;
   private int                dbId              = -1;
   private SPX42LogGraphView  sPX42LogGraphView = null;
+  private String             fragmentTitle;
 
   @Override
   public void handleMessages( int what, BtServiceMessage smsg )
@@ -186,19 +187,36 @@ public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceL
   }
 
   @Override
-  public void onActivityCreated( Bundle bundle )
+  public void onActivityCreated( Bundle savedInstanceState )
   {
-    super.onActivityCreated( bundle );
+    super.onActivityCreated( savedInstanceState );
     runningActivity = ( MainActivity )getActivity();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
+    //
+    // den Titel in der Actionbar setzten
+    // Aufruf via create
+    //
     Bundle arguments = getArguments();
     if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
     {
-      runningActivity.onSectionAttached( arguments.getString( ProjectConst.ARG_ITEM_CONTENT ) );
+      fragmentTitle = arguments.getString( ProjectConst.ARG_ITEM_CONTENT );
+      runningActivity.onSectionAttached( fragmentTitle );
     }
     else
     {
       Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+    }
+    //
+    // im Falle eines restaurierten Frames
+    //
+    if( savedInstanceState != null )
+    {
+      if( savedInstanceState.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+      {
+        fragmentTitle = savedInstanceState.getString( ProjectConst.ARG_ITEM_CONTENT );
+        runningActivity.onSectionAttached( fragmentTitle );
+      }
+      if( dbId == -1 ) dbId = savedInstanceState.getInt( ProjectConst.ARG_DBID, -1 );
     }
   }
 
@@ -237,7 +255,7 @@ public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceL
     super.onCreate( savedInstanceState );
     runningActivity.getWindow().setFlags( WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN );
     dbId = getArguments().getInt( ProjectConst.ARG_DBID, -1 );
-    if( ApplicationDEBUG.DEBUG ) Log.e( TAG, "onCreate... DBID=<" + dbId + ">" );
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate... DBID=<" + dbId + ">" );
   }
 
   /**
@@ -271,25 +289,6 @@ public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceL
   }
 
   @Override
-  public void onDetach()
-  {
-    super.onDetach();
-    Bundle arguments = getArguments();
-    //
-    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_ID ) )
-    {
-      // Es gibt einen Eintrag für den Gewählten Menüpunkt
-      if( arguments.getBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false ) )
-      {
-        // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
-        // und kennzeichnen
-        arguments.putBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false );
-        runningActivity.fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
-      }
-    }
-  }
-
-  @Override
   public void onPause()
   {
     super.onPause();
@@ -312,5 +311,14 @@ public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceL
     //
     runningActivity.addServiceListener( this );
     makeGraphForDive();
+  }
+
+  @Override
+  public void onSaveInstanceState( Bundle savedInstanceState )
+  {
+    super.onSaveInstanceState( savedInstanceState );
+    fragmentTitle = savedInstanceState.getString( ProjectConst.ARG_ITEM_CONTENT );
+    savedInstanceState.putString( ProjectConst.ARG_ITEM_CONTENT, fragmentTitle );
+    savedInstanceState.putInt( ProjectConst.ARG_DBID, dbId );
   }
 }

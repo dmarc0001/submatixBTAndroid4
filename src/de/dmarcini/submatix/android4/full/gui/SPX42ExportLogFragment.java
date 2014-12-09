@@ -110,10 +110,10 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
   private Button                     exportDeleteButton  = null;
   private CommToast                  theToast            = null;
   private boolean                    isFileZipped        = false;
-  // private final Vector<ReadLogItemObj> lItems = new Vector<ReadLogItemObj>();
   private WaitProgressFragmentDialog pd                  = null;
   private File                       tempDir             = null;
   private String                     mailMainAddr        = null;
+  private String                     fragmentTitle       = "unknown";
   @SuppressLint( "HandlerLeak" )
   private final Handler              mHandler            = new Handler() {
                                                            @Override
@@ -645,9 +645,9 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
   {}
 
   @Override
-  public void onActivityCreated( Bundle bundle )
+  public void onActivityCreated( Bundle savedInstanceState )
   {
-    super.onActivityCreated( bundle );
+    super.onActivityCreated( savedInstanceState );
     runningActivity = ( MainActivity )getActivity();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
     try
@@ -658,14 +658,27 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     {
       Log.e( TAG, "onActivityCreated: gui objects not allocated!" );
     }
+    //
+    // den Titel in der Actionbar setzten
+    // Aufruf via create
+    //
     Bundle arguments = getArguments();
     if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
     {
-      runningActivity.onSectionAttached( arguments.getString( ProjectConst.ARG_ITEM_CONTENT ) );
+      fragmentTitle = arguments.getString( ProjectConst.ARG_ITEM_CONTENT );
+      runningActivity.onSectionAttached( fragmentTitle );
     }
     else
     {
       Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+    }
+    //
+    // im Falle eines restaurierten Frames
+    //
+    if( savedInstanceState != null && savedInstanceState.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    {
+      fragmentTitle = savedInstanceState.getString( ProjectConst.ARG_ITEM_CONTENT );
+      runningActivity.onSectionAttached( fragmentTitle );
     }
   }
 
@@ -844,26 +857,6 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     exportLogsButton = ( Button )rootView.findViewById( R.id.exportLogsButton );
     exportDeleteButton = ( Button )runningActivity.findViewById( R.id.exportDeleteButton );
     return( rootView );
-  }
-
-  @Override
-  public void onDetach()
-  {
-    super.onDetach();
-    Bundle arguments = getArguments();
-    //
-    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_ID ) )
-    {
-      // Es gibt einen Eintrag für den Gewählten Menüpunkt
-      if( arguments.getBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false ) )
-      {
-        // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
-        // und kennzeichnen
-        // TODO: Merke mir, wo ich hier war!
-        arguments.putBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false );
-        runningActivity.fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
-      }
-    }
   }
 
   /**
@@ -1075,6 +1068,14 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     }
     // Listener aktivieren
     runningActivity.addServiceListener( this );
+  }
+
+  @Override
+  public void onSaveInstanceState( Bundle savedInstanceState )
+  {
+    super.onSaveInstanceState( savedInstanceState );
+    fragmentTitle = savedInstanceState.getString( ProjectConst.ARG_ITEM_CONTENT );
+    savedInstanceState.putString( ProjectConst.ARG_ITEM_CONTENT, fragmentTitle );
   }
 
   /**

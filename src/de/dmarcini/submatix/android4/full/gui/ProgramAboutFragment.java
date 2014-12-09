@@ -52,11 +52,12 @@ public class ProgramAboutFragment extends Fragment
   private TextView           aboutProgrammerTextView = null;
   private TextView           aboutBuildTextView      = null;
   private TextView           aboutBuildDateTextView  = null;
+  private String             fragmentTitle           = "unknown";
 
   @Override
-  public void onActivityCreated( Bundle bundle )
+  public void onActivityCreated( Bundle savedInstanceState )
   {
-    super.onActivityCreated( bundle );
+    super.onActivityCreated( savedInstanceState );
     runningActivity = ( MainActivity )getActivity();
     //
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
@@ -75,16 +76,27 @@ public class ProgramAboutFragment extends Fragment
     {
       Log.e( TAG, "onActivityCreated: gui objects not allocated!" );
     }
+    //
     // den Titel in der Actionbar setzten
+    // Aufruf via create
     //
     Bundle arguments = getArguments();
     if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
     {
-      runningActivity.onSectionAttached( arguments.getString( ProjectConst.ARG_ITEM_CONTENT ) );
+      fragmentTitle = arguments.getString( ProjectConst.ARG_ITEM_CONTENT );
+      runningActivity.onSectionAttached( fragmentTitle );
     }
     else
     {
       Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+    }
+    //
+    // im Falle eines restaurierten Frames
+    //
+    if( savedInstanceState != null && savedInstanceState.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    {
+      fragmentTitle = savedInstanceState.getString( ProjectConst.ARG_ITEM_CONTENT );
+      runningActivity.onSectionAttached( fragmentTitle );
     }
   }
 
@@ -130,21 +142,10 @@ public class ProgramAboutFragment extends Fragment
   }
 
   @Override
-  public void onDetach()
+  public void onSaveInstanceState( Bundle savedInstanceState )
   {
-    super.onDetach();
-    Bundle arguments = getArguments();
-    //
-    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_ID ) )
-    {
-      // Es gibt einen Eintrag für den Gewählten Menüpunkt
-      if( arguments.getBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false ) )
-      {
-        // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
-        // und kennzeichnen
-        arguments.putBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false );
-        runningActivity.fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
-      }
-    }
+    super.onSaveInstanceState( savedInstanceState );
+    fragmentTitle = savedInstanceState.getString( ProjectConst.ARG_ITEM_CONTENT );
+    savedInstanceState.putString( ProjectConst.ARG_ITEM_CONTENT, fragmentTitle );
   }
 }

@@ -90,6 +90,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   private CommToast                     theToast                  = null;
   private boolean                       showCommToast             = false;
   private final Vector<BluetoothDevice> discoveredDevices         = new Vector<BluetoothDevice>();
+  private String                        fragmentTitle             = "unknown";
   //
   // der Broadcast Empfänger der Nachrichten über gefundene BT Geräte findet
   //
@@ -787,9 +788,9 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
 
   @SuppressLint( "InlinedApi" )
   @Override
-  public void onActivityCreated( Bundle bundle )
+  public void onActivityCreated( Bundle savedInstanceState )
   {
-    super.onActivityCreated( bundle );
+    super.onActivityCreated( savedInstanceState );
     runningActivity = ( MainActivity )getActivity();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ..." );
     try
@@ -823,14 +824,27 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     {
       Log.e( TAG, "onActivityCreated: gui objects not allocated!" );
     }
+    //
+    // den Titel in der Actionbar setzten
+    // Aufruf via create
+    //
     Bundle arguments = getArguments();
     if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
     {
-      runningActivity.onSectionAttached( arguments.getString( ProjectConst.ARG_ITEM_CONTENT ) );
+      fragmentTitle = arguments.getString( ProjectConst.ARG_ITEM_CONTENT );
+      runningActivity.onSectionAttached( fragmentTitle );
     }
     else
     {
       Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+    }
+    //
+    // im Falle eines restaurierten Frames
+    //
+    if( savedInstanceState != null && savedInstanceState.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    {
+      fragmentTitle = savedInstanceState.getString( ProjectConst.ARG_ITEM_CONTENT );
+      runningActivity.onSectionAttached( fragmentTitle );
     }
     //
     // Intend-Filter und Intend für Pairing Anfragen
@@ -842,6 +856,14 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       filter.addAction( BluetoothDevice.ACTION_PAIRING_REQUEST );
     }
     runningActivity.registerReceiver( mReceiver, filter );
+  }
+
+  @Override
+  public void onSaveInstanceState( Bundle savedInstanceState )
+  {
+    super.onSaveInstanceState( savedInstanceState );
+    fragmentTitle = savedInstanceState.getString( ProjectConst.ARG_ITEM_CONTENT );
+    savedInstanceState.putString( ProjectConst.ARG_ITEM_CONTENT, fragmentTitle );
   }
 
   @Override
@@ -1030,25 +1052,6 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       MainActivity.mBtAdapter.cancelDiscovery();
     }
     runningActivity.removeServiceListener( this );
-  }
-
-  @Override
-  public void onDetach()
-  {
-    super.onDetach();
-    Bundle arguments = getArguments();
-    //
-    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_ID ) )
-    {
-      // Es gibt einen Eintrag für den Gewählten Menüpunkt
-      if( arguments.getBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false ) )
-      {
-        // wenn das Fragment NICHT über Back aufgerufen wurde, dann im Stack verewigen
-        // und kennzeichnen
-        arguments.putBoolean( ProjectConst.ARG_TOSTACK_ONDETACH, false );
-        runningActivity.fillCallStack( arguments.getInt( ProjectConst.ARG_ITEM_ID ), arguments );
-      }
-    }
   }
 
   @Override
