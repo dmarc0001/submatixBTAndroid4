@@ -20,7 +20,6 @@
 //@formatter:on
 package de.dmarcini.submatix.android4.full.gui;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
@@ -56,14 +55,10 @@ import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.dialogs.EditAliasDialogFragment;
 import de.dmarcini.submatix.android4.full.dialogs.PinErrorDialog;
-import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
-import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
 import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
 import de.dmarcini.submatix.android4.full.utils.BluetoothDeviceArrayAdapter;
 import de.dmarcini.submatix.android4.full.utils.CommToast;
-import de.dmarcini.submatix.android4.full.utils.DataSQLHelper;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
-import de.dmarcini.submatix.android4.full.utils.SPX42AliasManager;
 
 /**
  * 
@@ -165,7 +160,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         //
         else if( BluetoothDevice.ACTION_PAIRING_REQUEST.equals( action ))
         {
-          if( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT )
+          if( (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) && (MainActivity.aliasManager != null) )
           {
             //
             // das klappt nur bei Android >= 4.4, vorher gibt es die API nicht
@@ -597,6 +592,20 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     BluetoothDevice device;
     String dName;
     //
+    if( MainActivity.aliasManager == null )
+    {
+      //
+      // die Datenbank öffnen, wenn erforderlich
+      //
+      if( !runningActivity.openAliasManager() )
+      {
+        //
+        // Geht nicht, Die Funktion gibt dann eine ABORT Box aus
+        //
+        Log.e( TAG, "msgConnectedNotbound: can't open AliasManager!" );
+        return;
+      }
+    }
     device = ( BluetoothDevice )smsg.getContainer();
     dName = String.format( "%s/%s", MainActivity.aliasManager.getAliasForMac( device.getAddress(), device.getName() ), device.getName() );
     //
@@ -659,7 +668,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     //
     // hier ist nur der PIN-Dialog interessant, und nur bei API >= 19
     //
-    if( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT )
+    if( ( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT ) && ( MainActivity.aliasManager != null ) )
     {
       if( smsg.getContainer() instanceof PinErrorDialog )
       {
@@ -841,26 +850,19 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     super.onAttach( activity );
     runningActivity = ( MainActivity )activity;
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
-    try
+    if( MainActivity.aliasManager == null )
     {
-      if( MainActivity.aliasManager == null )
+      //
+      // die Datenbank öffnen, wenn erforderlich
+      //
+      if( !runningActivity.openAliasManager() )
       {
         //
-        // die Datenbank öffnen, wenn erforderlich
+        // Geht nicht, Die Funktion gibt dann eine ABORT Box aus
         //
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create SQLite helper..." );
-        DataSQLHelper sqlHelper = new DataSQLHelper( getActivity().getApplicationContext(), MainActivity.databaseDir.getAbsolutePath() + File.separator
-                + ProjectConst.DATABASE_NAME );
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: open Database..." );
-        MainActivity.aliasManager = new SPX42AliasManager( sqlHelper.getWritableDatabase() );
+        Log.e( TAG, "onAttach: can't open AliasManager!" );
+        return;
       }
-    }
-    catch( NoDatabaseException ex )
-    {
-      Log.e( TAG, "NoDatabaseException: <" + ex.getLocalizedMessage() + ">" );
-      UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_sqlite_error_header ), runningActivity.getResources()
-              .getString( R.string.dialog_sqlite_nodatabase_error ) );
-      uad.show( getFragmentManager(), "abortProgram" );
     }
     lastConnectedDeviceMac = null;
   }
@@ -1081,6 +1083,20 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   {
     super.onResume();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
+    if( MainActivity.aliasManager == null )
+    {
+      //
+      // die Datenbank öffnen, wenn erforderlich
+      //
+      if( !runningActivity.openAliasManager() )
+      {
+        //
+        // Geht nicht, Die Funktion gibt dann eine ABORT Box aus
+        //
+        Log.e( TAG, "onResume: can't open AliasManager!" );
+        return;
+      }
+    }
     runningActivity.addServiceListener( this );
     // wenn zu diesem Zeitpunkt das Array noch nicht gefüllt ist, dann mach das nun
     if( 0 == btArrayAdapter.getCount() )

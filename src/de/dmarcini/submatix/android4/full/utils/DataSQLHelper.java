@@ -300,6 +300,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
       Log.d( TAG, "Datepath: " + dbName );
     }
     dbObj = getOpenDatabase( false );
+    if( dbObj == null ) return( null );
     // OK, offen Upgrade abfragen
     onUpgrade( dbObj, dbObj.getVersion(), ProjectConst.DATABASE_VERSION );
     if( dbObj.isOpen() && dbObj.isReadOnly() )
@@ -323,6 +324,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
       Log.d( TAG, "Datepath: " + dbName );
     }
     dbObj = getOpenDatabase( true );
+    if( dbObj == null ) return( null );
     // OK, offen Upgrade abfragen
     onUpgrade( dbObj, dbObj.getVersion(), ProjectConst.DATABASE_VERSION );
     if( dbObj.isOpen() )
