@@ -106,11 +106,6 @@ public class NavigatorFragment extends Fragment
     // drawer. See PREF_USER_LEARNED_DRAWER for details.
     SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences( getActivity() );
     hasUserLearnedDrawer = sp.getBoolean( NaviActionBarDrawerToggle.PREF_USER_LEARNED_DRAWER, false );
-    if( savedInstanceState != null )
-    {
-      currentSelectedPosition = savedInstanceState.getInt( STATE_SELECTED_POSITION );
-      isFromSavedInstanceState = true;
-    }
     // Select either the default item (0) or the last selected item.
     Log.v( TAG, String.format( Locale.getDefault(), "onCreate: select item <%d>...", currentSelectedPosition ) );
     Log.v( TAG, "onCreate:...OK" );
@@ -121,6 +116,11 @@ public class NavigatorFragment extends Fragment
   {
     super.onActivityCreated( savedInstanceState );
     Log.v( TAG, "onActivityCreated:..." );
+    if( savedInstanceState != null )
+    {
+      currentSelectedPosition = savedInstanceState.getInt( STATE_SELECTED_POSITION );
+      isFromSavedInstanceState = true;
+    }
     // das Fragment hat ein Options Menü
     // damit reagiert es auf den Click auf den Titel mit dem Anzeigen des Navigators
     setHasOptionsMenu( true );
@@ -308,10 +308,10 @@ public class NavigatorFragment extends Fragment
   }
 
   @Override
-  public void onSaveInstanceState( Bundle outState )
+  public void onSaveInstanceState( Bundle savedInstanceState )
   {
-    super.onSaveInstanceState( outState );
-    outState.putInt( STATE_SELECTED_POSITION, currentSelectedPosition );
+    super.onSaveInstanceState( savedInstanceState );
+    savedInstanceState.putInt( STATE_SELECTED_POSITION, currentSelectedPosition );
   }
 
   @Override
