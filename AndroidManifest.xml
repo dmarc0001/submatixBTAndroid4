@@ -21,7 +21,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.dmarcini.submatix.android4.full"
     android:versionCode="23"
-    android:versionName="2.0 BETA8" 
+    android:versionName="2.0 BETA8-dev" 
     android:installLocation="auto">
 
     <uses-sdk
