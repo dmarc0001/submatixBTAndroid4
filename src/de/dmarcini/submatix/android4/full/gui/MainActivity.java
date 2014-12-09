@@ -68,10 +68,12 @@ import de.dmarcini.submatix.android4.full.dialogs.DatabaseFileDialog;
 import de.dmarcini.submatix.android4.full.dialogs.EditAliasDialogFragment;
 import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
 import de.dmarcini.submatix.android4.full.exceptions.FirmwareNotSupportetException;
+import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
 import de.dmarcini.submatix.android4.full.exceptions.NoWritableDatabaseDirException;
 import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
 import de.dmarcini.submatix.android4.full.interfaces.INavigationDrawerCallbacks;
 import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
+import de.dmarcini.submatix.android4.full.utils.DataSQLHelper;
 import de.dmarcini.submatix.android4.full.utils.FragmentCallStackEntry;
 import de.dmarcini.submatix.android4.full.utils.GasUpdateEntity;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
@@ -1886,6 +1888,76 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     super.onStop();
     if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onStop:..." );
     doUnbindService( true );
+  }
+
+  /**
+   * 
+   * Wann immer ain Alias Manager gebraucht wird...
+   *
+   * Project: SubmatixBTAndroid4 Package: de.dmarcini.submatix.android4.full.gui
+   * 
+   * Stand: 09.12.2014
+   * 
+   * @return Wahr, wenn er erzeugt wurde
+   */
+  public boolean openAliasManager()
+  {
+    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "openAliasManager..." );
+    //
+    // wenn da einer geöffnet ist, erst mal schliessen
+    //
+    if( aliasManager != null )
+    {
+      aliasManager.close();
+      aliasManager = null;
+    }
+    //
+    // Ist ein Pfad vorhanden, ein Dir und schreibfähig
+    //
+    if( databaseDir == null || !databaseDir.isDirectory() || !databaseDir.canWrite() )
+    {
+      UserAlertDialogFragment alrt = new UserAlertDialogFragment( getString( R.string.dialog_error_database_dir_header ), getString( R.string.dialog_error_database_no_dir ) + "/"
+              + getString( R.string.dialog_error_database_not_writable ) );
+      alrt.show( getFragmentManager(), "database_directory_alert" );
+      return( false );
+    }
+    try
+    {
+      //
+      // die Datenbank öffnen, wenn erforderlich
+      //
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "openAliasManager: create SQLite helper..." );
+      DataSQLHelper sqlHelper = new DataSQLHelper( getApplicationContext(), databaseDir.getAbsolutePath() + File.separator + ProjectConst.DATABASE_NAME );
+      //
+      // einen Alias Manager öffnen
+      //
+      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "openAliasManager: open Database..." );
+      aliasManager = new SPX42AliasManager( sqlHelper.getWritableDatabase() );
+    }
+    catch( NullPointerException ex )
+    {
+      //
+      // Beim File Objekt ist was falsch gelaufen -> Abort
+      //
+      Log.e( TAG, "NullPointerException: <" + ex.getLocalizedMessage() + ">" );
+      UserAlertDialogFragment uad = new UserAlertDialogFragment( getString( R.string.dialog_sqlite_error_header ), getString( R.string.dialog_sqlite_nodatabase_error ) );
+      uad.show( getFragmentManager(), "abortProgram" );
+      return( false );
+    }
+    catch( NoDatabaseException ex )
+    {
+      //
+      // Es gibt keine Database -> Programm beenden
+      //
+      Log.e( TAG, "NoDatabaseException: <" + ex.getLocalizedMessage() + ">" );
+      UserAlertDialogFragment uad = new UserAlertDialogFragment( getString( R.string.dialog_sqlite_error_header ), getString( R.string.dialog_sqlite_nodatabase_error ) );
+      uad.show( getFragmentManager(), "abortProgram" );
+      return( false );
+    }
+    //
+    // wenn alles geklappt hat
+    //
+    return( true );
   }
 
   /**
