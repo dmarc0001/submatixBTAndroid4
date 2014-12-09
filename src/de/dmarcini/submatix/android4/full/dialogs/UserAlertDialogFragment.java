@@ -28,6 +28,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
@@ -45,10 +46,10 @@ import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
 public class UserAlertDialogFragment extends DialogFragment
 {
   @SuppressWarnings( "unused" )
-  private static final String  TAG       = EditAliasDialogFragment.class.getSimpleName();
-  private View                 rootView;
-  private String               headLine;
-  private String               msg;
+  private static final String   TAG       = EditAliasDialogFragment.class.getSimpleName();
+  private View                  rootView;
+  private String                headLine;
+  private String                msg;
   // Use this instance of the interface to deliver action events
   private INoticeDialogListener mListener = null;
 
@@ -94,7 +95,7 @@ public class UserAlertDialogFragment extends DialogFragment
     LayoutInflater inflater = getActivity().getLayoutInflater();
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    rootView = inflater.inflate( R.layout.fragment_dialog_alert, null );
+    rootView = inflater.inflate( R.layout.fragment_dialog_alert, ( ViewGroup )null );
     //
     // die Texte einfügen, natürlich
     //
@@ -108,12 +109,12 @@ public class UserAlertDialogFragment extends DialogFragment
     //
     builder.setView( rootView );
     // Buttons erzeugen
-    builder.setPositiveButton( R.string.dialog_exit_button, new DialogInterface.OnClickListener() {
+    builder.setNegativeButton( R.string.dialog_exit_button, new DialogInterface.OnClickListener() {
       @Override
       public void onClick( DialogInterface dialog, int id )
       {
         // Gib in der App bescheid, ich will es so!
-        mListener.onDialogPositiveClick( UserAlertDialogFragment.this );
+        mListener.onDialogNegativeClick( UserAlertDialogFragment.this );
       }
     } );
     // Create the AlertDialog object and return it
