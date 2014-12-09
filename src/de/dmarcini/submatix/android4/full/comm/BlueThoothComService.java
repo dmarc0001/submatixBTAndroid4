@@ -1099,7 +1099,7 @@ public class BlueThoothComService extends Service
   private static ConnectThread mConnectThread              = null;
   private static ReaderThread  mReaderThread               = null;
   private static WriterThread  mWriterThread               = null;
-  private static volatile int  mConnectionState;
+  private static volatile int  mConnectionState            = ProjectConst.CONN_STATE_NONE;              // aktueller Verbindungsstatus
   private volatile boolean     isLogentryMode              = false;
   private String               connectedDeviceMac          = null;
   private String               connectedDeviceSerialNumber = null;
@@ -1371,7 +1371,6 @@ public class BlueThoothComService extends Service
     mConnectThread = new ConnectThread( device );
     connectedDeviceMac = addr;
     mConnectThread.start();
-    // setState( ProjectConst.CONN_STATE_CONNECTING );
   }
 
   /**
@@ -1739,29 +1738,34 @@ public class BlueThoothComService extends Service
   {
     BtServiceMessage msg;
     //
-    mConnectionState = state;
-    Log.v( TAG, "setState to <" + mConnectionState + ">  " + state );
-    switch ( state )
+    // Checke den aktuellen Status um mehrfache Meldungen zu unterdrücken
+    //
+    if( mConnectionState != state )
     {
-      default:
-      case ProjectConst.CONN_STATE_NONE:
-        // die Daten löschen
-        connectedDeviceMac = null;
-        connectedDeviceSerialNumber = null;
-        connectedDeviceManufacturer = null;
-        connectedDeviceFWVersion = null;
-        connectedDeviceLicense = null;
-        msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
-        break;
-      case ProjectConst.CONN_STATE_CONNECTING:
-        msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECTING );
-        break;
-      case ProjectConst.CONN_STATE_CONNECTED:
-        msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECTED );
-        break;
+      mConnectionState = state;
+      Log.v( TAG, "setState to <" + mConnectionState + ">  " + state );
+      switch ( state )
+      {
+        default:
+        case ProjectConst.CONN_STATE_NONE:
+          // die Daten löschen
+          connectedDeviceMac = null;
+          connectedDeviceSerialNumber = null;
+          connectedDeviceManufacturer = null;
+          connectedDeviceFWVersion = null;
+          connectedDeviceLicense = null;
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
+          break;
+        case ProjectConst.CONN_STATE_CONNECTING:
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECTING );
+          break;
+        case ProjectConst.CONN_STATE_CONNECTED:
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECTED );
+          break;
+      }
+      // Melde des Status an die Clienten
+      sendMessageToApp( msg );
     }
-    // Melde des Status an die Clienten
-    sendMessageToApp( msg );
   }
 
   /**
