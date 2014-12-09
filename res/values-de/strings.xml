@@ -107,6 +107,8 @@
     <string name="dialog_get_pin_msg">PIN für Gerät\n\"%s\"</string>
     <string name="dialog_pin_wrong_format">PIN falsches Format! Nochmal?\n(Gerät: \"%s\")</string>
     <string name="dialog_file_select_no_data">Keine Daten!</string>
+    <string name="dialog_firmware_not_supportet_header">Firmware Fehler</string>
+    <string name="dialog_firmware_not_supportet">SPX Firmware Version nicht unterstützt!</string>
     
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title" formatted="false">Suche BT Geräte...</string>

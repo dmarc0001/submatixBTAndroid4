@@ -107,6 +107,8 @@
     <string name="dialog_get_pin_msg">Get PIN for Device\n\"%s\"</string>
     <string name="dialog_pin_wrong_format">PIN has wrong format! Retry?\n(device: \"%s\")</string>
     <string name="dialog_file_select_no_data">No data!</string>
+    <string name="dialog_firmware_not_supportet_header">Firmware error</string>
+    <string name="dialog_firmware_not_supportet">Firmware version not supported!</string>
     
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title" formatted="false">Searching BT Devices..</string>
