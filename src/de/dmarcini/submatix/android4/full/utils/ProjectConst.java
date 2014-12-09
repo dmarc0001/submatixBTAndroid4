@@ -173,7 +173,6 @@ public final class ProjectConst
   public static final String ARG_ITEM_ID                = "arg.progitem_item_id";
   public static final String ARG_ITEM_CONTENT           = "arg.progitem_item_content";
   public static final String ARG_DBID                   = "arg.dbid";
-  public static final String ARG_TOSTACK_ONDETACH       = "arg.to_stack_on_detach";
   public static final String ARG_SELECTED_DEVICE        = "arg.selected_device";
   public static final String ARG_SELECTED_DIVE          = "arg.selected_dive";
   
