@@ -369,9 +369,8 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
         // Zeige markiertes Log an
         //
         rAdapter = ( SPX42ReadLogListArrayAdapter )graphLogsListView.getAdapter();
-        if( rAdapter != null )
+        if( rAdapter != null && !rAdapter.getMarkedItems().isEmpty() )
         {
-          if( rAdapter.getMarkedItems().isEmpty() ) return;
           int idx = rAdapter.getMarkedItems().firstElement();
           ReadLogItemObj rlo = rAdapter.getItem( idx );
           viewSelectedLogItem( rlo.dbId );
@@ -380,6 +379,9 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
         {
           // Nee, da ist nix ausgewählt,
           Log.i( TAG, "onClick: not device selected!" );
+          UserAlertDialogFragment wDial = new UserAlertDialogFragment( getString( R.string.dialog_not_selected_items_header ), getString( R.string.dialog_not_selected_items_graph ) );
+          wDial.show( getFragmentManager(), "notingSelectedWarning" );
+          return;
         }
       }
       //
@@ -454,7 +456,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
 
   /**
    * 
-   * Wenn der Dialog Positiv abgeschlossen wurde (OKO oder ähnlich)
+   * Wenn der Dialog Positiv abgeschlossen wurde (OK oder ähnlich)
    * 
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
    * 
@@ -465,6 +467,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   public void onDialogNegative( DialogFragment dialog )
   {
     if( ApplicationDEBUG.DEBUG ) Log.v( TAG, "Negative dialog click!" );
+    dialog.dismiss();
   }
 
   /**

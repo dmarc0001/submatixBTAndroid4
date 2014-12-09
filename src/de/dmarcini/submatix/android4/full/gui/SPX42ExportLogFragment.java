@@ -743,7 +743,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
         if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onClick: call changeDeviceDialog!" );
         SelectDeviceDialogFragment dialog = new SelectDeviceDialogFragment();
         dialog.setDeviceList( logManager.getDeviceNameIdList() );
-        dialog.show( getFragmentManager(), "SelectDeviceDialogFragment" );
+        dialog.show( getFragmentManager(), "selectDeviceForExport" );
       }
       //
       // oder sollen Daten exportiert werden?
@@ -766,7 +766,6 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
         //
         // exportiere alle markierten Elemente
         //
-        // Mail-Activity erledigt...
         if( tempDir != null )
         {
           deleteDir( tempDir );
@@ -831,26 +830,6 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
       Log.e( TAG, "onCreateView: container is NULL ..." );
       return( null );
     }
-    //
-    // wenn die laufende Activity eine AreaDetailActivity ist, dann gibts das View schon
-    //
-    // if( runningActivity instanceof AreaDetailActivity )
-    // {
-    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
-    // //
-    // // Objekte lokalisieren, Verbindungsseite ist von onePane Mode
-    // //
-    // mainListView = ( ListView )runningActivity.findViewById( R.id.exportLogsListView );
-    // mainListView.setChoiceMode( AbsListView.CHOICE_MODE_MULTIPLE );
-    // changeDeviceButton = ( Button )runningActivity.findViewById( R.id.changeDeviceButton );
-    // exportLogsButton = ( Button )runningActivity.findViewById( R.id.exportLogsButton );
-    // exportDeleteButton = ( Button )runningActivity.findViewById( R.id.exportDeleteButton );
-    // return( null );
-    // }
-    //
-    // Verbindungsseite via twoPane ausgewählt
-    //
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running two pane mode ..." );
     //
     // View aus Resource laden
     //
@@ -962,11 +941,14 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
         //
         // ALLE Daten des Gerätes (einschliesslich ALIAS und Datendateien) löschen
         //
-        if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "DELETE ALL Data for device: <" + selectedDeviceAlias + "..." );
-        logManager.deleteAllDataForDevice( selectedDeviceId );
-        //
-        // Alle Daten verschwinden lassen
-        //
+        if( selectedDeviceId >= 0 )
+        {
+          if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "DELETE ALL Data for device: <" + selectedDeviceAlias + "..." );
+          //
+          // Alle Daten verschwinden lassen
+          //
+          logManager.deleteAllDataForDevice( selectedDeviceId );
+        }
         selectedDeviceAlias = null;
         selectedDeviceId = -1;
         mainListView.setAdapter( null );
@@ -981,7 +963,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
         // die markierten Einträge suchen
         //
         SPX42ReadLogListArrayAdapter rAdapter = ( SPX42ReadLogListArrayAdapter )mainListView.getAdapter();
-        if( rAdapter != null && selectedDeviceId > 0 )
+        if( rAdapter != null && selectedDeviceId >= 0 )
         {
           // gibt es Einträge?
           if( rAdapter.getCountMarkedItems() > 0 )
