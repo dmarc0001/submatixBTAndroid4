@@ -89,6 +89,7 @@
     <string name="dialog_not_mail_exist">Sorry, not Mail in preferences,\nPlease enter valid mailaddress\nin program preferences!</string>
     <string name="dialog_not_selected_items_header">nothing selected</string>    
     <string name="dialog_not_selected_items">noting selelected to export!</string>
+    <string name="dialog_not_selected_items_graph">noting selelected to view!</string>
     <string name="dialog_no_uddfdir_header">not UDDF-directory</string>
     <string name="dialog_no_uddfdir">there ist not an directory with UDDF-Files\nor the directory is not readable.</string>
     <string name="dialog_no_device_selected_header">select device</string>

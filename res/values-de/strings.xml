@@ -89,6 +89,7 @@
     <string name="dialog_not_mail_exist">Entschuldige, es ist keine Mail\nin den Einstellungen eingetragen!\nEintragung in den Programmeinstellungen.</string>
     <string name="dialog_not_selected_items_header">Nichts markiert</string>    
     <string name="dialog_not_selected_items">Keine Einträge zum exportieren markiert!</string>
+    <string name="dialog_not_selected_items_graph">Keine Einträge zum anzeigen markiert!</string>
     <string name="dialog_no_uddfdir_header">Kein UDDF-Verzeichnis</string>
     <string name="dialog_no_uddfdir">Es existiert kein Verzeichnis mit UDDF-Dateien\noder das Verzeichnis ist nicht lesbar.</string>
     <string name="dialog_no_device_selected_header">Wähle Gerät</string>
