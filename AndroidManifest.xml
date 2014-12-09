@@ -20,8 +20,8 @@
 <manifest 
     xmlns:android="http://schemas.android.com/apk/res/android"
     package="de.dmarcini.submatix.android4.full"
-    android:versionCode="22"
-    android:versionName="2.0 BETA7" 
+    android:versionCode="23"
+    android:versionName="2.0 BETA8" 
     android:installLocation="auto">
 
     <uses-sdk
@@ -54,18 +54,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <!-- Die grafische Activity -->
-        <activity 
-            android:name="de.dmarcini.submatix.android4.full.gui.AreaDetailGraphActivity"
-            android:label="@string/graphlog_title"
-            android:screenOrientation="sensorLandscape" 
-            android:launchMode="singleTop">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".gui.areaListActivity" />
-        </activity>  
-              
+                      
         <!-- Der Bluethooth Service -->
         <service android:name="de.dmarcini.submatix.android4.full.comm.BlueThoothComService"></service>
     </application>
