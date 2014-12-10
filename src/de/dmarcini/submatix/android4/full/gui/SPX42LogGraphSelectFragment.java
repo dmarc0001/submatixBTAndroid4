@@ -560,14 +560,13 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   @Override
   public void onItemClick( AdapterView<?> parent, View clickedView, int position, long id )
   {
-    Bundle arguments;
+    ImageView ivMarked;
     SPX42ReadLogListArrayAdapter rlAdapter = null;
     //
     // Die Liste der Logs
     //
     if( parent.equals( graphLogsListView ) )
     {
-      arguments = getArguments();
       rlAdapter = ( SPX42ReadLogListArrayAdapter )graphLogsListView.getAdapter();
       //
       // mache die Markierung auch im View (das wird ja sonst nicht automatisch aktualisiert)
@@ -578,16 +577,23 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
       //
       if( !markedItems.isEmpty() )
       {
-        // Falls vorhanxen, löschen
-        Iterator<Integer> it = markedItems.iterator();
-        int idx = it.next();
-        rlAdapter.setMarked( idx, false );
-        // View erfraqgen
-        ImageView ivMarked = ( ImageView )graphLogsListView.getChildAt( idx ).findViewById( R.id.readLogMarkedIconView );
-        if( ivMarked != null )
+        try
         {
-          // ist ein View vorhanden, geht es schon los
-          ivMarked.setImageResource( R.drawable.circle_empty_yellow );
+          // Falls vorhanxen, löschen
+          Iterator<Integer> it = markedItems.iterator();
+          int idx = it.next();
+          rlAdapter.setMarked( idx, false );
+          // View erfragen TODO: Absturz? (NullPointerException)
+          ivMarked = ( ImageView )graphLogsListView.getChildAt( idx ).findViewById( R.id.readLogMarkedIconView );
+          if( ivMarked != null )
+          {
+            // ist ein View vorhanden, geht es schon los
+            ivMarked.setImageResource( R.drawable.circle_empty_yellow );
+          }
+        }
+        catch( NullPointerException ex )
+        {
+          Log.e( TAG, "onItemClick: Null pointer exception (" + ex.getLocalizedMessage() + ")" );
         }
       }
       //
@@ -595,17 +601,13 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
       //
       if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "set item <" + position + "> as marked" );
       rlAdapter.setMarked( position, true );
-      ImageView ivMarked = ( ImageView )clickedView.findViewById( R.id.readLogMarkedIconView );
-      ivMarked.setImageResource( R.drawable.circle_full_green );
+      ivMarked = ( ImageView )clickedView.findViewById( R.id.readLogMarkedIconView );
+      if( ivMarked != null ) ivMarked.setImageResource( R.drawable.circle_full_green );
       //
       // Tja, Einstellung merken
       //
-      if( ( arguments != null ) && ( !rlAdapter.getMarkedItems().isEmpty() ) )
-      {
-        int idx = rlAdapter.getMarkedItems().firstElement();
-        ReadLogItemObj rlo = rlAdapter.getItem( idx );
-        arguments.putInt( ProjectConst.ARG_SELECTED_DIVE, rlo.dbId );
-      }
+      ReadLogItemObj rlo = rlAdapter.getItem( position );
+      dbId = rlo.dbId;
     }
   }
 
