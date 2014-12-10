@@ -583,7 +583,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
           Iterator<Integer> it = markedItems.iterator();
           int idx = it.next();
           rlAdapter.setMarked( idx, false );
-          // View erfragen TODO: Absturz? (NullPointerException)
+          // View erfragen (Absturz NullPointerException)
           ivMarked = ( ImageView )graphLogsListView.getChildAt( idx ).findViewById( R.id.readLogMarkedIconView );
           if( ivMarked != null )
           {
