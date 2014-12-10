@@ -1595,7 +1595,13 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         }
         if( dialog.getTag().matches( "set_database_directory" ) )
         {
-          recreate();
+          dialog = null;
+          // Code nach stackoverflow
+          Intent intent = new Intent( Intent.ACTION_MAIN );
+          intent.addCategory( Intent.CATEGORY_HOME );
+          intent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP );
+          intent.putExtra( "EXIT", false );
+          startActivity( intent );
         }
       }
     }
