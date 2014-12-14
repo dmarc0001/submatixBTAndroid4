@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<lint>
-    <issue id="BackButton" severity="informational" />
-    <issue id="IconExpectedSize" severity="informational" />
-    <issue id="StopShip" severity="informational" />
-    <issue id="ValidFragment">
-        <ignore path="src/de/dmarcini/submatix/android4/gui/WaitProgressFragmentDialog.java" />
-    </issue>
-</lint>
