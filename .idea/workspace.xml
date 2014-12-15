@@ -26,70 +26,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="414ee92c-90c5-4033-ad1c-8e6cce312b4e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/SubmatixBTAndroid4.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/android_support_v4.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/codeStyleSettings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" />
-      <change type="DELETED" beforePath="C:\DATEN\androidStudioWorkspace\SubmatixBTAndroid4\.idea\libraries\support_annotations_21_0_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\DATEN\androidStudioWorkspace\SubmatixBTAndroid4\.idea\libraries\support_v4_21_0_3.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\DATEN\androidStudioWorkspace\SubmatixBTAndroid4\androidStudioWorkspace.iml" afterPath="" />
-      <change type="DELETED" beforePath="C:\DATEN\androidStudioWorkspace\SubmatixBTAndroid4\app\build\generated\source\buildConfig\test\debug\de\dmarcini\submatix\android4\full\test\BuildConfig.java" afterPath="" />
-      <change type="DELETED" beforePath="C:\DATEN\androidStudioWorkspace\SubmatixBTAndroid4\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\AndroidManifest.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\DATEN\androidStudioWorkspace\SubmatixBTAndroid4\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\aidl\android\support\v4\app\INotificationSideChannel.aidl" afterPath="" />
-      <change type="DELETED" beforePath="C:\DATEN\androidStudioWorkspace\SubmatixBTAndroid4\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\classes.jar" afterPath="" />
-      <change type="DELETED" beforePath="C:\DATEN\androidStudioWorkspace\SubmatixBTAndroid4\app\build\intermediates\exploded-aar\com.android.support\support-v4\21.0.3\libs\internal_impl-21.0.3.jar" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/model_data.bin" afterPath="$PROJECT_DIR$/build/intermediates/model_data.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/ApplicationDEBUG.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/ApplicationDEBUG.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/dialogs/AreYouSureDialogFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/dialogs/AreYouSureDialogFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ArrayAdapterWithPics.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ArrayAdapterWithPics.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/comm/BlueThoothComService.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/comm/BlueThoothComService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/BluetoothDeviceArrayAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/BluetoothDeviceArrayAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/comm/BtServiceMessage.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/comm/BtServiceMessage.java" />
+      <change type="DELETED" beforePath="C:\DATEN\androidStudioWorkspace\SubmatixBTAndroid4\.idea\libraries\android_support_v4.xml" afterPath="" />
+      <change type="DELETED" beforePath="C:\DATEN\androidStudioWorkspace\SubmatixBTAndroid4\.idea\libraries\joda_time_2_2.xml" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/BuildVersion.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/BuildVersion.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/CommToast.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/CommToast.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/DataSQLHelper.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/DataSQLHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/dialogs/EditAliasDialogFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/dialogs/EditAliasDialogFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ExportLogEntry.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ExportLogEntry.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/GasPickerPreference.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/GasPickerPreference.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/GasUtilitys.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/GasUtilitys.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/GradientPickerPreference.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/GradientPickerPreference.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/LogXMLCreator.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/LogXMLCreator.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/NavigatorFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/NavigatorFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/ProgramAboutFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/ProgramAboutFragment.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/ProgramPreferencesFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/ProgramPreferencesFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ProjectConst.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ProjectConst.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ReadLogItemObj.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ReadLogItemObj.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42AliasManager.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42AliasManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42Config.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42Config.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42ConnectFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42ConnectFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42DiveHeadData.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42DiveHeadData.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42ExportLogFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42ExportLogFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42GasParms.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42GasParms.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42GaslistPreferencesFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42GaslistPreferencesFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42HealthFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42HealthFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42LogEntryObj.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42LogEntryObj.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42LogGraphDetailFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42LogGraphDetailFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42LogGraphSelectFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42LogGraphSelectFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42LogManager.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42LogManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42PreferencesFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42PreferencesFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42ReadLogFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42ReadLogFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42ReadLogListArrayAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42ReadLogListArrayAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/dialogs/SelectDeviceDialogFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/dialogs/SelectDeviceDialogFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/UDDFFileCreateClass.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/UDDFFileCreateClass.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/dialogs/UserAlertDialogFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/dialogs/UserAlertDialogFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/WorkInProgressFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/WorkInProgressFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.gradle" afterPath="$PROJECT_DIR$/build.gradle" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/app/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/encodings.xml" afterPath="$PROJECT_DIR$/.idea/encodings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/joda_time_2_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/joda_time_2_2.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings.gradle" afterPath="$PROJECT_DIR$/settings.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/utils/build.txt" afterPath="$PROJECT_DIR$/app/utils/build.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/xml/config_program_preference.xml" afterPath="$PROJECT_DIR$/app/src/main/res/xml/config_program_preference.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/dmarc.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/dmarc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values-de/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-de/strings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="SubmatixBTAndroid4.iws" />
@@ -124,21 +71,9 @@
       <file leaf-file-name="build.gradle" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="528" max-vertical-offset="1071">
-              <caret line="55" column="1" selection-start-line="55" selection-start-column="1" selection-end-line="55" selection-end-column="1" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="952">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AreYouSureDialogFragment.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/dialogs/AreYouSureDialogFragment.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6151013" vertical-offset="601" max-vertical-offset="2091">
-              <caret line="64" column="5" selection-start-line="64" selection-start-column="5" selection-end-line="64" selection-end-column="5" />
-              <folding>
-                <element signature="e#0#4203#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -156,30 +91,122 @@
       <file leaf-file-name="build.gradle" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="119" max-vertical-offset="374">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="374">
               <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BlueThoothComService.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/comm/BlueThoothComService.java">
+      <file leaf-file-name="ContentSwitcher.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/content/ContentSwitcher.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="363" max-vertical-offset="38675">
-              <caret line="32" column="20" selection-start-line="32" selection-start-column="20" selection-end-line="32" selection-end-column="20" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1326" max-vertical-offset="3400">
+              <caret line="60" column="35" selection-start-line="60" selection-start-column="35" selection-end-line="60" selection-end-column="35" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainActivity.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="MainActivity.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="35445" max-vertical-offset="39525">
-              <caret line="2085" column="72" selection-start-line="2085" selection-start-column="72" selection-end-line="2085" selection-end-column="72" />
-              <folding />
+            <state vertical-scroll-proportion="0.689781" vertical-offset="30341" max-vertical-offset="38811">
+              <caret line="1807" column="12" selection-start-line="1807" selection-start-column="12" selection-end-line="1807" selection-end-column="12" />
+              <folding>
+                <element signature="e#0#74315#0" expanded="true" />
+                <element signature="imports" expanded="true" />
+                <element signature="e#4308#4837#0" expanded="true" />
+                <element signature="e#4832#4833#0" expanded="true" />
+                <element signature="e#5986#5996#0" expanded="true" />
+                <element signature="e#6480#6500#0" expanded="true" />
+                <element signature="e#5227#5257#0" expanded="true" />
+                <element signature="e#7916#7917#0" expanded="true" />
+                <element signature="e#7949#7950#0" expanded="true" />
+                <element signature="e#15949#15997#0" expanded="true" />
+                <element signature="e#16078#16132#0" expanded="true" />
+                <element signature="e#28654#28679#0" expanded="true" />
+                <element signature="e#28744#28780#0" expanded="true" />
+                <element signature="e#28847#28875#0" expanded="true" />
+                <element signature="e#28933#28972#0" expanded="true" />
+                <element signature="e#29040#29064#0" expanded="true" />
+                <element signature="e#29129#29164#0" expanded="true" />
+                <element signature="e#29232#29257#0" expanded="true" />
+                <element signature="e#29314#29350#0" expanded="true" />
+                <element signature="e#29418#29443#0" expanded="true" />
+                <element signature="e#29500#29536#0" expanded="true" />
+                <element signature="e#29604#29630#0" expanded="true" />
+                <element signature="e#29690#29727#0" expanded="true" />
+                <element signature="e#29794#29827#0" expanded="true" />
+                <element signature="e#29887#29931#0" expanded="true" />
+                <element signature="e#29997#30021#0" expanded="true" />
+                <element signature="e#30076#30111#0" expanded="true" />
+                <element signature="e#30178#30204#0" expanded="true" />
+                <element signature="e#30269#30306#0" expanded="true" />
+                <element signature="e#30373#30396#0" expanded="true" />
+                <element signature="e#30440#30474#0" expanded="true" />
+                <element signature="e#30541#30563#0" expanded="true" />
+                <element signature="e#30607#30640#0" expanded="true" />
+                <element signature="e#30707#30729#0" expanded="true" />
+                <element signature="e#30771#30804#0" expanded="true" />
+                <element signature="e#39216#39241#0" expanded="true" />
+                <element signature="e#39513#39537#0" expanded="true" />
+                <element signature="e#42050#42076#0" expanded="true" />
+                <element signature="e#42311#42334#0" expanded="true" />
+                <element signature="e#42623#42650#0" expanded="true" />
+                <element signature="e#43448#43471#0" expanded="true" />
+                <element signature="e#43696#43719#0" expanded="true" />
+                <element signature="e#44004#44038#0" expanded="true" />
+                <element signature="e#46508#46527#0" expanded="true" />
+                <element signature="e#49113#49132#0" expanded="true" />
+                <element signature="e#51025#51077#0" expanded="true" />
+                <element signature="e#51079#51127#0" expanded="true" />
+                <element signature="e#51424#51476#0" expanded="true" />
+                <element signature="e#53525#53561#0" expanded="true" />
+                <element signature="e#55058#55080#0" expanded="true" />
+                <element signature="e#55250#55286#0" expanded="true" />
+                <element signature="e#55403#55427#0" expanded="true" />
+                <element signature="e#55764#55797#0" expanded="true" />
+                <element signature="e#55965#55991#0" expanded="true" />
+                <element signature="e#56275#56313#0" expanded="true" />
+                <element signature="e#56469#56494#0" expanded="true" />
+                <element signature="e#56830#56866#0" expanded="true" />
+                <element signature="e#57041#57064#0" expanded="true" />
+                <element signature="e#57316#57350#0" expanded="true" />
+                <element signature="e#57500#57525#0" expanded="true" />
+                <element signature="e#57809#57845#0" expanded="true" />
+                <element signature="e#58009#58035#0" expanded="true" />
+                <element signature="e#58299#58334#0" expanded="true" />
+                <element signature="e#58491#58524#0" expanded="true" />
+                <element signature="e#58790#58825#0" expanded="true" />
+                <element signature="e#58982#59006#0" expanded="true" />
+                <element signature="e#59248#59281#0" expanded="true" />
+                <element signature="e#59433#59461#0" expanded="true" />
+                <element signature="e#59765#59798#0" expanded="true" />
+                <element signature="e#59952#59974#0" expanded="true" />
+                <element signature="e#60731#60756#0" expanded="true" />
+                <element signature="e#60945#60981#0" expanded="true" />
+                <element signature="e#61645#61669#0" expanded="true" />
+                <element signature="e#61782#61806#0" expanded="true" />
+                <element signature="e#63815#63867#0" expanded="true" />
+                <element signature="e#63869#63917#0" expanded="true" />
+                <element signature="e#63936#63990#0" expanded="true" />
+                <element signature="e#64894#64940#0" expanded="true" />
+                <element signature="e#64942#64992#0" expanded="true" />
+                <element signature="e#65326#65372#0" expanded="true" />
+                <element signature="e#65374#65424#0" expanded="true" />
+                <element signature="e#66333#66367#0" expanded="true" />
+                <element signature="e#68367#68431#0" expanded="true" />
+                <element signature="e#68461#68516#0" expanded="true" />
+              </folding>
             </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Translations Editor" pinned="false" current="false" current-in-tab="false">
+        <entry file="mock:///Translations Editor">
+          <provider selected="true" editor-type-id="string-resource-editor">
+            <state />
           </provider>
         </entry>
       </file>
@@ -1022,7 +1049,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="4255734447403" />
+        <entry key="$PROJECT_DIR$" value="4255799144615" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -1202,6 +1229,9 @@
       </map>
     </option>
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/content/ContentSwitcher.java" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
@@ -1211,7 +1241,6 @@
         <option value="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/ProgramAboutFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ArrayAdapterWithPics.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/dialogs/SelectDeviceDialogFragment.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/MainActivity.java" />
         <option value="$PROJECT_DIR$/lib/build.gradle" />
         <option value="$PROJECT_DIR$/utils/build.gradle" />
         <option value="$PROJECT_DIR$/settings.gradle" />
@@ -1219,6 +1248,9 @@
         <option value="$PROJECT_DIR$/app/utils/versionsScript.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/dialogs/AreYouSureDialogFragment.java" />
         <option value="$PROJECT_DIR$/app/build.gradle" />
+        <option value="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/ProgramPreferencesFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/xml/config_program_preference.xml" />
       </list>
     </option>
   </component>
@@ -1226,10 +1258,10 @@
     <treeState />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="166" />
-    <option name="y" value="14" />
+    <option name="x" value="283" />
+    <option name="y" value="5" />
     <option name="width" value="1992" />
-    <option name="height" value="1000" />
+    <option name="height" value="1008" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -1262,12 +1294,12 @@
   </component>
   <component name="ProjectView">
     <navigator currentView="AndroidView" proportions="" version="1">
-      <flattenPackages />
+      <flattenPackages AndroidView="true" />
       <showMembers />
       <showModules />
       <showLibraryContents />
       <hideEmptyPackages />
-      <abbreviatePackageNames />
+      <abbreviatePackageNames AndroidView="false" />
       <autoscrollToSource />
       <autoscrollFromSource />
       <sortByType />
@@ -1281,9 +1313,123 @@
               <option name="myItemId" value="SubmatixBTAndroid4" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
             </PATH_ELEMENT>
+          </PATH>
+          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="Gradle Scripts" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidBuildScriptsGroupNode" />
+              <option name="myItemId" value="SubmatixBTAndroid4" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="xml" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SubmatixBTAndroid4" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="values" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SubmatixBTAndroid4" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidResFolderNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SubmatixBTAndroid4" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SubmatixBTAndroid4" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gui" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SubmatixBTAndroid4" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="content" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SubmatixBTAndroid4" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="full" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -1321,6 +1467,7 @@
     <property name="android.project.structure.last.selected" value="app" />
     <property name="android.project.structure.proportion" value="0.15" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/app/utils/versionsScript.xml" />
+    <property name="LayoutCode.rearrangeEntriesJava" value="false" />
   </component>
   <component name="RunManager" selected="Android Application.app">
     <configuration default="true" type="JUnit" factoryName="JUnit">
@@ -1490,6 +1637,9 @@
       <AnalysisUIOptions />
     </option>
   </component>
+  <component name="StructureViewFactory">
+    <option name="ACTIVE_ACTIONS" value=",SHOW_INHERITED" />
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -1522,28 +1672,29 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="166" y="14" width="1992" height="1000" extended-state="0" />
+    <frame x="283" y="5" width="1992" height="1008" extended-state="0" />
     <editor active="false" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3293979" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32865497" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32821724" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32821724" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18097208" sideWeight="0.50087875" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32748538" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21199587" sideWeight="0.5008696" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32821724" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32865497" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32821724" sideWeight="0.4131334" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32748538" sideWeight="0.4131334" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3293979" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3293979" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32821724" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32748538" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" x="2849" y="48" width="967" height="278" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32821724" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18097208" sideWeight="0.49912128" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18252327" sideWeight="0.49912128" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32821724" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32988626" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24974146" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21199587" sideWeight="0.49913043" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.1778697" sideWeight="0.50087875" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -1576,36 +1727,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="35445" max-vertical-offset="39525">
-          <caret line="2085" column="72" selection-start-line="2085" selection-start-column="72" selection-end-line="2085" selection-end-column="72" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="51" max-vertical-offset="357">
-          <caret line="3" column="12" selection-start-line="3" selection-start-column="12" selection-end-line="3" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/comm/BlueThoothComService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="85" max-vertical-offset="38675">
-          <caret line="5" column="1" selection-start-line="5" selection-start-column="1" selection-end-line="5" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/ApplicationDEBUG.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="238" max-vertical-offset="799">
-          <caret line="14" column="66" selection-start-line="14" selection-start-column="66" selection-end-line="14" selection-end-column="66" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/ProgramAboutFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2669">
@@ -1856,13 +1977,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="6732">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ArrayAdapterWithPics.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2482">
@@ -1877,14 +1991,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="33173" max-vertical-offset="38046">
-          <caret line="2085" column="72" selection-start-line="2085" selection-start-column="72" selection-end-line="2085" selection-end-column="72" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/local.properties">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="543">
@@ -1892,42 +1998,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/comm/BlueThoothComService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="363" max-vertical-offset="38675">
-          <caret line="32" column="20" selection-start-line="32" selection-start-column="20" selection-end-line="32" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/settings.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="543">
-          <caret line="0" column="14" selection-start-line="0" selection-start-column="14" selection-end-line="0" selection-end-column="14" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="119" max-vertical-offset="374">
-          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/utils/versionsScript.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.1878453" vertical-offset="0" max-vertical-offset="543">
           <caret line="6" column="52" selection-start-line="6" selection-start-column="52" selection-end-line="6" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="528" max-vertical-offset="1071">
-          <caret line="55" column="1" selection-start-line="55" selection-start-column="1" selection-end-line="55" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1941,10 +2015,206 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/dialogs/AreYouSureDialogFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6151013" vertical-offset="601" max-vertical-offset="2091">
-          <caret line="64" column="5" selection-start-line="64" selection-start-column="5" selection-end-line="64" selection-end-column="5" />
+        <state vertical-scroll-proportion="0.32810616" vertical-offset="935" max-vertical-offset="2227">
+          <caret line="80" column="0" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
           <folding>
-            <element signature="e#0#4203#0" expanded="true" />
+            <element signature="e#0#4203#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="952">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="543">
+          <caret line="0" column="14" selection-start-line="0" selection-start-column="14" selection-end-line="0" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/comm/BlueThoothComService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.21833535" vertical-offset="363" max-vertical-offset="38675">
+          <caret line="32" column="20" selection-start-line="32" selection-start-column="20" selection-end-line="32" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="119" max-vertical-offset="374">
+          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/drawable/export_online.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/ProgramPreferencesFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="4450" max-vertical-offset="7361">
+          <caret line="303" column="5" selection-start-line="303" selection-start-column="5" selection-end-line="303" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/xml/config_program_preference.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="2.5391622" vertical-offset="0" max-vertical-offset="1547">
+          <caret line="82" column="70" selection-start-line="82" selection-start-column="70" selection-end-line="82" selection-end-column="70" />
+          <folding>
+            <element signature="e#183#211#0" expanded="true" />
+            <element signature="e#383#413#0" expanded="true" />
+            <element signature="e#466#502#0" expanded="true" />
+            <element signature="e#702#740#0" expanded="true" />
+            <element signature="e#775#813#0" expanded="true" />
+            <element signature="e#1084#1114#0" expanded="true" />
+            <element signature="e#1250#1277#0" expanded="true" />
+            <element signature="e#1429#1468#0" expanded="true" />
+            <element signature="e#1499#1537#0" expanded="true" />
+            <element signature="e#1572#1603#0" expanded="true" />
+            <element signature="e#1637#1667#0" expanded="true" />
+            <element signature="e#1694#1728#0" expanded="true" />
+            <element signature="e#1983#2014#0" expanded="true" />
+            <element signature="e#2113#2142#0" expanded="true" />
+            <element signature="e#2241#2269#0" expanded="true" />
+            <element signature="e#2421#2468#0" expanded="true" />
+            <element signature="e#2499#2545#0" expanded="true" />
+            <element signature="e#2572#2614#0" expanded="true" />
+            <element signature="e#2867#2900#0" expanded="true" />
+            <element signature="e#3051#3095#0" expanded="true" />
+            <element signature="e#3126#3168#0" expanded="true" />
+            <element signature="e#3203#3239#0" expanded="true" />
+            <element signature="e#3273#3307#0" expanded="true" />
+            <element signature="e#3334#3373#0" expanded="true" />
+            <element signature="e#3529#3578#0" expanded="true" />
+            <element signature="e#3609#3657#0" expanded="true" />
+            <element signature="e#3692#3733#0" expanded="true" />
+            <element signature="e#3767#3807#0" expanded="true" />
+            <element signature="e#3834#3881#0" expanded="true" />
+            <element signature="e#4039#4081#0" expanded="true" />
+            <element signature="e#4112#4153#0" expanded="true" />
+            <element signature="e#4188#4234#0" expanded="true" />
+            <element signature="e#4268#4313#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5458015" vertical-offset="6327" max-vertical-offset="6851">
+          <caret line="389" column="0" selection-start-line="389" selection-start-column="0" selection-end-line="389" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/content/ContentSwitcher.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3400">
+          <caret line="60" column="35" selection-start-line="60" selection-start-column="35" selection-end-line="60" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.689781" vertical-offset="30341" max-vertical-offset="38811">
+          <caret line="1807" column="12" selection-start-line="1807" selection-start-column="12" selection-end-line="1807" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#74315#0" expanded="true" />
+            <element signature="imports" expanded="true" />
+            <element signature="e#4308#4837#0" expanded="true" />
+            <element signature="e#4832#4833#0" expanded="true" />
+            <element signature="e#5986#5996#0" expanded="true" />
+            <element signature="e#6480#6500#0" expanded="true" />
+            <element signature="e#5227#5257#0" expanded="true" />
+            <element signature="e#7916#7917#0" expanded="true" />
+            <element signature="e#7949#7950#0" expanded="true" />
+            <element signature="e#15949#15997#0" expanded="true" />
+            <element signature="e#16078#16132#0" expanded="true" />
+            <element signature="e#28654#28679#0" expanded="true" />
+            <element signature="e#28744#28780#0" expanded="true" />
+            <element signature="e#28847#28875#0" expanded="true" />
+            <element signature="e#28933#28972#0" expanded="true" />
+            <element signature="e#29040#29064#0" expanded="true" />
+            <element signature="e#29129#29164#0" expanded="true" />
+            <element signature="e#29232#29257#0" expanded="true" />
+            <element signature="e#29314#29350#0" expanded="true" />
+            <element signature="e#29418#29443#0" expanded="true" />
+            <element signature="e#29500#29536#0" expanded="true" />
+            <element signature="e#29604#29630#0" expanded="true" />
+            <element signature="e#29690#29727#0" expanded="true" />
+            <element signature="e#29794#29827#0" expanded="true" />
+            <element signature="e#29887#29931#0" expanded="true" />
+            <element signature="e#29997#30021#0" expanded="true" />
+            <element signature="e#30076#30111#0" expanded="true" />
+            <element signature="e#30178#30204#0" expanded="true" />
+            <element signature="e#30269#30306#0" expanded="true" />
+            <element signature="e#30373#30396#0" expanded="true" />
+            <element signature="e#30440#30474#0" expanded="true" />
+            <element signature="e#30541#30563#0" expanded="true" />
+            <element signature="e#30607#30640#0" expanded="true" />
+            <element signature="e#30707#30729#0" expanded="true" />
+            <element signature="e#30771#30804#0" expanded="true" />
+            <element signature="e#39216#39241#0" expanded="true" />
+            <element signature="e#39513#39537#0" expanded="true" />
+            <element signature="e#42050#42076#0" expanded="true" />
+            <element signature="e#42311#42334#0" expanded="true" />
+            <element signature="e#42623#42650#0" expanded="true" />
+            <element signature="e#43448#43471#0" expanded="true" />
+            <element signature="e#43696#43719#0" expanded="true" />
+            <element signature="e#44004#44038#0" expanded="true" />
+            <element signature="e#46508#46527#0" expanded="true" />
+            <element signature="e#49113#49132#0" expanded="true" />
+            <element signature="e#51025#51077#0" expanded="true" />
+            <element signature="e#51079#51127#0" expanded="true" />
+            <element signature="e#51424#51476#0" expanded="true" />
+            <element signature="e#53525#53561#0" expanded="true" />
+            <element signature="e#55058#55080#0" expanded="true" />
+            <element signature="e#55250#55286#0" expanded="true" />
+            <element signature="e#55403#55427#0" expanded="true" />
+            <element signature="e#55764#55797#0" expanded="true" />
+            <element signature="e#55965#55991#0" expanded="true" />
+            <element signature="e#56275#56313#0" expanded="true" />
+            <element signature="e#56469#56494#0" expanded="true" />
+            <element signature="e#56830#56866#0" expanded="true" />
+            <element signature="e#57041#57064#0" expanded="true" />
+            <element signature="e#57316#57350#0" expanded="true" />
+            <element signature="e#57500#57525#0" expanded="true" />
+            <element signature="e#57809#57845#0" expanded="true" />
+            <element signature="e#58009#58035#0" expanded="true" />
+            <element signature="e#58299#58334#0" expanded="true" />
+            <element signature="e#58491#58524#0" expanded="true" />
+            <element signature="e#58790#58825#0" expanded="true" />
+            <element signature="e#58982#59006#0" expanded="true" />
+            <element signature="e#59248#59281#0" expanded="true" />
+            <element signature="e#59433#59461#0" expanded="true" />
+            <element signature="e#59765#59798#0" expanded="true" />
+            <element signature="e#59952#59974#0" expanded="true" />
+            <element signature="e#60731#60756#0" expanded="true" />
+            <element signature="e#60945#60981#0" expanded="true" />
+            <element signature="e#61645#61669#0" expanded="true" />
+            <element signature="e#61782#61806#0" expanded="true" />
+            <element signature="e#63815#63867#0" expanded="true" />
+            <element signature="e#63869#63917#0" expanded="true" />
+            <element signature="e#63936#63990#0" expanded="true" />
+            <element signature="e#64894#64940#0" expanded="true" />
+            <element signature="e#64942#64992#0" expanded="true" />
+            <element signature="e#65326#65372#0" expanded="true" />
+            <element signature="e#65374#65424#0" expanded="true" />
+            <element signature="e#66333#66367#0" expanded="true" />
+            <element signature="e#68367#68431#0" expanded="true" />
+            <element signature="e#68461#68516#0" expanded="true" />
           </folding>
         </state>
       </provider>

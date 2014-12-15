@@ -309,19 +309,6 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
         return;
       }
       //
-      // Datenverzeichnis
-      //
-      // if( key.equals( DATA_DIR_KEY ) )
-      // {
-      // MainActivity.databaseDir = new File( tP.getText() );
-      // if( !MainActivity.databaseDir.exists() )
-      // {
-      // Log.i( TAG, "onCreate: create database root dir..." );
-      // if( !MainActivity.databaseDir.mkdirs() ) MainActivity.databaseDir = null;
-      // }
-      // tP.setSummary( String.format( res.getString( R.string.conf_prog_datadir_summary ), tP.getText() ) );
-      // }
-      //
       // Hauptmailadresse
       //
       if( key.equals( "keyProgMailMain" ) )

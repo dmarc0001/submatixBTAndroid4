@@ -1,10 +1,3 @@
-//task(bildVersion)  {
-//    description 'task increments build counter'
-//    println("######## VERSION ################")
-//    println("start ANT ...")
-//    ant.echo( "ANT TASK" )
-//    ant.importBuild "..\\utils\\versionsScript.xml"
-//}
 apply plugin: 'com.android.application'
 android {
     compileSdkVersion 21

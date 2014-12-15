@@ -73,6 +73,14 @@
             android:switchTextOff="@string/conf_prog_others_off_disable_bt"
             android:switchTextOn="@string/conf_prog_others_on_disable_bt"
             android:title="@string/conf_prog_others_bt_disable_bt_header" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="keyProgOthersOnlineHelpEnabled"
+            android:summaryOff="@string/conf_prog_others_off_online_help"
+            android:summaryOn="@string/conf_prog_others_on_online_help"
+            android:switchTextOff="@string/conf_prog_others_off_online_help_key"
+            android:switchTextOn="@string/conf_prog_others_on_online_help_key"
+            android:title="@string/conf_prog_others_online_help_header" />
     </de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory>
     
 </PreferenceScreen>

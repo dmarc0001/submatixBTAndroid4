@@ -307,9 +307,9 @@
     <!-- ### Kategorie Anderes ### -->
     <string name="conf_prog_others_header">OTHERS</string>
     <!-- BT disable on exit?  -->
-    <string name="conf_prog_others_bt_disable_bt_header">"Bluethooth"</string>
+    <string name="conf_prog_others_bt_disable_bt_header">Bluethooth</string>
     <string name="conf_prog_others_on_disable_bt">"active"</string>
-    <string name="conf_prog_others_off_disable_bt">"let"</string>
+    <string name="conf_prog_others_off_disable_bt">let</string>
     <string name="conf_prog_others_on_disable_bt_summary">"disable BT on exit"</string>
     <string name="conf_prog_others_off_disable_bt_summary">"let BT active on exit"</string>
     <!-- Programmtheme -->
@@ -387,5 +387,12 @@
     <!-- sonstig  -->
     <string name="no_device">- no device -</string>
     <string name="array_with_pic_adapter_dummy">PROGRAMITEM</string>
-    
+    <string name="progitem_help">Help!(online)</string>
+    <string name="conf_prog_others_off_online_help">Disable online help</string>
+    <string name="conf_prog_others_on_online_help">Enable online help</string>
+    <string name="conf_prog_others_off_online_help_key">disable</string>
+    <string name="conf_prog_others_on_online_help_key">Enable</string>
+    <string name="conf_prog_others_enable_online_help_header">Online help enable?</string>
+    <string name="conf_prog_others_online_help_header">Online help enable?</string>
+
 </resources>
