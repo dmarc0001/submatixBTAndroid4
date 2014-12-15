@@ -20,9 +20,9 @@
 //@formatter:on
 /**
  * Klasse beinhaltet die Buildnummer und das Erstellungsdatum
- * 
+ *
  * BuildVersion.java de.dmarcini.netutils.dsl cmdLineSequenzialDslChecker
- * 
+ *
  */
 package de.dmarcini.submatix.android4.full.utils;
 
@@ -33,78 +33,74 @@ import org.joda.time.DateTime;
 import de.dmarcini.submatix.android4.full.gui.MainActivity;
 
 /**
- * 
  * Klasse, die die Build-Version und das Erstellungsdatum darstellt (im Buildprozess per Script aktualisiert)
- * 
+ * <p/>
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
- * 
+ *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- * 
+ *         <p/>
  *         Stand: 10.11.2013
  */
 public class BuildVersion
 {
-  private static final long buildNumber = 3843L;
-  private static final long buildDate = 1418648229565L;
+  private static final long buildNumber = 3847L;
   /**
    * Kennzeichnung für eine Version
    */
-  private static final String buildNumberString = String.format( Locale.ENGLISH, "%d", buildNumber );
+  private static final String buildNumberString = String.format(Locale.ENGLISH, "%d", buildNumber);
+  private static final long buildDate = 1418653199251L;
 
   /**
    * Gib die Buildnummer zurück
-   * 
+   *
    * @return long
    */
   public static long getBuild()
   {
-    return( buildNumber );
+    return (buildNumber);
   }
 
   /**
-   * 
    * Gib den Build als String zurück
-   * 
+   * <p/>
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
-   * 
+   * <p/>
    * Stand: 03.12.2013
-   * 
+   *
    * @return Buildstring
    */
   public static String getBuildAsString()
   {
-    return( buildNumberString );
+    return (buildNumberString);
   }
 
   /**
-   * 
    * Gib die konfigurierte Zeitdarstellung zurück
-   * 
+   * <p/>
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
-   * 
-   * 
+   * <p/>
+   * <p/>
    * Stand: 22.08.2013
-   * 
+   *
    * @return Zeitstring nach den Programmeinstellungen
    */
   public static String getdefaukltDateString()
   {
-    return( new DateTime( buildDate ).toString( MainActivity.localTimeFormatter ) );
+    return (new DateTime(buildDate).toString(MainActivity.localTimeFormatter));
   }
 
   /**
-   * 
    * Version aus den Projektdefinitionen zurückgeben
-   * 
+   * <p/>
    * Project: SubmatixBTForPC Package: de.dmarcini.submatix.pclogger.utils
-   * 
-   * 
+   * <p/>
+   * <p/>
    * Stand: 26.02.2014
-   * 
+   *
    * @return Versionsstring
    */
   public static String getVersion()
   {
-    return( ProjectConst.MANUFACTVERS );
+    return (ProjectConst.MANUFACTVERS);
   }
 }
