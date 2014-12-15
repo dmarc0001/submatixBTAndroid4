@@ -27,68 +27,80 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
 
 /**
- * 
  * Ein Fragment zur Anzeige, daß die Funktion noch in Arbeit ist
- * 
+ * <p/>
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
- * 
+ *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- * 
+ *         <p/>
  *         Stand: 10.11.2013
  */
 public class WorkInProgressFragment extends Fragment implements IBtServiceListener
 {
-  @SuppressWarnings( "javadoc" )
-  public static final String TAG             = WorkInProgressFragment.class.getSimpleName();
-  private Activity           runningActivity = null;
+  @SuppressWarnings("javadoc")
+  public static final String TAG = WorkInProgressFragment.class.getSimpleName();
+  private Activity runningActivity = null;
 
   @Override
-  public void onActivityCreated( Bundle bundle )
+  public void onActivityCreated(Bundle bundle)
   {
-    super.onActivityCreated( bundle );
+    super.onActivityCreated(bundle);
     runningActivity = getActivity();
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onActivityCreated: ACTIVITY ATTACH");
+    }
   }
 
   @Override
-  public void onAttach( Activity activity )
+  public void onAttach(Activity activity)
   {
-    super.onAttach( activity );
+    super.onAttach(activity);
     runningActivity = activity;
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onAttach: ATTACH");
+    }
   }
 
   /**
    * Nach dem Erzeugen des Objektes noch Einstellungen....
    */
   @Override
-  public void onCreate( Bundle savedInstanceState )
+  public void onCreate(Bundle savedInstanceState)
   {
-    super.onCreate( savedInstanceState );
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
+    super.onCreate(savedInstanceState);
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onCreate...");
+    }
   }
 
   /**
    * Wenn das View erzeugt wird (nach onCreate), noch ein paar Sachen erledigen
    */
   @Override
-  public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
   {
     View rootView;
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView..." );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onCreateView...");
+    }
     //
     // wenn kein Container vorhanden ist, dann gibts auch keinen View
     //
     if( container == null )
     {
-      Log.e( TAG, "onCreateView: container is NULL ..." );
-      return( null );
+      Log.e(TAG, "onCreateView: container is NULL ...");
+      return (null);
     }
     //
     // wenn die laufende Activity eine AreaDetailActivity ist, dann gibts das View schon
@@ -102,12 +114,15 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
     // Verbindungsseite via twoPane ausgewählt
     //
     //
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "makeConnectionView..." );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "makeConnectionView...");
+    }
     //
     // View aus Resource laden
     //
-    rootView = inflater.inflate( R.layout.fragment_in_progress, container, false );
-    return( rootView );
+    rootView = inflater.inflate(R.layout.fragment_in_progress, container, false);
+    return (rootView);
   }
 
   @Override
@@ -120,12 +135,18 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
   public void onPause()
   {
     super.onPause();
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause..." );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onPause...");
+    }
     //
     // die abgeleiteten Objekte führen das auch aus
     //
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
-    ( ( MainActivity )runningActivity ).removeServiceListener( this );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onPause: clear service listener for preferences fragment...");
+    }
+    (( MainActivity ) runningActivity).removeServiceListener(this);
   }
 
   /**
@@ -135,40 +156,51 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
   public synchronized void onResume()
   {
     super.onResume();
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
-    ( ( MainActivity )runningActivity ).addServiceListener( this );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onResume...");
+    }
+    (( MainActivity ) runningActivity).addServiceListener(this);
     // wenn zu diesem Zeitpunkt das Array noch nicht gefüllt ist, dann mach das nun
   }
 
   @Override
-  public void handleMessages( int what, BtServiceMessage msg )
-  {}
+  public void handleMessages(int what, BtServiceMessage msg)
+  {
+  }
 
   @Override
-  public void msgConnecting( BtServiceMessage msg )
-  {}
+  public void msgConnecting(BtServiceMessage msg)
+  {
+  }
 
   @Override
-  public void msgConnected( BtServiceMessage msg )
-  {}
+  public void msgConnected(BtServiceMessage msg)
+  {
+  }
 
   @Override
-  public void msgDisconnected( BtServiceMessage msg )
-  {}
+  public void msgDisconnected(BtServiceMessage msg)
+  {
+  }
 
   @Override
-  public void msgRecivedTick( BtServiceMessage msg )
-  {}
+  public void msgRecivedTick(BtServiceMessage msg)
+  {
+  }
 
   @Override
-  public void msgRecivedAlive( BtServiceMessage msg )
-  {}
+  public void msgRecivedAlive(BtServiceMessage msg)
+  {
+  }
 
   @Override
-  public void msgConnectError( BtServiceMessage msg )
-  {}
+  public void msgConnectError(BtServiceMessage msg)
+  {
+  }
 
   @Override
-  public void msgReciveWriteTmeout( BtServiceMessage msg )
-  {}
+  public void msgReciveWriteTmeout(BtServiceMessage msg)
+  {
+  }
 }

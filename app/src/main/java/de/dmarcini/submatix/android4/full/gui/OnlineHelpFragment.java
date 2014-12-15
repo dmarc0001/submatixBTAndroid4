@@ -27,32 +27,31 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
-import de.dmarcini.submatix.android4.full.utils.BuildVersion;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 
 /**
- * Eine "Über das Programm" Seite
+ * Eine Anzeige für Online View
  * <p/>
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
  *
- * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ * @author Dirk Marciniak (dirk_marciniak@online.de)
  *         <p/>
- *         Stand: 10.11.2013
+ *         Stand: 15.12.2014
  */
-public class ProgramAboutFragment extends Fragment
+public class OnlineHelpFragment extends Fragment
 {
-  @SuppressWarnings("javadoc")
-  public static final String TAG = ProgramAboutFragment.class.getSimpleName();
+  @SuppressWarnings( "javadoc" )
+  public static final String TAG = OnlineHelpFragment.class.getSimpleName();
   private MainActivity runningActivity = null;
-  private TextView aboutVersionTextView = null;
-  private TextView aboutProgrammerTextView = null;
-  private TextView aboutBuildTextView = null;
-  private TextView aboutBuildDateTextView = null;
+  private WebView OnlineHelpWebView = null;
   private String fragmentTitle = "unknown";
+  private String onlineUrl = "file:///android_asset/www/index_de.html";
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState)
@@ -61,19 +60,17 @@ public class ProgramAboutFragment extends Fragment
     runningActivity = ( MainActivity ) getActivity();
     //
     if( ApplicationDEBUG.DEBUG )
-    {
-      Log.d(TAG, "onActivityCreated: ACTIVITY ATTACH");
-    }
+    { Log.d(TAG, "onActivityCreated: ACTIVITY ATTACH"); }
     try
     {
-      aboutVersionTextView = ( TextView ) runningActivity.findViewById(R.id.aboutVersionTextView);
-      aboutProgrammerTextView = ( TextView ) runningActivity.findViewById(R.id.aboutProgrammerTextView);
-      aboutBuildTextView = ( TextView ) runningActivity.findViewById(R.id.aboutBuildTextView);
-      aboutBuildDateTextView = ( TextView ) runningActivity.findViewById(R.id.aboutBuildDateTextView);
-      aboutVersionTextView.setText(String.format("%s: %s", runningActivity.getResources().getString(R.string.app_version_prefix), BuildVersion.getVersion()));
-      aboutProgrammerTextView.setText(runningActivity.getResources().getString(R.string.app_programmer_name));
-      aboutBuildTextView.setText(String.format("%s: %s", runningActivity.getResources().getString(R.string.app_build_prefix), BuildVersion.getBuildAsString()));
-      aboutBuildDateTextView.setText(String.format("%s: %s", runningActivity.getResources().getString(R.string.app_build_date_prefix), BuildVersion.getdefaukltDateString()));
+      OnlineHelpWebView = ( WebView ) runningActivity.findViewById(R.id.onlineHelpWebView);
+      // Enable Javascript
+      WebSettings webSettings = OnlineHelpWebView.getSettings();
+      webSettings.setJavaScriptEnabled(true);
+      OnlineHelpWebView.setWebViewClient(new WebViewClient());
+      //TODO: WebViewClient filtern, nur submatix-Domains....
+      OnlineHelpWebView.loadUrl(onlineUrl);
+      //OnlineHelpWebView.loadUrl("http://beta.html5test.com/");
     }
     catch( NullPointerException ex )
     {
@@ -103,15 +100,18 @@ public class ProgramAboutFragment extends Fragment
     }
   }
 
+  public void setUrl(String urlStr)
+  {
+    onlineUrl = urlStr;
+  }
+
   @Override
   public void onAttach(Activity activity)
   {
     super.onAttach(activity);
     runningActivity = ( MainActivity ) activity;
     if( ApplicationDEBUG.DEBUG )
-    {
-      Log.d(TAG, "onAttach: ATTACH");
-    }
+    { Log.d(TAG, "onAttach: ATTACH"); }
   }
 
   /**
@@ -122,9 +122,7 @@ public class ProgramAboutFragment extends Fragment
   {
     super.onCreate(savedInstanceState);
     if( ApplicationDEBUG.DEBUG )
-    {
-      Log.d(TAG, "onCreate...");
-    }
+    { Log.d(TAG, "onCreate..."); }
   }
 
   /**
@@ -135,9 +133,7 @@ public class ProgramAboutFragment extends Fragment
   {
     View rootView;
     if( ApplicationDEBUG.DEBUG )
-    {
-      Log.d(TAG, "onCreateView...");
-    }
+    { Log.d(TAG, "onCreateView..."); }
     //
     // wenn kein Container vorhanden ist, dann gibts auch keinen View
     //
@@ -149,7 +145,7 @@ public class ProgramAboutFragment extends Fragment
     //
     // View aus Resource laden
     //
-    rootView = inflater.inflate(R.layout.fragment_about, container, false);
+    rootView = inflater.inflate(R.layout.fragment_online_help, container, false);
     return rootView;
   }
 
@@ -160,4 +156,15 @@ public class ProgramAboutFragment extends Fragment
     fragmentTitle = savedInstanceState.getString(ProjectConst.ARG_ITEM_CONTENT);
     savedInstanceState.putString(ProjectConst.ARG_ITEM_CONTENT, fragmentTitle);
   }
+
+  //TODO: Backspace handhaben
+//  #    @Override
+//       public void onBackPressed() {
+//  if(mWebView.canGoBack()) {
+//    mWebView.goBack();
+//  } else {
+//    super.onBackPressed();
+//  }
+//}
+
 }

@@ -20,10 +20,6 @@
 //@formatter:on
 package de.dmarcini.submatix.android4.full.gui;
 
-import java.io.File;
-import java.util.Iterator;
-import java.util.Vector;
-
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
@@ -41,6 +37,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+
+import java.io.File;
+import java.util.Iterator;
+import java.util.Vector;
+
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
@@ -56,43 +57,41 @@ import de.dmarcini.submatix.android4.full.utils.SPX42LogManager;
 import de.dmarcini.submatix.android4.full.utils.SPX42ReadLogListArrayAdapter;
 
 /**
- * 
  * Ein Detsailfragment, welches die Verbindung mit dem SPX Managed
- * 
+ * <p/>
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
- * 
+ *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- * 
+ *         <p/>
  *         Stand: 01.02.2014
  */
 public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceListener, OnClickListener, OnItemClickListener
 {
-  @SuppressWarnings( "javadoc" )
-  public static final String TAG                     = SPX42LogGraphSelectFragment.class.getSimpleName();
+  @SuppressWarnings("javadoc")
+  public static final String TAG = SPX42LogGraphSelectFragment.class.getSimpleName();
   // private CommToast theToast = null;
-  private SPX42LogManager    logManager              = null;
-  private int                selectedDeviceId        = -1;
-  private String             selectedDeviceAlias     = null;
-  private MainActivity       runningActivity;
-  private Button             changeGraphDeviceButton = null;
-  private Button             graphLogsButton         = null;
-  private ListView           graphLogsListView       = null;
-  private int                dbId                    = -1;
-  private int                diveId                  = -1;
-  private String             fragmentTitle           = "unknown";
+  private SPX42LogManager logManager = null;
+  private int selectedDeviceId = -1;
+  private String selectedDeviceAlias = null;
+  private MainActivity runningActivity;
+  private Button changeGraphDeviceButton = null;
+  private Button graphLogsButton = null;
+  private ListView graphLogsListView = null;
+  private int dbId = -1;
+  private int diveId = -1;
+  private String fragmentTitle = "unknown";
 
   /**
-   * 
    * Fülle den ListAdapter mit den Einträgen für Tauchgänge aus der Datenbank
-   * 
+   * <p/>
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
-   * 
+   * <p/>
    * Stand: 04.01.2014
-   * 
+   *
    * @param diveId
    * @return
    */
-  private boolean fillListAdapter( int diveId )
+  private boolean fillListAdapter(int diveId)
   {
     Vector<ReadLogItemObj> diveList;
     SPX42ReadLogListArrayAdapter logListAdapter;
@@ -102,15 +101,18 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     //
     // Creiere einen Adapter
     //
-    logListAdapter = new SPX42ReadLogListArrayAdapter( runningActivity, R.layout.read_log_array_adapter_view, MainActivity.getAppStyle() );
-    logListAdapter.setShowSavedStatus( false );
-    graphLogsListView.setAdapter( logListAdapter );
-    graphLogsListView.setChoiceMode( AbsListView.CHOICE_MODE_SINGLE );
+    logListAdapter = new SPX42ReadLogListArrayAdapter(runningActivity, R.layout.read_log_array_adapter_view, MainActivity.getAppStyle());
+    logListAdapter.setShowSavedStatus(false);
+    graphLogsListView.setAdapter(logListAdapter);
+    graphLogsListView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
     //
     // lese eine Liste der Tauchgänge ein
     //
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "read divelist for dbId: <" + diveId + ">..." );
-    diveList = logManager.getDiveListForDevice( diveId, res, true );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "read divelist for dbId: <" + diveId + ">...");
+    }
+    diveList = logManager.getDiveListForDevice(diveId, res, true);
     if( diveList != null && diveList.size() > 0 )
     {
       Iterator<ReadLogItemObj> it = diveList.iterator();
@@ -121,270 +123,306 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
       {
         ReadLogItemObj rlo = it.next();
         // Eintrag einbauen
-        logListAdapter.add( rlo );
+        logListAdapter.add(rlo);
       }
     }
-    return( true );
+    return (true);
   }
 
   @Override
-  public void handleMessages( int what, BtServiceMessage smsg )
+  public void handleMessages(int what, BtServiceMessage smsg)
   {
     // was war denn los? Welche Nachricht kam rein?
-    switch ( what )
+    switch( what )
     {
-    //
-    // ################################################################
-    // Service TICK empfangen
-    // ################################################################
+      //
+      // ################################################################
+      // Service TICK empfangen
+      // ################################################################
       case ProjectConst.MESSAGE_TICK:
-        msgRecivedTick( smsg );
+        msgRecivedTick(smsg);
         break;
       // ################################################################
       // JA, Positive Antwort
       // ################################################################
       case ProjectConst.MESSAGE_DIALOG_POSITIVE:
-        onDialogPositive( ( DialogFragment )smsg.getContainer() );
+        onDialogPositive(( DialogFragment ) smsg.getContainer());
         break;
       // ################################################################
       // NEIN, negative antwort
       // ################################################################
       case ProjectConst.MESSAGE_DIALOG_NEGATIVE:
-        onDialogNegative( ( DialogFragment )smsg.getContainer() );
+        onDialogNegative(( DialogFragment ) smsg.getContainer());
         break;
       // ################################################################
       // Computer wird gerade verbunden
       // ################################################################
       case ProjectConst.MESSAGE_CONNECTING:
-        msgConnecting( smsg );
+        msgConnecting(smsg);
         break;
       // ################################################################
       // Computer wurde getrennt
       // ################################################################
       case ProjectConst.MESSAGE_CONNECTED:
-        msgConnected( smsg );
+        msgConnected(smsg);
         break;
       // ################################################################
       // Computer wurde getrennt
       // ################################################################
       case ProjectConst.MESSAGE_DISCONNECTED:
-        msgDisconnected( smsg );
+        msgDisconnected(smsg);
         break;
       // ################################################################
       // Computer wurde getrennt
       // ################################################################
       case ProjectConst.MESSAGE_CONNECTERROR:
-        msgConnectError( smsg );
+        msgConnectError(smsg);
         break;
       // ################################################################
       // Sonst....
       // ################################################################
       default:
-        if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "handleMessages: unhadled message message with id <" + smsg.getId() + "> recived!" );
+        if( ApplicationDEBUG.DEBUG )
+        {
+          Log.i(TAG, "handleMessages: unhadled message message with id <" + smsg.getId() + "> recived!");
+        }
     }
   }
 
   /**
-   * 
    * Die Anzeige der Seite
-   * 
+   * <p/>
    * Project: SubmatixBluethoothLoggerAndroid4Tablet Package: de.dmarcini.submatix.android4.gui
-   * 
-   * 
+   * <p/>
+   * <p/>
    * Stand: 04.11.2012
-   * 
+   *
    * @param inflater
    * @param container
    * @return
    */
-  private View makeGraphSelectionView( LayoutInflater inflater, ViewGroup container )
+  private View makeGraphSelectionView(LayoutInflater inflater, ViewGroup container)
   {
     View rootView;
     //
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "makeGraphSelectionView..." );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "makeGraphSelectionView...");
+    }
     //
     // View aus Resource laden
     //
-    rootView = inflater.inflate( R.layout.fragment_log_protocol, container, false );
+    rootView = inflater.inflate(R.layout.fragment_log_protocol, container, false);
     //
     // Objekte lokalisieren
     //
-    changeGraphDeviceButton = ( Button )rootView.findViewById( R.id.changeGraphDeviceButton );
-    graphLogsButton = ( Button )rootView.findViewById( R.id.graphLogsButton );
-    graphLogsListView = ( ListView )rootView.findViewById( R.id.graphLogsListView );
+    changeGraphDeviceButton = ( Button ) rootView.findViewById(R.id.changeGraphDeviceButton);
+    graphLogsButton = ( Button ) rootView.findViewById(R.id.graphLogsButton);
+    graphLogsListView = ( ListView ) rootView.findViewById(R.id.graphLogsListView);
     if( changeGraphDeviceButton == null || graphLogsButton == null || graphLogsListView == null )
     {
-      throw new NullPointerException( "makeConnectionView: can't init GUI (not found an Element)" );
+      throw new NullPointerException("makeConnectionView: can't init GUI (not found an Element)");
     }
-    return( rootView );
+    return (rootView);
   }
 
   @Override
-  public void msgConnected( BtServiceMessage msg )
+  public void msgConnected(BtServiceMessage msg)
   {
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgConnected..." );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "msgConnected...");
+    }
   }
 
   @Override
-  public void msgConnectError( BtServiceMessage msg )
-  {}
+  public void msgConnectError(BtServiceMessage msg)
+  {
+  }
 
   @Override
-  public void msgConnecting( BtServiceMessage msg )
-  {}
+  public void msgConnecting(BtServiceMessage msg)
+  {
+  }
 
   @Override
-  public void msgDisconnected( BtServiceMessage msg )
-  {}
+  public void msgDisconnected(BtServiceMessage msg)
+  {
+  }
 
   @Override
-  public void msgRecivedAlive( BtServiceMessage msg )
-  {}
+  public void msgRecivedAlive(BtServiceMessage msg)
+  {
+  }
 
   @Override
-  public void msgRecivedTick( BtServiceMessage msg )
+  public void msgRecivedTick(BtServiceMessage msg)
   {
     // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
   }
 
   @Override
-  public void msgReciveWriteTmeout( BtServiceMessage msg )
+  public void msgReciveWriteTmeout(BtServiceMessage msg)
   {
     //
   }
 
   @Override
-  public void onActivityCreated( Bundle savedInstanceState )
+  public void onActivityCreated(Bundle savedInstanceState)
   {
-    super.onActivityCreated( savedInstanceState );
+    super.onActivityCreated(savedInstanceState);
     dbId = -1;
     diveId = -1;
-    runningActivity = ( MainActivity )getActivity();
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
+    runningActivity = ( MainActivity ) getActivity();
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onActivityCreated: ACTIVITY ATTACH");
+    }
     try
     {
       //
       // auch die Objekte lokalisieren
       //
-      changeGraphDeviceButton = ( Button )runningActivity.findViewById( R.id.changeGraphDeviceButton );
-      graphLogsButton = ( Button )runningActivity.findViewById( R.id.graphLogsButton );
-      graphLogsListView = ( ListView )runningActivity.findViewById( R.id.graphLogsListView );
+      changeGraphDeviceButton = ( Button ) runningActivity.findViewById(R.id.changeGraphDeviceButton);
+      graphLogsButton = ( Button ) runningActivity.findViewById(R.id.graphLogsButton);
+      graphLogsListView = ( ListView ) runningActivity.findViewById(R.id.graphLogsListView);
     }
     catch( NullPointerException ex )
     {
-      Log.e( TAG, "onActivityCreated: gui objects not allocated!" );
+      Log.e(TAG, "onActivityCreated: gui objects not allocated!");
     }
     //
     // Aufruf mittels create
     //
     Bundle arguments = getArguments();
-    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    if( arguments != null && arguments.containsKey(ProjectConst.ARG_ITEM_CONTENT) )
     {
-      fragmentTitle = arguments.getString( ProjectConst.ARG_ITEM_CONTENT );
-      runningActivity.onSectionAttached( fragmentTitle );
-      if( arguments.containsKey( ProjectConst.ARG_SELECTED_DEVICE ) )
+      fragmentTitle = arguments.getString(ProjectConst.ARG_ITEM_CONTENT);
+      runningActivity.onSectionAttached(fragmentTitle);
+      if( arguments.containsKey(ProjectConst.ARG_SELECTED_DEVICE) )
       {
         // Gerät vorselektieren
-        dbId = arguments.getInt( ProjectConst.ARG_SELECTED_DEVICE );
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: marked device <" + arguments.getInt( ProjectConst.ARG_SELECTED_DEVICE ) + ">" );
-        fillListAdapter( dbId );
-        if( arguments.containsKey( ProjectConst.ARG_SELECTED_DIVE ) )
+        dbId = arguments.getInt(ProjectConst.ARG_SELECTED_DEVICE);
+        if( ApplicationDEBUG.DEBUG )
+        {
+          Log.d(TAG, "onActivityCreated: marked device <" + arguments.getInt(ProjectConst.ARG_SELECTED_DEVICE) + ">");
+        }
+        fillListAdapter(dbId);
+        if( arguments.containsKey(ProjectConst.ARG_SELECTED_DIVE) )
         {
           // Dive vorselektieren
-          diveId = arguments.getInt( ProjectConst.ARG_SELECTED_DIVE );
-          setDiveAdapterForDiveId( diveId );
+          diveId = arguments.getInt(ProjectConst.ARG_SELECTED_DIVE);
+          setDiveAdapterForDiveId(diveId);
         }
       }
     }
     else
     {
-      Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+      Log.w(TAG, "onActivityCreated: TITLE NOT SET!");
     }
     //
     // im Falle eines restaurierten Frames
     //
-    if( savedInstanceState != null && savedInstanceState.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    if( savedInstanceState != null && savedInstanceState.containsKey(ProjectConst.ARG_ITEM_CONTENT) )
     {
-      fragmentTitle = savedInstanceState.getString( ProjectConst.ARG_ITEM_CONTENT );
-      runningActivity.onSectionAttached( fragmentTitle );
+      fragmentTitle = savedInstanceState.getString(ProjectConst.ARG_ITEM_CONTENT);
+      runningActivity.onSectionAttached(fragmentTitle);
     }
     //
     // Fragment vom Stack geholt?
     //
-    if( savedInstanceState != null && savedInstanceState.containsKey( ProjectConst.ARG_SELECTED_DEVICE ) )
+    if( savedInstanceState != null && savedInstanceState.containsKey(ProjectConst.ARG_SELECTED_DEVICE) )
     {
-      dbId = savedInstanceState.getInt( ProjectConst.ARG_SELECTED_DEVICE );
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: marked device <" + savedInstanceState.getInt( ProjectConst.ARG_SELECTED_DEVICE ) + ">" );
-      fillListAdapter( dbId );
-      if( savedInstanceState.containsKey( ProjectConst.ARG_SELECTED_DIVE ) )
+      dbId = savedInstanceState.getInt(ProjectConst.ARG_SELECTED_DEVICE);
+      if( ApplicationDEBUG.DEBUG )
+      {
+        Log.d(TAG, "onActivityCreated: marked device <" + savedInstanceState.getInt(ProjectConst.ARG_SELECTED_DEVICE) + ">");
+      }
+      fillListAdapter(dbId);
+      if( savedInstanceState.containsKey(ProjectConst.ARG_SELECTED_DIVE) )
       {
         // Dive vorselektieren
-        diveId = savedInstanceState.getInt( ProjectConst.ARG_SELECTED_DIVE );
-        setDiveAdapterForDiveId( savedInstanceState.getInt( ProjectConst.ARG_SELECTED_DIVE ) );
+        diveId = savedInstanceState.getInt(ProjectConst.ARG_SELECTED_DIVE);
+        setDiveAdapterForDiveId(savedInstanceState.getInt(ProjectConst.ARG_SELECTED_DIVE));
       }
     }
   }
 
   @Override
-  public void onAttach( Activity activity )
+  public void onAttach(Activity activity)
   {
-    super.onAttach( activity );
-    runningActivity = ( MainActivity )activity;
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
+    super.onAttach(activity);
+    runningActivity = ( MainActivity ) activity;
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onAttach: ATTACH");
+    }
     //
     // die Datenbank öffnen
     //
     try
     {
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create SQLite helper..." );
-      DataSQLHelper sqlHelper = new DataSQLHelper( getActivity().getApplicationContext(), MainActivity.databaseDir.getAbsolutePath() + File.separator + ProjectConst.DATABASE_NAME );
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create logManager helper..." );
-      logManager = new SPX42LogManager( sqlHelper.getWritableDatabase() );
+      if( ApplicationDEBUG.DEBUG )
+      {
+        Log.d(TAG, "onAttach: create SQLite helper...");
+      }
+      DataSQLHelper sqlHelper = new DataSQLHelper(getActivity().getApplicationContext(), MainActivity.databaseDir.getAbsolutePath() + File.separator + ProjectConst.DATABASE_NAME);
+      if( ApplicationDEBUG.DEBUG )
+      {
+        Log.d(TAG, "onAttach: create logManager helper...");
+      }
+      logManager = new SPX42LogManager(sqlHelper.getWritableDatabase());
     }
     catch( NoDatabaseException ex )
     {
-      Log.e( TAG, "NoDatabaseException: <" + ex.getLocalizedMessage() + ">" );
-      UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_sqlite_error_header ), runningActivity.getResources()
-              .getString( R.string.dialog_sqlite_nodatabase_error ) );
-      uad.show( getFragmentManager(), "abortProgram" );
+      Log.e(TAG, "NoDatabaseException: <" + ex.getLocalizedMessage() + ">");
+      UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_sqlite_error_header), runningActivity.getResources()
+          .getString(R.string.dialog_sqlite_nodatabase_error));
+      uad.show(getFragmentManager(), "abortProgram");
     }
   }
 
   @Override
-  public void onClick( View v )
+  public void onClick(View v)
   {
     SPX42ReadLogListArrayAdapter rAdapter = null;
     Button button = null;
     //
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "Click" );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "Click");
+    }
     //
     // Wurde ein Button geklickt?
     //
     if( v instanceof Button )
     {
-      button = ( Button )v;
+      button = ( Button ) v;
       //
       // sollen Daten visualisiert werden?
       //
       if( button == graphLogsButton )
       {
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onClick: VIEW selected Item" );
+        if( ApplicationDEBUG.DEBUG )
+        {
+          Log.d(TAG, "onClick: VIEW selected Item");
+        }
         //
         // Zeige markiertes Log an
         //
-        rAdapter = ( SPX42ReadLogListArrayAdapter )graphLogsListView.getAdapter();
+        rAdapter = ( SPX42ReadLogListArrayAdapter ) graphLogsListView.getAdapter();
         if( rAdapter != null && !rAdapter.getMarkedItems().isEmpty() )
         {
           int idx = rAdapter.getMarkedItems().firstElement();
-          ReadLogItemObj rlo = rAdapter.getItem( idx );
-          viewSelectedLogItem( rlo.dbId );
+          ReadLogItemObj rlo = rAdapter.getItem(idx);
+          viewSelectedLogItem(rlo.dbId);
         }
         else
         {
           // Nee, da ist nix ausgewählt,
-          Log.i( TAG, "onClick: not device selected!" );
-          UserAlertDialogFragment wDial = new UserAlertDialogFragment( getString( R.string.dialog_not_selected_items_header ), getString( R.string.dialog_not_selected_items_graph ) );
-          wDial.show( getFragmentManager(), "notingSelectedWarning" );
+          Log.i(TAG, "onClick: not device selected!");
+          UserAlertDialogFragment wDial = new UserAlertDialogFragment(getString(R.string.dialog_not_selected_items_header), getString(R.string.dialog_not_selected_items_graph));
+          wDial.show(getFragmentManager(), "notingSelectedWarning");
           return;
         }
       }
@@ -394,10 +432,13 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
       else if( button == changeGraphDeviceButton )
       {
         // Hier wird dann ein Dialog gebraucht!
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onClick: call changeGraphDeviceButton!" );
+        if( ApplicationDEBUG.DEBUG )
+        {
+          Log.d(TAG, "onClick: call changeGraphDeviceButton!");
+        }
         SelectDeviceDialogFragment dialog = new SelectDeviceDialogFragment();
-        dialog.setDeviceList( logManager.getDeviceNameIdList() );
-        dialog.show( getFragmentManager(), "SelectDeviceDialogFragment" );
+        dialog.setDeviceList(logManager.getDeviceNameIdList());
+        dialog.show(getFragmentManager(), "SelectDeviceDialogFragment");
       }
     }
   }
@@ -406,31 +447,37 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
    * Nach dem Erzeugen des Objektes noch Einstellungen....
    */
   @Override
-  public void onCreate( Bundle savedInstanceState )
+  public void onCreate(Bundle savedInstanceState)
   {
-    super.onCreate( savedInstanceState );
+    super.onCreate(savedInstanceState);
     dbId = -1;
     diveId = -1;
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onCreate...");
+    }
   }
 
   /**
    * Wenn das View erzeugt wird (nach onCreate), noch ein paar Sachen erledigen
    */
   @Override
-  public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
   {
     View rootView;
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView..." );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onCreateView...");
+    }
     //
     // wenn kein Container vorhanden ist, dann gibts auch keinen View
     //
     if( container == null )
     {
-      Log.e( TAG, "onCreateView: container is NULL ..." );
-      return( null );
+      Log.e(TAG, "onCreateView: container is NULL ...");
+      return (null);
     }
-    rootView = makeGraphSelectionView( inflater, container );
+    rootView = makeGraphSelectionView(inflater, container);
     return rootView;
   }
 
@@ -438,49 +485,55 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   public void onDestroy()
   {
     super.onDestroy();
-    runningActivity.removeServiceListener( this );
+    runningActivity.removeServiceListener(this);
   }
 
   /**
-   * 
    * Wenn der Dialog Positiv abgeschlossen wurde (OK oder ähnlich)
-   * 
+   * <p/>
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
-   * 
+   * <p/>
    * Stand: 01.12.2013
-   * 
+   *
    * @param dialog
    */
-  public void onDialogNegative( DialogFragment dialog )
+  public void onDialogNegative(DialogFragment dialog)
   {
-    if( ApplicationDEBUG.DEBUG ) Log.v( TAG, "Negative dialog click!" );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.v(TAG, "Negative dialog click!");
+    }
     dialog.dismiss();
   }
 
   /**
-   * 
    * Wenn der Dialog negativ abgeschlossen wurde (Abbruchg o.ä.)
-   * 
+   * <p/>
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
-   * 
+   * <p/>
    * Stand: 01.12.2013
-   * 
+   *
    * @param dialog
    */
-  public void onDialogPositive( DialogFragment dialog )
+  public void onDialogPositive(DialogFragment dialog)
   {
     Bundle arguments;
     //
-    if( ApplicationDEBUG.DEBUG ) Log.v( TAG, "Positive dialog click!" );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.v(TAG, "Positive dialog click!");
+    }
     if( dialog instanceof SelectDeviceDialogFragment )
     {
       arguments = getArguments();
-      SelectDeviceDialogFragment deviceDialog = ( SelectDeviceDialogFragment )dialog;
+      SelectDeviceDialogFragment deviceDialog = ( SelectDeviceDialogFragment ) dialog;
       selectedDeviceId = deviceDialog.getSelectedDeviceId();
-      selectedDeviceAlias = logManager.getAliasForId( selectedDeviceId );
+      selectedDeviceAlias = logManager.getAliasForId(selectedDeviceId);
       if( ApplicationDEBUG.DEBUG )
-        Log.i( TAG, "onDialogNegative: selected Device Alias: <" + deviceDialog.getSelectedDeviceName() + "> Device-ID <" + deviceDialog.getSelectedDeviceId() + ">" );
-      getActivity().getActionBar().setTitle( String.format( getResources().getString( R.string.graphlog_header_device ), deviceDialog.getSelectedDeviceName() ) );
+      {
+        Log.i(TAG, "onDialogNegative: selected Device Alias: <" + deviceDialog.getSelectedDeviceName() + "> Device-ID <" + deviceDialog.getSelectedDeviceId() + ">");
+      }
+      getActivity().getActionBar().setTitle(String.format(getResources().getString(R.string.graphlog_header_device), deviceDialog.getSelectedDeviceName()));
       //
       // ist eigentlich ein Gerät ausgewählt?
       //
@@ -491,9 +544,9 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
         //
         if( arguments != null )
         {
-          arguments.putInt( ProjectConst.ARG_SELECTED_DEVICE, selectedDeviceId );
+          arguments.putInt(ProjectConst.ARG_SELECTED_DEVICE, selectedDeviceId);
         }
-        fillListAdapter( selectedDeviceId );
+        fillListAdapter(selectedDeviceId);
       }
       else
       {
@@ -502,13 +555,16 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
         //
         if( arguments != null )
         {
-          arguments.remove( ProjectConst.ARG_SELECTED_DEVICE );
+          arguments.remove(ProjectConst.ARG_SELECTED_DEVICE);
         }
         // Das wird nix, kein Gerät ausgewählt
-        if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "no device selected -> note to user" );
-        UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_no_device_selected_header ), runningActivity
-                .getResources().getString( R.string.dialog_no_device_selected ) );
-        uad.show( getFragmentManager(), "noSelectedDevice" );
+        if( ApplicationDEBUG.DEBUG )
+        {
+          Log.w(TAG, "no device selected -> note to user");
+        }
+        UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_no_device_selected_header), runningActivity
+            .getResources().getString(R.string.dialog_no_device_selected));
+        uad.show(getFragmentManager(), "noSelectedDevice");
         return;
       }
       //
@@ -521,13 +577,16 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
         //
         if( arguments != null )
         {
-          arguments.remove( ProjectConst.ARG_SELECTED_DEVICE );
+          arguments.remove(ProjectConst.ARG_SELECTED_DEVICE);
         }
         // Das wird auch nix, Keine Einträge in der Datenbank
-        if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "no logs foir device -> note to user" );
-        UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_not_log_entrys_header ), runningActivity
-                .getResources().getString( R.string.dialog_not_log_entrys ) );
-        uad.show( getFragmentManager(), "noLogsForDevice" );
+        if( ApplicationDEBUG.DEBUG )
+        {
+          Log.w(TAG, "no logs foir device -> note to user");
+        }
+        UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_not_log_entrys_header), runningActivity
+            .getResources().getString(R.string.dialog_not_log_entrys));
+        uad.show(getFragmentManager(), "noLogsForDevice");
         return;
       }
     }
@@ -536,38 +595,41 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     //
     else if( dialog instanceof AreYouSureToDeleteFragment )
     {
-      if( dialog.getTag().matches( "sureToDeleteDeviceData" ) )
+      if( dialog.getTag().matches("sureToDeleteDeviceData") )
       {
         //
         // ALLE Daten des Gerätes (einschliesslich ALIAS und Datendateien) löschen
         //
-        if( ApplicationDEBUG.DEBUG ) Log.w( TAG, "DELETE ALL Data for device: <" + selectedDeviceAlias + "..." );
-        logManager.deleteAllDataForDevice( selectedDeviceId );
+        if( ApplicationDEBUG.DEBUG )
+        {
+          Log.w(TAG, "DELETE ALL Data for device: <" + selectedDeviceAlias + "...");
+        }
+        logManager.deleteAllDataForDevice(selectedDeviceId);
         //
         // Alle Daten verschwinden lassen
         //
         selectedDeviceAlias = null;
         selectedDeviceId = -1;
-        graphLogsListView.setAdapter( null );
+        graphLogsListView.setAdapter(null);
       }
     }
     else
     {
-      Log.i( TAG, "onDialogNegative: UNKNOWN dialog type" );
+      Log.i(TAG, "onDialogNegative: UNKNOWN dialog type");
     }
   }
 
   @Override
-  public void onItemClick( AdapterView<?> parent, View clickedView, int position, long id )
+  public void onItemClick(AdapterView<?> parent, View clickedView, int position, long id)
   {
     ImageView ivMarked;
     SPX42ReadLogListArrayAdapter rlAdapter = null;
     //
     // Die Liste der Logs
     //
-    if( parent.equals( graphLogsListView ) )
+    if( parent.equals(graphLogsListView) )
     {
-      rlAdapter = ( SPX42ReadLogListArrayAdapter )graphLogsListView.getAdapter();
+      rlAdapter = ( SPX42ReadLogListArrayAdapter ) graphLogsListView.getAdapter();
       //
       // mache die Markierung auch im View (das wird ja sonst nicht automatisch aktualisiert)
       //
@@ -582,31 +644,37 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
           // Falls vorhanxen, löschen
           Iterator<Integer> it = markedItems.iterator();
           int idx = it.next();
-          rlAdapter.setMarked( idx, false );
+          rlAdapter.setMarked(idx, false);
           // View erfragen (Absturz NullPointerException)
-          ivMarked = ( ImageView )graphLogsListView.getChildAt( idx ).findViewById( R.id.readLogMarkedIconView );
+          ivMarked = ( ImageView ) graphLogsListView.getChildAt(idx).findViewById(R.id.readLogMarkedIconView);
           if( ivMarked != null )
           {
             // ist ein View vorhanden, geht es schon los
-            ivMarked.setImageResource( R.drawable.circle_empty_yellow );
+            ivMarked.setImageResource(R.drawable.circle_empty_yellow);
           }
         }
         catch( NullPointerException ex )
         {
-          Log.e( TAG, "onItemClick: Null pointer exception (" + ex.getLocalizedMessage() + ")" );
+          Log.e(TAG, "onItemClick: Null pointer exception (" + ex.getLocalizedMessage() + ")");
         }
       }
       //
       // setze die Markierung im Adapter
       //
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "set item <" + position + "> as marked" );
-      rlAdapter.setMarked( position, true );
-      ivMarked = ( ImageView )clickedView.findViewById( R.id.readLogMarkedIconView );
-      if( ivMarked != null ) ivMarked.setImageResource( R.drawable.circle_full_green );
+      if( ApplicationDEBUG.DEBUG )
+      {
+        Log.d(TAG, "set item <" + position + "> as marked");
+      }
+      rlAdapter.setMarked(position, true);
+      ivMarked = ( ImageView ) clickedView.findViewById(R.id.readLogMarkedIconView);
+      if( ivMarked != null )
+      {
+        ivMarked.setImageResource(R.drawable.circle_full_green);
+      }
       //
       // Tja, Einstellung merken
       //
-      ReadLogItemObj rlo = rlAdapter.getItem( position );
+      ReadLogItemObj rlo = rlAdapter.getItem(position);
       dbId = rlo.dbId;
     }
   }
@@ -615,10 +683,16 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   public void onPause()
   {
     super.onPause();
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause..." );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onPause...");
+    }
     // handler loeschen
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
-    runningActivity.removeServiceListener( this );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onPause: clear service listener for preferences fragment...");
+    }
+    runningActivity.removeServiceListener(this);
   }
 
   /**
@@ -628,22 +702,25 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   public synchronized void onResume()
   {
     super.onResume();
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onResume...");
+    }
     //
     // Objekte initialisieren
     //
-    changeGraphDeviceButton.setOnClickListener( this );
-    graphLogsButton = ( Button )runningActivity.findViewById( R.id.graphLogsButton );
-    graphLogsButton.setOnClickListener( this );
-    graphLogsListView = ( ListView )runningActivity.findViewById( R.id.graphLogsListView );
-    graphLogsListView.setOnItemClickListener( this );
+    changeGraphDeviceButton.setOnClickListener(this);
+    graphLogsButton = ( Button ) runningActivity.findViewById(R.id.graphLogsButton);
+    graphLogsButton.setOnClickListener(this);
+    graphLogsListView = ( ListView ) runningActivity.findViewById(R.id.graphLogsListView);
+    graphLogsListView.setOnItemClickListener(this);
     //
     //
     // Liste füllen
     //
     if( selectedDeviceId > 0 )
     {
-      fillListAdapter( selectedDeviceId );
+      fillListAdapter(selectedDeviceId);
     }
     else
     {
@@ -652,79 +729,80 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     //
     // Service Listener setzen
     //
-    runningActivity.addServiceListener( this );
+    runningActivity.addServiceListener(this);
   }
 
   @Override
-  public void onSaveInstanceState( Bundle savedInstanceState )
+  public void onSaveInstanceState(Bundle savedInstanceState)
   {
-    super.onSaveInstanceState( savedInstanceState );
-    fragmentTitle = savedInstanceState.getString( ProjectConst.ARG_ITEM_CONTENT );
-    savedInstanceState.putString( ProjectConst.ARG_ITEM_CONTENT, fragmentTitle );
-    savedInstanceState.putInt( ProjectConst.ARG_DBID, dbId );
-    savedInstanceState.putInt( ProjectConst.ARG_SELECTED_DIVE, diveId );
+    super.onSaveInstanceState(savedInstanceState);
+    fragmentTitle = savedInstanceState.getString(ProjectConst.ARG_ITEM_CONTENT);
+    savedInstanceState.putString(ProjectConst.ARG_ITEM_CONTENT, fragmentTitle);
+    savedInstanceState.putInt(ProjectConst.ARG_DBID, dbId);
+    savedInstanceState.putInt(ProjectConst.ARG_SELECTED_DIVE, diveId);
   }
 
   /**
-   * 
    * Suche und selektiere ggf. den vorgemerkten Dive
-   *
+   * <p/>
    * Project: SubmatixBTAndroid4 Package: de.dmarcini.submatix.android4.full.gui
-   * 
+   * <p/>
    * Stand: 25.11.2014
-   * 
+   *
    * @param diveId
    */
-  private void setDiveAdapterForDiveId( int diveId )
+  private void setDiveAdapterForDiveId(int diveId)
   {
     SPX42ReadLogListArrayAdapter rAdapter;
     ReadLogItemObj rlo;
     int idx;
     //
-    rAdapter = ( SPX42ReadLogListArrayAdapter )graphLogsListView.getAdapter();
+    rAdapter = ( SPX42ReadLogListArrayAdapter ) graphLogsListView.getAdapter();
     rAdapter.clearMarkedItems();
     // alle Einträge nach DBID durchsuchen
     for( idx = 0; idx < rAdapter.getCount(); idx++ )
     {
-      rlo = rAdapter.getItem( idx );
+      rlo = rAdapter.getItem(idx);
       if( rlo.dbId == diveId )
       {
-        rAdapter.setMarked( idx, true );
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "setDiveAdapterForDiveId: marked IDX <" + idx + ">" );
+        rAdapter.setMarked(idx, true);
+        if( ApplicationDEBUG.DEBUG )
+        {
+          Log.d(TAG, "setDiveAdapterForDiveId: marked IDX <" + idx + ">");
+        }
         break;
       }
     }
   }
 
   /**
-   * 
    * Zeige das selektierte View an!
-   * 
+   * <p/>
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
-   * 
+   * <p/>
    * Stand: 01.02.2014
-   * 
+   *
    * @param dbId
    */
-  private void viewSelectedLogItem( int dbId )
+  private void viewSelectedLogItem(int dbId)
   {
     //
     // Logs grafisch darstellen, dazu neues Frame aufrufen
     //
     Bundle arguments = new Bundle();
-    arguments.putString( ProjectConst.ARG_ITEM_CONTENT, getString( R.string.progitem_loggraph_detail ) );
-    arguments.putInt( ProjectConst.ARG_ITEM_ID, R.string.progitem_loggraph_detail );
-    arguments.putInt( ProjectConst.ARG_DBID, dbId );
-    Log.i( TAG, "viewSelectedLogItem: create SPX42LogGraphDetailFragment..." );
+    arguments.putString(ProjectConst.ARG_ITEM_CONTENT, getString(R.string.progitem_loggraph_detail));
+    arguments.putInt(ProjectConst.ARG_ITEM_ID, R.string.progitem_loggraph_detail);
+    arguments.putInt(ProjectConst.ARG_DBID, dbId);
+    Log.i(TAG, "viewSelectedLogItem: create SPX42LogGraphDetailFragment...");
     //
     // Logs detailiert darstellen
     //
     SPX42LogGraphDetailFragment lgdf = new SPX42LogGraphDetailFragment();
-    lgdf.setArguments( arguments );
+    lgdf.setArguments(arguments);
     FragmentTransaction fTrans = getFragmentManager().beginTransaction();
-    fTrans.replace( R.id.main_container, lgdf );
-    fTrans.setTransition( FragmentTransaction.TRANSIT_FRAGMENT_OPEN | FragmentTransaction.TRANSIT_FRAGMENT_FADE );
-    fTrans.addToBackStack( "SPX42LogGraphDetailFragment" );
+    fTrans.replace(R.id.main_container, lgdf);
+    fTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN | FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+    fTrans.addToBackStack("SPX42LogGraphDetailFragment");
     fTrans.commit();
   }
 }

@@ -20,9 +20,6 @@
 //@formatter:on
 package de.dmarcini.submatix.android4.full.gui;
 
-import java.io.File;
-import java.util.Vector;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -32,6 +29,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+
+import java.io.File;
+import java.util.Vector;
+
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
@@ -47,84 +48,85 @@ import de.dmarcini.submatix.android4.full.utils.SPX42LogGraphView;
 import de.dmarcini.submatix.android4.full.utils.SPX42LogManager;
 
 /**
- * 
  * Zeige Logs grafisch an!
- * 
+ * <p/>
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
- * 
+ *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- * 
+ *         <p/>
  *         Stand: 25.11.2014
  */
 public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceListener
 {
-  @SuppressWarnings( "javadoc" )
-  public static final String TAG               = SPX42LogGraphDetailFragment.class.getSimpleName();
-  protected ProgressDialog   progressDialog    = null;
-  private SPX42LogManager    logManager        = null;
-  private MainActivity       runningActivity   = null;
-  private int                dbId              = -1;
-  private SPX42LogGraphView  sPX42LogGraphView = null;
-  private String             fragmentTitle;
+  @SuppressWarnings("javadoc")
+  public static final String TAG = SPX42LogGraphDetailFragment.class.getSimpleName();
+  protected ProgressDialog progressDialog = null;
+  private SPX42LogManager logManager = null;
+  private MainActivity runningActivity = null;
+  private int dbId = -1;
+  private SPX42LogGraphView sPX42LogGraphView = null;
+  private String fragmentTitle;
 
   @Override
-  public void handleMessages( int what, BtServiceMessage smsg )
+  public void handleMessages(int what, BtServiceMessage smsg)
   {
     // was war denn los? Welche Nachricht kam rein?
-    switch ( what )
+    switch( what )
     {
-    //
-    // ################################################################
-    // Service TICK empfangen
-    // ################################################################
+      //
+      // ################################################################
+      // Service TICK empfangen
+      // ################################################################
       case ProjectConst.MESSAGE_TICK:
-        msgRecivedTick( smsg );
+        msgRecivedTick(smsg);
         break;
       // ################################################################
       // Computer wird gerade verbunden
       // ################################################################
       case ProjectConst.MESSAGE_CONNECTING:
-        msgConnecting( smsg );
+        msgConnecting(smsg);
         break;
       // ################################################################
       // Computer wurde getrennt
       // ################################################################
       case ProjectConst.MESSAGE_CONNECTED:
-        msgConnected( smsg );
+        msgConnected(smsg);
         break;
       // ################################################################
       // Computer wurde getrennt
       // ################################################################
       case ProjectConst.MESSAGE_DISCONNECTED:
-        msgDisconnected( smsg );
+        msgDisconnected(smsg);
         break;
       // ################################################################
       // Computer wurde getrennt
       // ################################################################
       case ProjectConst.MESSAGE_CONNECTERROR:
-        msgConnectError( smsg );
+        msgConnectError(smsg);
         break;
       // ################################################################
       // Sonst....
       // ################################################################
       default:
-        if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "handleMessages: unhandled message message with id <" + smsg.getId() + "> recived!" );
+        if( ApplicationDEBUG.DEBUG )
+        {
+          Log.i(TAG, "handleMessages: unhandled message message with id <" + smsg.getId() + "> recived!");
+        }
     }
   }
 
   /**
-   * 
    * Erzeuge nun die grafik für den Tauchgang mit dem objekt SPX42LogGraphView
-   * 
+   * <p/>
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
-   * 
+   * <p/>
    * Stand: 02.02.2014
    */
   private void makeGraphForDive()
   {
     Vector<float[]> sampleVector;
     //
-    ReadLogItemObj rlo = logManager.getLogObjForDbId( dbId, getActivity().getResources() );
+    ReadLogItemObj rlo = logManager.getLogObjForDbId(dbId, getActivity().getResources());
     if( rlo != null )
     {
       //
@@ -133,19 +135,22 @@ public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceL
       //
       if( runningActivity.getActionBar() != null )
       {
-        String headerStr = String.format( "%s <%s>", getResources().getString( R.string.graphlog_header ), rlo.itemName );
-        runningActivity.getActionBar().setTitle( headerStr );
+        String headerStr = String.format("%s <%s>", getResources().getString(R.string.graphlog_header), rlo.itemName);
+        runningActivity.getActionBar().setTitle(headerStr);
       }
       try
       {
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "read dive samples from file <%s>...", rlo.fileOnMobile ) );
-        sampleVector = SPX42DiveSampleClass.makeSamples( rlo );
-        sPX42LogGraphView.setDiveData( sampleVector );
+        if( ApplicationDEBUG.DEBUG )
+        {
+          Log.d(TAG, String.format("read dive samples from file <%s>...", rlo.fileOnMobile));
+        }
+        sampleVector = SPX42DiveSampleClass.makeSamples(rlo);
+        sPX42LogGraphView.setDiveData(sampleVector);
         sPX42LogGraphView.invalidate();
       }
       catch( NoXMLDataFileFoundException ex )
       {
-        Log.e( TAG, "can't create diveLog samples : <" + ex.getLocalizedMessage() + ">" );
+        Log.e(TAG, "can't create diveLog samples : <" + ex.getLocalizedMessage() + ">");
         // TODO: User benachrichtigen
         return;
       }
@@ -153,95 +158,117 @@ public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceL
   }
 
   @Override
-  public void msgConnected( BtServiceMessage msg )
+  public void msgConnected(BtServiceMessage msg)
   {
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "msgConnected..." );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "msgConnected...");
+    }
   }
 
   @Override
-  public void msgConnectError( BtServiceMessage msg )
-  {}
+  public void msgConnectError(BtServiceMessage msg)
+  {
+  }
 
   @Override
-  public void msgConnecting( BtServiceMessage msg )
-  {}
+  public void msgConnecting(BtServiceMessage msg)
+  {
+  }
 
   @Override
-  public void msgDisconnected( BtServiceMessage msg )
-  {}
+  public void msgDisconnected(BtServiceMessage msg)
+  {
+  }
 
   @Override
-  public void msgRecivedAlive( BtServiceMessage msg )
-  {}
+  public void msgRecivedAlive(BtServiceMessage msg)
+  {
+  }
 
   @Override
-  public void msgRecivedTick( BtServiceMessage msg )
+  public void msgRecivedTick(BtServiceMessage msg)
   {
     // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
   }
 
   @Override
-  public void msgReciveWriteTmeout( BtServiceMessage msg )
+  public void msgReciveWriteTmeout(BtServiceMessage msg)
   {
     //
   }
 
   @Override
-  public void onActivityCreated( Bundle savedInstanceState )
+  public void onActivityCreated(Bundle savedInstanceState)
   {
-    super.onActivityCreated( savedInstanceState );
-    runningActivity = ( MainActivity )getActivity();
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
+    super.onActivityCreated(savedInstanceState);
+    runningActivity = ( MainActivity ) getActivity();
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onActivityCreated: ACTIVITY ATTACH");
+    }
     //
     // den Titel in der Actionbar setzten
     // Aufruf via create
     //
     Bundle arguments = getArguments();
-    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    if( arguments != null && arguments.containsKey(ProjectConst.ARG_ITEM_CONTENT) )
     {
-      fragmentTitle = arguments.getString( ProjectConst.ARG_ITEM_CONTENT );
-      runningActivity.onSectionAttached( fragmentTitle );
+      fragmentTitle = arguments.getString(ProjectConst.ARG_ITEM_CONTENT);
+      runningActivity.onSectionAttached(fragmentTitle);
     }
     else
     {
-      Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+      Log.w(TAG, "onActivityCreated: TITLE NOT SET!");
     }
     //
     // im Falle eines restaurierten Frames
     //
     if( savedInstanceState != null )
     {
-      if( savedInstanceState.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+      if( savedInstanceState.containsKey(ProjectConst.ARG_ITEM_CONTENT) )
       {
-        fragmentTitle = savedInstanceState.getString( ProjectConst.ARG_ITEM_CONTENT );
-        runningActivity.onSectionAttached( fragmentTitle );
+        fragmentTitle = savedInstanceState.getString(ProjectConst.ARG_ITEM_CONTENT);
+        runningActivity.onSectionAttached(fragmentTitle);
       }
-      if( dbId == -1 ) dbId = savedInstanceState.getInt( ProjectConst.ARG_DBID, -1 );
+      if( dbId == -1 )
+      {
+        dbId = savedInstanceState.getInt(ProjectConst.ARG_DBID, -1);
+      }
     }
   }
 
   @Override
-  public void onAttach( Activity activity )
+  public void onAttach(Activity activity)
   {
-    super.onAttach( activity );
-    runningActivity = ( MainActivity )activity;
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
+    super.onAttach(activity);
+    runningActivity = ( MainActivity ) activity;
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onAttach: ATTACH");
+    }
     //
     // die Datenbank öffnen
     //
     try
     {
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create SQLite helper..." );
-      DataSQLHelper sqlHelper = new DataSQLHelper( getActivity().getApplicationContext(), MainActivity.databaseDir.getAbsolutePath() + File.separator + ProjectConst.DATABASE_NAME );
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: create logManager helper..." );
-      logManager = new SPX42LogManager( sqlHelper.getWritableDatabase() );
+      if( ApplicationDEBUG.DEBUG )
+      {
+        Log.d(TAG, "onAttach: create SQLite helper...");
+      }
+      DataSQLHelper sqlHelper = new DataSQLHelper(getActivity().getApplicationContext(), MainActivity.databaseDir.getAbsolutePath() + File.separator + ProjectConst.DATABASE_NAME);
+      if( ApplicationDEBUG.DEBUG )
+      {
+        Log.d(TAG, "onAttach: create logManager helper...");
+      }
+      logManager = new SPX42LogManager(sqlHelper.getWritableDatabase());
     }
     catch( NoDatabaseException ex )
     {
-      Log.e( TAG, "NoDatabaseException: <" + ex.getLocalizedMessage() + ">" );
-      UserAlertDialogFragment uad = new UserAlertDialogFragment( runningActivity.getResources().getString( R.string.dialog_sqlite_error_header ), runningActivity.getResources()
-              .getString( R.string.dialog_sqlite_nodatabase_error ) );
-      uad.show( getFragmentManager(), "abortProgram" );
+      Log.e(TAG, "NoDatabaseException: <" + ex.getLocalizedMessage() + ">");
+      UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_sqlite_error_header), runningActivity.getResources()
+          .getString(R.string.dialog_sqlite_nodatabase_error));
+      uad.show(getFragmentManager(), "abortProgram");
     }
   }
 
@@ -249,34 +276,43 @@ public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceL
    * Nach dem Erzeugen des Objektes noch Einstellungen....
    */
   @Override
-  public void onCreate( Bundle savedInstanceState )
+  public void onCreate(Bundle savedInstanceState)
   {
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
-    super.onCreate( savedInstanceState );
-    runningActivity.getWindow().setFlags( WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN );
-    dbId = getArguments().getInt( ProjectConst.ARG_DBID, -1 );
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate... DBID=<" + dbId + ">" );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onCreate...");
+    }
+    super.onCreate(savedInstanceState);
+    runningActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    dbId = getArguments().getInt(ProjectConst.ARG_DBID, -1);
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onCreate... DBID=<" + dbId + ">");
+    }
   }
 
   /**
    * Wenn das View erzeugt wird (nach onCreate), noch ein paar Sachen erledigen
    */
   @Override
-  public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
   {
     View rootView;
     //
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView..." );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onCreateView...");
+    }
     //
     // wenn kein Container vorhanden ist, dann gibts auch keinen View
     //
     if( container == null )
     {
-      Log.e( TAG, "onCreateView: container is NULL ..." );
-      return( null );
+      Log.e(TAG, "onCreateView: container is NULL ...");
+      return (null);
     }
-    sPX42LogGraphView = new SPX42LogGraphView( getActivity().getApplication().getApplicationContext() );
-    sPX42LogGraphView.setTheme( MainActivity.getAppStyle() );
+    sPX42LogGraphView = new SPX42LogGraphView(getActivity().getApplication().getApplicationContext());
+    sPX42LogGraphView.setTheme(MainActivity.getAppStyle());
     rootView = sPX42LogGraphView;
     return rootView;
   }
@@ -285,17 +321,23 @@ public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceL
   public void onDestroy()
   {
     super.onDestroy();
-    runningActivity.removeServiceListener( this );
+    runningActivity.removeServiceListener(this);
   }
 
   @Override
   public void onPause()
   {
     super.onPause();
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause..." );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onPause...");
+    }
     // handler loeschen
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
-    runningActivity.removeServiceListener( this );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onPause: clear service listener for preferences fragment...");
+    }
+    runningActivity.removeServiceListener(this);
   }
 
   /**
@@ -305,20 +347,23 @@ public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceL
   public synchronized void onResume()
   {
     super.onResume();
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onResume...");
+    }
     //
     // Service Listener setzen
     //
-    runningActivity.addServiceListener( this );
+    runningActivity.addServiceListener(this);
     makeGraphForDive();
   }
 
   @Override
-  public void onSaveInstanceState( Bundle savedInstanceState )
+  public void onSaveInstanceState(Bundle savedInstanceState)
   {
-    super.onSaveInstanceState( savedInstanceState );
-    fragmentTitle = savedInstanceState.getString( ProjectConst.ARG_ITEM_CONTENT );
-    savedInstanceState.putString( ProjectConst.ARG_ITEM_CONTENT, fragmentTitle );
-    savedInstanceState.putInt( ProjectConst.ARG_DBID, dbId );
+    super.onSaveInstanceState(savedInstanceState);
+    fragmentTitle = savedInstanceState.getString(ProjectConst.ARG_ITEM_CONTENT);
+    savedInstanceState.putString(ProjectConst.ARG_ITEM_CONTENT, fragmentTitle);
+    savedInstanceState.putInt(ProjectConst.ARG_DBID, dbId);
   }
 }

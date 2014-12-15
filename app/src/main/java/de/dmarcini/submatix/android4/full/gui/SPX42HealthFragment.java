@@ -29,6 +29,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
@@ -36,33 +37,32 @@ import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 
 /**
- * 
  * Ein Fragment zur Anzeige der Stati des SPX42
- * 
+ * <p/>
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
- * 
+ *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- * 
+ *         <p/>
  *         Stand: 26.01.2014
  */
 public class SPX42HealthFragment extends Fragment implements IBtServiceListener
 {
-  @SuppressWarnings( "javadoc" )
-  public static final String TAG                       = SPX42HealthFragment.class.getSimpleName();
-  private MainActivity       runningActivity           = null;
-  private TextView           ackuVoltageTextView       = null;
-  private TextView           serialNumberTextView      = null;
-  private TextView           firmwareVersionTextView   = null;
-  private TextView           licenseNitroxTextView     = null;
-  private TextView           licenseNTMXTextView       = null;
-  private TextView           licenseTMXTextView        = null;
-  private TextView           licenseIndividualTextView = null;
-  private String             fragmentTitle             = "unknown";
+  @SuppressWarnings("javadoc")
+  public static final String TAG = SPX42HealthFragment.class.getSimpleName();
+  private MainActivity runningActivity = null;
+  private TextView ackuVoltageTextView = null;
+  private TextView serialNumberTextView = null;
+  private TextView firmwareVersionTextView = null;
+  private TextView licenseNitroxTextView = null;
+  private TextView licenseNTMXTextView = null;
+  private TextView licenseTMXTextView = null;
+  private TextView licenseIndividualTextView = null;
+  private String fragmentTitle = "unknown";
 
   @Override
-  public void handleMessages( int what, BtServiceMessage msg )
+  public void handleMessages(int what, BtServiceMessage msg)
   {
-    switch ( what )
+    switch( what )
     {
       case ProjectConst.MESSAGE_TICK:
         break;
@@ -70,31 +70,34 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
       // OnConnect Meldung
       // ################################################################
       case ProjectConst.MESSAGE_CONNECTED:
-        msgConnected( msg );
+        msgConnected(msg);
         break;
       // ################################################################
       // OnAlive
       // ################################################################
       case ProjectConst.MESSAGE_SPXALIVE:
-        msgRecivedAlive( msg );
+        msgRecivedAlive(msg);
         break;
       // ################################################################
       // DEFAULT
       // ################################################################
       default:
-        if( ApplicationDEBUG.DEBUG ) Log.i( TAG, "unknown messsage with id <" + what + "> recived!" );
+        if( ApplicationDEBUG.DEBUG )
+        {
+          Log.i(TAG, "unknown messsage with id <" + what + "> recived!");
+        }
     }
   }
 
   @Override
-  public void msgConnected( BtServiceMessage msg )
+  public void msgConnected(BtServiceMessage msg)
   {
     Resources res = runningActivity.getResources();
     float ackuValue = MainActivity.ackuValue;
     //
     // Fülle die Textfelder mit aktuellen Werten
     //
-    ackuVoltageTextView.setText( String.format( runningActivity.getResources().getString( R.string.health_acku_volatage ), ackuValue ) );
+    ackuVoltageTextView.setText(String.format(runningActivity.getResources().getString(R.string.health_acku_volatage), ackuValue));
     //
     // Ackuspannung mit Farbe hinterlegen (grün SUPI, gelb, NAJA, rot, sollte nicht mehr tauchen gehen
     // grün ( oberhalb 3.6 Volt ) ROT 2,5 Volt
@@ -103,147 +106,174 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
     // rot kleiner 3,6 Volt
     if( ackuValue > 3.6F )
     {
-      ackuVoltageTextView.setTextColor( res.getColor( R.color.acku_good_value ) );
+      ackuVoltageTextView.setTextColor(res.getColor(R.color.acku_good_value));
     }
     else if( ackuValue > 3.1F )
     {
-      ackuVoltageTextView.setTextColor( res.getColor( R.color.acku_mid_value ) );
+      ackuVoltageTextView.setTextColor(res.getColor(R.color.acku_mid_value));
     }
     else
     {
-      ackuVoltageTextView.setTextColor( res.getColor( R.color.acku_low_value ) );
+      ackuVoltageTextView.setTextColor(res.getColor(R.color.acku_low_value));
     }
     // Beschriftungen
-    serialNumberTextView.setText( MainActivity.spxConfig.getSerial() );
-    firmwareVersionTextView.setText( MainActivity.spxConfig.getFirmwareVersion() );
-    switch ( MainActivity.spxConfig.getLicenseState() )
+    serialNumberTextView.setText(MainActivity.spxConfig.getSerial());
+    firmwareVersionTextView.setText(MainActivity.spxConfig.getFirmwareVersion());
+    switch( MainActivity.spxConfig.getLicenseState() )
     {
       case ProjectConst.SPX_LICENSE_FULLTX:
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX MIX License : FULL TRIMIX licensed" );
-        licenseTMXTextView.setText( res.getString( R.string.health_license_enable ) );
-        licenseTMXTextView.setTextColor( res.getColor( R.color.licenseEnabled ) );
+        if( ApplicationDEBUG.DEBUG )
+        {
+          Log.d(TAG, "SPX MIX License : FULL TRIMIX licensed");
+        }
+        licenseTMXTextView.setText(res.getString(R.string.health_license_enable));
+        licenseTMXTextView.setTextColor(res.getColor(R.color.licenseEnabled));
       case ProjectConst.SPX_LICENSE_NORMOXICTX:
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX MIX License : NORMOXIX TRIMIX licensed" );
-        licenseNTMXTextView.setText( res.getString( R.string.health_license_enable ) );
-        licenseNTMXTextView.setTextColor( res.getColor( R.color.licenseEnabled ) );
+        if( ApplicationDEBUG.DEBUG )
+        {
+          Log.d(TAG, "SPX MIX License : NORMOXIX TRIMIX licensed");
+        }
+        licenseNTMXTextView.setText(res.getString(R.string.health_license_enable));
+        licenseNTMXTextView.setTextColor(res.getColor(R.color.licenseEnabled));
       case ProjectConst.SPX_LICENSE_NITROX:
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX MIX License : NITROX licensed" );
-        licenseNitroxTextView.setText( res.getString( R.string.health_license_enable ) );
-        licenseNitroxTextView.setTextColor( res.getColor( R.color.licenseEnabled ) );
+        if( ApplicationDEBUG.DEBUG )
+        {
+          Log.d(TAG, "SPX MIX License : NITROX licensed");
+        }
+        licenseNitroxTextView.setText(res.getString(R.string.health_license_enable));
+        licenseNitroxTextView.setTextColor(res.getColor(R.color.licenseEnabled));
         break;
       default:
-        if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX MIX License : UNKNOWN" );
+        if( ApplicationDEBUG.DEBUG )
+        {
+          Log.d(TAG, "SPX MIX License : UNKNOWN");
+        }
     }
     //
     // jetzt noch den Individual-Lizenzsatatus erfragen
     //
     if( 1 == MainActivity.spxConfig.getCustomEnabled() )
     {
-      if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "SPX CUSTOM License : licensed" );
-      licenseIndividualTextView.setText( res.getString( R.string.health_license_enable ) );
-      licenseIndividualTextView.setTextColor( res.getColor( R.color.licenseEnabled ) );
+      if( ApplicationDEBUG.DEBUG )
+      {
+        Log.d(TAG, "SPX CUSTOM License : licensed");
+      }
+      licenseIndividualTextView.setText(res.getString(R.string.health_license_enable));
+      licenseIndividualTextView.setTextColor(res.getColor(R.color.licenseEnabled));
     }
   }
 
   @Override
-  public void msgConnectError( BtServiceMessage msg )
+  public void msgConnectError(BtServiceMessage msg)
   {
     // TODO Automatisch generierter Methodenstub
   }
 
   @Override
-  public void msgConnecting( BtServiceMessage msg )
+  public void msgConnecting(BtServiceMessage msg)
   {
     // TODO Automatisch generierter Methodenstub
   }
 
   @Override
-  public void msgDisconnected( BtServiceMessage msg )
+  public void msgDisconnected(BtServiceMessage msg)
   {
     // TODO Automatisch generierter Methodenstub
   }
 
   @Override
-  public void msgRecivedAlive( BtServiceMessage msg )
+  public void msgRecivedAlive(BtServiceMessage msg)
   {
-    ackuVoltageTextView.setText( String.format( runningActivity.getResources().getString( R.string.health_acku_volatage ), MainActivity.ackuValue ) );
+    ackuVoltageTextView.setText(String.format(runningActivity.getResources().getString(R.string.health_acku_volatage), MainActivity.ackuValue));
   }
 
   @Override
-  public void msgRecivedTick( BtServiceMessage msg )
+  public void msgRecivedTick(BtServiceMessage msg)
   {
     // TODO Automatisch generierter Methodenstub
   }
 
   @Override
-  public void msgReciveWriteTmeout( BtServiceMessage msg )
+  public void msgReciveWriteTmeout(BtServiceMessage msg)
   {
     // TODO Automatisch generierter Methodenstub
   }
 
   @Override
-  public void onActivityCreated( Bundle savedInstanceState )
+  public void onActivityCreated(Bundle savedInstanceState)
   {
-    super.onActivityCreated( savedInstanceState );
-    runningActivity = ( MainActivity )getActivity();
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
+    super.onActivityCreated(savedInstanceState);
+    runningActivity = ( MainActivity ) getActivity();
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onActivityCreated: ACTIVITY ATTACH");
+    }
     //
     // den Titel in der Actionbar setzten
     // Aufruf via create
     //
     Bundle arguments = getArguments();
-    if( arguments != null && arguments.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    if( arguments != null && arguments.containsKey(ProjectConst.ARG_ITEM_CONTENT) )
     {
-      fragmentTitle = arguments.getString( ProjectConst.ARG_ITEM_CONTENT );
-      runningActivity.onSectionAttached( fragmentTitle );
+      fragmentTitle = arguments.getString(ProjectConst.ARG_ITEM_CONTENT);
+      runningActivity.onSectionAttached(fragmentTitle);
     }
     else
     {
-      Log.w( TAG, "onActivityCreated: TITLE NOT SET!" );
+      Log.w(TAG, "onActivityCreated: TITLE NOT SET!");
     }
     //
     // im Falle eines restaurierten Frames
     //
-    if( savedInstanceState != null && savedInstanceState.containsKey( ProjectConst.ARG_ITEM_CONTENT ) )
+    if( savedInstanceState != null && savedInstanceState.containsKey(ProjectConst.ARG_ITEM_CONTENT) )
     {
-      fragmentTitle = savedInstanceState.getString( ProjectConst.ARG_ITEM_CONTENT );
-      runningActivity.onSectionAttached( fragmentTitle );
+      fragmentTitle = savedInstanceState.getString(ProjectConst.ARG_ITEM_CONTENT);
+      runningActivity.onSectionAttached(fragmentTitle);
     }
   }
 
   @Override
-  public void onAttach( Activity activity )
+  public void onAttach(Activity activity)
   {
-    super.onAttach( activity );
-    runningActivity = ( MainActivity )activity;
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onAttach: ATTACH" );
+    super.onAttach(activity);
+    runningActivity = ( MainActivity ) activity;
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onAttach: ATTACH");
+    }
   }
 
   /**
    * Nach dem Erzeugen des Objektes noch Einstellungen....
    */
   @Override
-  public void onCreate( Bundle savedInstanceState )
+  public void onCreate(Bundle savedInstanceState)
   {
-    super.onCreate( savedInstanceState );
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreate..." );
+    super.onCreate(savedInstanceState);
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onCreate...");
+    }
   }
 
   /**
    * Wenn das View erzeugt wird (nach onCreate), noch ein paar Sachen erledigen
    */
   @Override
-  public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
+  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
   {
     View rootView;
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView..." );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onCreateView...");
+    }
     //
     // wenn kein Container vorhanden ist, dann gibts auch keinen View
     //
     if( container == null )
     {
-      Log.e( TAG, "onCreateView: container is NULL ..." );
-      return( null );
+      Log.e(TAG, "onCreateView: container is NULL ...");
+      return (null);
     }
     //
     // wenn die laufende Activity eine AreaDetailActivity ist, dann gibts das View schon
@@ -257,23 +287,26 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
     // Verbindungsseite via twoPane ausgewählt
     //
     //
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "makeConnectionView..." );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "makeConnectionView...");
+    }
     //
     // View aus Resource laden
     //
-    rootView = inflater.inflate( R.layout.fragment_spx42_health, container, false );
+    rootView = inflater.inflate(R.layout.fragment_spx42_health, container, false);
     //
     // die Adressen der gesuchten Objekte rausuchen
     //
-    ackuVoltageTextView = ( TextView )rootView.findViewById( R.id.ackuVoltageTextView );
-    serialNumberTextView = ( TextView )rootView.findViewById( R.id.serialNumberTextView );
-    firmwareVersionTextView = ( TextView )rootView.findViewById( R.id.firmwareVersionTextView );
-    licenseNitroxTextView = ( TextView )rootView.findViewById( R.id.licenseNitroxTextView );
-    licenseNTMXTextView = ( TextView )rootView.findViewById( R.id.licenseNTMXTextView );
-    licenseTMXTextView = ( TextView )rootView.findViewById( R.id.licenseTMXTextView );
-    licenseIndividualTextView = ( TextView )rootView.findViewById( R.id.licenseIndividualTextView );
+    ackuVoltageTextView = ( TextView ) rootView.findViewById(R.id.ackuVoltageTextView);
+    serialNumberTextView = ( TextView ) rootView.findViewById(R.id.serialNumberTextView);
+    firmwareVersionTextView = ( TextView ) rootView.findViewById(R.id.firmwareVersionTextView);
+    licenseNitroxTextView = ( TextView ) rootView.findViewById(R.id.licenseNitroxTextView);
+    licenseNTMXTextView = ( TextView ) rootView.findViewById(R.id.licenseNTMXTextView);
+    licenseTMXTextView = ( TextView ) rootView.findViewById(R.id.licenseTMXTextView);
+    licenseIndividualTextView = ( TextView ) rootView.findViewById(R.id.licenseIndividualTextView);
     //
-    return( rootView );
+    return (rootView);
   }
 
   @Override
@@ -286,12 +319,18 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
   public void onPause()
   {
     super.onPause();
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause..." );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onPause...");
+    }
     //
     // die abgeleiteten Objekte führen das auch aus
     //
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
-    runningActivity.removeServiceListener( this );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onPause: clear service listener for preferences fragment...");
+    }
+    runningActivity.removeServiceListener(this);
   }
 
   /**
@@ -301,15 +340,18 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
   public synchronized void onResume()
   {
     super.onResume();
-    if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onResume..." );
-    runningActivity.addServiceListener( this );
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.d(TAG, "onResume...");
+    }
+    runningActivity.addServiceListener(this);
   }
 
   @Override
-  public void onSaveInstanceState( Bundle savedInstanceState )
+  public void onSaveInstanceState(Bundle savedInstanceState)
   {
-    super.onSaveInstanceState( savedInstanceState );
-    fragmentTitle = savedInstanceState.getString( ProjectConst.ARG_ITEM_CONTENT );
-    savedInstanceState.putString( ProjectConst.ARG_ITEM_CONTENT, fragmentTitle );
+    super.onSaveInstanceState(savedInstanceState);
+    fragmentTitle = savedInstanceState.getString(ProjectConst.ARG_ITEM_CONTENT);
+    savedInstanceState.putString(ProjectConst.ARG_ITEM_CONTENT, fragmentTitle);
   }
 }
