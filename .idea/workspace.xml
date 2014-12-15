@@ -31,23 +31,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="414ee92c-90c5-4033-ad1c-8e6cce312b4e" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/OnlineHelpFragment.java" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_online_help.xml" />
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/www/index_de.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/BuildVersion.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/BuildVersion.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/MainActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/NavigatorFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/NavigatorFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/ProgramAboutFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/ProgramAboutFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/ProgramPreferencesFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/ProgramPreferencesFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42ConnectFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42ConnectFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42ExportLogFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42ExportLogFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42GaslistPreferencesFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42GaslistPreferencesFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42HealthFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42HealthFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42LogGraphDetailFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42LogGraphDetailFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42LogGraphSelectFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42LogGraphSelectFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42PreferencesFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42PreferencesFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42ReadLogFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42ReadLogFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/WorkInProgressFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/WorkInProgressFragment.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/utils/build.txt" afterPath="$PROJECT_DIR$/app/utils/build.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -1670,7 +1658,11 @@
       <created>1418653285216</created>
       <updated>1418653285216</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Online Hilfe weiter zugefügt">
+      <created>1418653329041</created>
+      <updated>1418653329042</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -1747,7 +1739,8 @@
     <option name="SHOW_DIRTY_RECURSIVELY" value="true" />
     <MESSAGE value="Einstellungen für Online-Hilfe zugefügt" />
     <MESSAGE value="Einstellungen für Copyright" />
-    <option name="LAST_COMMIT_MESSAGE" value="Einstellungen für Copyright" />
+    <MESSAGE value="Online Hilfe weiter zugefügt" />
+    <option name="LAST_COMMIT_MESSAGE" value="Online Hilfe weiter zugefügt" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
