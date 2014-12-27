@@ -394,5 +394,7 @@
     <string name="conf_prog_others_on_online_help_key">Enable</string>
     <string name="conf_prog_others_enable_online_help_header">Online help enable?</string>
     <string name="conf_prog_others_online_help_header">Online help enable?</string>
+    <string name="online_help_local_url">file:///android_asset/www/index_en.html</string>
+    <string name="online_help_remote_url">http://spx42.submatix.com/en/</string>
 
 </resources>
