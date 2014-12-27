@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <lint>
-    <issue id="BackButton" severity="informational" />
-    <issue id="IconExpectedSize" severity="informational" />
-    <issue id="StopShip" severity="informational" />
+    <issue id="BackButton" severity="informational"/>
+    <issue id="IconExpectedSize" severity="informational"/>
+    <issue id="StopShip" severity="informational"/>
     <issue id="ValidFragment">
-        <ignore path="src/de/dmarcini/submatix/android4/gui/WaitProgressFragmentDialog.java" />
+        <ignore path="src/de/dmarcini/submatix/android4/gui/WaitProgressFragmentDialog.java"/>
+        <ignore path="src/de/jockels/tools/.java"/>
     </issue>
 </lint>

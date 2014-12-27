@@ -16,10 +16,10 @@
     <string name="app_unit_depth_metric">meters</string>
     <string name="app_unit_minute">min</string>
     <string name="app_empty"> </string>
-    
+
     <!-- About Frame  -->
     <string name="about_headline">About SubmatixBTLogger</string>
-    
+
     <!-- Liste der Programmaktivitäten -->
     <string name="progitem_connect">Connection</string>
     <string name="progitem_spx_status">SPX42 Status</string>
@@ -68,7 +68,7 @@
     <string name="toast_export_cant_create_dir">can\'t create dir &lt;%s&gt;</string>
     <string name="toast_export_cant_find_xmldata">can\'t find data-xml file</string>
     <string name="toast_export_internal_xml_error">internal XML-DOM-Error!</string>
-    
+
     <!-- Dialogboxen  -->
     <string name="dialog_sure_exit">Are you sure?</string>
     <string name="dialog_exit_button">EXIT</string>
@@ -87,7 +87,7 @@
     <string name="dialog_device_select_button">Select</string>
     <string name="dialog_not_mail_exist_header">No Mail in prefs</string>
     <string name="dialog_not_mail_exist">Sorry, not Mail in preferences,\nPlease enter valid mailaddress\nin program preferences!</string>
-    <string name="dialog_not_selected_items_header">nothing selected</string>    
+    <string name="dialog_not_selected_items_header">nothing selected</string>
     <string name="dialog_not_selected_items">noting selelected to export!</string>
     <string name="dialog_not_selected_items_graph">noting selelected to view!</string>
     <string name="dialog_no_uddfdir_header">not UDDF-directory</string>
@@ -109,16 +109,16 @@
     <string name="dialog_file_select_no_data">No data!</string>
     <string name="dialog_firmware_not_supportet_header">Firmware error</string>
     <string name="dialog_firmware_not_supportet">Firmware version not supported!</string>
-    
+
     <!-- BT Discover Box -->
     <string name="progress_wait_for_discover_title" formatted="false">Searching BT Devices..</string>
     <string name="progress_wait_for_discover_message_start" formatted="false">not found device yet...</string>
     <string name="progress_wait_for_discover_message_continue" formatted="false">last device found: %s...</string>
-    
+
     <!--  DUMMY Detailseite  -->
     <string name="dummy_headline">dummy page</string>
     <string name="spacer_string">spacer</string>
-    
+
     <!-- Detailseite für Konfiguration des SPX42 -->
     <string name="conf_headline">Config SPX42</string>
     <!-- ### Kategorie Setpoint ###  -->
@@ -192,7 +192,7 @@
     <string name="conf_units_depth_foot">foot</string>
     <string name="conf_units_depth_meters_summary">depth is in meters</string>
     <string name="conf_units_depth_foot_summary">depth is in foot</string>
-    <!-- süß oder salzwasser -->    
+    <!-- süß oder salzwasser -->
     <string name="conf_units_watertype_header">type of water</string>
     <string name="conf_units_freshwater">freshwater</string>
     <string name="conf_units_saltwater">salty water</string>
@@ -200,7 +200,7 @@
     <string name="conf_units_saltwater_summary">property is salty water</string>
     <!-- ### kategorie individual ### -->
     <string name="conf_ind_header">Individuals</string>
-    <!-- sensoren ein/aus -->    
+    <!-- sensoren ein/aus -->
     <string name="conf_ind_sensors_onoff_header">switch sensors on or off</string>
     <string name="conf_ind_sensors_text_on">ON</string>
     <string name="conf_ind_sensors_text_off">OFF</string>
@@ -216,7 +216,7 @@
     <string name="conf_ind_count_sensorwarning_header">sensor warnings</string>
     <string name="conf_ind_count_sensorwarning_header_summary">current %s for warning</string>
     <string name="conf_ind_count_default">3</string>
-    <!-- akustische warnungen on/off -->    
+    <!-- akustische warnungen on/off -->
     <string name="conf_ind_acoustic_warning_header">acoustic warnings</string>
     <string name="conf_ind_acoustic_warning_on">ON</string>
     <string name="conf_ind_acoustic_warning_off">OFF</string>
@@ -230,7 +230,7 @@
     <string name="conf_ind_tempstick_header">tempstick type</string>
     <string name="conf_ind_tempstick_header_summary">type of tempstick: %s </string>
     <string name="conf_ind_tempstick_default">T1</string>
-        
+
     <!-- Detailseite connect mit spx -->
     <string name="connect_headline">Connection to SPX42</string>
     <string name="connect_discover_button_title">Discover BT Devices</string>
@@ -240,7 +240,7 @@
     <string name="connect_connected_device">connected</string>
     <string name="connect_editalias_button_title">Edit alias</string>
     <string name="connect_editaliasv4_button_title">Edit Alias/PIN</string>
-    
+
     <!-- Detailseite für Gaslisten-Editor -->
     <string name="conf_gaslist_headline">SPX42 gaslist edit</string>
     <string name="conf_gaslist_default">21:0:79:0:0:0</string>
@@ -252,7 +252,7 @@
     <string name="conf_gaslist_bailout">B</string>
     <string name="conf_gaslist_button_positive">Set Gas</string>
     <string name="conf_gaslist_button_negative">Cancel</string>
-    
+
     <!-- Detailseite Gasliste -->
     <string name="gaslist_headline">Gaslist SPX42</string>
     <string name="conf_gaslist_summary_first" formatted="false">current gas %02d is %s, MOD is %dm (clearwater)</string>
@@ -261,7 +261,7 @@
     <string name="conf_gaslist_summary_no_diluent">       </string>
     <string name="conf_gaslist_summary_bailout"> - BO</string>
     <string name="conf_gaslist_noname">not init yet</string>
-    
+
     <!-- ### Kategorie Gas  ## -->
     <string name="conf_gaslist_gas_key_template" formatted="false">keyGaslistGas%02d</string>
     <string name="conf_gaslist_gas_key">"keyGaslistGas"</string>
@@ -273,7 +273,7 @@
     <string name="conf_gaslist_gas06_header">gas #06</string>
     <string name="conf_gaslist_gas07_header">gas #07</string>
     <string name="conf_gaslist_gas08_header">gas #08</string>
-            
+
     <!-- Detailseite für Programmkonfiguration -->
     <string name="conf_prog_headline">app preferences</string>
     <!-- ### Kategorie Zeitanzeige ### -->
@@ -282,7 +282,7 @@
     <string name="conf_prog_temp_units_title">Timeformat</string>
     <string name="conf_prog_temp_units_summary" formatted="false">Standard format: &lt;%s&gt;</string>
     <string name="conf_prog_temp_units_default">yyyy/dd/MM - hh:mm:ss a</string>
-    
+
     <!-- ### Kategorie Dateisystem ### -->
     <string name="conf_prog_filesystem">FILESYSTEM PREFERENCES</string>
     <!-- datenverzeichnis für Logdaten -->
@@ -318,12 +318,12 @@
     <string name="conf_prog_others_off_light">light</string>
     <string name="conf_prog_others_on_dark_summary">app theme DARK selected</string>
     <string name="conf_prog_others_off_light_summary">app theme LIGHT selected</string>
-    
+
     <!--  Strings für ConnectSeite  -->
     <string name="connect_togglebtn_disconn">OFF</string>
     <string name="connect_togglebtn_doconn">WAIT</string>
     <string name="connect_togglebtn_conn">CONN</string>
-    
+
     <!-- NotificationBar  -->
     <string name="notify_service">Submatix BT service</string>
     <string name="notify_service_started">BT service started</string>
@@ -331,11 +331,11 @@
     <string name="notify_service_disconnected">BT service disconnected</string>
     <string name="notify_service_running">Submatix BT service running</string>
     <string name="notify_service_ticker">SUBMATIX BT Service</string>
-    
+
     <!-- IN-PROGRESS-Frame -->
     <string name="in_progress_header">page in progress</string>
     <string name="in_progress_msg" formatted="false">this page is under progress...</string>
-    
+
     <!-- Fragment SPXReadLogFragment  -->
     <string name="logread_headline">read logs from SPX</string>
     <string name="logread_doit_button">Read!</string>
@@ -349,16 +349,16 @@
     <string name="logread_file_message_empty">read next log from database</string>
     <string name="logread_show_not_all_header">only new logs</string>
     <string name="logread_show_not_all_footer">end of new logs</string>
-    
+
     <!-- Fragment SPXExportLogFragment -->
     <string name="export_header">Export logs from device</string>
-    <string name="export_header_device" formatted="false" >Export logs from device &lt;%s&gt;</string>
+    <string name="export_header_device" formatted="false">Export logs from device &lt;%s&gt;</string>
     <string name="export_subheader" formatted="false">Device: %s</string>
     <string name="export_change_drive_button">Device...</string>
     <string name="export_delete_button">DELETE</string>
     <string name="export_do_export">Export!</string>
     <string name="export_mail_bodytext">Here your divelogs in attachement from this mail!\n\nRegards, your ANDROID Device\n\n</string>
-    
+
     <!--  Fragment SPX Gesundheit  -->
     <string name="health_header">status/health SPX42</string>
     <string name="health_serial_number_label">SPX42 serial number</string>
@@ -372,18 +372,18 @@
     <string name="health_license_individual_label">individual</string>
     <string name="health_acku_volatage_label">Acku voltage:</string>
     <string name="health_acku_volatage" formatted="false">%02.02f volts</string>
-    
+
     <!-- Fragment Logs grafisch darstellen  -->
     <string name="graphlog_title">logs graphial</string>
     <string name="graphlog_header">logs graphial</string>
-    <string name="graphlog_header_device" formatted="false" >view logs from device &lt;%s&gt;</string>
+    <string name="graphlog_header_device" formatted="false">view logs from device &lt;%s&gt;</string>
     <string name="graphlog_do_view">Show!</string>
     <string name="graphlog_change_drive_button">Device...</string>
-    
+
     <!-- Navigator Strings  -->
     <string name="navigation_drawer_open">Open navigator</string>
     <string name="navigation_drawer_close">Close navigator</string>
-    
+
     <!-- sonstig  -->
     <string name="no_device">- no device -</string>
     <string name="array_with_pic_adapter_dummy">PROGRAMITEM</string>
@@ -395,6 +395,6 @@
     <string name="conf_prog_others_enable_online_help_header">Online help enable?</string>
     <string name="conf_prog_others_online_help_header">Online help enable?</string>
     <string name="online_help_local_url">file:///android_asset/www/index_en.html</string>
-    <string name="online_help_remote_url">http://spx42.submatix.com/en/</string>
+    <string name="online_help_remote_url">http://spx42.submatix.com/en/v200/</string>
 
 </resources>

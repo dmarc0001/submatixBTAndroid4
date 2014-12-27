@@ -21,7 +21,7 @@
     package="de.dmarcini.submatix.android4.full"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:installLocation="auto"
-    android:versionCode="26"
+    android:versionCode="27"
     android:versionName="2.0 RC1">
 
     <uses-sdk
