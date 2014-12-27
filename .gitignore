@@ -1,0 +1,7 @@
+app/build/
+app/lib/
+*.log
+.memdump
+.gralde/
+.idea/
+gradle/
