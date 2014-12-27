@@ -36,53 +36,11 @@
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="app: de.dmarcini.submatix.android4.full" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="414ee92c-90c5-4033-ad1c-8e6cce312b4e" name="Default" comment="Offline Hilfetexte">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/www/index_en.html" />
-      <change type="DELETED" beforePath="C:\DATEN\androidStudioWorkspace\SubmatixBTAndroid4\.idea\libraries\android_support_v4.xml" afterPath="" />
-      <change type="DELETED" beforePath="C:\DATEN\androidStudioWorkspace\SubmatixBTAndroid4\.idea\libraries\joda_time_2_2.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/model_data.bin" afterPath="$PROJECT_DIR$/build/intermediates/model_data.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ArrayAdapterWithPics.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ArrayAdapterWithPics.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/BluetoothDeviceArrayAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/BluetoothDeviceArrayAdapter.java" />
+    <list default="true" id="414ee92c-90c5-4033-ad1c-8e6cce312b4e" name="Default" comment="Version RC1">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/BuildVersion.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/BuildVersion.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ColorizedPreferenceCategory.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ColorizedPreferenceCategory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/CommToast.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/CommToast.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/DataSQLHelper.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/DataSQLHelper.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/DeviceSelectArrayAdapterWithPics.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/DeviceSelectArrayAdapterWithPics.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/DivePlaceLocationListener.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/DivePlaceLocationListener.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ExportLogEntry.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ExportLogEntry.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/FileSelectorArrayAdapterWithPics.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/FileSelectorArrayAdapterWithPics.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/FragmentCallStackEntry.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/FragmentCallStackEntry.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/GasPickerPreference.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/GasPickerPreference.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/GasUpdateEntity.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/GasUpdateEntity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/GasUtilitys.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/GasUtilitys.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/GradientPickerPreference.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/GradientPickerPreference.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/LogXMLCreator.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/LogXMLCreator.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/MainActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/MainActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/NaviActionBarDrawerToggle.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/NaviActionBarDrawerToggle.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/NavigatorFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/NavigatorFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/OnlineHelpFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/OnlineHelpFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/ProgramPreferencesFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/ProgramPreferencesFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ProjectConst.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ProjectConst.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ReadLogItemObj.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ReadLogItemObj.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42AliasManager.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42AliasManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42Config.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42Config.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42ConnectFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42ConnectFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42DiveHeadData.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42DiveHeadData.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42DiveSampleClass.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42DiveSampleClass.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42GasParms.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42GasParms.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42HealthFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42HealthFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42LogColorClass.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42LogColorClass.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42LogEntryObj.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42LogEntryObj.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42LogGraphView.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42LogGraphView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42LogManager.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42LogManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42PreferencesFragment.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/SPX42PreferencesFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42ReadLogListArrayAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42ReadLogListArrayAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42diveSamplesReader.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42diveSamplesReader.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/UDDFFileCreateClass.java" afterPath="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/UDDFFileCreateClass.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/utils/build.txt" afterPath="$PROJECT_DIR$/app/utils/build.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/assets/www/index_de.html" afterPath="$PROJECT_DIR$/app/src/main/assets/www/index_de.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values-de/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values-de/strings.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" afterPath="$PROJECT_DIR$/build/intermediates/dex-cache/cache.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="SubmatixBTAndroid4.iws" />
@@ -111,117 +69,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="MainActivity.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="MainActivity.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="5206" max-vertical-offset="38386">
-              <caret line="390" column="60" selection-start-line="390" selection-start-column="60" selection-end-line="390" selection-end-column="60" />
-              <folding>
-                <element signature="e#16063#16111#0" expanded="true" />
-                <element signature="e#16194#16248#0" expanded="true" />
-                <element signature="e#28876#28901#0" expanded="true" />
-                <element signature="e#28966#29002#0" expanded="true" />
-                <element signature="e#29069#29097#0" expanded="true" />
-                <element signature="e#29155#29194#0" expanded="true" />
-                <element signature="e#29262#29286#0" expanded="true" />
-                <element signature="e#29351#29386#0" expanded="true" />
-                <element signature="e#29454#29479#0" expanded="true" />
-                <element signature="e#29536#29572#0" expanded="true" />
-                <element signature="e#29640#29665#0" expanded="true" />
-                <element signature="e#29722#29758#0" expanded="true" />
-                <element signature="e#29826#29852#0" expanded="true" />
-                <element signature="e#29912#29949#0" expanded="true" />
-                <element signature="e#30016#30049#0" expanded="true" />
-                <element signature="e#30109#30153#0" expanded="true" />
-                <element signature="e#30219#30243#0" expanded="true" />
-                <element signature="e#30298#30333#0" expanded="true" />
-                <element signature="e#30400#30426#0" expanded="true" />
-                <element signature="e#30491#30528#0" expanded="true" />
-                <element signature="e#30595#30618#0" expanded="true" />
-                <element signature="e#30662#30696#0" expanded="true" />
-                <element signature="e#30763#30785#0" expanded="true" />
-                <element signature="e#30829#30862#0" expanded="true" />
-                <element signature="e#30929#30951#0" expanded="true" />
-                <element signature="e#30993#31026#0" expanded="true" />
-                <element signature="e#39604#39629#0" expanded="true" />
-                <element signature="e#39909#39933#0" expanded="true" />
-                <element signature="e#42472#42498#0" expanded="true" />
-                <element signature="e#42733#42756#0" expanded="true" />
-                <element signature="e#43045#43072#0" expanded="true" />
-                <element signature="e#43874#43897#0" expanded="true" />
-                <element signature="e#44122#44145#0" expanded="true" />
-                <element signature="e#44430#44464#0" expanded="true" />
-                <element signature="e#46934#46953#0" expanded="true" />
-                <element signature="e#49555#49574#0" expanded="true" />
-                <element signature="e#51505#51557#0" expanded="true" />
-                <element signature="e#51559#51607#0" expanded="true" />
-                <element signature="e#51912#51964#0" expanded="true" />
-                <element signature="e#54035#54071#0" expanded="true" />
-                <element signature="e#55594#55616#0" expanded="true" />
-                <element signature="e#55786#55822#0" expanded="true" />
-                <element signature="e#55939#55963#0" expanded="true" />
-                <element signature="e#56300#56333#0" expanded="true" />
-                <element signature="e#56501#56527#0" expanded="true" />
-                <element signature="e#56811#56849#0" expanded="true" />
-                <element signature="e#57005#57030#0" expanded="true" />
-                <element signature="e#57366#57402#0" expanded="true" />
-                <element signature="e#57577#57600#0" expanded="true" />
-                <element signature="e#57852#57886#0" expanded="true" />
-                <element signature="e#58036#58061#0" expanded="true" />
-                <element signature="e#58345#58381#0" expanded="true" />
-                <element signature="e#58545#58571#0" expanded="true" />
-                <element signature="e#58835#58870#0" expanded="true" />
-                <element signature="e#59027#59060#0" expanded="true" />
-                <element signature="e#59326#59361#0" expanded="true" />
-                <element signature="e#59518#59542#0" expanded="true" />
-                <element signature="e#59784#59817#0" expanded="true" />
-                <element signature="e#59969#59997#0" expanded="true" />
-                <element signature="e#60301#60334#0" expanded="true" />
-                <element signature="e#60488#60510#0" expanded="true" />
-                <element signature="e#60941#60974#0" expanded="true" />
-                <element signature="e#61310#61367#0" expanded="true" />
-                <element signature="e#61501#61557#0" expanded="true" />
-                <element signature="e#61680#61705#0" expanded="true" />
-                <element signature="e#61894#61930#0" expanded="true" />
-                <element signature="e#62594#62618#0" expanded="true" />
-                <element signature="e#62737#62761#0" expanded="true" />
-                <element signature="e#64785#64837#0" expanded="true" />
-                <element signature="e#64839#64887#0" expanded="true" />
-                <element signature="e#64906#64960#0" expanded="true" />
-                <element signature="e#65888#65934#0" expanded="true" />
-                <element signature="e#65936#65986#0" expanded="true" />
-                <element signature="e#66324#66370#0" expanded="true" />
-                <element signature="e#66372#66422#0" expanded="true" />
-                <element signature="e#67339#67371#0" expanded="true" />
-                <element signature="e#69375#69439#0" expanded="true" />
-                <element signature="e#69469#69524#0" expanded="true" />
-                <marker date="1419688703415" expanded="false" signature="5943:6023" placeholder="handleMessage(msg) -&gt; {" />
-                <marker date="1419688703415" expanded="false" signature="6443:6450" placeholder="}" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="strings.xml" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.2748091" vertical-offset="6064" max-vertical-offset="6885">
-              <caret line="396" column="80" selection-start-line="396" selection-start-column="41" selection-end-line="396" selection-end-column="80" />
+            <state vertical-scroll-proportion="1.2386156" vertical-offset="0" max-vertical-offset="38386">
+              <caret line="120" column="38" selection-start-line="120" selection-start-column="38" selection-end-line="120" selection-end-column="38" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="OnlineHelpFragment.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/OnlineHelpFragment.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1007" max-vertical-offset="2941">
-              <caret line="70" column="8" selection-start-line="70" selection-start-column="8" selection-end-line="70" selection-end-column="8" />
-              <folding>
-                <element signature="e#0#5276#0" expanded="true" />
-                <element signature="imports" expanded="true" />
-                <element signature="e#1665#1695#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -232,6 +85,10 @@
     <FindUsagesManager>
       <setting name="OPEN_NEW_TAB" value="true" />
     </FindUsagesManager>
+  </component>
+  <component name="GenerateSignedApkSettings">
+    <option name="KEY_STORE_PATH" value="C:\DATEN\eclipseWorkspace\dirksPrivaterAndroidEntwicklerkey.key" />
+    <option name="KEY_ALIAS" value="android develpoment dirk marciniak" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -1253,7 +1110,6 @@
       <list>
         <option value="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/comm/BlueThoothComService.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/comm/BtServiceMessage.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/ApplicationDEBUG.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/ProgramAboutFragment.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ArrayAdapterWithPics.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/dialogs/SelectDeviceDialogFragment.java" />
@@ -1280,6 +1136,9 @@
         <option value="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/SPX42ReadLogListArrayAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/assets/www/index_de.html" />
         <option value="$PROJECT_DIR$/app/src/main/assets/www/index_en.html" />
+        <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/ApplicationDEBUG.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ProjectConst.java" />
       </list>
     </option>
   </component>
@@ -1380,8 +1239,26 @@
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="manifests" />
-              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidManifestsGroupNode" />
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SubmatixBTAndroid4" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="gui" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -1409,8 +1286,11 @@
     <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_AVD" value="Nexus_5_API_21" />
     <property name="android.project.structure.last.selected" value="app" />
     <property name="android.project.structure.proportion" value="0.15" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/app/utils/versionsScript.xml" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../upload" />
     <property name="LayoutCode.rearrangeEntriesJava" value="true" />
+    <property name="ExportApk.ApkPath" value="C:\DATEN\upload" />
+    <property name="ExportApk.Flavors" value="" />
+    <property name="ExportApk.BuildType" value="release" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -1621,7 +1501,19 @@
       <created>1418653383616</created>
       <updated>1418653383616</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Offline Hilfetexte">
+      <created>1419688965687</created>
+      <updated>1419688965687</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Implementierung Onlinehilfe">
+      <created>1419689086298</created>
+      <updated>1419689086298</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Version RC1">
+      <created>1419689220081</created>
+      <updated>1419689220081</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -1651,8 +1543,8 @@
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32865497" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32748538" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32748538" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21199587" sideWeight="0.5008696" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32748538" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18252327" sideWeight="0.5005848" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32748538" sideWeight="0.5475698" order="7" side_tool="true" content_ui="tabs" />
@@ -1662,9 +1554,9 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32865497" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3293979" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32748538" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" x="2849" y="48" width="967" height="278" />
-      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32748538" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32748538" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18252327" sideWeight="0.49912128" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18252327" sideWeight="0.49824563" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Problems" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32821724" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32988626" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1704,7 +1596,9 @@
     <MESSAGE value="Online Hilfe weiter zugefügt" />
     <MESSAGE value="automatische Versionierung" />
     <MESSAGE value="Offline Hilfetexte" />
-    <option name="LAST_COMMIT_MESSAGE" value="Offline Hilfetexte" />
+    <MESSAGE value="Implementierung Onlinehilfe" />
+    <MESSAGE value="Version RC1" />
+    <option name="LAST_COMMIT_MESSAGE" value="Version RC1" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
@@ -1713,13 +1607,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/ApplicationDEBUG.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="238" max-vertical-offset="799">
-          <caret line="14" column="66" selection-start-line="14" selection-start-column="66" selection-end-line="14" selection-end-column="66" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/ProgramAboutFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2669">
@@ -1846,13 +1733,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/ApplicationDEBUG.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="799">
-          <caret line="14" column="66" selection-start-line="14" selection-start-column="66" selection-end-line="14" selection-end-column="66" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/local.properties">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="543">
@@ -1935,95 +1815,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/MainActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="5206" max-vertical-offset="38386">
-          <caret line="390" column="60" selection-start-line="390" selection-start-column="60" selection-end-line="390" selection-end-column="60" />
-          <folding>
-            <element signature="e#16063#16111#0" expanded="true" />
-            <element signature="e#16194#16248#0" expanded="true" />
-            <element signature="e#28876#28901#0" expanded="true" />
-            <element signature="e#28966#29002#0" expanded="true" />
-            <element signature="e#29069#29097#0" expanded="true" />
-            <element signature="e#29155#29194#0" expanded="true" />
-            <element signature="e#29262#29286#0" expanded="true" />
-            <element signature="e#29351#29386#0" expanded="true" />
-            <element signature="e#29454#29479#0" expanded="true" />
-            <element signature="e#29536#29572#0" expanded="true" />
-            <element signature="e#29640#29665#0" expanded="true" />
-            <element signature="e#29722#29758#0" expanded="true" />
-            <element signature="e#29826#29852#0" expanded="true" />
-            <element signature="e#29912#29949#0" expanded="true" />
-            <element signature="e#30016#30049#0" expanded="true" />
-            <element signature="e#30109#30153#0" expanded="true" />
-            <element signature="e#30219#30243#0" expanded="true" />
-            <element signature="e#30298#30333#0" expanded="true" />
-            <element signature="e#30400#30426#0" expanded="true" />
-            <element signature="e#30491#30528#0" expanded="true" />
-            <element signature="e#30595#30618#0" expanded="true" />
-            <element signature="e#30662#30696#0" expanded="true" />
-            <element signature="e#30763#30785#0" expanded="true" />
-            <element signature="e#30829#30862#0" expanded="true" />
-            <element signature="e#30929#30951#0" expanded="true" />
-            <element signature="e#30993#31026#0" expanded="true" />
-            <element signature="e#39604#39629#0" expanded="true" />
-            <element signature="e#39909#39933#0" expanded="true" />
-            <element signature="e#42472#42498#0" expanded="true" />
-            <element signature="e#42733#42756#0" expanded="true" />
-            <element signature="e#43045#43072#0" expanded="true" />
-            <element signature="e#43874#43897#0" expanded="true" />
-            <element signature="e#44122#44145#0" expanded="true" />
-            <element signature="e#44430#44464#0" expanded="true" />
-            <element signature="e#46934#46953#0" expanded="true" />
-            <element signature="e#49555#49574#0" expanded="true" />
-            <element signature="e#51505#51557#0" expanded="true" />
-            <element signature="e#51559#51607#0" expanded="true" />
-            <element signature="e#51912#51964#0" expanded="true" />
-            <element signature="e#54035#54071#0" expanded="true" />
-            <element signature="e#55594#55616#0" expanded="true" />
-            <element signature="e#55786#55822#0" expanded="true" />
-            <element signature="e#55939#55963#0" expanded="true" />
-            <element signature="e#56300#56333#0" expanded="true" />
-            <element signature="e#56501#56527#0" expanded="true" />
-            <element signature="e#56811#56849#0" expanded="true" />
-            <element signature="e#57005#57030#0" expanded="true" />
-            <element signature="e#57366#57402#0" expanded="true" />
-            <element signature="e#57577#57600#0" expanded="true" />
-            <element signature="e#57852#57886#0" expanded="true" />
-            <element signature="e#58036#58061#0" expanded="true" />
-            <element signature="e#58345#58381#0" expanded="true" />
-            <element signature="e#58545#58571#0" expanded="true" />
-            <element signature="e#58835#58870#0" expanded="true" />
-            <element signature="e#59027#59060#0" expanded="true" />
-            <element signature="e#59326#59361#0" expanded="true" />
-            <element signature="e#59518#59542#0" expanded="true" />
-            <element signature="e#59784#59817#0" expanded="true" />
-            <element signature="e#59969#59997#0" expanded="true" />
-            <element signature="e#60301#60334#0" expanded="true" />
-            <element signature="e#60488#60510#0" expanded="true" />
-            <element signature="e#60941#60974#0" expanded="true" />
-            <element signature="e#61310#61367#0" expanded="true" />
-            <element signature="e#61501#61557#0" expanded="true" />
-            <element signature="e#61680#61705#0" expanded="true" />
-            <element signature="e#61894#61930#0" expanded="true" />
-            <element signature="e#62594#62618#0" expanded="true" />
-            <element signature="e#62737#62761#0" expanded="true" />
-            <element signature="e#64785#64837#0" expanded="true" />
-            <element signature="e#64839#64887#0" expanded="true" />
-            <element signature="e#64906#64960#0" expanded="true" />
-            <element signature="e#65888#65934#0" expanded="true" />
-            <element signature="e#65936#65986#0" expanded="true" />
-            <element signature="e#66324#66370#0" expanded="true" />
-            <element signature="e#66372#66422#0" expanded="true" />
-            <element signature="e#67339#67371#0" expanded="true" />
-            <element signature="e#69375#69439#0" expanded="true" />
-            <element signature="e#69469#69524#0" expanded="true" />
-            <marker date="1419688703415" expanded="false" signature="5943:6023" placeholder="handleMessage(msg) -&gt; {" />
-            <marker date="1419688703415" expanded="false" signature="6443:6450" placeholder="}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/fragment_online_help.xml">
       <provider editor-type-id="android-designer">
         <state />
@@ -2031,14 +1822,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.063432835" vertical-offset="0" max-vertical-offset="804">
           <caret line="3" column="62" selection-start-line="2" selection-start-column="21" selection-end-line="2" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.36911944" vertical-offset="306" max-vertical-offset="1139">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -2120,12 +1903,12 @@
         <state vertical-scroll-proportion="1.6958106" vertical-offset="2146" max-vertical-offset="7531">
           <caret line="181" column="76" selection-start-line="181" selection-start-column="76" selection-end-line="181" selection-end-column="76" />
           <folding>
-            <element signature="e#0#10628#0" expanded="true" />
+            <element signature="e#0#10630#0" expanded="true" />
             <element signature="imports" expanded="true" />
-            <element signature="e#1652#1679#0" expanded="true" />
-            <element signature="e#9430#9439#0" expanded="true" />
-            <element signature="e#10402#10403#0" expanded="true" />
-            <element signature="e#10434#10435#0" expanded="true" />
+            <element signature="e#1652#1681#0" expanded="true" />
+            <element signature="e#9432#9441#0" expanded="true" />
+            <element signature="e#10404#10405#0" expanded="true" />
+            <element signature="e#10436#10437#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2135,45 +1918,45 @@
         <state vertical-scroll-proportion="2.9034607" vertical-offset="7144" max-vertical-offset="10744">
           <caret line="514" column="0" selection-start-line="514" selection-start-column="0" selection-end-line="514" selection-end-column="0" />
           <folding>
-            <element signature="e#0#15299#0" expanded="true" />
-            <element signature="e#1294#1322#0" expanded="true" />
-            <element signature="e#1369#1397#0" expanded="true" />
-            <element signature="e#2444#2445#0" expanded="true" />
-            <element signature="e#2461#2462#0" expanded="true" />
-            <element signature="e#3711#3712#0" expanded="true" />
-            <element signature="e#3740#3741#0" expanded="true" />
-            <element signature="e#6672#6673#0" expanded="true" />
-            <element signature="e#6700#6701#0" expanded="true" />
-            <element signature="e#6959#6960#0" expanded="true" />
-            <element signature="e#6988#6989#0" expanded="true" />
-            <element signature="e#7231#7232#0" expanded="true" />
-            <element signature="e#7258#7259#0" expanded="true" />
-            <element signature="e#7530#7531#0" expanded="true" />
-            <element signature="e#7564#7565#0" expanded="true" />
-            <element signature="e#9773#9774#0" expanded="true" />
-            <element signature="e#9804#9805#0" expanded="true" />
-            <element signature="e#10072#10073#0" expanded="true" />
-            <element signature="e#10103#10104#0" expanded="true" />
-            <element signature="e#10731#10732#0" expanded="true" />
-            <element signature="e#10766#10767#0" expanded="true" />
-            <element signature="e#11102#11103#0" expanded="true" />
-            <element signature="e#11143#11144#0" expanded="true" />
-            <element signature="e#11441#11442#0" expanded="true" />
-            <element signature="e#11479#11480#0" expanded="true" />
-            <element signature="e#12412#12413#0" expanded="true" />
-            <element signature="e#12455#12456#0" expanded="true" />
-            <element signature="e#12785#12786#0" expanded="true" />
-            <element signature="e#12821#12822#0" expanded="true" />
-            <element signature="e#13125#13126#0" expanded="true" />
-            <element signature="e#13167#13168#0" expanded="true" />
-            <element signature="e#14369#14370#0" expanded="true" />
-            <element signature="e#14400#14401#0" expanded="true" />
-            <element signature="e#14654#14655#0" expanded="true" />
-            <element signature="e#14695#14696#0" expanded="true" />
-            <element signature="e#14969#14970#0" expanded="true" />
-            <element signature="e#15006#15007#0" expanded="true" />
-            <element signature="e#15261#15262#0" expanded="true" />
-            <element signature="e#15295#15296#0" expanded="true" />
+            <element signature="e#0#15303#0" expanded="true" />
+            <element signature="e#1294#1324#0" expanded="true" />
+            <element signature="e#1371#1401#0" expanded="true" />
+            <element signature="e#2448#2449#0" expanded="true" />
+            <element signature="e#2465#2466#0" expanded="true" />
+            <element signature="e#3715#3716#0" expanded="true" />
+            <element signature="e#3744#3745#0" expanded="true" />
+            <element signature="e#6676#6677#0" expanded="true" />
+            <element signature="e#6704#6705#0" expanded="true" />
+            <element signature="e#6963#6964#0" expanded="true" />
+            <element signature="e#6992#6993#0" expanded="true" />
+            <element signature="e#7235#7236#0" expanded="true" />
+            <element signature="e#7262#7263#0" expanded="true" />
+            <element signature="e#7534#7535#0" expanded="true" />
+            <element signature="e#7568#7569#0" expanded="true" />
+            <element signature="e#9777#9778#0" expanded="true" />
+            <element signature="e#9808#9809#0" expanded="true" />
+            <element signature="e#10076#10077#0" expanded="true" />
+            <element signature="e#10107#10108#0" expanded="true" />
+            <element signature="e#10735#10736#0" expanded="true" />
+            <element signature="e#10770#10771#0" expanded="true" />
+            <element signature="e#11106#11107#0" expanded="true" />
+            <element signature="e#11147#11148#0" expanded="true" />
+            <element signature="e#11445#11446#0" expanded="true" />
+            <element signature="e#11483#11484#0" expanded="true" />
+            <element signature="e#12416#12417#0" expanded="true" />
+            <element signature="e#12459#12460#0" expanded="true" />
+            <element signature="e#12789#12790#0" expanded="true" />
+            <element signature="e#12825#12826#0" expanded="true" />
+            <element signature="e#13129#13130#0" expanded="true" />
+            <element signature="e#13171#13172#0" expanded="true" />
+            <element signature="e#14373#14374#0" expanded="true" />
+            <element signature="e#14404#14405#0" expanded="true" />
+            <element signature="e#14658#14659#0" expanded="true" />
+            <element signature="e#14699#14700#0" expanded="true" />
+            <element signature="e#14973#14974#0" expanded="true" />
+            <element signature="e#15010#15011#0" expanded="true" />
+            <element signature="e#15265#15266#0" expanded="true" />
+            <element signature="e#15299#15300#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2214,10 +1997,44 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.08202654" vertical-offset="306" max-vertical-offset="1139">
+          <caret line="22" column="27" selection-start-line="22" selection-start-column="27" selection-end-line="22" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/values/strings.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.2748091" vertical-offset="6064" max-vertical-offset="6885">
+        <state vertical-scroll-proportion="0.8308458" vertical-offset="6064" max-vertical-offset="6885">
           <caret line="396" column="80" selection-start-line="396" selection-start-column="41" selection-end-line="396" selection-end-column="80" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/utils/ProjectConst.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.63570565" vertical-offset="0" max-vertical-offset="4012">
+          <caret line="55" column="41" selection-start-line="55" selection-start-column="41" selection-end-line="55" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/ApplicationDEBUG.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.79975873" vertical-offset="0" max-vertical-offset="829">
+          <caret line="39" column="43" selection-start-line="39" selection-start-column="43" selection-end-line="39" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#1324#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/de/dmarcini/submatix/android4/full/gui/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.2386156" vertical-offset="0" max-vertical-offset="38386">
+          <caret line="120" column="38" selection-start-line="120" selection-start-column="38" selection-end-line="120" selection-end-column="38" />
           <folding />
         </state>
       </provider>
