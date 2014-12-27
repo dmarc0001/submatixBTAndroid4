@@ -1,11 +1,7 @@
-bin/
-gen/
-doc/
+app/build/
+app/lib/
 *.log
-javadoc/
-database/
-*.log.?
-*.log.lck
-*.db
 .memdump
-
+.gralde/
+.idea/
+gradle/

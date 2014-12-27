@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+    programm: SubmatixBTLoggerAndroid
+    purpose:  configuration and read logs from SUBMATIX SPX42 divecomputer via Bluethooth    
+    Copyright (C) 2012  Dirk Marciniak
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/
+-->
+<manifest
+    package="de.dmarcini.submatix.android4.full"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:installLocation="auto"
+    android:versionCode="26"
+    android:versionName="2.0 RC1">
+
+    <uses-sdk
+        android:minSdkVersion="15"
+        android:targetSdkVersion="21"/>
+    <!--  Berechtigungen  -->
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- Die Anwendungsbeschreibung  -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+    <application
+        android:allowBackup="true"
+        android:description="@string/app_description"
+        android:hardwareAccelerated="true"
+        android:icon="@drawable/spx42"
+        android:label="@string/app_name"
+        android:theme="@style/AppDarkTheme">
+
+        <!-- Die List/Main activity -->
+        <activity
+            android:name="de.dmarcini.submatix.android4.full.gui.MainActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:screenOrientation="sensorLandscape">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <!-- Der Bluethooth Service -->
+        <service android:name="de.dmarcini.submatix.android4.full.comm.BlueThoothComService"></service>
+    </application>
+
+</manifest>

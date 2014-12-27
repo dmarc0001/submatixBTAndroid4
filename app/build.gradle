@@ -1,0 +1,50 @@
+apply plugin: 'com.android.application'
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    signingConfigs {
+        DirksKey {
+            storeFile file('C:/DATEN/eclipseWorkspace/dirksPrivaterAndroidEntwicklerkey.key')
+            storePassword 'energie'
+            keyAlias 'android develpoment dirk marciniak'
+            keyPassword 'energie'
+        }
+    }
+
+    defaultConfig {
+        applicationId "de.dmarcini.submatix.android4.full"
+        minSdkVersion 15
+        targetSdkVersion 21
+        signingConfig signingConfigs.DirksKey
+    }
+
+    buildTypes {
+        debug {
+            ant.importBuild "utils\\versionsScript.xml"
+            tasks.makeVersion.execute()
+            signingConfig signingConfigs.DirksKey
+            proguardFile 'C:/DATEN/androidStudioWorkspace/SubmatixBTAndroid4/app/utils/proguard-project.txt'
+        }
+        release {
+            ant.importBuild "utils\\versionsScript.xml"
+            tasks.makeVersion.execute()
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            signingConfig signingConfigs.DirksKey
+            proguardFile 'C:/DATEN/androidStudioWorkspace/SubmatixBTAndroid4/app/utils/proguard-project.txt'
+        }
+    }
+
+    dependencies {
+        compile fileTree(dir: 'lib', include: '*.jar')
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+
+}
+
