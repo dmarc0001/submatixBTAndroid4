@@ -93,6 +93,7 @@
     <option name="KEY_ALIAS" value="android develpoment dirk marciniak" />
   </component>
   <component name="Git.Settings">
+    <option name="SYNC_SETTING" value="DONT" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GradleLocalSettings">
@@ -1306,7 +1307,7 @@
     <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_AVD" value="Nexus_5_API_21" />
     <property name="android.project.structure.last.selected" value="app" />
     <property name="android.project.structure.proportion" value="0.15" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/.idea" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/gradle" />
     <property name="LayoutCode.rearrangeEntriesJava" value="true" />
     <property name="ExportApk.ApkPath" value="C:\DATEN\upload" />
     <property name="ExportApk.Flavors" value="" />
@@ -1538,7 +1539,11 @@
       <created>1419703652522</created>
       <updated>1419703652522</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Version RC1a">
+      <created>1419703969086</created>
+      <updated>1419703969086</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
