@@ -20,16 +20,13 @@
 //@formatter:on
 /**
  * Eigener Arrayadapter, der Icons beinhaltet
- * 
+ *
  * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
- * 
- * 
+ *
+ *
  * Stand: 23.12.2012
  */
 package de.dmarcini.submatix.android4.full.utils;
-
-import java.util.Iterator;
-import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
@@ -40,36 +37,40 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.Iterator;
+import java.util.List;
+
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.content.ContentSwitcher;
 
 /**
- * 
  * Das Objekt leitet sich vom ArrayAdapter ab, erzeugt Adapter mit Icons
- * 
+ * <p/>
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
- * 
+ *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- * 
+ *         <p/>
  *         Stand: 10.11.2013
  */
 public class ArrayAdapterWithPics extends ArrayAdapter<ContentSwitcher.ProgItem>
 {
-  private int     themeId  = R.style.AppDarkTheme;
-  private boolean isOnline = false;                ;
+  private int themeId = R.style.AppDarkTheme;
+  private boolean isOnline = false;
+  ;
 
   /**
    * Mein Konstruktor Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
-   * 
+   *
    * @param context
    * @param textViewResourceId
    * @param isOnline
    * @param objects
    * @param themeId
    */
-  public ArrayAdapterWithPics( Context context, int textViewResourceId, boolean isOnline, List<ContentSwitcher.ProgItem> objects, int themeId )
+  public ArrayAdapterWithPics(Context context, int textViewResourceId, boolean isOnline, List<ContentSwitcher.ProgItem> objects, int themeId)
   {
-    super( context, textViewResourceId );
+    super(context, textViewResourceId);
     //
     // Alle Objekte erst einmal durchgehen
     //
@@ -77,68 +78,62 @@ public class ArrayAdapterWithPics extends ArrayAdapter<ContentSwitcher.ProgItem>
     while( it.hasNext() )
     {
       ContentSwitcher.ProgItem item = it.next();
-      if( item.isDummy ) continue;
+      if( item.isDummy )
+      {
+        continue;
+      }
       if( isOnline || item.workOffline )
       {
         // wenn wir online sind oder die Funktion auch offline erlaubt ist
         // dann in die Liste aufnehmen
-        super.add( item );
+        super.add(item);
       }
     }
     this.themeId = themeId;
     this.isOnline = isOnline;
   }
 
-  /* private view holder class */
-  private class ViewHolder
-  {
-    public ImageView imageView;
-    public TextView  txtTitle;
-    public ImageView imageRightIndicatorView;
-    public ImageView imageLeftIndicatorView;
-  }
-
   /**
    * Die Methode gibt mein in XML Creiertes Objekt für jeden Listenpunkt zurück
-   * 
-   * @see android.widget.ArrayAdapter#getView(int, android.view.View, android.view.ViewGroup)
+   *
    * @param position
    * @param convertView
    * @param parent
    * @return die View für diesen Punkt der Liste
+   * @see android.widget.ArrayAdapter#getView(int, android.view.View, android.view.ViewGroup)
    */
   @Override
-  public View getView( int position, View convertView, ViewGroup parent )
+  public View getView(int position, View convertView, ViewGroup parent)
   {
     ViewHolder holder = null;
-    ContentSwitcher.ProgItem progItem = getItem( position );
-    LayoutInflater mInflater = ( LayoutInflater )getContext().getSystemService( Activity.LAYOUT_INFLATER_SERVICE );
+    ContentSwitcher.ProgItem progItem = getItem(position);
+    LayoutInflater mInflater = ( LayoutInflater ) getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
     if( convertView == null )
     {
-      convertView = mInflater.inflate( R.layout.array_with_pic_adapter_view, parent, false );
+      convertView = mInflater.inflate(R.layout.array_with_pic_adapter_view, parent, false);
       holder = new ViewHolder();
-      holder.txtTitle = ( TextView )convertView.findViewById( R.id.arrayListTextView );
-      holder.imageView = ( ImageView )convertView.findViewById( R.id.arrayListIconView );
-      holder.imageRightIndicatorView = ( ImageView )convertView.findViewById( R.id.arrayListRightActiveIndicator );
-      holder.imageLeftIndicatorView = ( ImageView )convertView.findViewById( R.id.arrayListLeftActiveIndicator );
-      convertView.setTag( holder );
+      holder.txtTitle = ( TextView ) convertView.findViewById(R.id.arrayListTextView);
+      holder.imageView = ( ImageView ) convertView.findViewById(R.id.arrayListIconView);
+      holder.imageRightIndicatorView = ( ImageView ) convertView.findViewById(R.id.arrayListRightActiveIndicator);
+      holder.imageLeftIndicatorView = ( ImageView ) convertView.findViewById(R.id.arrayListLeftActiveIndicator);
+      convertView.setTag(holder);
     }
     else
     {
-      holder = ( ViewHolder )convertView.getTag();
+      holder = ( ViewHolder ) convertView.getTag();
     }
-    holder.txtTitle.setText( progItem.content );
+    holder.txtTitle.setText(progItem.content);
     if( this.isOnline )
     {
-      holder.imageView.setImageResource( progItem.resIdOnline );
+      holder.imageView.setImageResource(progItem.resIdOnline);
     }
     else
     {
-      holder.imageView.setImageResource( progItem.resIdOffline );
+      holder.imageView.setImageResource(progItem.resIdOffline);
     }
     if( parent instanceof ListView )
     {
-      ListView pView = ( ListView )parent;
+      ListView pView = ( ListView ) parent;
       if( pView.getCheckedItemPosition() == position )
       {
         //
@@ -146,35 +141,44 @@ public class ArrayAdapterWithPics extends ArrayAdapter<ContentSwitcher.ProgItem>
         //
         if( this.themeId == R.style.AppDarkTheme )
         {
-          holder.imageLeftIndicatorView.setImageResource( R.drawable.activated_red_icon_color );
-          holder.imageRightIndicatorView.setImageResource( R.drawable.activated_red_icon_color );
-          convertView.setBackgroundColor( getContext().getResources().getColor( R.color.navigatorDark_markerColor ) );
-          holder.txtTitle.setTextColor( getContext().getResources().getColor( R.color.navigatorDark_activeTextColor ) );
+          holder.imageLeftIndicatorView.setImageResource(R.drawable.activated_red_icon_color);
+          holder.imageRightIndicatorView.setImageResource(R.drawable.activated_red_icon_color);
+          convertView.setBackgroundColor(getContext().getResources().getColor(R.color.navigatorDark_markerColor));
+          holder.txtTitle.setTextColor(getContext().getResources().getColor(R.color.navigatorDark_activeTextColor));
         }
         else
         {
-          holder.imageLeftIndicatorView.setImageResource( R.drawable.activated_blue_icon_color );
-          holder.imageRightIndicatorView.setImageResource( R.drawable.activated_blue_icon_color );
-          convertView.setBackgroundColor( getContext().getResources().getColor( R.color.navigatorLight_markerColor ) );
-          holder.txtTitle.setTextColor( getContext().getResources().getColor( R.color.navigatorLight_activeTextColor ) );
+          holder.imageLeftIndicatorView.setImageResource(R.drawable.activated_blue_icon_color);
+          holder.imageRightIndicatorView.setImageResource(R.drawable.activated_blue_icon_color);
+          convertView.setBackgroundColor(getContext().getResources().getColor(R.color.navigatorLight_markerColor));
+          holder.txtTitle.setTextColor(getContext().getResources().getColor(R.color.navigatorLight_activeTextColor));
         }
       }
       else
       {
-        holder.imageLeftIndicatorView.setImageResource( R.drawable.deactivated_and_space );
-        holder.imageRightIndicatorView.setImageResource( R.drawable.deactivated_and_space );
+        holder.imageLeftIndicatorView.setImageResource(R.drawable.deactivated_and_space);
+        holder.imageRightIndicatorView.setImageResource(R.drawable.deactivated_and_space);
         if( this.themeId == R.style.AppDarkTheme )
         {
-          convertView.setBackgroundColor( getContext().getResources().getColor( R.color.navigatorDark_backgroundColor ) );
-          holder.txtTitle.setTextColor( getContext().getResources().getColor( R.color.navigatorDark_inactiveTextColor ) );
+          convertView.setBackgroundColor(getContext().getResources().getColor(R.color.navigatorDark_backgroundColor));
+          holder.txtTitle.setTextColor(getContext().getResources().getColor(R.color.navigatorDark_inactiveTextColor));
         }
         else
         {
-          convertView.setBackgroundColor( getContext().getResources().getColor( R.color.navigatorLight_backgroundColor ) );
-          holder.txtTitle.setTextColor( getContext().getResources().getColor( R.color.navigatorLight_inactiveTextColor ) );
+          convertView.setBackgroundColor(getContext().getResources().getColor(R.color.navigatorLight_backgroundColor));
+          holder.txtTitle.setTextColor(getContext().getResources().getColor(R.color.navigatorLight_inactiveTextColor));
         }
       }
     }
     return convertView;
+  }
+
+  /* private view holder class */
+  private class ViewHolder
+  {
+    public ImageView imageView;
+    public TextView txtTitle;
+    public ImageView imageRightIndicatorView;
+    public ImageView imageLeftIndicatorView;
   }
 }

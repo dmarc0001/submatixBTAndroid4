@@ -166,19 +166,16 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
   @Override
   public void msgConnectError(BtServiceMessage msg)
   {
-    // TODO Automatisch generierter Methodenstub
   }
 
   @Override
   public void msgConnecting(BtServiceMessage msg)
   {
-    // TODO Automatisch generierter Methodenstub
   }
 
   @Override
   public void msgDisconnected(BtServiceMessage msg)
   {
-    // TODO Automatisch generierter Methodenstub
   }
 
   @Override
@@ -190,13 +187,11 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
   @Override
   public void msgRecivedTick(BtServiceMessage msg)
   {
-    // TODO Automatisch generierter Methodenstub
   }
 
   @Override
   public void msgReciveWriteTmeout(BtServiceMessage msg)
   {
-    // TODO Automatisch generierter Methodenstub
   }
 
   @Override

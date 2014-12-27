@@ -24,33 +24,36 @@ import android.os.Bundle;
 
 /**
  * ein Proghramminterner Stackeintrag über Aufrufe der Fragmente
- *
+ * <p/>
  * Project: SubmatixBTAndroid4 Package: de.dmarcini.submatix.android4.full.utils
- * 
- * @author Dirk Marciniak (dirk_marciniak@arcor.de)
  *
+ * @author Dirk Marciniak (dirk_marciniak@arcor.de)
+ *         <p/>
  *         Stand: 24.11.2014
  */
 public class FragmentCallStackEntry
 {
-  private int    itemNumber = -1;
+  private int itemNumber = -1;
   private Bundle itemBundle = null;
 
-  @SuppressWarnings( "unused" )
+  @SuppressWarnings("unused")
   private FragmentCallStackEntry()
-  {};
+  {
+  }
+
+  ;
 
   /**
    * Der Kosntruktor mit den Inhalten
-   *
+   * <p/>
    * Project: SubmatixBTAndroid4 Package: de.dmarcini.submatix.android4.full.utils
-   * 
+   * <p/>
    * Stand: 24.11.2014
-   * 
+   *
    * @param itemNumber
    * @param paramBundle
    */
-  public FragmentCallStackEntry( int itemNumber, Bundle paramBundle )
+  public FragmentCallStackEntry(int itemNumber, Bundle paramBundle)
   {
     this.itemNumber = itemNumber;
     this.itemBundle = paramBundle;
@@ -58,29 +61,29 @@ public class FragmentCallStackEntry
 
   /**
    * Gib die ID des Programmpunktes zurück
-   *
+   * <p/>
    * Project: SubmatixBTAndroid4 Package: de.dmarcini.submatix.android4.full.utils
-   * 
+   * <p/>
    * Stand: 24.11.2014
-   * 
+   *
    * @return Programmpunkt-ID
    */
   public int getId()
   {
-    return( itemNumber );
+    return (itemNumber);
   }
 
   /**
    * Gib die Argumente (Bundle) des Eintrages zurück
-   *
+   * <p/>
    * Project: SubmatixBTAndroid4 Package: de.dmarcini.submatix.android4.full.utils
-   * 
+   * <p/>
    * Stand: 24.11.2014
-   * 
+   *
    * @return eine argumentesammlung (Bundle)
    */
   public Bundle getBundle()
   {
-    return( itemBundle );
+    return (itemBundle);
   }
 }

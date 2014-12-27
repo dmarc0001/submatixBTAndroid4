@@ -21,32 +21,30 @@
 package de.dmarcini.submatix.android4.full.utils;
 
 /**
- * 
  * Klasse als Container für ein Gas-Update
- * 
+ * <p/>
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
- * 
+ *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- * 
+ *         <p/>
  *         Stand: 10.11.2013
  */
 public class GasUpdateEntity
 {
-  private int           gasNr    = 0;
+  private int gasNr = 0;
   private SPX42GasParms gasParms = null;
 
   /**
-   * 
    * Konstruktor mit Parametern
-   * 
+   * <p/>
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
-   * 
+   * <p/>
    * Stand: 03.12.2013
-   * 
+   *
    * @param nr
    * @param parms
    */
-  public GasUpdateEntity( int nr, SPX42GasParms parms )
+  public GasUpdateEntity(int nr, SPX42GasParms parms)
   {
     gasNr = nr;
     gasParms = parms;

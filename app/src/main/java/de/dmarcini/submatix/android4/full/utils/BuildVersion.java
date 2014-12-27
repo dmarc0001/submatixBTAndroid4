@@ -26,9 +26,9 @@
  */
 package de.dmarcini.submatix.android4.full.utils;
 
-import java.util.Locale;
-
 import org.joda.time.DateTime;
+
+import java.util.Locale;
 
 import de.dmarcini.submatix.android4.full.gui.MainActivity;
 
@@ -43,12 +43,12 @@ import de.dmarcini.submatix.android4.full.gui.MainActivity;
  */
 public class BuildVersion
 {
-  private static final long buildNumber = 3847L;
+  private static final long buildNumber = 3856L;
   /**
    * Kennzeichnung für eine Version
    */
   private static final String buildNumberString = String.format(Locale.ENGLISH, "%d", buildNumber);
-  private static final long buildDate = 1418653199251L;
+  private static final long buildDate = 1419680683321L;
 
   /**
    * Gib die Buildnummer zurück

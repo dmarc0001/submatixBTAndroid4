@@ -1818,7 +1818,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     }
     catch( FirmwareNotSupportetException ex )
     {
-      // TODO Fehklermeldung an User generieren
+      // TODO Fehlermeldung an User generieren
       ex.printStackTrace();
     }
   }
@@ -1888,7 +1888,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     }
     catch( FirmwareNotSupportetException ex )
     {
-      // TODO FEhlermeldung für User generieren
+      // TODO Fehlermeldung für User generieren
       ex.printStackTrace();
     }
   }
@@ -2157,7 +2157,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     }
     catch( FirmwareNotSupportetException ex )
     {
-      // TODO FEhlermeldung für User generieren
+      // TODO Fehlermeldung für User generieren
       ex.printStackTrace();
     }
   }

@@ -70,7 +70,7 @@ public class OnlineHelpFragment extends Fragment
       OnlineHelpWebView.setWebViewClient(new WebViewClient());
       //TODO: WebViewClient filtern, nur submatix-Domains....
       OnlineHelpWebView.loadUrl(onlineUrl);
-      //OnlineHelpWebView.loadUrl("http://beta.html5test.com/");
+      // OnlineHelpWebView.loadUrl("http://beta.html5test.com/");
     }
     catch( NullPointerException ex )
     {

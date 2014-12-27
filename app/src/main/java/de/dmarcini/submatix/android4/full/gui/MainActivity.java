@@ -99,6 +99,29 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   //
 
   private final static String TAG = MainActivity.class.getSimpleName();
+  private final static String TAG2 = "BackStackChangeListener";
+  private static final String SERVICENAME = BlueThoothComService.class.getCanonicalName();
+  private static final String PACKAGENAME = BlueThoothComService.class.getPackage().getName();
+  private static final String FIRSTTIME = "keyFirstTimeInitiated";
+  private static final String PREFVERSION = "keyPreferencesVersion";
+  @SuppressWarnings( "javadoc" )
+  public static DateTimeFormatter localTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd - HH:mm:ss");
+  /**
+   * Global verfügbarer Alias Manager, Zuordnung Gerät <-> Alias
+   */
+  public static SPX42AliasManager aliasManager = null;
+  protected static File databaseDir = null;
+  protected static SPX42Config spxConfig = new SPX42Config();                                   // Da werden SPX-Spezifische Sachen gespeichert
+  protected static BluetoothAdapter mBtAdapter = null;
+  protected static float ackuValue = 0.0F;
+  protected static boolean wasRestartForNewTheme = false;                                               // War es ein restart mit neuem Thema?
+  private static Vector<String[]> dirEntryCache = new Vector<>();
+  private static boolean dirCacheIsFilling = true;
+  private static String[] deviceUnis = null;
+  private static int currentStyleId = R.style.AppDarkTheme;
+  private static int firstId = -1;                                                  // Die ID des ersten Eintrages
+  private static int lastStatusConnected = ProjectConst.CONN_STATE_NONE;                        // War der letzte Status Connected?
+  private final ArrayList<IBtServiceListener> serviceListener = new ArrayList<>();
   //
   // Ein Messagehandler, der vom Service kommende Messages bearbeitet
   //
@@ -116,36 +139,12 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       BtServiceMessage smsg = ( BtServiceMessage ) msg.obj;
 
       // an alle Listener versenden!
-      Iterator<IBtServiceListener> it = serviceListener.iterator();
-      while( it.hasNext() )
+      for( IBtServiceListener aServiceListener : serviceListener )
       {
-        it.next().handleMessages(msg.what, smsg);
+        aServiceListener.handleMessages(msg.what, smsg);
       }
     }
   };
-  private final static String TAG2 = "BackStackChangeListener";
-  private static final String SERVICENAME = BlueThoothComService.class.getCanonicalName();
-  private static final String PACKAGENAME = BlueThoothComService.class.getPackage().getName();
-  private static final String FIRSTTIME = "keyFirstTimeInitiated";
-  private static final String PREFVERSION = "keyPreferencesVersion";
-  @SuppressWarnings( "javadoc" )
-  public static DateTimeFormatter localTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd - HH:mm:ss");
-  /**
-   * Global verfügbarer Alias Manager, Zuordnung Gerät <-> Alias
-   */
-  public static SPX42AliasManager aliasManager = null;
-  protected static File databaseDir = null;
-  protected static SPX42Config spxConfig = new SPX42Config();                                   // Da werden SPX-Spezifische Sachen gespeichert
-  protected static BluetoothAdapter mBtAdapter = null;
-  protected static float ackuValue = 0.0F;
-  protected static boolean wasRestartForNewTheme = false;                                               // War es ein restart mit neuem Thema?
-  private static Vector<String[]> dirEntryCache = new Vector<String[]>();
-  private static boolean dirCacheIsFilling = true;
-  private static String[] deviceUnis = null;
-  private static int currentStyleId = R.style.AppDarkTheme;
-  private static int firstId = -1;                                                  // Die ID des ersten Eintrages
-  private static int lastStatusConnected = ProjectConst.CONN_STATE_NONE;                        // War der letzte Status Connected?
-  private final ArrayList<IBtServiceListener> serviceListener = new ArrayList<IBtServiceListener>();
   private BlueThoothComService mService = null;
   private LocalBinder binder = null;
   //
@@ -209,7 +208,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    * <p/>
    * Stand: 24.02.2013
    *
-   * @param listener
+   * @param listener der Listener des rufenden Fragmentes
    */
   public void addServiceListener(IBtServiceListener listener)
   {
@@ -389,7 +388,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    * <p/>
    * Stand: 07.08.2013
    *
-   * @param numberOnSPX
+   * @param numberOnSPX Die Nummer des Eintrages auf dem SPX
    */
   public void askForLogDetail(int numberOnSPX)
   {
@@ -582,7 +581,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void doConnectBtDevice(String device)
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, String.format("recived do connect device <%s>", device)); }
+    { Log.d(TAG, String.format(Locale.ENGLISH, "recived do connect device <%s>", device)); }
     if( mIsBound )
     {
       mService.connect(device);
@@ -736,7 +735,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     if( (devs != null) && (devs.length >= 2) )
     {
       extSdCard = devs[ 1 ].getAbsoluteFile();
-      Log.i(TAG, String.format("extern SDCARD =  %s", extSdCard.getAbsolutePath()));
+      Log.i(TAG, String.format(Locale.ENGLISH, "extern SDCARD =  %s", extSdCard.getAbsolutePath()));
       if( extSdCard.exists() && extSdCard.isDirectory() && extSdCard.canWrite() )
       {
         //
@@ -963,7 +962,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    * <p/>
    * Stand: 21.01.2014
    *
-   * @param smsg
+   * @param smsg die Nachricht vom BT Moul
    */
   private void msgComputeDirentry(BtServiceMessage smsg)
   {
@@ -1106,7 +1105,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       ackuValue = ( float ) (val / 100.0);
       // Hauptfenster
       if( ApplicationDEBUG.DEBUG )
-      { Log.d(TAG, String.format("Acku value: %02.02f", ackuValue)); }
+      { Log.d(TAG, String.format(Locale.ENGLISH, "Acku value: %02.02f", ackuValue)); }
     }
     else
     {
@@ -1172,7 +1171,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   @Override
   public void msgRecivedTick(BtServiceMessage msg)
   {
-    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
+    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( Locale.ENGLISH, "recived Tick <%x08x>", msg.getTimeStamp() ) );
   }
 
   /**
@@ -1684,7 +1683,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     FragmentTransaction fTrans = null;
     Fragment newFrag = null;
     //
-    Log.v(TAG, String.format("onNavigationDrawerItemSelected: id: <%d>, content: <%s>...", pItem.nId, pItem.content));
+    Log.v(TAG, String.format(Locale.ENGLISH, "onNavigationDrawerItemSelected: id: <%d>, content: <%s>...", pItem.nId, pItem.content));
     //
     // sind wir online?
     //
@@ -1855,14 +1854,13 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
             PreferenceManager.getDefaultSharedPreferences(this).getBoolean("keyProgOthersOnlineHelpEnabled", false) )
         {
           Log.i(TAG, "Online Help ist TRUE");
-          //TODO: Nach Version und Sprache...
-          (( OnlineHelpFragment ) newFrag).setUrl("http://www.submatix.com");
+          (( OnlineHelpFragment ) newFrag).setUrl(getResources().getString(R.string.online_help_remote_url));
         }
         else
         {
           Log.i(TAG, "Online Help ist FALSE");
-          //TODO: Nach Version und Sprache...
-          (( OnlineHelpFragment ) newFrag).setUrl("file:///android_asset/www/index_de.html");
+
+          (( OnlineHelpFragment ) newFrag).setUrl(getResources().getString(R.string.online_help_local_url));
         }
         break;
       default:
@@ -1937,7 +1935,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    */
   public void onSectionAttached(String pItem)
   {
-    Log.v(TAG, String.format(Locale.getDefault(), "onSectionAttached: fragment for  <%s>...", pItem));
+    Log.v(TAG, String.format(Locale.ENGLISH, "onSectionAttached: fragment for  <%s>...", pItem));
     getActionBar().setDisplayShowTitleEnabled(true);
     mTitle = pItem;
     getActionBar().setTitle(mTitle);
@@ -2056,7 +2054,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    * <p/>
    * Stand: 06.11.2014
    */
-  @SuppressWarnings( "deprecation" )
+  @SuppressWarnings("deprecation")
   public void restoreActionBar()
   {
     Log.v(TAG, "restoreActionBar:...");
@@ -2142,7 +2140,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     //
     for( int i = 1; i < 9; i++ )
     {
-      editor.putString(String.format(gasKeyTemplate, i), gasListDefault);
+      editor.putString(String.format(Locale.getDefault(), gasKeyTemplate, i), gasListDefault);
     }
     //
     // external Storage eintragen

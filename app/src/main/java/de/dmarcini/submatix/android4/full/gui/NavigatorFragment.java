@@ -53,7 +53,7 @@ import de.dmarcini.submatix.android4.full.utils.NaviActionBarDrawerToggle;
 /**
  * Fragment zur Interaktion mit dem user (Darstellung Menü)
  */
-@SuppressWarnings( "deprecation" )
+@SuppressWarnings("deprecation")
 public class NavigatorFragment extends Fragment
 {
   /**

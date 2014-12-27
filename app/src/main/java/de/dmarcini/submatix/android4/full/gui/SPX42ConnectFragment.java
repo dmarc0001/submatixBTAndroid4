@@ -213,7 +213,6 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       }
       //
       // wenn der Pairing-Status geändert wurde
-      // TODO: die Liste anpassen
       //
       else if( BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action) )
       {
@@ -248,6 +247,8 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
           {
             Log.d(TAG, "device pairing changed: device unpaired...");
           }
+          // und nun die Liste frisch befüllen....
+          fillNewAdapterWithKnownDevices();
         }
       }
     }

@@ -27,117 +27,116 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.gui.MainActivity;
 
 /**
- * 
  * Eigene, farbig markierte Preferenz Kategorie, erbt von PreferenceCategory
- * 
+ * <p/>
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
- * 
+ *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- * 
+ *         <p/>
  *         Stand: 10.11.2013
  */
 public class ColorizedPreferenceCategory extends PreferenceCategory
 {
-  private int                 currStyle = R.style.AppDarkTheme;
-  private static final String TAG       = ColorizedPreferenceCategory.class.getSimpleName();
+  private static final String TAG = ColorizedPreferenceCategory.class.getSimpleName();
+  private int currStyle = R.style.AppDarkTheme;
 
   /**
    * Konstruktor mit Kontext
-   * 
+   * <p/>
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
-   * 
+   * <p/>
    * Stand: 11.11.2013
-   * 
+   *
    * @param context
    */
-  public ColorizedPreferenceCategory( Context context )
+  public ColorizedPreferenceCategory(Context context)
   {
-    super( context );
-    getTheme( context );
+    super(context);
+    getTheme(context);
   }
 
   /**
    * Konstruktor mit Context und Attibuten
-   * 
+   * <p/>
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
-   * 
+   * <p/>
    * Stand: 11.11.2013
-   * 
+   *
    * @param context
    * @param attrs
    */
-  public ColorizedPreferenceCategory( Context context, AttributeSet attrs )
+  public ColorizedPreferenceCategory(Context context, AttributeSet attrs)
   {
-    super( context, attrs );
-    getTheme( context );
+    super(context, attrs);
+    getTheme(context);
   }
 
   /**
    * Konstruktor mit Context und Attibuten und Style
-   * 
+   * <p/>
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
-   * 
+   * <p/>
    * Stand: 11.11.2013
-   * 
+   *
    * @param context
    * @param attrs
    * @param defStyle
    */
-  public ColorizedPreferenceCategory( Context context, AttributeSet attrs, int defStyle )
+  public ColorizedPreferenceCategory(Context context, AttributeSet attrs, int defStyle)
   {
-    super( context, attrs, defStyle );
-    getTheme( context );
+    super(context, attrs, defStyle);
+    getTheme(context);
   }
 
   /**
-   * 
    * Das aktuelle Theme lesen
-   * 
+   * <p/>
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
-   * 
-   * 
+   * <p/>
+   * <p/>
    * Stand: 28.01.2013
-   * 
+   *
    * @param context
    * @return
    */
-  private int getTheme( Context context )
+  private int getTheme(Context context)
   {
-    Log.v( TAG, "check for theme in app..." );
+    Log.v(TAG, "check for theme in app...");
     currStyle = MainActivity.getAppStyle();
-    return( currStyle );
+    return (currStyle);
   }
 
   /**
    * We catch the view after its creation, and before the activity will use it, in order to make our changes
-   * 
+   *
    * @param parent
    * @return Der Kategorietitel
    */
   @Override
-  protected View onCreateView( ViewGroup parent )
+  protected View onCreateView(ViewGroup parent)
   {
     // And it's just a TextView!
-    TextView categoryTitle = ( TextView )super.onCreateView( parent );
-    switch ( currStyle )
+    TextView categoryTitle = ( TextView ) super.onCreateView(parent);
+    switch( currStyle )
     {
       case R.style.AppDarkTheme:
-        categoryTitle.setTextAppearance( this.getContext(), R.style.preferenceCategoryDark );
-        categoryTitle.setBackgroundColor( getContext().getResources().getColor( R.color.preferenceCategoryDark_backgroundColor ) );
+        categoryTitle.setTextAppearance(this.getContext(), R.style.preferenceCategoryDark);
+        categoryTitle.setBackgroundColor(getContext().getResources().getColor(R.color.preferenceCategoryDark_backgroundColor));
         break;
       case R.style.AppLightTheme:
-        categoryTitle.setTextAppearance( this.getContext(), R.style.preferenceCategoryLight );
-        categoryTitle.setBackgroundColor( getContext().getResources().getColor( R.color.preferenceCategoryLight_backgroundColor ) );
+        categoryTitle.setTextAppearance(this.getContext(), R.style.preferenceCategoryLight);
+        categoryTitle.setBackgroundColor(getContext().getResources().getColor(R.color.preferenceCategoryLight_backgroundColor));
         break;
       default:
-        Log.e( TAG, "Theme is UNKNOWN: " + currStyle );
+        Log.e(TAG, "Theme is UNKNOWN: " + currStyle);
     }
-    categoryTitle.setMinHeight( 65 );
-    categoryTitle.setPadding( 10, 32, 10, 4 );
+    categoryTitle.setMinHeight(65);
+    categoryTitle.setPadding(10, 32, 10, 4);
     return categoryTitle;
   }
 }

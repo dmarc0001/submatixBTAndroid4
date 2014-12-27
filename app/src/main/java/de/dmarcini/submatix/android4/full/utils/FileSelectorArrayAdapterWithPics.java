@@ -20,15 +20,13 @@
 //@formatter:on
 /**
  * Eigener Arrayadapter, der Icons beinhaltet
- * 
+ *
  * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
- * 
- * 
+ *
+ *
  * Stand: 23.12.2012
  */
 package de.dmarcini.submatix.android4.full.utils;
-
-import java.io.File;
 
 import android.app.Activity;
 import android.content.Context;
@@ -38,16 +36,18 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.File;
+
 import de.dmarcini.submatix.android4.full.R;
 
 /**
- * 
  * Das Objekt leitet sich vom ArrayAdapter ab, erzeugt Adapter mit Icons
- * 
+ * <p/>
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
- * 
+ *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- * 
+ *         <p/>
  *         Stand: 10.11.2013
  */
 public class FileSelectorArrayAdapterWithPics extends ArrayAdapter<File>
@@ -56,84 +56,71 @@ public class FileSelectorArrayAdapterWithPics extends ArrayAdapter<File>
 
   /**
    * Mein Konstruktor Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
-   * 
-   * @param context
-   *          Kontext der Activity
-   * @param textViewResourceId
-   *          ResourcenId zum Anzeigen der Einträge
-   * @param themeId
-   *          Welches Thema hat die Activity
-   * @param rootDir
-   *          Verzeichnis, welches angezeigt werden soll
+   *
+   * @param context            Kontext der Activity
+   * @param textViewResourceId ResourcenId zum Anzeigen der Einträge
+   * @param themeId            Welches Thema hat die Activity
+   * @param rootDir            Verzeichnis, welches angezeigt werden soll
    */
-  public FileSelectorArrayAdapterWithPics( Context context, int textViewResourceId, int themeId, File rootDir )
+  public FileSelectorArrayAdapterWithPics(Context context, int textViewResourceId, int themeId, File rootDir)
   {
-    super( context, textViewResourceId );
+    super(context, textViewResourceId);
     //
     // Alle Objekte erst einmal durchgehen
     //
     if( rootDir.getParent() != null )
     {
       // nur, wenn das nicht schon rootdir ist
-      super.add( new File( ".." ) );
+      super.add(new File(".."));
     }
     if( rootDir.exists() )
     {
       File[] lFiles = rootDir.listFiles();
       if( lFiles != null && lFiles.length > 0 )
       {
-        super.addAll( rootDir.listFiles() );
+        super.addAll(rootDir.listFiles());
       }
     }
     this.themeId = themeId;
   }
 
-  /* private view holder class */
-  private class ViewHolder
-  {
-    public ImageView imageView;
-    public TextView  txtTitle;
-    public ImageView imageRightIndicatorView;
-    public ImageView imageLeftIndicatorView;
-  }
-
   /**
    * Die Methode gibt mein in XML Creiertes Objekt für jeden Listenpunkt zurück
-   * 
-   * @see android.widget.ArrayAdapter#getView(int, android.view.View, android.view.ViewGroup)
+   *
    * @param position
    * @param convertView
    * @param parent
    * @return die View für diesen Punkt der Liste
+   * @see android.widget.ArrayAdapter#getView(int, android.view.View, android.view.ViewGroup)
    */
   @Override
-  public View getView( int position, View convertView, ViewGroup parent )
+  public View getView(int position, View convertView, ViewGroup parent)
   {
     ViewHolder holder = null;
     LayoutInflater mInflater = null;
     File currFileObj = null;
     boolean isFileUp = false;
     //
-    mInflater = ( LayoutInflater )getContext().getSystemService( Activity.LAYOUT_INFLATER_SERVICE );
+    mInflater = ( LayoutInflater ) getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
     if( convertView == null )
     {
-      convertView = mInflater.inflate( R.layout.array_with_pic_adapter_view, parent, false );
+      convertView = mInflater.inflate(R.layout.array_with_pic_adapter_view, parent, false);
       holder = new ViewHolder();
-      holder.txtTitle = ( TextView )convertView.findViewById( R.id.arrayListTextView );
-      holder.imageView = ( ImageView )convertView.findViewById( R.id.arrayListIconView );
-      holder.imageRightIndicatorView = ( ImageView )convertView.findViewById( R.id.arrayListRightActiveIndicator );
-      holder.imageLeftIndicatorView = ( ImageView )convertView.findViewById( R.id.arrayListLeftActiveIndicator );
-      convertView.setTag( holder );
+      holder.txtTitle = ( TextView ) convertView.findViewById(R.id.arrayListTextView);
+      holder.imageView = ( ImageView ) convertView.findViewById(R.id.arrayListIconView);
+      holder.imageRightIndicatorView = ( ImageView ) convertView.findViewById(R.id.arrayListRightActiveIndicator);
+      holder.imageLeftIndicatorView = ( ImageView ) convertView.findViewById(R.id.arrayListLeftActiveIndicator);
+      convertView.setTag(holder);
     }
     else
     {
-      holder = ( ViewHolder )convertView.getTag();
+      holder = ( ViewHolder ) convertView.getTag();
     }
     // hier immer leer darstellen (ist für ArrayAdapter vorhanden
-    holder.imageLeftIndicatorView.setImageResource( R.drawable.deactivated_and_space );
-    holder.imageRightIndicatorView.setImageResource( R.drawable.deactivated_and_space );
+    holder.imageLeftIndicatorView.setImageResource(R.drawable.deactivated_and_space);
+    holder.imageRightIndicatorView.setImageResource(R.drawable.deactivated_and_space);
     // File Objekt erstellen
-    if( getItem( position ).equals( ".." ) )
+    if( getItem(position).equals("..") )
     {
       isFileUp = true;
     }
@@ -141,52 +128,61 @@ public class FileSelectorArrayAdapterWithPics extends ArrayAdapter<File>
     {
       isFileUp = false;
     }
-    currFileObj = getItem( position );
+    currFileObj = getItem(position);
     // Das Thema einstellen
     if( this.themeId == R.style.AppDarkTheme )
     {
-      convertView.setBackgroundColor( getContext().getResources().getColor( R.color.navigatorDark_backgroundColor ) );
-      holder.txtTitle.setTextColor( getContext().getResources().getColor( R.color.navigatorDark_inactiveTextColor ) );
+      convertView.setBackgroundColor(getContext().getResources().getColor(R.color.navigatorDark_backgroundColor));
+      holder.txtTitle.setTextColor(getContext().getResources().getColor(R.color.navigatorDark_inactiveTextColor));
     }
     else
     {
-      convertView.setBackgroundColor( getContext().getResources().getColor( R.color.navigatorLight_backgroundColor ) );
-      holder.txtTitle.setTextColor( getContext().getResources().getColor( R.color.navigatorLight_inactiveTextColor ) );
+      convertView.setBackgroundColor(getContext().getResources().getColor(R.color.navigatorLight_backgroundColor));
+      holder.txtTitle.setTextColor(getContext().getResources().getColor(R.color.navigatorLight_inactiveTextColor));
     }
     // Ordner/Datei/Fehler
     if( currFileObj.exists() )
     {
       // Dateinamen eintragen
-      holder.txtTitle.setText( currFileObj.getName() );
+      holder.txtTitle.setText(currFileObj.getName());
       // Zeiger auf Parent?
       if( isFileUp )
       {
         // mach das Icon durchsichtig
-        holder.imageView.setAlpha( 0.0F );
+        holder.imageView.setAlpha(0.0F);
       }
       else
       {
         // mach das Icon sichtbar
-        holder.imageView.setAlpha( 1.0F );
+        holder.imageView.setAlpha(1.0F);
       }
       //
       // Datei oder Verzeichnis
       //
       if( currFileObj.isDirectory() )
       {
-        holder.imageView.setImageResource( R.drawable.folder );
+        holder.imageView.setImageResource(R.drawable.folder);
       }
       else
       {
-        holder.imageView.setImageResource( R.drawable.file );
+        holder.imageView.setImageResource(R.drawable.file);
       }
     }
     else
     {
       // FEHLER darstellen!
-      holder.imageView.setImageResource( R.drawable.ask_little1 );
+      holder.imageView.setImageResource(R.drawable.ask_little1);
     }
-    holder.txtTitle.setText( currFileObj.getName() );
+    holder.txtTitle.setText(currFileObj.getName());
     return convertView;
+  }
+
+  /* private view holder class */
+  private class ViewHolder
+  {
+    public ImageView imageView;
+    public TextView txtTitle;
+    public ImageView imageRightIndicatorView;
+    public ImageView imageLeftIndicatorView;
   }
 }

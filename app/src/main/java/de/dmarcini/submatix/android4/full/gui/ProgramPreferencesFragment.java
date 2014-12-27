@@ -352,7 +352,6 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
           setThemeForApp();
         }
       }
-      // TODO: bei Änderung der des Datenverzeichnis Summary anpassen
     }
   }
 
