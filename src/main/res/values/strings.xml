@@ -264,7 +264,7 @@
 
     <!-- ### Kategorie Gas  ## -->
     <string name="conf_gaslist_gas_key_template" formatted="false">keyGaslistGas%02d</string>
-    <string name="conf_gaslist_gas_key">"keyGaslistGas"</string>
+    <string name="conf_gaslist_gas_key">keyGaslistGas</string>
     <string name="conf_gaslist_gas01_header">gas #01</string>
     <string name="conf_gaslist_gas02_header">gas #02</string>
     <string name="conf_gaslist_gas03_header">gas #03</string>
@@ -291,7 +291,7 @@
     <!-- nur neue Logdaten oder alle Logdaten auf dem Gerät zeigen? -->
     <string name="conf_prog_showall_header">show all new logentrys?</string>
     <string name="conf_prog_showall_on_summary">showing all logentrys</string>
-    <string name="conf_prog_showall_off_summary">"showing only new logentrys "</string>
+    <string name="conf_prog_showall_off_summary">showing only new logentrys</string>
     <string name="conf_prog_showall_on">SHOW</string>
     <string name="conf_prog_showall_off">NO</string>
     <!-- ### Kategorie Mail ### -->
@@ -308,9 +308,9 @@
     <string name="conf_prog_others_header">OTHERS</string>
     <!-- BT disable on exit?  -->
     <string name="conf_prog_others_bt_disable_bt_header">Bluethooth</string>
-    <string name="conf_prog_others_on_disable_bt">"active"</string>
+    <string name="conf_prog_others_on_disable_bt">active</string>
     <string name="conf_prog_others_off_disable_bt">let</string>
-    <string name="conf_prog_others_on_disable_bt_summary">"disable BT on exit"</string>
+    <string name="conf_prog_others_on_disable_bt_summary">disable BT on exit</string>
     <string name="conf_prog_others_off_disable_bt_summary">"let BT active on exit"</string>
     <!-- Programmtheme -->
     <string name="conf_prog_others_theme_header">switch theme</string>
@@ -341,7 +341,7 @@
     <string name="logread_doit_button">Read!</string>
     <string name="logread_please_wait_dialog_header" formatted="false">Read log #%02d</string>
     <string name="logread_please_wait_dialog_count_items" formatted="false">line %03d readet</string>
-    <string name="logread_please_wait_dialog_directory" formatted="false">Lese Verzeichniseintrag %03d</string>
+    <string name="logread_please_wait_dialog_directory" formatted="false">Read logentry %03d</string>
     <string name="logread_not_saved_yet_msg">log not saved yet</string>
     <string name="logread_saved_format" formatted="false">dive depth: %02.1f %s length: %d:%02d </string>
     <string name="logread_please_patient">Please patient</string>
