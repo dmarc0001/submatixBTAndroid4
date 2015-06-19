@@ -207,7 +207,8 @@ public class UDDFFileCreateClass
     File retFile = file;
     Node profileNode = null;
     //
-    Log.v(TAG, "createXML()...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.v(TAG, "createXML()..."); }
     // Handler für Nachrichten übernehmen
     mHandler = _mHandler;
     if( gases == null )
@@ -318,7 +319,6 @@ public class UDDFFileCreateClass
    *
    * @param doc       Dokument Objekt
    * @param repNumber Nummer des Repetivtauchgangee (bei mir immer 1 :-( )
-   * @param number    Nummer des Logs in der Datenbank
    * @return Teilbaum Repetitiongroup
    * @throws NoXMLDataFileFoundException
    * @throws DOMException
@@ -340,8 +340,7 @@ public class UDDFFileCreateClass
    * <p/>
    * Project: SubmatixXMLTest Package: de.dmarcini.bluethooth.submatix.xml
    *
-   * @param doc        Document Objekt
-   * @param diveNumber Nummer des Tauchganges in der Datenbank
+   * @param doc Document Objekt
    * @return Teilbaum Tauchgang
    * <p/>
    * TODO Süßwasser/Salzwasser Dichte eintragen (Datenbankfeld einrichten)
@@ -435,9 +434,7 @@ public class UDDFFileCreateClass
    * <p/>
    * Project: SubmatixXMLTest Package: de.dmarcini.bluethooth.submatix.xml
    *
-   * @param doc        Document Objekt
-   * @param diveNumber Nummer des Tauchgangs in der Datenbank
-   * @param dAttr      Objekt für Tauchgangseigenschaften
+   * @param doc Document Objekt
    * @return Teilbaum für das Tauchprofil
    * @throws NoXMLDataFileFoundException
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
@@ -467,7 +464,8 @@ public class UDDFFileCreateClass
       throw new NoXMLDataFileFoundException("Cant found data-XML-File: <" + xmlFile.getFreeSpace() + ">");
     }
     // Liste des Tauchganges machen
-    Log.v(TAG, "getDiveList()...scan XML...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.v(TAG, "getDiveList()...scan XML..."); }
     // versuchen wir es...
     // SAX Parser erzeugen
     spf = SAXParserFactory.newInstance();
@@ -845,8 +843,7 @@ public class UDDFFileCreateClass
    * <p/>
    * Project: SubmatixXMLTest Package: de.dmarcini.bluethooth.submatix.xml
    *
-   * @param doc       Document Objekt
-   * @param diveAttrs
+   * @param doc Document Objekt
    * @return Teilbaum für Gasdefinitionen in diesem Tauchgang
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * <p/>

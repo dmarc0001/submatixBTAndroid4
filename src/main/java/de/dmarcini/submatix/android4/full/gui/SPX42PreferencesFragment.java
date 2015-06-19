@@ -324,7 +324,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   @Override
   public void msgConnected(BtServiceMessage msg)
   {
-    Log.v(TAG, "msgConnected()...ask for SPX config...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.v(TAG, "msgConnected()...ask for SPX config..."); }
     MainActivity fActivity = runningActivity;
     // Dialog schliesen, wenn geöffnet
     theToast.dismissDial();
@@ -339,7 +340,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
       Thread.yield();
     }
     catch( InterruptedException ex )
-    {}
+    {
+    }
     fActivity.askForConfigFromSPX42();
     ignorePrefChange = false;
   }
@@ -1258,7 +1260,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   {
     super.onAttach(activity);
     runningActivity = ( MainActivity ) activity;
-    Log.w(TAG, "ATTACH");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.d(TAG, "ATTACH"); }
   }
 
   @Override
@@ -1346,7 +1349,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // initiiere die notwendigen summarys
     //
     setAllSummarys();
-    Log.v(TAG, "onCreate: add Resouce...OK");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.v(TAG, "onCreate: add Resouce...OK"); }
   }
 
   @Override
@@ -1361,7 +1365,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     switch( item.getItemId() )
     {
       case android.R.id.home:
-        Log.v(TAG, "onOptionsItemSelected: HOME");
+        if( ApplicationDEBUG.DEBUG )
+        { Log.v(TAG, "onOptionsItemSelected: HOME"); }
         Intent intent = new Intent(getActivity(), MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
@@ -1374,7 +1379,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   public void onPause()
   {
     super.onPause();
-    Log.v(TAG, "onPause()...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.v(TAG, "onPause()..."); }
     //
     // lösche Listener, der überwacht, wenn Preferenzen geändert wurden
     //
@@ -1390,7 +1396,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   public synchronized void onResume()
   {
     super.onResume();
-    Log.v(TAG, "onResume()...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.v(TAG, "onResume()..."); }
     //
     // setze Listener, der überwacht, wenn Preferenzen geändert wurden
     //
@@ -1418,7 +1425,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   {
     ListPreference lP = null;
     Preference pref = null;
-    Log.v(TAG, "onSharedPreferenceChanged()....");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.v(TAG, "onSharedPreferenceChanged()...."); }
     if( ignorePrefChange )
     {
       if( ApplicationDEBUG.DEBUG )
@@ -1598,7 +1606,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   public void onViewCreated(View view, Bundle savedInstanceState)
   {
     super.onViewCreated(view, savedInstanceState);
-    Log.v(TAG, "onViewCreated...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.v(TAG, "onViewCreated..."); }
     PreferenceScreen ps = getPreferenceScreen();
     if( ApplicationDEBUG.DEBUG )
     {
@@ -2200,7 +2209,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    * <p/>
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
    *
-   * @param presetCandidateStr
+   * @param presetCandidate
    * @return
    */
   private boolean setDecoGradients(int[] presetCandidate)
@@ -2267,8 +2276,11 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     String fields[] = presetCandidate.split(":");
     if( (fields != null) && (fields.length >= 2) )
     {
-      Log.d(TAG, String.format("makeValuesFromString: <%s> <%s>", fields[ 0 ], fields[ 1 ]));
-      Log.d(TAG, "makeValuesFromString: successful split default value!");
+      if( ApplicationDEBUG.DEBUG )
+      {
+        Log.d(TAG, String.format("makeValuesFromString: <%s> <%s>", fields[ 0 ], fields[ 1 ]));
+        Log.d(TAG, "makeValuesFromString: successful split default value!");
+      }
       try
       {
         vals[ 0 ] = Integer.parseInt(fields[ 0 ]);

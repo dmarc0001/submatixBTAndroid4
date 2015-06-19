@@ -38,6 +38,7 @@ import android.widget.NumberPicker.Formatter;
 import android.widget.NumberPicker.OnValueChangeListener;
 import android.widget.TextView;
 
+import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.gui.MainActivity;
 
@@ -83,7 +84,8 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
   public GasPickerPreference(Context context, AttributeSet attrs)
   {
     super(context, attrs);
-    Log.d(TAG, "GasPickerPreference(Context,AttributeSet)...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.d(TAG, "GasPickerPreference(Context,AttributeSet)..."); }
     gasParms = new SPX42GasParms();
     setPositiveButtonText(R.string.conf_gaslist_button_positive);
     setNegativeButtonText(R.string.conf_gaslist_button_negative);
@@ -100,7 +102,8 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
   public GasPickerPreference(Context context, AttributeSet attrs, int defStyle)
   {
     super(context, attrs, defStyle);
-    Log.d(TAG, "GasPickerPreference(Context,AttributeSet,int)...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.d(TAG, "GasPickerPreference(Context,AttributeSet,int)..."); }
     gasParms = new SPX42GasParms();
     setPositiveButtonText(R.string.conf_gaslist_button_positive);
     setNegativeButtonText(R.string.conf_gaslist_button_negative);
@@ -120,21 +123,26 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    */
   private boolean makeValuesFromString(String defaultValueStr)
   {
-    Log.d(TAG, "makeValuesFromString: String to split <" + defaultValueStr + ">");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.d(TAG, "makeValuesFromString: String to split <" + defaultValueStr + ">"); }
     String fields[] = defaultValueStr.split(":");
     if( (fields != null) && (fields.length >= 3) )
     {
-      Log.d(TAG, String.format("makeValuesFromString: <%s> <%s> <%s>", fields[ 0 ], fields[ 1 ], fields[ 2 ]));
-      Log.d(TAG, "makeValuesFromString: successful split default value!");
+      if( ApplicationDEBUG.DEBUG )
+      { Log.d(TAG, String.format("makeValuesFromString: <%s> <%s> <%s>", fields[ 0 ], fields[ 1 ], fields[ 2 ])); }
+      if( ApplicationDEBUG.DEBUG )
+      { Log.d(TAG, "makeValuesFromString: successful split default value!"); }
       try
       {
         gasParms.o2 = Integer.parseInt(fields[ 0 ]);
         gasParms.he = Integer.parseInt(fields[ 1 ]);
         gasParms.n2 = Integer.parseInt(fields[ 2 ]);
-        Log.d(TAG, "makeValuesFromString: successful set Values");
+        if( ApplicationDEBUG.DEBUG )
+        { Log.d(TAG, "makeValuesFromString: successful set Values"); }
         if( fields.length == 6 )
         {
-          Log.d(TAG, "makeValuesFromString: found diluent and bailout markers...");
+          if( ApplicationDEBUG.DEBUG )
+          { Log.d(TAG, "makeValuesFromString: found diluent and bailout markers..."); }
           gasParms.d1 = Boolean.parseBoolean(fields[ 3 ]);
           gasParms.d2 = Boolean.parseBoolean(fields[ 4 ]);
           gasParms.bo = Boolean.parseBoolean(fields[ 5 ]);
@@ -159,7 +167,8 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
   {
     int index;
     //
-    Log.d(TAG, "onBindDialogView()...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.d(TAG, "onBindDialogView()..."); }
     noAction = true;
     gasNameTextView = ( TextView ) v.findViewById(R.id.GasNameTextView);
     if( gasNameTextView != null )
@@ -256,7 +265,8 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
     noAction = true;
     onSetO2Value(gasParms.o2);
     setGasNameToTitle(gasParms.o2, gasParms.he);
-    Log.d(TAG, "onBindDialogView()...OK");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.d(TAG, "onBindDialogView()...OK"); }
   }
 
   @Override
@@ -268,7 +278,8 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
       switch( cb.getId() )
       {
         case R.id.diluent1CheckBox:
-          Log.d(TAG, "onCheckedChanged: diluent 1 <" + isChecked + ">");
+          if( ApplicationDEBUG.DEBUG )
+          { Log.d(TAG, "onCheckedChanged: diluent 1 <" + isChecked + ">"); }
           gasParms.d1 = isChecked;
           if( isChecked && d2Checkbox.isChecked() )
           {
@@ -277,7 +288,8 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
           break;
         //
         case R.id.diluent2CheckBox:
-          Log.d(TAG, "onCheckedChanged: diluent 2 <" + isChecked + ">");
+          if( ApplicationDEBUG.DEBUG )
+          { Log.d(TAG, "onCheckedChanged: diluent 2 <" + isChecked + ">"); }
           gasParms.d2 = isChecked;
           if( isChecked && d1Checkbox.isChecked() )
           {
@@ -286,7 +298,8 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
           break;
         //
         case R.id.bailoutCheckBox:
-          Log.d(TAG, "onCheckedChanged: bailout <" + isChecked + ">");
+          if( ApplicationDEBUG.DEBUG )
+          { Log.d(TAG, "onCheckedChanged: bailout <" + isChecked + ">"); }
           gasParms.bo = isChecked;
           break;
         //
@@ -299,7 +312,8 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
   @Override
   protected View onCreateDialogView()
   {
-    Log.d(TAG, "onCreateDialogView()...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.d(TAG, "onCreateDialogView()..."); }
     setDialogLayoutResource(R.layout.gas_picker_layout);
     currentStyleId = MainActivity.getAppStyle();
     return super.onCreateDialogView();
@@ -312,10 +326,12 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
   protected void onDialogClosed(boolean shouldSave)
   {
     super.onDialogClosed(shouldSave);
-    Log.v(TAG, "onDialogClosed()...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.v(TAG, "onDialogClosed()..."); }
     if( shouldSave )
     {
-      Log.v(TAG, "onDialogClosed: should save...");
+      if( ApplicationDEBUG.DEBUG )
+      { Log.v(TAG, "onDialogClosed: should save..."); }
       persistString(String.format("%d:%d:%d:%b:%b:%b", o2Picker.getValue(), hePicker.getValue(), n2Picker.getValue(), d1Checkbox.isChecked(), d2Checkbox.isChecked(),
           bailoutCheckbox.isChecked()));
     }
@@ -328,17 +344,20 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
     String defaultString = null;
     //
     super.onGetDefaultValue(a, index);
-    Log.d(TAG, "onGetDefaultValue()...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.d(TAG, "onGetDefaultValue()..."); }
     //
     // versuche aus einer Stringresource einen defaultwert zu machen
     //
-    Log.d(TAG, "onGetDefaultValue:...try read string resource and index <" + index + ">...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.d(TAG, "onGetDefaultValue:...try read string resource and index <" + index + ">..."); }
     defaultString = a.getString(index);
     if( defaultString != null )
     {
       defaultReturnValue = defaultString;
     }
-    Log.d(TAG, "onGetDefaultValue: defaultString<" + defaultString + ">");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.d(TAG, "onGetDefaultValue: defaultString<" + defaultString + ">"); }
     return (defaultString);
   }
 
@@ -346,7 +365,8 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
   protected void onRestoreInstanceState(Parcelable state)
   {
     super.onRestoreInstanceState(state);
-    Log.d(TAG, "onRestoreInstanceState()...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.d(TAG, "onRestoreInstanceState()..."); }
     // Check whether we saved the state in onSaveInstanceState
     if( state == null || !state.getClass().equals(SavedState.class) )
     {
@@ -380,7 +400,8 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
     super.onSaveInstanceState();
     final Parcelable superState = super.onSaveInstanceState();
     //
-    Log.d(TAG, "onSaveInstanceState()...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.d(TAG, "onSaveInstanceState()..."); }
     // Check whether this Preference is persistent (continually saved)
     if( isPersistent() )
     {
@@ -441,7 +462,8 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
     String defaultValueStr;
     //
     super.onSetInitialValue(restoreValue, def);
-    Log.d(TAG, "onSetInitialValue: restore:<" + restoreValue + ">");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.d(TAG, "onSetInitialValue: restore:<" + restoreValue + ">"); }
     if( restoreValue )
     {
       // es soll restored werden
@@ -471,7 +493,6 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    * Stand: 01.01.2013
    *
    * @param newVal
-   * @param oldVal
    */
   private void onSetO2Value(int newVal)
   {
@@ -518,7 +539,8 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
   @Override
   public void onValueChange(NumberPicker picker, int oldVal, int newVal)
   {
-    Log.d(TAG, "onValueChange()...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.d(TAG, "onValueChange()..."); }
     int id = picker.getId();
     if( noAction )
     {
@@ -528,21 +550,24 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
     switch( id )
     {
       case R.id.o2NumberPicker:
-        Log.d(TAG, "onValueChange: O2 oldVal: <" + oldVal + ">, newVal: <" + newVal + ">");
+        if( ApplicationDEBUG.DEBUG )
+        { Log.d(TAG, "onValueChange: O2 oldVal: <" + oldVal + ">, newVal: <" + newVal + ">"); }
         onSetO2Value(newVal);
         setO2PickerColor(gasParms.o2);
         setHePickerColor(gasParms.he);
         break;
       //
       case R.id.heNumberPicker:
-        Log.d(TAG, "onValueChange: HE oldVal: <" + oldVal + ">, newVal: <" + newVal + ">");
+        if( ApplicationDEBUG.DEBUG )
+        { Log.d(TAG, "onValueChange: HE oldVal: <" + oldVal + ">, newVal: <" + newVal + ">"); }
         onSetHeValue(newVal);
         setHePickerColor(gasParms.he);
         setO2PickerColor(gasParms.o2);
         break;
       //
       case R.id.n2NumberPicker:
-        Log.d(TAG, "onValueChange: N2 oldVal: <" + oldVal + ">, newVal: <" + newVal + ">");
+        if( ApplicationDEBUG.DEBUG )
+        { Log.d(TAG, "onValueChange: N2 oldVal: <" + oldVal + ">, newVal: <" + newVal + ">"); }
         // eh, das stellen wir nicht um!
         gasParms.n2 = oldVal;
         setPickerWoEvent();
@@ -683,13 +708,15 @@ public class GasPickerPreference extends DialogPreference implements OnValueChan
    */
   private void setPickerWoEvent()
   {
-    Log.d(TAG, "setPickerWoEvent()...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.d(TAG, "setPickerWoEvent()..."); }
     this.noAction = true;
     o2Picker.setValue(gasParms.o2);
     hePicker.setValue(gasParms.he);
     n2Picker.setValue(gasParms.n2);
     this.noAction = false;
-    Log.d(TAG, "setPickerWoEvent()...OK");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.d(TAG, "setPickerWoEvent()...OK"); }
   }
 
   /**

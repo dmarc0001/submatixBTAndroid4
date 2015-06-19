@@ -20,10 +20,10 @@
 //@formatter:on
 /**
  * Code für Grundformular exportLog
- *
+ * <p/>
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
- *
- *
+ * <p/>
+ * <p/>
  * Stand: 28.08.2013
  */
 package de.dmarcini.submatix.android4.full.gui;
@@ -99,21 +99,6 @@ import de.dmarcini.submatix.android4.full.utils.UDDFFileCreateClass;
 public class SPX42ExportLogFragment extends Fragment implements IBtServiceListener, OnItemClickListener, OnClickListener
 {
   private static final String TAG = SPX42ExportLogFragment.class.getSimpleName();
-  @SuppressLint("HandlerLeak")
-  private final Handler mHandler = new Handler()
-  {
-    @Override
-    public void handleMessage(Message msg)
-    {
-      if( !(msg.obj instanceof BtServiceMessage) )
-      {
-        Log.e(TAG, "Handler::handleMessage: Recived Message is NOT type of BtServiceMessage!");
-        return;
-      }
-      BtServiceMessage smsg = ( BtServiceMessage ) msg.obj;
-      handleMessages(msg.what, smsg);
-    }
-  };
   private final Pattern mailPattern = Pattern.compile(ProjectConst.PATTERN_EMAIL);
   private MainActivity runningActivity = null;
   private ListView mainListView = null;
@@ -128,6 +113,21 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
   private WaitProgressFragmentDialog pd = null;
   private File tempDir = null;
   private String mailMainAddr = null;
+  @SuppressLint( "HandlerLeak" )
+  private final Handler mHandler = new Handler()
+  {
+    @Override
+    public void handleMessage(Message msg)
+    {
+      if( !(msg.obj instanceof BtServiceMessage) )
+      {
+        Log.e(TAG, "Handler::handleMessage: Recived Message is NOT type of BtServiceMessage!");
+        return;
+      }
+      BtServiceMessage smsg = ( BtServiceMessage ) msg.obj;
+      handleMessages(msg.what, smsg);
+    }
+  };
   private String fragmentTitle = "unknown";
 
   /**
@@ -286,8 +286,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
    * <p/>
    * Stand: 04.01.2014
    *
-   * @param devAlias
-   * @param markedItems
+   * @param rAdapter Der LogListAdapter
    */
   private void exportSelectedLogItems(SPX42ReadLogListArrayAdapter rAdapter)
   {
@@ -726,7 +725,8 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data)
   {
-    Log.v(TAG, "onActivityResult()... ");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.v(TAG, "onActivityResult()... "); }
     switch( requestCode )
     {
       case ProjectConst.REQUEST_SEND_MAIL:
@@ -1225,7 +1225,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
    *
    * @param uddfDir
    * @param deviceAlias
-   * @param mailAddr1
+   * @param mailAddr
    */
   private void sendMailToAddr(final File uddfDir, final String[] mailAddr, String deviceAlias)
   {
@@ -1307,7 +1307,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
    * <p/>
    * Stand: 01.12.2013
    *
-   * @param string
+   * @param devName
    */
   private void setTitleString(String devName)
   {

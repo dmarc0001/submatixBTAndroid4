@@ -473,13 +473,17 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
     String fields[] = defaultValueStr.split(":");
     if( (fields != null) && (fields.length >= 2) )
     {
-      Log.d(TAG, String.format("makeValuesFromString: <%s> <%s>", fields[ 0 ], fields[ 1 ]));
-      Log.d(TAG, "makeValuesFromString: successful split default value!");
+      if( ApplicationDEBUG.DEBUG )
+      {
+        Log.d(TAG, String.format("makeValuesFromString: <%s> <%s>", fields[ 0 ], fields[ 1 ]));
+        Log.d(TAG, "makeValuesFromString: successful split default value!");
+      }
       try
       {
         lowGradient = Integer.parseInt(fields[ 0 ]);
         highGradient = Integer.parseInt(fields[ 1 ]);
-        Log.d(TAG, "makeValuesFromString: successful set Values");
+        if( ApplicationDEBUG.DEBUG )
+        { Log.d(TAG, "makeValuesFromString: successful set Values"); }
         return (true);
       }
       catch( NumberFormatException ex )
@@ -508,13 +512,15 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
     //
     // versuche aus einer Stringresource einen defaultwert zu machen
     //
-    Log.d(TAG, "onGetDefaultValue:...try read string resource and index <" + index + ">...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.d(TAG, "onGetDefaultValue:...try read string resource and index <" + index + ">..."); }
     defaultString = a.getString(index);
     if( defaultString != null )
     {
       defaultReturnValue = defaultString;
     }
-    Log.d(TAG, "onGetDefaultValue: defaultString<" + defaultString + ">");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.d(TAG, "onGetDefaultValue: defaultString<" + defaultString + ">"); }
     return (defaultString);
   }
 
@@ -531,7 +537,8 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
     }
     if( shouldSave )
     {
-      Log.v(TAG, "onDialogClosed: should save...");
+      if( ApplicationDEBUG.DEBUG )
+      { Log.v(TAG, "onDialogClosed: should save..."); }
       persistString(String.format("%d:%d", lowPicker.getValue(), highPicker.getValue()));
     }
   }

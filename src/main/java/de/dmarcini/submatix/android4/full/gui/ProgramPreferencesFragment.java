@@ -177,8 +177,11 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
   public void onCreate(Bundle savedInstanceState)
   {
     super.onCreate(savedInstanceState);
-    Log.v(TAG, "onCreate()...");
-    Log.v(TAG, "onCreate: add Resouce id <" + R.xml.config_program_preference + ">...");
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.v(TAG, "onCreate()...");
+      Log.v(TAG, "onCreate: add Resouce id <" + R.xml.config_program_preference + ">...");
+    }
     addPreferencesFromResource(R.xml.config_program_preference);
     //
     // initiiere die notwendigen summarys
@@ -189,7 +192,8 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     //
     sPref = getPreferenceManager().getSharedPreferences();
     sPref.registerOnSharedPreferenceChangeListener(this);
-    Log.v(TAG, "onCreate: add Resouce...OK");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.v(TAG, "onCreate: add Resouce...OK"); }
   }
 
   @Override
@@ -208,7 +212,8 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     switch( item.getItemId() )
     {
       case android.R.id.home:
-        Log.v(TAG, "onOptionsItemSelected: HOME");
+        if( ApplicationDEBUG.DEBUG )
+        { Log.v(TAG, "onOptionsItemSelected: HOME"); }
         Intent intent = new Intent(getActivity(), MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
@@ -221,7 +226,8 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
   public void onPause()
   {
     super.onPause();
-    Log.v(TAG, "onPause...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.v(TAG, "onPause..."); }
     if( ApplicationDEBUG.DEBUG )
     {
       Log.d(TAG, "onPause: clear service listener for preferences fragment...");
@@ -262,9 +268,11 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
   public void onResume()
   {
     super.onResume();
-    Log.v(TAG, "onResume()");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.v(TAG, "onResume()"); }
     PreferenceScreen ps = getPreferenceScreen();
-    Log.v(TAG, "this preferencescreen has <" + ps.getPreferenceCount() + "> preferenes.");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.v(TAG, "this preferencescreen has <" + ps.getPreferenceCount() + "> preferenes."); }
     (( MainActivity ) getActivity()).addServiceListener(this);
   }
 
@@ -283,9 +291,10 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     EditTextPreference tP = null;
     Preference pref = null;
     Resources res = getResources();
-    Log.v(TAG, "onSharedPreferenceChanged()....");
+    //
     if( ApplicationDEBUG.DEBUG )
     {
+      Log.v(TAG, "onSharedPreferenceChanged()....");
       Log.d(TAG, "onSharedPreferenceChanged: key = <" + key + ">");
     }
     //
@@ -359,17 +368,23 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
   public void onViewCreated(View view, Bundle savedInstanceState)
   {
     super.onViewCreated(view, savedInstanceState);
-    Log.v(TAG, "onViewCreated...");
     PreferenceScreen ps = getPreferenceScreen();
-    Log.v(TAG, "this preferencescreen has <" + ps.getPreferenceCount() + "> preferenes.");
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.v(TAG, "onViewCreated...");
+      Log.v(TAG, "this preferencescreen has <" + ps.getPreferenceCount() + "> preferenes.");
+    }
+
     for( int groupIdx = 0; groupIdx < ps.getPreferenceCount(); groupIdx++ )
     {
       PreferenceGroup pg = ( PreferenceGroup ) ps.getPreference(groupIdx);
-      Log.v(TAG, String.format("The Group <%s> has %d preferences", pg.getTitle(), pg.getPreferenceCount()));
+      if( ApplicationDEBUG.DEBUG )
+      { Log.v(TAG, String.format("The Group <%s> has %d preferences", pg.getTitle(), pg.getPreferenceCount())); }
       for( int prefIdx = 0; prefIdx < pg.getPreferenceCount(); prefIdx++ )
       {
         Preference pref = pg.getPreference(prefIdx);
-        Log.v(TAG, String.format("The Preference <%s> is number %d", pref.getTitle(), prefIdx));
+        if( ApplicationDEBUG.DEBUG )
+        { Log.v(TAG, String.format("The Preference <%s> is number %d", pref.getTitle(), prefIdx)); }
         // jede ungerade Zeile färben
         if( prefIdx % 2 > 0 )
         {

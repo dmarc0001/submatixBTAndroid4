@@ -37,6 +37,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+
 /**
  * Klasse zum lesen von Samples aus einer XML-Datei
  * <p/>
@@ -107,13 +109,15 @@ public class SPX42diveSamplesReader
     ContentHandler myHandler = null;
     XMLReader xr = null;
     // Liste des Tauchganges machen
-    Log.v(TAG, "getDiveList()...scan XML <" + xmlFile.getName() + ">...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.v(TAG, "getDiveList()...scan XML <" + xmlFile.getName() + ">..."); }
     // versuchen wir es...
     // SAX Parser erzeugen
     spf = SAXParserFactory.newInstance();
     try
     {
-      Log.v(TAG, "getDiveList()...NEW SAX Parser...");
+      if( ApplicationDEBUG.DEBUG )
+      { Log.v(TAG, "getDiveList()...NEW SAX Parser..."); }
       sp = spf.newSAXParser();
       xr = sp.getXMLReader();
     }
@@ -129,7 +133,8 @@ public class SPX42diveSamplesReader
     }
     // einen nagenleuen Handler erzeugen
     // als implizite Klasse
-    Log.v(TAG, "getDiveList()...create ContentHandler...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.v(TAG, "getDiveList()...create ContentHandler..."); }
     //
     // Lokaler Handler
     //
@@ -255,7 +260,8 @@ public class SPX42diveSamplesReader
           if( entry.whereAlDataThere() )
           {
             // Jetz einen Eintrag in das Vector-Teil
-            Log.v(TAG, "create new LogSample...");
+            if( ApplicationDEBUG.DEBUG )
+            { Log.v(TAG, "create new LogSample..."); }
             float[] entArr = new float[ 5 ];
             entArr[ DIVE_TIME ] = entry.time;
             entArr[ DIVE_DEPTH ] = ( float ) entry.depth;

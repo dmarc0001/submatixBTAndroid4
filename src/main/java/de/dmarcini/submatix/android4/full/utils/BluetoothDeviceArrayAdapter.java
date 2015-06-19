@@ -171,7 +171,7 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    * Stand: 28.04.2013
    *
    * @param position
-   * @param cconvertView
+   * @param convertView
    * @param parent
    * @param isFirst
    * @return

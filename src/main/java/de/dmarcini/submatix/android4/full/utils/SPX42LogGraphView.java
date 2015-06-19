@@ -40,6 +40,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Vector;
 
+import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 
 /**
@@ -343,7 +344,8 @@ public class SPX42LogGraphView extends View implements OnTouchListener
     maxValue = getMaxValue(origProfil);
     // Die Tiefe muß ich nun noch skalieren, passend auf den Schirm
     depthFactor = (viewHeight - margin_top - margin_bottom - 30) / maxValue;
-    Log.v(TAG, String.format("drawDepthPath() -> max depth value: <%03.1f>, depthFactor: <%03.2f>", maxValue, depthFactor));
+    if( ApplicationDEBUG.DEBUG )
+    { Log.v(TAG, String.format("drawDepthPath() -> max depth value: <%03.1f>, depthFactor: <%03.2f>", maxValue, depthFactor)); }
     // wo kommt die Legende für max-tiefe hin?
     maxTextPosY = (maxValue * depthFactor) + margin_top;
     // Pfad erstellen
@@ -377,7 +379,8 @@ public class SPX42LogGraphView extends View implements OnTouchListener
         pathDepth.lineTo(currX, currY);
       }
       catch( ArrayIndexOutOfBoundsException ex )
-      {}
+      {
+      }
     }
     pathDepth.lineTo(currX, margin_top);
     // Pfad schließen
@@ -507,7 +510,8 @@ public class SPX42LogGraphView extends View implements OnTouchListener
     int samplePos;
     //
     markScale = viewWidth / countTimeMark;
-    Log.v(TAG, String.format("drawTimeLine() -> divelength: <%d> secounds, timeStep: <%d> secounds, timeFactor: <%03.2f>", diveLength, timeStep, timeFactor));
+    if( ApplicationDEBUG.DEBUG )
+    { Log.v(TAG, String.format("drawTimeLine() -> divelength: <%d> secounds, timeStep: <%d> secounds, timeFactor: <%03.2f>", diveLength, timeStep, timeFactor)); }
     pnt.setColor(colorClass.spxGraphTimeline);
     pnt.setTextSize(20);
     pnt.setTextAlign(Align.LEFT);
@@ -598,7 +602,8 @@ public class SPX42LogGraphView extends View implements OnTouchListener
     maxOxigen = getMaxValue(oxyProfil);
     // Die PPO2 muß ich nun noch skalieren, passend auf den Schirm und verkleinert
     oxygenFactor = (viewHeight - margin_bottom_ox - (viewHeight / 4)) / maxOxigen;
-    Log.v(TAG, String.format("drawOxigenLine() -> max oxy value: <%03.1f>, oxigenFactor: <%03.2f>", maxOxigen, oxygenFactor));
+    if( ApplicationDEBUG.DEBUG )
+    { Log.v(TAG, String.format("drawOxigenLine() -> max oxy value: <%03.1f>, oxigenFactor: <%03.2f>", maxOxigen, oxygenFactor)); }
     // Pfad erstellen
     Path pathOx = new Path();
     // hier gehts los, Ausgangspunkt erstellen
@@ -615,7 +620,8 @@ public class SPX42LogGraphView extends View implements OnTouchListener
       pathOx.moveTo(currX, viewHeight - (oxygenFactor * oxyProfil[ samplePos ]) - margin_bottom_ox);
     }
     catch( ArrayIndexOutOfBoundsException ex )
-    {}
+    {
+    }
     ;
     while( (currX <= viewWidth) && (samplePos < oxyProfil.length) )
     {
@@ -634,7 +640,8 @@ public class SPX42LogGraphView extends View implements OnTouchListener
         pathOx.lineTo(currX, currY);
       }
       catch( ArrayIndexOutOfBoundsException ex )
-      {}
+      {
+      }
     }
     // PPO2 Pfad zeichnen
     pnt.setColor(graphColor);
@@ -698,7 +705,7 @@ public class SPX42LogGraphView extends View implements OnTouchListener
    * Project: SubmatixBluethoothLogger Package: de.dmarcini.submatix.logger.gui
    *
    * @param canvas
-   * @param oneProfil
+   * @param tempProfil
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * <p/>
    * Stand: 01.02.2014
@@ -720,8 +727,11 @@ public class SPX42LogGraphView extends View implements OnTouchListener
     }
     // Die Temperatur muß ich nun noch skalieren, passend auf den Schirm und verkleinert
     temperatureFactor = (viewHeight - margin_bottom_temp - (viewHeight / 3)) / (maxTemperature - minTemperature);
-    Log.v(TAG,
-        String.format("drawTemperatureLine() -> max temp value: <%03.1f>, min temp value: <%03.2f>, tempFactor: <%03.2f>", maxTemperature, minTemperature, temperatureFactor));
+    if( ApplicationDEBUG.DEBUG )
+    {
+      Log.v(TAG,
+          String.format("drawTemperatureLine() -> max temp value: <%03.1f>, min temp value: <%03.2f>, tempFactor: <%03.2f>", maxTemperature, minTemperature, temperatureFactor));
+    }
     // Pfad erstellen
     Path pathTemp = new Path();
     // hier gehts los, Ausgangspunkt erstellen
@@ -738,7 +748,8 @@ public class SPX42LogGraphView extends View implements OnTouchListener
       pathTemp.moveTo(currX, viewHeight - (temperatureFactor * (tempProfil[ samplePos ] - minTemperature)) - margin_bottom_temp);
     }
     catch( ArrayIndexOutOfBoundsException ex )
-    {}
+    {
+    }
     ;
     while( (currX <= viewWidth) && (samplePos < tempProfil.length) )
     {
@@ -757,7 +768,8 @@ public class SPX42LogGraphView extends View implements OnTouchListener
         pathTemp.lineTo(currX, currY);
       }
       catch( ArrayIndexOutOfBoundsException ex )
-      {}
+      {
+      }
     }
     // Temperatur Pfad zeichnen
     pnt.setColor(graphColor);
@@ -1088,7 +1100,8 @@ public class SPX42LogGraphView extends View implements OnTouchListener
     public boolean onScale(ScaleGestureDetector detector)
     {
       masterScale *= detector.getScaleFactor();
-      Log.d(TAG, String.format("Skalierung: %03.2f", masterScale));
+      if( ApplicationDEBUG.DEBUG )
+      { Log.d(TAG, String.format("Skalierung: %03.2f", masterScale)); }
       invalidate();
       return true;
     }

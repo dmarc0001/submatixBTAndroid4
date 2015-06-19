@@ -103,7 +103,8 @@ public class SPX42DiveSampleClass
     spf = SAXParserFactory.newInstance();
     try
     {
-      Log.v(TAG, "NEW SAX Parser...");
+      if( ApplicationDEBUG.DEBUG )
+      { Log.v(TAG, "NEW SAX Parser..."); }
       sp = spf.newSAXParser();
       xr = sp.getXMLReader();
     }
@@ -254,7 +255,8 @@ public class SPX42DiveSampleClass
           if( entry.whereAlDataThere() )
           {
             // Jetz einen Eintrag in das Vector-Teil
-            Log.v(TAG, "create new LogSample...");
+            if( ApplicationDEBUG.DEBUG )
+            { Log.v(TAG, "create new LogSample..."); }
             float[] entArr = new float[ 5 ];
             entArr[ DIVE_TIME ] = entry.time;
             entArr[ DIVE_DEPTH ] = ( float ) entry.depth;

@@ -146,7 +146,8 @@ public class SPX42AliasManager
         }
       }
       cu.close();
-      Log.d(TAG, "exist Devive <" + _deviceId + "> : " + retVal);
+      if( ApplicationDEBUG.DEBUG )
+      { Log.d(TAG, "exist Devive <" + _deviceId + "> : " + retVal); }
       return (retVal);
     }
     catch( SQLException ex )
@@ -488,7 +489,8 @@ public class SPX42AliasManager
         }
         while( cu.moveToNext() );
       }
-      Log.d(TAG, "getDeviceAdressesList: read <" + devLists.size() + "> entrys...");
+      if( ApplicationDEBUG.DEBUG )
+      { Log.d(TAG, "getDeviceAdressesList: read <" + devLists.size() + "> entrys..."); }
       cu.close();
       return (devLists);
     }

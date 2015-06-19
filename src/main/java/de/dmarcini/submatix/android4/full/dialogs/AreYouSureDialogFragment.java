@@ -28,6 +28,8 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+
+import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
 
@@ -128,7 +130,8 @@ public class AreYouSureDialogFragment extends DialogFragment
   @Override
   public void show( FragmentManager manager, String tag )
   {
-    super.show( manager, tag );
-    Log.v( TAG, "show(manager,tag)..." );
+    super.show(manager, tag);
+    if( ApplicationDEBUG.DEBUG )
+    { Log.v(TAG, "show(manager,tag)..."); }
   }
 }

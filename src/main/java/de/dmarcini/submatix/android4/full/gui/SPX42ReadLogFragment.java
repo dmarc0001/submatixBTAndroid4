@@ -266,8 +266,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
    * <p/>
    * Stand: 19.08.2013
    *
-   * @param maxDepth
-   * @param diveLength
+   * @param diveHead
    * @return
    */
   private String makeDetailText(SPX42DiveHeadData diveHead)
@@ -462,7 +461,8 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   @Override
   public void msgDisconnected(BtServiceMessage msg)
   {
-    Log.v(TAG, "msgDisconnected");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.v(TAG, "msgDisconnected"); }
     Intent intent = new Intent(getActivity(), MainActivity.class);
     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     startActivity(intent);

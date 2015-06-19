@@ -28,6 +28,8 @@ import android.util.Log;
 
 import java.util.Locale;
 
+import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+
 /**
  * Klasse für Benachrichtigungen über Locationupdates
  * <p/>
@@ -61,7 +63,8 @@ public class DivePlaceLocationListener implements LocationListener
   {
     String out = null;
     //
-    Log.d(TAG, "new Location...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.d(TAG, "new Location..."); }
     if( location.hasAccuracy() )
     {
       out = String.format(Locale.ENGLISH, "accuracy: %2.1f m LAT: %2.6f, LON: %2.6f", location.getAccuracy(), location.getLatitude(), location.getLongitude());
@@ -70,7 +73,8 @@ public class DivePlaceLocationListener implements LocationListener
     {
       out = "accuracy: NONE LAT: NONE, LON: NONE";
     }
-    Log.d(TAG, out);
+    if( ApplicationDEBUG.DEBUG )
+    { Log.d(TAG, out); }
   }
 
   @Override
@@ -79,7 +83,8 @@ public class DivePlaceLocationListener implements LocationListener
     String stat = "unknown";
     String out = null;
     //
-    Log.d(TAG, "status changed...");
+    if( ApplicationDEBUG.DEBUG )
+    { Log.d(TAG, "status changed..."); }
     if( status == LocationProvider.OUT_OF_SERVICE )
     {
       stat = "OUT_OF_SERVICE";
@@ -92,23 +97,32 @@ public class DivePlaceLocationListener implements LocationListener
     {
       stat = "TEMPORARILY_UNAVAILABLE";
     }
-    out = String.format("Provider: %s, Status: %s", provider, stat);
-    Log.d(TAG, out);
+    if( ApplicationDEBUG.DEBUG )
+    {
+      out = String.format("Provider: %s, Status: %s", provider, stat);
+      Log.d(TAG, out);
+    }
   }
 
   @Override
   public void onProviderEnabled(String provider)
   {
     String out = null;
-    out = String.format("provider %s enabled...", provider);
-    Log.d(TAG, out);
+    if( ApplicationDEBUG.DEBUG )
+    {
+      out = String.format("provider %s enabled...", provider);
+      Log.d(TAG, out);
+    }
   }
 
   @Override
   public void onProviderDisabled(String provider)
   {
     String out = null;
-    out = String.format("provider %s disabled...", provider);
-    Log.d(TAG, out);
+    if( ApplicationDEBUG.DEBUG )
+    {
+      out = String.format("provider %s disabled...", provider);
+      Log.d(TAG, out);
+    }
   }
 }

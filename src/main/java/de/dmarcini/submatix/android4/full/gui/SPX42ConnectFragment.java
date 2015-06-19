@@ -72,7 +72,7 @@ import de.dmarcini.submatix.android4.full.utils.ProjectConst;
  */
 public class SPX42ConnectFragment extends Fragment implements IBtServiceListener, OnItemSelectedListener, OnClickListener
 {
-  @SuppressWarnings("javadoc")
+  @SuppressWarnings( "javadoc" )
   public static final String TAG = SPX42ConnectFragment.class.getSimpleName();
   private static final String LAST_CONNECTED_DEVICE_KEY = "keyLastConnectedDevice";
   private static final String DIAL_GET_PIN = "get_pin_dial";
@@ -87,13 +87,15 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   private ImageButton connButton = null;
   private TextView connectTextView = null;
   private boolean runDiscovering = false;
+  private MainActivity runningActivity = null;
+  private CommToast theToast = null;
   //
   // der Broadcast Empfänger der Nachrichten über gefundene BT Geräte findet
   //
   //
   // @formatter:off
   //
-  @SuppressLint("NewApi")
+  @SuppressLint( "NewApi" )
   private final BroadcastReceiver mReceiver = new BroadcastReceiver()
   {
     public final String TAG = BroadcastReceiver.class.getSimpleName();
@@ -157,7 +159,8 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       }
       else if( BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action) )
       {
-        Log.v(TAG, "discover finished, enable button.");
+        if( ApplicationDEBUG.DEBUG )
+        { Log.v(TAG, "discover finished, enable button."); }
         runDiscovering = false;
         stopDiscoverBt();
         // und nun die Liste frisch befüllen....
@@ -183,11 +186,6 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
           //
           BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
           theToast.showConnectionToast(String.format(getResources().getString(R.string.toast_connect_device_pairing_request), device.getName()), false);
-//            if( device.getBondState() == BluetoothDevice.BOND_BONDING )
-//            {
-//              if( ApplicationDEBUG.DEBUG )Log.d(TAG, "device is bonding... wait...");
-//            }
-//            else
           {
             String devicePin = MainActivity.aliasManager.getPINForMac(device.getAddress());
             if( devicePin != null )
@@ -254,32 +252,10 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     }
 
   };
-  private MainActivity runningActivity = null;
-  private CommToast theToast = null;
   private boolean showCommToast = false;
   private String fragmentTitle = "unknown";
 
-//    private void pairDevice(BluetoothDevice device) {
-//      try {
-//          Method method = device.getClass().getMethod("createBond", (Class[]) null);
-//          method.invoke(device, (Object[]) null);
-//      } catch (Exception e) {
-//          e.printStackTrace();
-//      }
-//  }
-//    
-//    private void unpairDevice(BluetoothDevice device) {
-//      try {
-//          Method method = device.getClass().getMethod("removeBond", (Class[]) null);
-//          method.invoke(device, (Object[]) null);
-//
-//      } catch (Exception e) {
-//          e.printStackTrace();
-//      }
-//  } 
-
-//
-// @formatter:on
+  // @formatter:on
   //
 
   /**
@@ -723,7 +699,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
    *
    * @param smsg die Nachricht
    */
-  @SuppressLint("NewApi")
+  @SuppressLint( "NewApi" )
   private void msgRecivedDialogPositive(BtServiceMessage smsg)
   {
     //
@@ -866,7 +842,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     //
   }
 
-  @SuppressLint("InlinedApi")
+  @SuppressLint( "InlinedApi" )
   @Override
   public void onActivityCreated(Bundle savedInstanceState)
   {
@@ -1333,19 +1309,22 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       // ArrayAdapter erfragen
       // mit welchem Gerät bin ich verbunden?
       lastConnectedDeviceMac = runningActivity.getConnectedDevice();
-      Log.v(TAG, "setSpinnerToConnectedDevice connected Device: <" + lastConnectedDeviceMac + ">");
+      if( ApplicationDEBUG.DEBUG )
+      { Log.v(TAG, "setSpinnerToConnectedDevice connected Device: <" + lastConnectedDeviceMac + ">"); }
       if( lastConnectedDeviceMac != null )
       {
         // welcher index gehört zu dem Gerät?
         deviceIndex = btArrayAdapter.getIndexForMac(lastConnectedDeviceMac);
-        Log.v(TAG, "setSpinnerToConnectedDevice index in Adapter: <" + deviceIndex + ">");
+        if( ApplicationDEBUG.DEBUG )
+        { Log.v(TAG, "setSpinnerToConnectedDevice index in Adapter: <" + deviceIndex + ">"); }
         // Online Markieren
         btArrayAdapter.setDeviceIsOnline(deviceIndex);
         // Update erzwingen
         devSpinner.setAdapter(btArrayAdapter);
         // Selektieren
         devSpinner.setSelection(deviceIndex, true);
-        Log.v(TAG, "setSpinnerToConnectedDevice set Spinner to index <" + deviceIndex + ">");
+        if( ApplicationDEBUG.DEBUG )
+        { Log.v(TAG, "setSpinnerToConnectedDevice set Spinner to index <" + deviceIndex + ">"); }
       }
     }
     catch( Exception ex )
@@ -1501,7 +1480,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
    * <p/>
    * Stand: 06.05.2013
    */
-  @SuppressLint("InlinedApi")
+  @SuppressLint( "InlinedApi" )
   private void stopDiscoverBt()
   {
     MainActivity.mBtAdapter.cancelDiscovery();

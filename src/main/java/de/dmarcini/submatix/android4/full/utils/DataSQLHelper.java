@@ -115,10 +115,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
   {
     String sql;
     // Main-Tabelle
-    if( ApplicationDEBUG.DEBUG )
-    {
-      Log.d(TAG, "create table " + ProjectConst.H_TABLE_DIVELOGS + "...");
-    }
+    Log.i(TAG, "create table " + ProjectConst.H_TABLE_DIVELOGS + "...");
     sql = "create table  " + ProjectConst.H_TABLE_DIVELOGS + " ";
     sql += "(";
     sql += ProjectConst.H_DIVEID + " integer primary key autoincrement, \n";

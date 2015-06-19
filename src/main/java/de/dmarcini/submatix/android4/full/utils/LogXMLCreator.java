@@ -243,9 +243,10 @@ public class LogXMLCreator
       }
       transformer.transform(doc, res);
       // ungezipptes file erzeugen
-      Log.v(TAG, "domToFile()...write to unzipped file... ");
+
       if( ApplicationDEBUG.DEBUG )
       {
+        Log.v(TAG, "domToFile()...write to unzipped file... ");
         Log.d(TAG, "closeLog: fileName:<" + diveHeader.xmlFile.getAbsoluteFile() + ">");
       }
       if( diveHeader.xmlFile.exists() )

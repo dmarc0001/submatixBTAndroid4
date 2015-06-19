@@ -20,8 +20,6 @@
 //@formatter:on
 package de.dmarcini.submatix.android4.full.dialogs;
 
-import java.util.Vector;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -34,6 +32,10 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Spinner;
+
+import java.util.Vector;
+
+import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
 import de.dmarcini.submatix.android4.full.utils.DeviceSelectArrayAdapterWithPics;
@@ -174,7 +176,8 @@ public class SelectDeviceDialogFragment extends DialogFragment
   @Override
   public void show( FragmentManager manager, String tag )
   {
-    super.show( manager, tag );
-    Log.v( TAG, "show(manager," + tag + ")..." );
+    super.show(manager, tag);
+    if( ApplicationDEBUG.DEBUG )
+    { Log.v(TAG, "show(manager," + tag + ")..."); }
   }
 }
