@@ -32,7 +32,21 @@
        <item>15</item>
        <item>20</item>
     </string-array>
-    
+
+    <string-array name="highsetpointSixDepthNamesArrayWoOff">
+        <item>6m</item>
+        <item>10m</item>
+        <item>15m</item>
+        <item>20m</item>
+    </string-array>
+
+    <string-array name="highsetpointSixDepthValuesArrayWoOff">
+        <item>6</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+    </string-array>
+
     <!-- Highsetpoint (wenn autosetpoint enable ab der vorgewählten Tiefe...) -->
     <string-array name="highsetpointNamesArray">
       <item >1.0 bar</item>
