@@ -1155,6 +1155,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       Log.i(TAG, "is old param order: " + spxConfig.isOldParamSorting());
       Log.i(TAG, "is newer display brightness: " + spxConfig.isNewerDisplayBrigthness());
       Log.i(TAG, "has six meters first autosetpoint: " + spxConfig.isSixMetersAutoSetpoint());
+      Log.i(TAG, "has deactivated autosetpoint to switch off: " + spxConfig.isAutoSetpointWithoutOff());
     }
     //
     // Jetzt währe es an der Zeit, auch an Datum und Zeit zu denken
@@ -1183,7 +1184,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void msgRecivedSerial(BtServiceMessage msg)
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, "serial <" + ( String ) msg.getContainer() + "> recived"); }
+    {
+      Log.d(TAG, "serial <" + msg.getContainer() + "> recived");
+    }
     spxConfig.setSerial(new String(( String ) msg.getContainer()));
   }
 
@@ -1244,7 +1247,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void msgReciveManufacturer(BtServiceMessage msg)
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, "SPX Manufacturer <" + ( String ) msg.getContainer() + "> recived. Ignore."); }
+    {
+      Log.d(TAG, "SPX Manufacturer <" + msg.getContainer() + "> recived. Ignore.");
+    }
   }
 
   @Override

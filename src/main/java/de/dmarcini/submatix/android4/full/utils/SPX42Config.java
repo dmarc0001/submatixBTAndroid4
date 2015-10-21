@@ -58,6 +58,7 @@ public class SPX42Config
   protected boolean isOldParamSorting = false;  // bei alter Firmware war die Reihenfolge der Paramete anders
   protected boolean isNewerDisplayBrightness = false; // ab FW FIRMWARE_2_7H_R83CE 20 % Schritte
   protected boolean isSixMetersAutoSetpoint = false; // ab FW FIRMWARE_2_7H_R83CE autosetpoint ab 6 Meter
+  protected boolean isAutoSetpointWithoutOff = false; // ab FW FIRMWARE_2_7H_R83CE autosetpoint nicht abschaltbar (Parameter beim read/write veränderter Wert)
 
 
   //
@@ -101,6 +102,7 @@ public class SPX42Config
     isOldParamSorting = cf.isOldParamSorting;
     isNewerDisplayBrightness = cf.isNewerDisplayBrightness;
     isSixMetersAutoSetpoint = cf.isSixMetersAutoSetpoint;
+    isAutoSetpointWithoutOff = cf.isAutoSetpointWithoutOff;
   }
 
   /**
@@ -142,6 +144,7 @@ public class SPX42Config
     isOldParamSorting = false; // bei alter Firmware war die Reihenfolge der Paramete anders
     isNewerDisplayBrightness = false; // ab FW FIRMWARE_2_7H_R83CE 20 % Schritte
     isSixMetersAutoSetpoint = false;
+    isAutoSetpointWithoutOff = false;
   }
 
   /**
@@ -214,7 +217,7 @@ public class SPX42Config
     {
       return (false);
     }
-    return (true);
+    return isAutoSetpointWithoutOff == cf.isAutoSetpointWithoutOff;
   }
 
   /**
@@ -317,6 +320,7 @@ public class SPX42Config
     isOldParamSorting = false;
     isNewerDisplayBrightness = false;
     isSixMetersAutoSetpoint = false;
+    isAutoSetpointWithoutOff = false;
     //
     // versuch mal die Eigenschaften rauszufinden
     //
@@ -341,6 +345,7 @@ public class SPX42Config
         isNewerDisplayBrightness = true;
         isSixMetersAutoSetpoint = true;
         canSetDate = true;
+        isAutoSetpointWithoutOff = true;
       }
       else
       {
@@ -363,6 +368,7 @@ public class SPX42Config
         isNewerDisplayBrightness = true;
         isSixMetersAutoSetpoint = true;
         canSetDate = true;
+        isAutoSetpointWithoutOff = true;
       }
     }
   }
@@ -555,16 +561,19 @@ public class SPX42Config
       return false;
     }
     licenseState = vals[ 0 ];
-    if( vals[ 1 ] == 0 )
-    {
-      customEnabled = false;
-    }
-    else
-    {
-      customEnabled = true;
-    }
+    customEnabled = vals[1] != 0;
     return (true);
   }
+
+  /**
+   * Ist das Ausschalten des Autosetpoints deaktiviert (neuere Firmware)
+   *
+   * @return ist es so?
+   */
+  public boolean isAutoSetpointWithoutOff() {
+    return (isAutoSetpointWithoutOff);
+  }
+
 
   /**
    * Setze den Lizenzstatus direkt
