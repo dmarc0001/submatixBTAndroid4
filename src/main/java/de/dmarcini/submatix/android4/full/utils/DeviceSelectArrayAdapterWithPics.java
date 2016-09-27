@@ -158,7 +158,7 @@ public class DeviceSelectArrayAdapterWithPics extends ArrayAdapter<Pair<Integer,
    * Stand: 01.12.2013
    *
    * @param position
-   * @return GErätename an Position
+   * @return Gerätename an Position
    */
   public String getDeviceNameAt(int position)
   {
