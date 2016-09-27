@@ -43,8 +43,8 @@ import de.dmarcini.submatix.android4.full.gui.MainActivity;
  */
 public class ColorizedPreferenceCategory extends PreferenceCategory
 {
-  private static final String TAG = ColorizedPreferenceCategory.class.getSimpleName();
-  private int currStyle = R.style.AppDarkTheme;
+  private static final String TAG       = ColorizedPreferenceCategory.class.getSimpleName();
+  private              int    currStyle = R.style.AppDarkTheme;
 
   /**
    * Konstruktor mit Kontext
@@ -108,7 +108,9 @@ public class ColorizedPreferenceCategory extends PreferenceCategory
   private int getTheme(Context context)
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "check for theme in app..."); }
+    {
+      Log.v(TAG, "check for theme in app...");
+    }
     currStyle = MainActivity.getAppStyle();
     return (currStyle);
   }

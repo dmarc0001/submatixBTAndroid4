@@ -45,8 +45,8 @@ import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
  */
 public class SPX42AliasManager
 {
-  private static final String TAG = SPX42AliasManager.class.getSimpleName();
-  protected SQLiteDatabase dBase = null;
+  private static final String         TAG   = SPX42AliasManager.class.getSimpleName();
+  protected            SQLiteDatabase dBase = null;
 
   /**
    * Konstruktor mit Übergabe einer geöffneten Datenbank
@@ -125,8 +125,8 @@ public class SPX42AliasManager
    */
   public boolean existDeviceId(int _deviceId)
   {
-    String sql;
-    Cursor cu;
+    String  sql;
+    Cursor  cu;
     boolean retVal = false;
     //
     if( ApplicationDEBUG.DEBUG )
@@ -147,7 +147,9 @@ public class SPX42AliasManager
       }
       cu.close();
       if( ApplicationDEBUG.DEBUG )
-      { Log.d(TAG, "exist Devive <" + _deviceId + "> : " + retVal); }
+      {
+        Log.d(TAG, "exist Devive <" + _deviceId + "> : " + retVal);
+      }
       return (retVal);
     }
     catch( SQLException ex )
@@ -374,8 +376,8 @@ public class SPX42AliasManager
    */
   public Vector<Integer> getDeviceIdList()
   {
-    String sql;
-    Cursor cu;
+    String          sql;
+    Cursor          cu;
     Vector<Integer> lst = new Vector<Integer>();
     //
     if( ApplicationDEBUG.DEBUG )
@@ -419,8 +421,8 @@ public class SPX42AliasManager
   public Vector<Pair<Integer, String>> getDeviceNameIdList()
   {
     // Pair<Integer,String> = new Pair<Integer,String>(null, null);
-    String sql;
-    Cursor cu;
+    String                        sql;
+    Cursor                        cu;
     Vector<Pair<Integer, String>> devList = new Vector<Pair<Integer, String>>();
     //
     if( ApplicationDEBUG.DEBUG )
@@ -463,16 +465,15 @@ public class SPX42AliasManager
    */
   public Vector<HashMap<String, String>> getDeviceAdressesList()
   {
-    String sql;
-    Cursor cu;
+    String                          sql;
+    Cursor                          cu;
     Vector<HashMap<String, String>> devLists = new Vector<HashMap<String, String>>();
     //
     if( ApplicationDEBUG.DEBUG )
     {
       Log.i(TAG, "getDeviceAdressesList...");
     }
-    sql = String.format("select %s,%s,%s from %s order by %s", ProjectConst.A_MAC, ProjectConst.A_DEVNAME, ProjectConst.A_ALIAS, ProjectConst.A_TABLE_ALIASES,
-        ProjectConst.A_DEVICEID);
+    sql = String.format("select %s,%s,%s from %s order by %s", ProjectConst.A_MAC, ProjectConst.A_DEVNAME, ProjectConst.A_ALIAS, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_DEVICEID);
     cu = dBase.rawQuery(sql, null);
     //
     try
@@ -490,7 +491,9 @@ public class SPX42AliasManager
         while( cu.moveToNext() );
       }
       if( ApplicationDEBUG.DEBUG )
-      { Log.d(TAG, "getDeviceAdressesList: read <" + devLists.size() + "> entrys..."); }
+      {
+        Log.d(TAG, "getDeviceAdressesList: read <" + devLists.size() + "> entrys...");
+      }
       cu.close();
       return (devLists);
     }
@@ -516,7 +519,7 @@ public class SPX42AliasManager
   public int getIdForDeviceFromMac(String _mac)
   {
     String sql;
-    int deviceId = -1;
+    int    deviceId = -1;
     Cursor cu;
     //
     if( ApplicationDEBUG.DEBUG )
@@ -560,7 +563,7 @@ public class SPX42AliasManager
   public int getIdForDeviceFromSerial(String _serial)
   {
     String sql;
-    int deviceId = -1;
+    int    deviceId = -1;
     Cursor cu;
     //
     if( ApplicationDEBUG.DEBUG )
@@ -608,8 +611,8 @@ public class SPX42AliasManager
    */
   public boolean setAliasForMac(String _mac, String _devName, String _alias, String _serial)
   {
-    String sql;
-    Cursor cu;
+    String        sql;
+    Cursor        cu;
     ContentValues values;
     //
     if( ApplicationDEBUG.DEBUG )
@@ -681,8 +684,8 @@ public class SPX42AliasManager
    */
   public void setAliasForMacIfNotExist(String _mac, String _deviceName)
   {
-    String sql;
-    Cursor cu;
+    String        sql;
+    Cursor        cu;
     ContentValues values;
     //
     if( ApplicationDEBUG.DEBUG )
@@ -732,10 +735,10 @@ public class SPX42AliasManager
    */
   public void setSerialIfNotExist(String _mac, String _serial)
   {
-    String sql;
-    Cursor cu;
+    String        sql;
+    Cursor        cu;
     ContentValues values;
-    String whereString;
+    String        whereString;
     //
     if( ApplicationDEBUG.DEBUG )
     {
@@ -784,7 +787,7 @@ public class SPX42AliasManager
   public void setPinForMac(String _mac, String _pin)
   {
     ContentValues values;
-    String whereString;
+    String        whereString;
     //
     try
     {

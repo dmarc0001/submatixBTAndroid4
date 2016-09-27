@@ -20,10 +20,10 @@
 //@formatter:on
 /**
  * Eigener Arrayadapter, der Icons beinhaltet
- *
+ * <p>
  * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
- *
- *
+ * <p>
+ * <p>
  * Stand: 23.12.2012
  */
 package de.dmarcini.submatix.android4.full.utils;
@@ -55,7 +55,7 @@ import de.dmarcini.submatix.android4.full.content.ContentSwitcher;
  */
 public class ArrayAdapterWithPics extends ArrayAdapter<ContentSwitcher.ProgItem>
 {
-  private int themeId = R.style.AppDarkTheme;
+  private int     themeId  = R.style.AppDarkTheme;
   private boolean isOnline = false;
   ;
 
@@ -105,9 +105,9 @@ public class ArrayAdapterWithPics extends ArrayAdapter<ContentSwitcher.ProgItem>
   @Override
   public View getView(int position, View convertView, ViewGroup parent)
   {
-    ViewHolder holder = null;
-    ContentSwitcher.ProgItem progItem = getItem(position);
-    LayoutInflater mInflater = ( LayoutInflater ) getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+    ViewHolder               holder    = null;
+    ContentSwitcher.ProgItem progItem  = getItem(position);
+    LayoutInflater           mInflater = ( LayoutInflater ) getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
     if( convertView == null )
     {
       convertView = mInflater.inflate(R.layout.array_with_pic_adapter_view, parent, false);
@@ -177,7 +177,7 @@ public class ArrayAdapterWithPics extends ArrayAdapter<ContentSwitcher.ProgItem>
   private class ViewHolder
   {
     public ImageView imageView;
-    public TextView txtTitle;
+    public TextView  txtTitle;
     public ImageView imageRightIndicatorView;
     public ImageView imageLeftIndicatorView;
   }

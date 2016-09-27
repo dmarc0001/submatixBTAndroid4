@@ -31,7 +31,7 @@ package de.dmarcini.submatix.android4.full.utils;
  */
 public class GasUpdateEntity
 {
-  private int gasNr = 0;
+  private int           gasNr    = 0;
   private SPX42GasParms gasParms = null;
 
   /**

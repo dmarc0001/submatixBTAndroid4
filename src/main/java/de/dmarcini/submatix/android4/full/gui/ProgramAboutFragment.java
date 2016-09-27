@@ -45,14 +45,14 @@ import de.dmarcini.submatix.android4.full.utils.ProjectConst;
  */
 public class ProgramAboutFragment extends Fragment
 {
-  @SuppressWarnings("javadoc")
-  public static final String TAG = ProgramAboutFragment.class.getSimpleName();
-  private MainActivity runningActivity = null;
-  private TextView aboutVersionTextView = null;
-  private TextView aboutProgrammerTextView = null;
-  private TextView aboutBuildTextView = null;
-  private TextView aboutBuildDateTextView = null;
-  private String fragmentTitle = "unknown";
+  @SuppressWarnings( "javadoc" )
+  public static final String       TAG                     = ProgramAboutFragment.class.getSimpleName();
+  private             MainActivity runningActivity         = null;
+  private             TextView     aboutVersionTextView    = null;
+  private             TextView     aboutProgrammerTextView = null;
+  private             TextView     aboutBuildTextView      = null;
+  private             TextView     aboutBuildDateTextView  = null;
+  private             String       fragmentTitle           = "unknown";
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState)

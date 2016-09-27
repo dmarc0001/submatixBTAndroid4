@@ -55,22 +55,22 @@ import de.dmarcini.submatix.android4.full.R;
 public class SPX42LogGraphView extends View implements OnTouchListener
 {
   @SuppressWarnings( "javadoc" )
-  public static final String TAG = SPX42LogGraphView.class.getSimpleName();
-  private final static float margin_top = 20;
-  private final static float margin_bottom = 30;
-  private final static float margin_bottom_ox = 55;
-  private final static float margin_bottom_temp = 75;
-  private final static float countTimeMark = 6;
-  private final Paint pnt = new Paint(Paint.ANTI_ALIAS_FLAG);
-  private final SPX42LogColorClass colorClass = new SPX42LogColorClass();
-  private int currentAppstyle = R.style.AppDarkTheme;
-  private ScaleGestureDetector scaleDetector = null;
-  private Vector<float[]> sampleVector = null;
-  private int viewWidth = 1;
-  private int viewHeight = 1;
-  private float masterScale = 0.0F;
-  private float sampleOffset = 0F;
-  private float startTouchMove = 0F;
+  public static final  String               TAG                = SPX42LogGraphView.class.getSimpleName();
+  private final static float                margin_top         = 20;
+  private final static float                margin_bottom      = 30;
+  private final static float                margin_bottom_ox   = 55;
+  private final static float                margin_bottom_temp = 75;
+  private final static float                countTimeMark      = 6;
+  private final        Paint                pnt                = new Paint(Paint.ANTI_ALIAS_FLAG);
+  private final        SPX42LogColorClass   colorClass         = new SPX42LogColorClass();
+  private              int                  currentAppstyle    = R.style.AppDarkTheme;
+  private              ScaleGestureDetector scaleDetector      = null;
+  private              Vector<float[]>      sampleVector       = null;
+  private              int                  viewWidth          = 1;
+  private              int                  viewHeight         = 1;
+  private              float                masterScale        = 0.0F;
+  private              float                sampleOffset       = 0F;
+  private              float                startTouchMove     = 0F;
 
   /**
    * Konstruktor
@@ -190,7 +190,7 @@ public class SPX42LogGraphView extends View implements OnTouchListener
   public void onDraw(Canvas canvas)
   {
     float[] depthProfil = null;
-    float[] oneProfil = null;
+    float[] oneProfil   = null;
     super.onDraw(canvas);
     //
     // Hintergrund zeichnen
@@ -266,11 +266,11 @@ public class SPX42LogGraphView extends View implements OnTouchListener
    */
   private void drawZoomBar(Canvas canvas, float[] origProfil)
   {
-    Path bar_outer = new Path();
-    Path bar_inner = new Path();
+    Path  bar_outer = new Path();
+    Path  bar_inner = new Path();
     float barStart;
     float barLength;
-    Paint zbPnt = new Paint(Paint.ANTI_ALIAS_FLAG);
+    Paint zbPnt     = new Paint(Paint.ANTI_ALIAS_FLAG);
     // Berechne, wo der gezeigte Bereich anfängt
     if( sampleOffset <= 0.0F )
     {
@@ -339,13 +339,15 @@ public class SPX42LogGraphView extends View implements OnTouchListener
     float depthFactor;
     float maxValue;
     float maxTextPosY;
-    int samplePos = 0;
+    int   samplePos = 0;
     //
     maxValue = getMaxValue(origProfil);
     // Die Tiefe muß ich nun noch skalieren, passend auf den Schirm
     depthFactor = (viewHeight - margin_top - margin_bottom - 30) / maxValue;
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, String.format("drawDepthPath() -> max depth value: <%03.1f>, depthFactor: <%03.2f>", maxValue, depthFactor)); }
+    {
+      Log.v(TAG, String.format("drawDepthPath() -> max depth value: <%03.1f>, depthFactor: <%03.2f>", maxValue, depthFactor));
+    }
     // wo kommt die Legende für max-tiefe hin?
     maxTextPosY = (maxValue * depthFactor) + margin_top;
     // Pfad erstellen
@@ -501,17 +503,19 @@ public class SPX42LogGraphView extends View implements OnTouchListener
    */
   private void drawTimeLine(Canvas canvas, float[] oneProfil)
   {
-    int timeStep = ( int ) oneProfil[ 0 ];
-    int diveLength = getDiveLength(oneProfil);
+    int   timeStep   = ( int ) oneProfil[ 0 ];
+    int   diveLength = getDiveLength(oneProfil);
     float timeFactor = ((100 * viewWidth) / oneProfil.length) * masterScale;
-    int timeLineTimeMark;
+    int   timeLineTimeMark;
     float markScale;
     float currX, currY;
-    int samplePos;
+    int   samplePos;
     //
     markScale = viewWidth / countTimeMark;
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, String.format("drawTimeLine() -> divelength: <%d> secounds, timeStep: <%d> secounds, timeFactor: <%03.2f>", diveLength, timeStep, timeFactor)); }
+    {
+      Log.v(TAG, String.format("drawTimeLine() -> divelength: <%d> secounds, timeStep: <%d> secounds, timeFactor: <%03.2f>", diveLength, timeStep, timeFactor));
+    }
     pnt.setColor(colorClass.spxGraphTimeline);
     pnt.setTextSize(20);
     pnt.setTextAlign(Align.LEFT);
@@ -596,14 +600,16 @@ public class SPX42LogGraphView extends View implements OnTouchListener
     float currX, currY;
     float oxygenFactor;
     float maxOxigen, maxOxigenAbsolute;
-    int samplePos = 0;
-    int graphColor = colorClass.spxGraphPpo2Line;
-    int scaleColor = colorClass.spxGraphPpo2Scale;
+    int   samplePos  = 0;
+    int   graphColor = colorClass.spxGraphPpo2Line;
+    int   scaleColor = colorClass.spxGraphPpo2Scale;
     maxOxigen = getMaxValue(oxyProfil);
     // Die PPO2 muß ich nun noch skalieren, passend auf den Schirm und verkleinert
     oxygenFactor = (viewHeight - margin_bottom_ox - (viewHeight / 4)) / maxOxigen;
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, String.format("drawOxigenLine() -> max oxy value: <%03.1f>, oxigenFactor: <%03.2f>", maxOxigen, oxygenFactor)); }
+    {
+      Log.v(TAG, String.format("drawOxigenLine() -> max oxy value: <%03.1f>, oxigenFactor: <%03.2f>", maxOxigen, oxygenFactor));
+    }
     // Pfad erstellen
     Path pathOx = new Path();
     // hier gehts los, Ausgangspunkt erstellen
@@ -715,9 +721,9 @@ public class SPX42LogGraphView extends View implements OnTouchListener
     float currX, currY;
     float temperatureFactor;
     float maxTemperature, maxTemperatureAbsolute, minTemperature;
-    int samplePos = 0;
-    int graphColor = colorClass.spxGraphTemperatureLine;
-    int scaleColor = colorClass.spxGraphTemperatureScale;
+    int   samplePos  = 0;
+    int   graphColor = colorClass.spxGraphTemperatureLine;
+    int   scaleColor = colorClass.spxGraphTemperatureScale;
     maxTemperature = getMaxValue(tempProfil);
     minTemperature = getMinValue(tempProfil);
     if( (maxTemperature - minTemperature) < 2 )
@@ -729,8 +735,7 @@ public class SPX42LogGraphView extends View implements OnTouchListener
     temperatureFactor = (viewHeight - margin_bottom_temp - (viewHeight / 3)) / (maxTemperature - minTemperature);
     if( ApplicationDEBUG.DEBUG )
     {
-      Log.v(TAG,
-          String.format("drawTemperatureLine() -> max temp value: <%03.1f>, min temp value: <%03.2f>, tempFactor: <%03.2f>", maxTemperature, minTemperature, temperatureFactor));
+      Log.v(TAG, String.format("drawTemperatureLine() -> max temp value: <%03.1f>, min temp value: <%03.2f>, tempFactor: <%03.2f>", maxTemperature, minTemperature, temperatureFactor));
     }
     // Pfad erstellen
     Path pathTemp = new Path();
@@ -1005,9 +1010,9 @@ public class SPX42LogGraphView extends View implements OnTouchListener
    */
   private float[] getIndexProfil(Vector<float[]> sv, int id)
   {
-    float[] prof = new float[ sv.size() ];
-    Iterator<float[]> svi = sv.iterator();
-    int index;
+    float[]           prof = new float[ sv.size() ];
+    Iterator<float[]> svi  = sv.iterator();
+    int               index;
     index = 0;
     // Alle Elemente...
     while( svi.hasNext() )
@@ -1066,7 +1071,7 @@ public class SPX42LogGraphView extends View implements OnTouchListener
   private String getTimeString(int tm)
   {
     int minute = tm / 60;
-    int sec = tm % 60;
+    int sec    = tm % 60;
     return (String.format(Locale.ENGLISH, "%02d:%02d m", minute, sec));
   }
 
@@ -1101,7 +1106,9 @@ public class SPX42LogGraphView extends View implements OnTouchListener
     {
       masterScale *= detector.getScaleFactor();
       if( ApplicationDEBUG.DEBUG )
-      { Log.d(TAG, String.format("Skalierung: %03.2f", masterScale)); }
+      {
+        Log.d(TAG, String.format("Skalierung: %03.2f", masterScale));
+      }
       invalidate();
       return true;
     }

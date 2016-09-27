@@ -52,17 +52,17 @@ import de.dmarcini.submatix.android4.full.exceptions.NoXMLDataFileFoundException
 public class SPX42DiveSampleClass
 {
   @SuppressWarnings( "javadoc" )
-  public static final int DIVE_TIME = 0;
+  public static final int    DIVE_TIME        = 0;
   @SuppressWarnings( "javadoc" )
-  public static final int DIVE_DEPTH = 1;
+  public static final int    DIVE_DEPTH       = 1;
   @SuppressWarnings( "javadoc" )
-  public static final int DIVE_TEMPERATURE = 2;
+  public static final int    DIVE_TEMPERATURE = 2;
   @SuppressWarnings( "javadoc" )
-  public static final int DIVE_PPO2 = 3;
+  public static final int    DIVE_PPO2        = 3;
   @SuppressWarnings( "javadoc" )
-  public static final int DIVE_ZEROTIME = 4;
-  static final String TAG = SPX42DiveSampleClass.class.getSimpleName();
-  private static int diveTimeCurrent = 0;
+  public static final int    DIVE_ZEROTIME    = 4;
+  static final        String TAG              = SPX42DiveSampleClass.class.getSimpleName();
+  private static      int    diveTimeCurrent  = 0;
 
   /**
    * Eine Funktion zum erzeugen der Samples für einen Tauchgang
@@ -77,11 +77,11 @@ public class SPX42DiveSampleClass
    */
   public static Vector<float[]> makeSamples(final ReadLogItemObj rlo) throws NoXMLDataFileFoundException
   {
-    SAXParserFactory spf = null;
-    SAXParser sp = null;
-    ContentHandler myHandler = null;
-    XMLReader xr = null;
-    File xmlFile = null;
+    SAXParserFactory      spf          = null;
+    SAXParser             sp           = null;
+    ContentHandler        myHandler    = null;
+    XMLReader             xr           = null;
+    File                  xmlFile      = null;
     final Vector<float[]> sampleVector = new Vector<float[]>();
     //
     diveTimeCurrent = 0;
@@ -104,7 +104,9 @@ public class SPX42DiveSampleClass
     try
     {
       if( ApplicationDEBUG.DEBUG )
-      { Log.v(TAG, "NEW SAX Parser..."); }
+      {
+        Log.v(TAG, "NEW SAX Parser...");
+      }
       sp = spf.newSAXParser();
       xr = sp.getXMLReader();
     }
@@ -256,7 +258,9 @@ public class SPX42DiveSampleClass
           {
             // Jetz einen Eintrag in das Vector-Teil
             if( ApplicationDEBUG.DEBUG )
-            { Log.v(TAG, "create new LogSample..."); }
+            {
+              Log.v(TAG, "create new LogSample...");
+            }
             float[] entArr = new float[ 5 ];
             entArr[ DIVE_TIME ] = entry.time;
             entArr[ DIVE_DEPTH ] = ( float ) entry.depth;

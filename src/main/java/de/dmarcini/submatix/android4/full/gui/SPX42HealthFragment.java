@@ -47,17 +47,17 @@ import de.dmarcini.submatix.android4.full.utils.ProjectConst;
  */
 public class SPX42HealthFragment extends Fragment implements IBtServiceListener
 {
-  @SuppressWarnings("javadoc")
-  public static final String TAG = SPX42HealthFragment.class.getSimpleName();
-  private MainActivity runningActivity = null;
-  private TextView ackuVoltageTextView = null;
-  private TextView serialNumberTextView = null;
-  private TextView firmwareVersionTextView = null;
-  private TextView licenseNitroxTextView = null;
-  private TextView licenseNTMXTextView = null;
-  private TextView licenseTMXTextView = null;
-  private TextView licenseIndividualTextView = null;
-  private String fragmentTitle = "unknown";
+  @SuppressWarnings( "javadoc" )
+  public static final String       TAG                       = SPX42HealthFragment.class.getSimpleName();
+  private             MainActivity runningActivity           = null;
+  private             TextView     ackuVoltageTextView       = null;
+  private             TextView     serialNumberTextView      = null;
+  private             TextView     firmwareVersionTextView   = null;
+  private             TextView     licenseNitroxTextView     = null;
+  private             TextView     licenseNTMXTextView       = null;
+  private             TextView     licenseTMXTextView        = null;
+  private             TextView     licenseIndividualTextView = null;
+  private             String       fragmentTitle             = "unknown";
 
   @Override
   public void handleMessages(int what, BtServiceMessage msg)
@@ -92,8 +92,8 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
   @Override
   public void msgConnected(BtServiceMessage msg)
   {
-    Resources res = runningActivity.getResources();
-    float ackuValue = MainActivity.ackuValue;
+    Resources res       = runningActivity.getResources();
+    float     ackuValue = MainActivity.ackuValue;
     //
     // Fülle die Textfelder mit aktuellen Werten
     //

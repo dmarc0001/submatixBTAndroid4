@@ -1,5 +1,3 @@
-
-
 //@formatter:off
 /*
     programm: SubmatixBTLoggerAndroid
@@ -24,11 +22,11 @@ package de.dmarcini.submatix.android4.full;
 
 /**
  * Klasse mit statischem Flag zum Debuggen
- * 
+ * <p>
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4
- * 
+ *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- * 
+ *         <p>
  *         Stand: 18.11.2013
  */
 public class ApplicationDEBUG

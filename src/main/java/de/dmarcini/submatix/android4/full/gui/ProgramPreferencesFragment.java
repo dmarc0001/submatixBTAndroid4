@@ -59,10 +59,10 @@ import de.dmarcini.submatix.android4.full.utils.ProjectConst;
  */
 public class ProgramPreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener, OnPreferenceClickListener, IBtServiceListener
 {
-  private static final String TAG = ProgramPreferencesFragment.class.getSimpleName();
-  private static final String DATA_DIR_KEY = "keyProgDataDirectory";
-  private SharedPreferences sPref = null;
-  private String fragmentTitle = "unknown";
+  private static final String            TAG           = ProgramPreferencesFragment.class.getSimpleName();
+  private static final String            DATA_DIR_KEY  = "keyProgDataDirectory";
+  private              SharedPreferences sPref         = null;
+  private              String            fragmentTitle = "unknown";
 
   @Override
   public void handleMessages(int what, BtServiceMessage smsg)
@@ -91,7 +91,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
           // Alle Aktionen in MainActivity abgearbeitet, jetzt noch Zusätzlich
           // die Summary machen
           //
-          Preference pP;
+          Preference       pP;
           PreferenceScreen pS = getPreferenceScreen();
           // auf dem Screen die Voreinstellung finden
           pP = pS.findPreference(DATA_DIR_KEY);
@@ -193,7 +193,9 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     sPref = getPreferenceManager().getSharedPreferences();
     sPref.registerOnSharedPreferenceChangeListener(this);
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "onCreate: add Resouce...OK"); }
+    {
+      Log.v(TAG, "onCreate: add Resouce...OK");
+    }
   }
 
   @Override
@@ -213,7 +215,9 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     {
       case android.R.id.home:
         if( ApplicationDEBUG.DEBUG )
-        { Log.v(TAG, "onOptionsItemSelected: HOME"); }
+        {
+          Log.v(TAG, "onOptionsItemSelected: HOME");
+        }
         Intent intent = new Intent(getActivity(), MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
@@ -227,7 +231,9 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
   {
     super.onPause();
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "onPause..."); }
+    {
+      Log.v(TAG, "onPause...");
+    }
     if( ApplicationDEBUG.DEBUG )
     {
       Log.d(TAG, "onPause: clear service listener for preferences fragment...");
@@ -269,10 +275,14 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
   {
     super.onResume();
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "onResume()"); }
+    {
+      Log.v(TAG, "onResume()");
+    }
     PreferenceScreen ps = getPreferenceScreen();
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "this preferencescreen has <" + ps.getPreferenceCount() + "> preferenes."); }
+    {
+      Log.v(TAG, "this preferencescreen has <" + ps.getPreferenceCount() + "> preferenes.");
+    }
     (( MainActivity ) getActivity()).addServiceListener(this);
   }
 
@@ -287,10 +297,10 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
   @Override
   public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key)
   {
-    ListPreference lP = null;
-    EditTextPreference tP = null;
-    Preference pref = null;
-    Resources res = getResources();
+    ListPreference     lP   = null;
+    EditTextPreference tP   = null;
+    Preference         pref = null;
+    Resources          res  = getResources();
     //
     if( ApplicationDEBUG.DEBUG )
     {
@@ -379,12 +389,16 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     {
       PreferenceGroup pg = ( PreferenceGroup ) ps.getPreference(groupIdx);
       if( ApplicationDEBUG.DEBUG )
-      { Log.v(TAG, String.format("The Group <%s> has %d preferences", pg.getTitle(), pg.getPreferenceCount())); }
+      {
+        Log.v(TAG, String.format("The Group <%s> has %d preferences", pg.getTitle(), pg.getPreferenceCount()));
+      }
       for( int prefIdx = 0; prefIdx < pg.getPreferenceCount(); prefIdx++ )
       {
         Preference pref = pg.getPreference(prefIdx);
         if( ApplicationDEBUG.DEBUG )
-        { Log.v(TAG, String.format("The Preference <%s> is number %d", pref.getTitle(), prefIdx)); }
+        {
+          Log.v(TAG, String.format("The Preference <%s> is number %d", pref.getTitle(), prefIdx));
+        }
         // jede ungerade Zeile färben
         if( prefIdx % 2 > 0 )
         {
@@ -417,12 +431,12 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
    */
   private void setAllSummarys()
   {
-    ListPreference lP = null;
-    EditTextPreference tP = null;
-    Preference pP = null;
-    String temp = null;
-    PreferenceScreen pS = getPreferenceScreen();
-    Resources res = getResources();
+    ListPreference     lP   = null;
+    EditTextPreference tP   = null;
+    Preference         pP   = null;
+    String             temp = null;
+    PreferenceScreen   pS   = getPreferenceScreen();
+    Resources          res  = getResources();
     //
     //
     // Zeitformat

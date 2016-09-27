@@ -385,7 +385,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     ListPreference lP = null;
     // Preference pref = null;
     String[] setPoint;
-    int autoSp, sP;
+    int      autoSp, sP;
     //
     if( ApplicationDEBUG.DEBUG )
     {
@@ -508,10 +508,10 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    */
   private void msgReciveDeco(BtServiceMessage msg)
   {
-    String[] decoParam;
-    int[] presetCandidate = {0, 0};
+    String[]         decoParam;
+    int[]            presetCandidate = {0, 0};
     SwitchPreference sp;
-    int   lowG, highG, deepStops, dynGr, lastStop;
+    int              lowG, highG, deepStops, dynGr, lastStop;
     //
     //
     if( ApplicationDEBUG.DEBUG )
@@ -660,9 +660,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    */
   private void msgReciveDisplay(BtServiceMessage msg)
   {
-    String[] displayParm;
-    int      lumin  = 0;
-    int      orient = 0;
+    String[]       displayParm;
+    int            lumin  = 0;
+    int            orient = 0;
     ListPreference lP;
     //
     if( ApplicationDEBUG.DEBUG )
@@ -800,10 +800,10 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    */
   private void msgReciveIndividuals(BtServiceMessage msg)
   {
-    String[]       individualParm;
-    int            sensorsOff = 0, pscrOff = 0, sensorsCount = 3, soundOn = 1, logInterval = 2, tempStick = 0;
+    String[]         individualParm;
+    int              sensorsOff = 0, pscrOff = 0, sensorsCount = 3, soundOn = 1, logInterval = 2, tempStick = 0;
     SwitchPreference sp;
-    ListPreference lP;
+    ListPreference   lP;
     //
     if( ApplicationDEBUG.DEBUG )
     {
@@ -999,8 +999,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // UD= 1=Fahrenheit/0=Celsius => immer 0 in der aktuellen Firmware 2.6.7.7_U
     // UL= 0=metrisch 1=imperial
     // UW= 0->Salzwasser 1->Süßwasser
-    int      isTempImperial = 0, isDepthImperial = 0, isFreshwater = 0;
-    String[] unitsParm;
+    int              isTempImperial = 0, isDepthImperial = 0, isFreshwater = 0;
+    String[]         unitsParm;
     SwitchPreference sp;
     //
     if( msg.getContainer() instanceof String[] )
@@ -1143,7 +1143,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   @Override
   public void msgReciveWriteTmeout(BtServiceMessage msg)
   {
-    int kdo = 0;
+    int    kdo       = 0;
     String toSendMsg = null;
     //
     // ich versuche rauszubekommen, welches Kommando das war
@@ -1746,7 +1746,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    */
   private void sendDecoPrefs()
   {
-    int lowG, highG, deepStops, dynGr, lastStop;
+    int              lowG, highG, deepStops, dynGr, lastStop;
     SwitchPreference sp;
     //
     //
@@ -1943,9 +1943,9 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    */
   private void sendIndividualPrefs()
   {
-    int            sensorsOff = 0, pscrOff = 0, sensorsCount = 2, soundOn = 1, logInterval = 2, tempStick = 0;
+    int              sensorsOff = 0, pscrOff = 0, sensorsCount = 2, soundOn = 1, logInterval = 2, tempStick = 0;
     SwitchPreference sp;
-    ListPreference lP;
+    ListPreference   lP;
     //
     if( ApplicationDEBUG.DEBUG )
     {
@@ -2108,7 +2108,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
     // UD= 1=Fahrenheit/0=Celsius => immer 0 in der aktuellen Firmware 2.6.7.7_U
     // UL= 0=metrisch 1=imperial
     // UW= 0->Salzwasser 1->Süßwasser
-    int isTempImperial = 0, isDepthImperial = 0, isFreshwater = 1;
+    int              isTempImperial = 0, isDepthImperial = 0, isFreshwater = 1;
     SwitchPreference sp;
     //
     if( ApplicationDEBUG.DEBUG )
@@ -2346,8 +2346,8 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
   private void setDecoGradientsPreset(int[] presetCandidate)
   {
     ListPreference lP;
-    String presetCandidateStr = String.format(Locale.ENGLISH, "%02d:%02d", presetCandidate[ 0 ], presetCandidate[ 1 ]);
-    int    i;
+    String         presetCandidateStr = String.format(Locale.ENGLISH, "%02d:%02d", presetCandidate[ 0 ], presetCandidate[ 1 ]);
+    int            i;
     //
     // in die Voreinstellungen übertragen, wenn es ein Preset ist
     //
@@ -2394,7 +2394,7 @@ public class SPX42PreferencesFragment extends PreferenceFragment implements IBtS
    */
   private void setDecoGradientsSummary()
   {
-    int low = 0;
+    int low  = 0;
     int high = 0;
     //
     int[] val = getDecoGradients();

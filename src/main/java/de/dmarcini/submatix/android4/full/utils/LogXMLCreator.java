@@ -58,10 +58,10 @@ public class LogXMLCreator
 {
   private static final String TAG = LogXMLCreator.class.getSimpleName();
   private final Element rootNode;
-  private SPX42DiveHeadData diveHeader = null;
-  private Transformer transformer = null;
-  private DocumentBuilder builder = null;
-  private Document logXmlFile = null;
+  private SPX42DiveHeadData diveHeader  = null;
+  private Transformer       transformer = null;
+  private DocumentBuilder   builder     = null;
+  private Document          logXmlFile  = null;
 
   /**
    * Erzeugt eine XML-Logdatei
@@ -127,8 +127,7 @@ public class LogXMLCreator
     rootNode.setAttribute("version", ProjectConst.XML_FILEVERSION);
     logXmlFile.appendChild(rootNode);
     // Kommentiere mal
-    rootNode.appendChild(logXmlFile.createComment(String.format("created from: %s, vers: %s %s-%s-%s", ProjectConst.CREATORPROGRAM, ProjectConst.MANUFACTVERS,
-        ProjectConst.GENYEAR, ProjectConst.GENMONTH, ProjectConst.GENDAY)));
+    rootNode.appendChild(logXmlFile.createComment(String.format("created from: %s, vers: %s %s-%s-%s", ProjectConst.CREATORPROGRAM, ProjectConst.MANUFACTVERS, ProjectConst.GENYEAR, ProjectConst.GENMONTH, ProjectConst.GENDAY)));
     //
     // und ab hier DATEN
     //
@@ -148,7 +147,7 @@ public class LogXMLCreator
   {
     Element genNode;
     Element presNode, depthNode, tempNode, ackuNode, ppo2Node, setpointNode, nitroNode, heliumNode, zeroTimeNode, nextStepNode;
-    int stepDiff = 60000;
+    int     stepDiff = 60000;
     //
     try
     {
@@ -163,7 +162,8 @@ public class LogXMLCreator
       }
     }
     catch( NumberFormatException ex )
-    {}
+    {
+    }
     // Wurzel dieser Ebene
     genNode = logXmlFile.createElement("logEntry");
     // Druck
@@ -235,8 +235,8 @@ public class LogXMLCreator
     try
     {
       StringWriter writer = new StringWriter();
-      DOMSource doc = new DOMSource(logXmlFile);
-      StreamResult res = new StreamResult(writer);
+      DOMSource    doc    = new DOMSource(logXmlFile);
+      StreamResult res    = new StreamResult(writer);
       if( ApplicationDEBUG.DEBUG )
       {
         Log.d(TAG, "closeLog: transform... ");

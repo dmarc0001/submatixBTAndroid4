@@ -23,20 +23,19 @@ package de.dmarcini.submatix.android4.full.interfaces;
 import android.app.DialogFragment;
 
 /**
- * 
  * Die aufrufende App muss das Interface implementieren
- * 
+ * <p>
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
- * 
+ *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- * 
+ *         <p>
  *         Stand: 02.11.2012
  */
 public interface INoticeDialogListener
 {
   @SuppressWarnings( "javadoc" )
-  public void onDialogPositiveClick( DialogFragment dialog );
+  public void onDialogPositiveClick(DialogFragment dialog);
 
   @SuppressWarnings( "javadoc" )
-  public void onDialogNegativeClick( DialogFragment dialog );
+  public void onDialogNegativeClick(DialogFragment dialog);
 }

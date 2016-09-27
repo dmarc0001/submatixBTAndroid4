@@ -47,9 +47,9 @@ import de.dmarcini.submatix.android4.full.R;
 public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
 {
   @SuppressWarnings( "unused" )
-  private static final String TAG = SPX42ReadLogListArrayAdapter.class.getSimpleName();
-  private int themeId = R.style.AppDarkTheme;
-  private boolean showSavedStatus = true;
+  private static final String  TAG             = SPX42ReadLogListArrayAdapter.class.getSimpleName();
+  private              int     themeId         = R.style.AppDarkTheme;
+  private              boolean showSavedStatus = true;
 
   /**
    * Konstruktor mit Parametern
@@ -107,7 +107,7 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
   @Override
   public View getView(int position, View convertView, ViewGroup parent)
   {
-    View cView = convertView;
+    View           cView = convertView;
     ReadLogItemObj rlio;
     LayoutInflater mInflater;
     //
@@ -123,10 +123,10 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
     //
     // verorte die Objekte
     //
-    ImageView ivSaved = ( ImageView ) cView.findViewById(R.id.readLogListIconView);
+    ImageView ivSaved  = ( ImageView ) cView.findViewById(R.id.readLogListIconView);
     ImageView ivMarked = ( ImageView ) cView.findViewById(R.id.readLogMarkedIconView);
-    TextView tvName = ( TextView ) cView.findViewById(R.id.readLogNameListTextView);
-    TextView tvDetail = ( TextView ) cView.findViewById(R.id.readLogDetailsTextView);
+    TextView  tvName   = ( TextView ) cView.findViewById(R.id.readLogNameListTextView);
+    TextView  tvDetail = ( TextView ) cView.findViewById(R.id.readLogDetailsTextView);
     try
     {
       //

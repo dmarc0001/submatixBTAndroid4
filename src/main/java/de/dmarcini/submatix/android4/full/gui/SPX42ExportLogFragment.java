@@ -98,23 +98,23 @@ import de.dmarcini.submatix.android4.full.utils.UDDFFileCreateClass;
  */
 public class SPX42ExportLogFragment extends Fragment implements IBtServiceListener, OnItemClickListener, OnClickListener
 {
-  private static final String TAG = SPX42ExportLogFragment.class.getSimpleName();
-  private final Pattern mailPattern = Pattern.compile(ProjectConst.PATTERN_EMAIL);
-  private MainActivity runningActivity = null;
-  private ListView mainListView = null;
-  private SPX42LogManager logManager = null;
-  private int selectedDeviceId = -1;
-  private String selectedDeviceAlias = null;
-  private Button changeDeviceButton = null;
-  private Button exportLogsButton = null;
-  private Button exportDeleteButton = null;
-  private CommToast theToast = null;
-  private boolean isFileZipped = false;
-  private WaitProgressFragmentDialog pd = null;
-  private File tempDir = null;
-  private String mailMainAddr = null;
+  private static final String                     TAG                 = SPX42ExportLogFragment.class.getSimpleName();
+  private final        Pattern                    mailPattern         = Pattern.compile(ProjectConst.PATTERN_EMAIL);
+  private              MainActivity               runningActivity     = null;
+  private              ListView                   mainListView        = null;
+  private              SPX42LogManager            logManager          = null;
+  private              int                        selectedDeviceId    = -1;
+  private              String                     selectedDeviceAlias = null;
+  private              Button                     changeDeviceButton  = null;
+  private              Button                     exportLogsButton    = null;
+  private              Button                     exportDeleteButton  = null;
+  private              CommToast                  theToast            = null;
+  private              boolean                    isFileZipped        = false;
+  private              WaitProgressFragmentDialog pd                  = null;
+  private              File                       tempDir             = null;
+  private              String                     mailMainAddr        = null;
   @SuppressLint( "HandlerLeak" )
-  private final Handler mHandler = new Handler()
+  private final        Handler                    mHandler            = new Handler()
   {
     @Override
     public void handleMessage(Message msg)
@@ -128,7 +128,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
       handleMessages(msg.what, smsg);
     }
   };
-  private String fragmentTitle = "unknown";
+  private              String                     fragmentTitle       = "unknown";
 
   /**
    * vernichte rekursiv den Ordner mit allen Dateien darin
@@ -172,17 +172,17 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
    */
   private void exportLogItemsAsThread(final Vector<ReadLogItemObj> lItems, File _tempDir)
   {
-    final Vector<ReadLogItemObj> rlos = new Vector<ReadLogItemObj>(lItems);
-    final File tempDir = _tempDir;
-    Thread exportThread = null;
+    final Vector<ReadLogItemObj> rlos         = new Vector<ReadLogItemObj>(lItems);
+    final File                   tempDir      = _tempDir;
+    Thread                       exportThread = null;
     //
     exportThread = new Thread()
     {
       @Override
       public void run()
       {
-        UDDFFileCreateClass uddfClass = null;
-        String uddfFileName = null;
+        UDDFFileCreateClass uddfClass    = null;
+        String              uddfFileName = null;
         //
         try
         {
@@ -204,8 +204,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
               Log.i(TAG, String.format("exportThread: export dive %d db-id: %d...", rlos.firstElement().numberOnSPX, rlos.firstElement().dbId));
             }
             DateTime st = new DateTime(rlos.firstElement().startTimeMilis);
-            uddfFileName = String.format(Locale.ENGLISH, "%s%sdive_%07d_at_%04d%02d%02d%02d%02d%02d.uddf", tempDir.getAbsolutePath(), File.separator,
-                rlos.firstElement().numberOnSPX, st.getYear(), st.getMonthOfYear(), st.getDayOfMonth(), st.getHourOfDay(), st.getMinuteOfHour(), st.getSecondOfMinute());
+            uddfFileName = String.format(Locale.ENGLISH, "%s%sdive_%07d_at_%04d%02d%02d%02d%02d%02d.uddf", tempDir.getAbsolutePath(), File.separator, rlos.firstElement().numberOnSPX, st.getYear(), st.getMonthOfYear(), st.getDayOfMonth(), st.getHourOfDay(), st.getMinuteOfHour(), st.getSecondOfMinute());
           }
           else
           {
@@ -214,9 +213,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
               Log.i(TAG, String.format("exportThread: export %d dives ...", rlos.size()));
             }
             DateTime st = new DateTime(rlos.firstElement().startTimeMilis);
-            uddfFileName = String.format(Locale.ENGLISH, "%s%sdive_%07d_at_%04d%02d%02d%02d%02d%02d-plus-%03d.uddf", tempDir.getAbsolutePath(), File.separator,
-                rlos.firstElement().numberOnSPX, st.getYear(), st.getMonthOfYear(), st.getDayOfMonth(), st.getHourOfDay(), st.getMinuteOfHour(), st.getSecondOfMinute(),
-                rlos.size());
+            uddfFileName = String.format(Locale.ENGLISH, "%s%sdive_%07d_at_%04d%02d%02d%02d%02d%02d-plus-%03d.uddf", tempDir.getAbsolutePath(), File.separator, rlos.firstElement().numberOnSPX, st.getYear(), st.getMonthOfYear(), st.getDayOfMonth(), st.getHourOfDay(), st.getMinuteOfHour(), st.getSecondOfMinute(), rlos.size());
           }
           //
           // erzeuge die XML...
@@ -290,14 +287,13 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
    */
   private void exportSelectedLogItems(SPX42ReadLogListArrayAdapter rAdapter)
   {
-    int itemIndex = 0;
-    Vector<ReadLogItemObj> lItems = new Vector<ReadLogItemObj>();
+    int                    itemIndex = 0;
+    Vector<ReadLogItemObj> lItems    = new Vector<ReadLogItemObj>();
     //
     if( rAdapter == null || rAdapter.getMarkedItems().isEmpty() )
     {
       Log.i(TAG, "exportSelectedLogItems: not selected items");
-      UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_not_selected_items_header), runningActivity
-          .getResources().getString(R.string.dialog_not_selected_items));
+      UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_not_selected_items_header), runningActivity.getResources().getString(R.string.dialog_not_selected_items));
       uad.show(getFragmentManager(), "noSelectedLogitems");
       return;
     }
@@ -369,9 +365,9 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
    */
   private boolean fillListAdapter(int diveId)
   {
-    Vector<ReadLogItemObj> diveList;
+    Vector<ReadLogItemObj>       diveList;
     SPX42ReadLogListArrayAdapter logListAdapter;
-    Resources res;
+    Resources                    res;
     //
     res = runningActivity.getResources();
     //
@@ -416,7 +412,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
    */
   private String getMainMailFromPrefs()
   {
-    String mailAddr = null;
+    String  mailAddr    = null;
     boolean isPrefError = false;
     //
     // ist eine Zieladresse zum Versand vorgesehen?
@@ -590,8 +586,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     //
     // alle Elemente exortiert, jetzt bitte Mail fertig machen und versenden
     //
-    sendMailToAddr(tempDir, new String[]
-        {mailMainAddr}, selectedDeviceAlias);
+    sendMailToAddr(tempDir, new String[]{mailMainAddr}, selectedDeviceAlias);
     //
     // Aufräumen
     //
@@ -631,8 +626,8 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
       rlo.isMarked = false;
       int firstPos = mainListView.getFirstVisiblePosition();
       mainListView.setAdapter(mainListView.getAdapter());
-      View v = mainListView.getChildAt(rlo.tagId);
-      int top = (v == null) ? 0 : v.getTop();
+      View v   = mainListView.getChildAt(rlo.tagId);
+      int  top = (v == null) ? 0 : v.getTop();
       mainListView.setSelectionFromTop(firstPos, top);
       if( pd != null )
       {
@@ -726,7 +721,9 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
   public void onActivityResult(int requestCode, int resultCode, Intent data)
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "onActivityResult()... "); }
+    {
+      Log.v(TAG, "onActivityResult()... ");
+    }
     switch( requestCode )
     {
       case ProjectConst.REQUEST_SEND_MAIL:
@@ -776,8 +773,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     catch( NoDatabaseException ex )
     {
       Log.e(TAG, "NoDatabaseException: <" + ex.getLocalizedMessage() + ">");
-      UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_sqlite_error_header), runningActivity.getResources()
-          .getString(R.string.dialog_sqlite_nodatabase_error));
+      UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_sqlite_error_header), runningActivity.getResources().getString(R.string.dialog_sqlite_nodatabase_error));
       uad.show(getFragmentManager(), "abortProgram");
     }
   }
@@ -791,7 +787,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
   public void onClick(View v)
   {
     SPX42ReadLogListArrayAdapter rAdapter;
-    Button button = null;
+    Button                       button = null;
     //
     if( ApplicationDEBUG.DEBUG )
     {
@@ -836,8 +832,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
           {
             Log.w(TAG, "not valid mail -> note to user");
           }
-          UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_not_mail_exist_header), runningActivity
-              .getResources().getString(R.string.dialog_not_mail_exist));
+          UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_not_mail_exist_header), runningActivity.getResources().getString(R.string.dialog_not_mail_exist));
           uad.show(getFragmentManager(), "noMailaddrWarning");
           return;
         }
@@ -868,8 +863,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
           {
             Log.w(TAG, "not valid mail -> note to user");
           }
-          UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_delete_header), runningActivity.getResources()
-              .getString(R.string.dialog_delete_nothing_selected));
+          UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_delete_header), runningActivity.getResources().getString(R.string.dialog_delete_nothing_selected));
           uad.show(getFragmentManager(), "nothingSelectedToDelete");
           return;
         }
@@ -881,7 +875,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
           //
           // Meinst Du das wirklich?
           //
-          String msg = String.format(runningActivity.getResources().getString(R.string.dialog_delete_device), selectedDeviceAlias);
+          String                     msg                = String.format(runningActivity.getResources().getString(R.string.dialog_delete_device), selectedDeviceAlias);
           AreYouSureToDeleteFragment sureToDeleteDialog = new AreYouSureToDeleteFragment(msg);
           sureToDeleteDialog.show(getFragmentManager().beginTransaction(), "sureToDeleteDeviceData");
           return;
@@ -889,7 +883,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
         //
         // Also meint der die selektierten Logs?
         //
-        String msg = runningActivity.getResources().getString(R.string.dialog_delete_selected_logs);
+        String                     msg                = runningActivity.getResources().getString(R.string.dialog_delete_selected_logs);
         AreYouSureToDeleteFragment sureToDeleteDialog = new AreYouSureToDeleteFragment(msg);
         sureToDeleteDialog.show(getFragmentManager().beginTransaction(), "sureToDeleteSelectedLogs");
       }
@@ -986,8 +980,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
         {
           Log.w(TAG, "no device selected -> note to user");
         }
-        UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_no_device_selected_header), runningActivity
-            .getResources().getString(R.string.dialog_no_device_selected));
+        UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_no_device_selected_header), runningActivity.getResources().getString(R.string.dialog_no_device_selected));
         uad.show(getFragmentManager(), "noSelectedDevice");
         return;
       }
@@ -1001,8 +994,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
         {
           Log.w(TAG, "no logs foir device -> note to user");
         }
-        UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_not_log_entrys_header), runningActivity
-            .getResources().getString(R.string.dialog_not_log_entrys));
+        UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_not_log_entrys_header), runningActivity.getResources().getString(R.string.dialog_not_log_entrys));
         uad.show(getFragmentManager(), "noLogsForDevice");
         return;
       }
@@ -1057,7 +1049,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
             Iterator<Integer> it = markedItems.iterator();
             while( it.hasNext() )
             {
-              int idx = it.next();
+              int idx  = it.next();
               int dbId = rAdapter.getItem(idx).dbId;
               logManager.deleteDataForDevice(dbId);
             }
@@ -1094,8 +1086,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
       {
         Log.w(TAG, "not valid mail -> note to user");
       }
-      UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_not_mail_exist_header), runningActivity.getResources()
-          .getString(R.string.dialog_not_mail_exist));
+      UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_not_mail_exist_header), runningActivity.getResources().getString(R.string.dialog_not_mail_exist));
       uad.show(getFragmentManager(), "noMailaddrWarning");
       return;
     }
@@ -1196,8 +1187,8 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     //
     // wenn ein Dialog da ist, erst mal aus den Fragmenten entfernen
     //
-    FragmentTransaction ft = runningActivity.getFragmentManager().beginTransaction();
-    Fragment prev = runningActivity.getFragmentManager().findFragmentByTag("dialog");
+    FragmentTransaction ft   = runningActivity.getFragmentManager().beginTransaction();
+    Fragment            prev = runningActivity.getFragmentManager().findFragmentByTag("dialog");
     if( prev != null )
     {
       ft.remove(prev);
@@ -1230,7 +1221,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
   private void sendMailToAddr(final File uddfDir, final String[] mailAddr, String deviceAlias)
   {
     // String diveTime = null;
-    String diveMessage;
+    String         diveMessage;
     ArrayList<Uri> uddfURIs = new ArrayList<Uri>();
     // ArrayList<CharSequence> mailBody = new ArrayList<CharSequence>();
     //
@@ -1248,8 +1239,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     }
     else
     {
-      UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_no_uddfdir_header), runningActivity.getResources()
-          .getString(R.string.dialog_no_uddfdir));
+      UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_no_uddfdir_header), runningActivity.getResources().getString(R.string.dialog_no_uddfdir));
       uad.show(getFragmentManager(), "noUddfDirectory");
       return;
     }
@@ -1329,7 +1319,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
   private boolean shouldMailComressed()
   {
     boolean isMailCompressed = false;
-    boolean isPrefError = false;
+    boolean isPrefError      = false;
     //
     // ist eine Zieladresse zum Versand vorgesehen?
     //

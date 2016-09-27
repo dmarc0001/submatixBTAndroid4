@@ -98,35 +98,35 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   // @formatter:on
   //
 
-  private final static String TAG = MainActivity.class.getSimpleName();
-  private final static String TAG2 = "BackStackChangeListener";
-  private static final String SERVICENAME = BlueThoothComService.class.getCanonicalName();
-  private static final String PACKAGENAME = BlueThoothComService.class.getPackage().getName();
-  private static final String FIRSTTIME = "keyFirstTimeInitiated";
-  private static final String PREFVERSION = "keyPreferencesVersion";
+  private final static String                        TAG                   = MainActivity.class.getSimpleName();
+  private final static String                        TAG2                  = "BackStackChangeListener";
+  private static final String                        SERVICENAME           = BlueThoothComService.class.getCanonicalName();
+  private static final String                        PACKAGENAME           = BlueThoothComService.class.getPackage().getName();
+  private static final String                        FIRSTTIME             = "keyFirstTimeInitiated";
+  private static final String                        PREFVERSION           = "keyPreferencesVersion";
   @SuppressWarnings( "javadoc" )
-  public static DateTimeFormatter localTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd - HH:mm:ss");
+  public static        DateTimeFormatter             localTimeFormatter    = DateTimeFormat.forPattern("yyyy-MM-dd - HH:mm:ss");
   /**
    * Global verfügbarer Alias Manager, Zuordnung Gerät <-> Alias
    */
-  public static SPX42AliasManager aliasManager = null;
-  protected static File databaseDir = null;
-  protected static SPX42Config spxConfig = new SPX42Config();                                   // Da werden SPX-Spezifische Sachen gespeichert
-  protected static BluetoothAdapter mBtAdapter = null;
-  protected static float ackuValue = 0.0F;
-  protected static boolean wasRestartForNewTheme = false;                                               // War es ein restart mit neuem Thema?
-  private static Vector<String[]> dirEntryCache = new Vector<String[]>();
-  private static boolean dirCacheIsFilling = true;
-  private static String[] deviceUnis = null;
-  private static int currentStyleId = R.style.AppDarkTheme;
-  private static int firstId = -1;                                                  // Die ID des ersten Eintrages
-  private static int lastStatusConnected = ProjectConst.CONN_STATE_NONE;                        // War der letzte Status Connected?
-  private final ArrayList<IBtServiceListener> serviceListener = new ArrayList<IBtServiceListener>();
+  public static        SPX42AliasManager             aliasManager          = null;
+  protected static     File                          databaseDir           = null;
+  protected static     SPX42Config                   spxConfig             = new SPX42Config();                                   // Da werden SPX-Spezifische Sachen gespeichert
+  protected static     BluetoothAdapter              mBtAdapter            = null;
+  protected static     float                         ackuValue             = 0.0F;
+  protected static     boolean                       wasRestartForNewTheme = false;                                               // War es ein restart mit neuem Thema?
+  private static       Vector<String[]>              dirEntryCache         = new Vector<String[]>();
+  private static       boolean                       dirCacheIsFilling     = true;
+  private static       String[]                      deviceUnis            = null;
+  private static       int                           currentStyleId        = R.style.AppDarkTheme;
+  private static       int                           firstId               = -1;                                                  // Die ID des ersten Eintrages
+  private static       int                           lastStatusConnected   = ProjectConst.CONN_STATE_NONE;                        // War der letzte Status Connected?
+  private final        ArrayList<IBtServiceListener> serviceListener       = new ArrayList<IBtServiceListener>();
   //
   // Ein Messagehandler, der vom Service kommende Messages bearbeitet
   //
   @SuppressLint( "HandlerLeak" )
-  private final Handler mHandler = new Handler()
+  private final        Handler                       mHandler              = new Handler()
   {
     @Override
     public void handleMessage(Message msg)
@@ -145,8 +145,8 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       }
     }
   };
-  private BlueThoothComService mService = null;
-  private LocalBinder binder = null;
+  private              BlueThoothComService          mService              = null;
+  private              LocalBinder                   binder                = null;
   //
   //@formatter:off
   //
@@ -213,7 +213,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void addServiceListener(IBtServiceListener listener)
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "setServiceListener..."); }
+    {
+      Log.v(TAG, "setServiceListener...");
+    }
     if( !serviceListener.contains(listener) )
     {
       serviceListener.add(listener);
@@ -279,7 +281,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       if( deviceUnis != null )
       {
         if( ApplicationDEBUG.DEBUG )
-        { Log.i(TAG, "read units from cache..."); }
+        {
+          Log.i(TAG, "read units from cache...");
+        }
         BtServiceMessage msg = new BtServiceMessage(ProjectConst.MESSAGE_UNITS_READ, deviceUnis);
         mHandler.obtainMessage(ProjectConst.MESSAGE_UNITS_READ, msg).sendToTarget();
       }
@@ -296,11 +300,15 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   private void askEnableBT()
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "askEnableBT..."); }
+    {
+      Log.v(TAG, "askEnableBT...");
+    }
     Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
     startActivityForResult(enableIntent, ProjectConst.REQUEST_ENABLE_BT);
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "askEnableBT...OK"); }
+    {
+      Log.v(TAG, "askEnableBT...OK");
+    }
   }
 
   /**
@@ -424,7 +432,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       else
       {
         if( ApplicationDEBUG.DEBUG )
-        { Log.i(TAG, "read directory from cache..."); }
+        {
+          Log.i(TAG, "read directory from cache...");
+        }
         // hole Daten aus dem Cache
         // und sende diese dann in die Queue
         Iterator<String[]> it = dirEntryCache.iterator();
@@ -500,16 +510,22 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   private void checkDatabaseDir(File dDir) throws NoWritableDatabaseDirException
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, "checkDatabaseDir: check if Directory exist and is writable..."); }
+    {
+      Log.d(TAG, "checkDatabaseDir: check if Directory exist and is writable...");
+    }
     if( dDir != null )
     {
       if( ApplicationDEBUG.DEBUG )
-      { Log.d(TAG, "checkDatabaseDir: Directory exist.."); }
+      {
+        Log.d(TAG, "checkDatabaseDir: Directory exist..");
+      }
       if( !dDir.exists() )
       {
         Log.i(TAG, "checkDatabaseDir: create database root dir...");
         if( !dDir.mkdirs() )
-        { dDir = null; }
+        {
+          dDir = null;
+        }
       }
     }
     //
@@ -519,9 +535,13 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     {
       Log.e(TAG, "checkDatabaseDir: database directory not set! User must select one!");
       if( dDir == null )
-      { throw new NoWritableDatabaseDirException(getString(R.string.dialog_error_database_no_dir)); }
+      {
+        throw new NoWritableDatabaseDirException(getString(R.string.dialog_error_database_no_dir));
+      }
       if( !dDir.canWrite() )
-      { throw new NoWritableDatabaseDirException(getString(R.string.dialog_error_database_not_writable)); }
+      {
+        throw new NoWritableDatabaseDirException(getString(R.string.dialog_error_database_not_writable));
+      }
     }
   }
 
@@ -539,10 +559,12 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     // Service starten, wenn er nicht schon läuft
     //
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "doBindService()..."); }
-    final ActivityManager activityManager = ( ActivityManager ) getApplicationContext().getSystemService(ACTIVITY_SERVICE);
-    final List<ActivityManager.RunningServiceInfo> services = activityManager.getRunningServices(Integer.MAX_VALUE);
-    boolean isServiceFound = false;
+    {
+      Log.v(TAG, "doBindService()...");
+    }
+    final ActivityManager                          activityManager = ( ActivityManager ) getApplicationContext().getSystemService(ACTIVITY_SERVICE);
+    final List<ActivityManager.RunningServiceInfo> services        = activityManager.getRunningServices(Integer.MAX_VALUE);
+    boolean                                        isServiceFound  = false;
     //
     for( int i = 0; i < services.size(); i++ )
     {
@@ -551,7 +573,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         if( SERVICENAME.equals(services.get(i).service.getClassName()) )
         {
           if( ApplicationDEBUG.DEBUG )
-          { Log.d(TAG, "Service is running, need not start..."); }
+          {
+            Log.d(TAG, "Service is running, need not start...");
+          }
           isServiceFound = true;
         }
       }
@@ -559,7 +583,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     if( !isServiceFound )
     {
       if( ApplicationDEBUG.DEBUG )
-      { Log.d(TAG, "Starting Service (package:<" + PACKAGENAME + ">)..."); }
+      {
+        Log.d(TAG, "Starting Service (package:<" + PACKAGENAME + ">)...");
+      }
       Intent service = new Intent(this, BlueThoothComService.class);
       startService(service);
     }
@@ -585,7 +611,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void doConnectBtDevice(String device)
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, String.format(Locale.ENGLISH, "recived do connect device <%s>", device)); }
+    {
+      Log.d(TAG, String.format(Locale.ENGLISH, "recived do connect device <%s>", device));
+    }
     if( mIsBound )
     {
       mService.connect(device);
@@ -607,7 +635,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void doDisconnectBtDevice()
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, "recived do disconnect device "); }
+    {
+      Log.d(TAG, "recived do disconnect device ");
+    }
     if( mIsBound )
     {
       mService.disconnect();
@@ -636,13 +666,17 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       if( mService != null )
       {
         if( ApplicationDEBUG.DEBUG )
-        { Log.v(TAG, "doUnbindService..."); }
+        {
+          Log.v(TAG, "doUnbindService...");
+        }
         if( mService != null )
         {
           if( mService != null && binder != null )
           {
             if( ApplicationDEBUG.DEBUG )
-            { Log.d(TAG, "doUnbindService...unregister Handler..."); }
+            {
+              Log.d(TAG, "doUnbindService...unregister Handler...");
+            }
             binder.unregisterServiceHandler(mHandler, isNowStopping);
           }
           unbindService(mConnection);
@@ -651,7 +685,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         }
         mIsBound = false;
         if( ApplicationDEBUG.DEBUG )
-        { Log.v(TAG, "doUnbindService...OK"); }
+        {
+          Log.v(TAG, "doUnbindService...OK");
+        }
       }
     }
   }
@@ -733,8 +769,8 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    */
   private File getDatabaseDir()
   {
-    File extSdCard;
-    File dataBaseRoot;
+    File                extSdCard;
+    File                dataBaseRoot;
     Environment4.Device devs[] = Environment4.getExternalStorage(this);
     Environment4.setUseReceiver(this, false);
     //
@@ -815,13 +851,17 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         if( appNavigatorFragment != null )
         {
           if( ApplicationDEBUG.DEBUG )
-          Log.v(TAG, "ICONS auf CONNECTED stellen...");
+          {
+            Log.v(TAG, "ICONS auf CONNECTED stellen...");
+          }
           appNavigatorFragment.setListAdapterForOnlinestatus(true);
         }
         else
         {
           if( ApplicationDEBUG.DEBUG )
-          Log.v(TAG, "no fragment found: ICONS auf CONNECTED... ");
+          {
+            Log.v(TAG, "no fragment found: ICONS auf CONNECTED... ");
+          }
         }
         msgConnected(smsg);
         break;
@@ -833,7 +873,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         if( appNavigatorFragment != null )
         {
           if( ApplicationDEBUG.DEBUG )
-          Log.v(TAG, "ICONS auf DISCONNECTED stellen");
+          {
+            Log.v(TAG, "ICONS auf DISCONNECTED stellen");
+          }
           appNavigatorFragment.setListAdapterForOnlinestatus(false);
         }
         else
@@ -853,13 +895,17 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         if( appNavigatorFragment != null )
         {
           if( ApplicationDEBUG.DEBUG )
-          { Log.v(TAG, "ICONS auf DISCONNECTED stellen"); }
+          {
+            Log.v(TAG, "ICONS auf DISCONNECTED stellen");
+          }
           appNavigatorFragment.setListAdapterForOnlinestatus(false);
         }
         else
         {
           if( ApplicationDEBUG.DEBUG )
-          { Log.v(TAG, "no fragment found: ICONS auf DISCONNECTED... "); }
+          {
+            Log.v(TAG, "no fragment found: ICONS auf DISCONNECTED... ");
+          }
         }
         msgConnectError(smsg);
         break;
@@ -927,7 +973,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       // ################################################################
       default:
         if( ApplicationDEBUG.DEBUG )
-        { Log.d(TAG, "unknown message with id <" + smsg.getId() + "> recived!"); }
+        {
+          Log.d(TAG, "unknown message with id <" + smsg.getId() + "> recived!");
+        }
     }
   }
 
@@ -937,7 +985,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   private void initStaticContenSwitcher()
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "initStaticContent..."); }
+    {
+      Log.v(TAG, "initStaticContent...");
+    }
     // zuerst aufräumen
     ContentSwitcher.clearItems();
     //
@@ -1008,7 +1058,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void msgConnected(BtServiceMessage msg)
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "connected..."); }
+    {
+      Log.v(TAG, "connected...");
+    }
     //
     // if( !spxConfig.isInitialized() && ( mService != null ) && ( mService.getConnectionState() == ProjectConst.MESSAGE_CONNECTED ) )
     if( !spxConfig.isInitialized() )
@@ -1018,16 +1070,24 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       //
       spxConfig.setConnectedDeviceMac(getConnectedDevice());
       if( ApplicationDEBUG.DEBUG )
-      { Log.d(TAG, "msgConnected(): ask for manufacturer number..."); }
+      {
+        Log.d(TAG, "msgConnected(): ask for manufacturer number...");
+      }
       askForManufacturer();
       if( ApplicationDEBUG.DEBUG )
-      { Log.d(TAG, "msgConnected(): ask for serial number..."); }
+      {
+        Log.d(TAG, "msgConnected(): ask for serial number...");
+      }
       askForSerialNumber();
       if( ApplicationDEBUG.DEBUG )
-      { Log.d(TAG, "msgConnected(): ask for SPX license..."); }
+      {
+        Log.d(TAG, "msgConnected(): ask for SPX license...");
+      }
       askForLicenseFromSPX();
       if( ApplicationDEBUG.DEBUG )
-      { Log.d(TAG, "msgConnected(): ask for Firmware version..."); }
+      {
+        Log.d(TAG, "msgConnected(): ask for Firmware version...");
+      }
       askForFirmwareVersion();
     }
     lastStatusConnected = ProjectConst.CONN_STATE_CONNECTED;
@@ -1037,7 +1097,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void msgConnectError(BtServiceMessage msg)
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, "connection error (device not online?)"); }
+    {
+      Log.d(TAG, "connection error (device not online?)");
+    }
     // Cache für Directory leeren!
     dirEntryCache.clear();
     dirCacheIsFilling = true;
@@ -1058,7 +1120,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void msgConnecting(BtServiceMessage msg)
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "connecting..."); }
+    {
+      Log.v(TAG, "connecting...");
+    }
     lastStatusConnected = ProjectConst.CONN_STATE_CONNECTING;
   }
 
@@ -1076,7 +1140,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void msgDisconnected(BtServiceMessage msg)
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "disconnected..."); }
+    {
+      Log.v(TAG, "disconnected...");
+    }
     spxConfig.clear();
     // Cache für Directory leeren!
     dirEntryCache.clear();
@@ -1090,7 +1156,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       //
       lastStatusConnected = ProjectConst.CONN_STATE_NONE;
       if( ApplicationDEBUG.DEBUG )
-      { Log.e(TAG, "disconnected, cleaning Fragment stack!"); }
+      {
+        Log.e(TAG, "disconnected, cleaning Fragment stack!");
+      }
       getFragmentManager().popBackStack(firstId, 0);
     }
   }
@@ -1099,9 +1167,11 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void msgRecivedAlive(BtServiceMessage msg)
   {
     String amsg;
-    int val = 0;
+    int    val = 0;
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, "message alive with acku voltage recived"); }
+    {
+      Log.d(TAG, "message alive with acku voltage recived");
+    }
     //
     // Ist die Nachricht ein String?
     //
@@ -1123,12 +1193,16 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       ackuValue = ( float ) (val / 100.0);
       // Hauptfenster
       if( ApplicationDEBUG.DEBUG )
-      { Log.d(TAG, String.format(Locale.ENGLISH, "Acku value: %02.02f", ackuValue)); }
+      {
+        Log.d(TAG, String.format(Locale.ENGLISH, "Acku value: %02.02f", ackuValue));
+      }
     }
     else
     {
       if( ApplicationDEBUG.DEBUG )
-      { Log.d(TAG, "Acku value was not an STRING"); }
+      {
+        Log.d(TAG, "Acku value was not an STRING");
+      }
     }
   }
 
@@ -1161,7 +1235,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     // Jetzt währe es an der Zeit, auch an Datum und Zeit zu denken
     //
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, "msgConnected(): set Date and Time to Device (if possible)..."); }
+    {
+      Log.d(TAG, "msgConnected(): set Date and Time to Device (if possible)...");
+    }
     try
     {
       writeDateTimeToDevice();
@@ -1213,7 +1289,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     String[] lic = ( String[] ) msg.getContainer();
     spxConfig.setLicenseStatus(lic);
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, "SPX License state <" + lic[ 0 ] + "," + lic[ 1 ] + "> recived"); }
+    {
+      Log.d(TAG, "SPX License state <" + lic[ 0 ] + "," + lic[ 1 ] + "> recived");
+    }
     if( ApplicationDEBUG.DEBUG )
     {
       Log.d(TAG, "SPX License INDIVIDUAL: <" + spxConfig.getCustomEnabled() + ">");
@@ -1261,7 +1339,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void onActivityResult(int requestCode, int resultCode, Intent data)
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "onActivityResult()... "); }
+    {
+      Log.v(TAG, "onActivityResult()... ");
+    }
     switch( requestCode )
     {
       //
@@ -1272,7 +1352,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         if( resultCode == Activity.RESULT_OK )
         {
           if( ApplicationDEBUG.DEBUG )
-          { Log.v(TAG, "REQUEST_ENABLE_BT => BT Device ENABLED"); }
+          {
+            Log.v(TAG, "REQUEST_ENABLE_BT => BT Device ENABLED");
+          }
           Toast.makeText(this, R.string.toast_bt_enabled, Toast.LENGTH_SHORT).show();
           // Service starten und binden (bei onResume())
         }
@@ -1280,7 +1362,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         {
           // Der User hats verboten oder ein Fehler trat auf
           if( ApplicationDEBUG.DEBUG )
-          { Log.v(TAG, "REQUEST_ENABLE_BT => BT Device NOT ENABLED"); }
+          {
+            Log.v(TAG, "REQUEST_ENABLE_BT => BT Device NOT ENABLED");
+          }
           Toast.makeText(this, R.string.toast_exit_nobt, Toast.LENGTH_LONG).show();
           finish();
         }
@@ -1301,7 +1385,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   {
     super.onCreate(savedInstanceState);
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, "onCreate..."); }
+    {
+      Log.d(TAG, "onCreate...");
+    }
     if( getIntent().getBooleanExtra("EXIT", false) )
     {
       finish();
@@ -1319,7 +1405,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     // den defaultadapter lesen
     mBtAdapter = BluetoothAdapter.getDefaultAdapter();
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, "onCreate: setContentView..."); }
+    {
+      Log.d(TAG, "onCreate: setContentView...");
+    }
     //
     // Das gewünschte Thema setzen
     //
@@ -1331,14 +1419,18 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       if( whishedTheme )
       {
         if( ApplicationDEBUG.DEBUG )
-        { Log.d(TAG, "onCreate: select DARK theme while preference was set"); }
+        {
+          Log.d(TAG, "onCreate: select DARK theme while preference was set");
+        }
         currentStyleId = R.style.AppDarkTheme;
         setTheme(R.style.AppDarkTheme);
       }
       else
       {
         if( ApplicationDEBUG.DEBUG )
-        { Log.d(TAG, "onCreate: select Blue theme while preference was set"); }
+        {
+          Log.d(TAG, "onCreate: select Blue theme while preference was set");
+        }
         currentStyleId = R.style.AppLightTheme;
         setTheme(R.style.AppLightTheme);
       }
@@ -1353,7 +1445,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     if( wasRestartForNewTheme )
     {
       if( ApplicationDEBUG.DEBUG )
-      { Log.v(TAG, "onCreate: it was an restart for new Theme.."); }
+      {
+        Log.v(TAG, "onCreate: it was an restart for new Theme..");
+      }
       //
       // ja, jetzt muss ich auch drauf reagieren und das Preferenz-Fragment neu aufbauen
       //
@@ -1361,15 +1455,17 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       appNavigatorFragment = ( NavigatorFragment ) getFragmentManager().findFragmentById(R.id.navi_drawer);
       mTitle = getTitle();
       if( ApplicationDEBUG.DEBUG )
-      { Log.v(TAG, "onCreate: restart for new Theme: set navigation drawer..."); }
+      {
+        Log.v(TAG, "onCreate: restart for new Theme: set navigation drawer...");
+      }
       // Initialisiere den Navigator
       appNavigatorFragment.setUp(R.id.navi_drawer, ( DrawerLayout ) findViewById(R.id.drawer_layout), R.string.progitem_progpref);
       Log.i(TAG, "onCreate: set program preferences after switch theme...");
       //
       // das Programmeinstellungsfragment
       //
-      Bundle arguments = new Bundle();
-      ProgItem pItem = ContentSwitcher.getProgItemForId(R.string.progitem_about);
+      Bundle   arguments = new Bundle();
+      ProgItem pItem     = ContentSwitcher.getProgItemForId(R.string.progitem_about);
       arguments.putString(ProjectConst.ARG_ITEM_CONTENT, pItem.content);
       arguments.putInt(ProjectConst.ARG_ITEM_ID, pItem.nId);
       ProgramPreferencesFragment ppFragment = new ProgramPreferencesFragment();
@@ -1390,15 +1486,17 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       appNavigatorFragment = ( NavigatorFragment ) getFragmentManager().findFragmentById(R.id.navi_drawer);
       mTitle = getTitle();
       if( ApplicationDEBUG.DEBUG )
-      { Log.v(TAG, "onCreate: set navigation drawer..."); }
+      {
+        Log.v(TAG, "onCreate: set navigation drawer...");
+      }
       // Initialisiere den Navigator
       appNavigatorFragment.setUp(R.id.navi_drawer, ( DrawerLayout ) findViewById(R.id.drawer_layout), R.string.progitem_about);
       //
       // Als erstes das Connect-Fragment...
       //
       Log.i(TAG, "onCreate: default Fragnment initialising...");
-      Bundle arguments = new Bundle();
-      ProgItem pItem = ContentSwitcher.getProgItemForId(R.string.progitem_about);
+      Bundle   arguments = new Bundle();
+      ProgItem pItem     = ContentSwitcher.getProgItemForId(R.string.progitem_about);
       arguments.putString(ProjectConst.ARG_ITEM_CONTENT, pItem.content);
       arguments.putInt(ProjectConst.ARG_ITEM_ID, pItem.nId);
       Log.i(TAG, "onCreate: create ProgramAbountFragment");
@@ -1439,7 +1537,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       //
       getFragmentManager().removeOnBackStackChangedListener(this);
       if( ApplicationDEBUG.DEBUG )
-      { Log.d(TAG, "onDestroy:..."); }
+      {
+        Log.d(TAG, "onDestroy:...");
+      }
     }
   }
 
@@ -1452,7 +1552,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void onDialogNegativeClick(DialogFragment dialog)
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "Negative dialog click!"); }
+    {
+      Log.v(TAG, "Negative dialog click!");
+    }
     if( dialog.getTag().matches("set_database_directory") )
     {
       dialog.dismiss();
@@ -1480,7 +1582,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void onDialogPositiveClick(DialogFragment dialog)
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "Positive dialog click!"); }
+    {
+      Log.v(TAG, "Positive dialog click!");
+    }
     //
     // war es ein AreYouSureDialogFragment Dialog?
     //
@@ -1505,7 +1609,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
           if( sPref.getBoolean("keyProgOthersDisableBTOnExit", true) )
           {
             if( ApplicationDEBUG.DEBUG )
-            { Log.d(TAG, "disable BT Adapter on exit!"); }
+            {
+              Log.d(TAG, "disable BT Adapter on exit!");
+            }
             BluetoothAdapter.getDefaultAdapter().disable();
           }
         }
@@ -1531,8 +1637,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     {
       Log.i(TAG, "User will edit alias...");
       EditAliasDialogFragment editDialog = ( EditAliasDialogFragment ) dialog;
-      mHandler.obtainMessage(ProjectConst.MESSAGE_DEVALIAS_SET, new BtServiceMessage(ProjectConst.MESSAGE_DEVALIAS_SET, new String[]
-          {editDialog.getDeviceName(), editDialog.getAliasName(), editDialog.getMac(), editDialog.getPin()})).sendToTarget();
+      mHandler.obtainMessage(ProjectConst.MESSAGE_DEVALIAS_SET, new BtServiceMessage(ProjectConst.MESSAGE_DEVALIAS_SET, new String[]{editDialog.getDeviceName(), editDialog.getAliasName(), editDialog.getMac(), editDialog.getPin()})).sendToTarget();
     }
     //
     // ALERT Dialog?
@@ -1575,7 +1680,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
           if( sPref.getBoolean("keyProgOthersDisableBTOnExit", true) )
           {
             if( ApplicationDEBUG.DEBUG )
-            { Log.d(TAG, "disable BT Adapter on exit!"); }
+            {
+              Log.d(TAG, "disable BT Adapter on exit!");
+            }
             BluetoothAdapter.getDefaultAdapter().disable();
           }
         }
@@ -1640,13 +1747,15 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         //
         // Daten in Prefs und Main schreiben
         //
-        SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences        sPref  = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sPref.edit();
         editor.putString("keyProgDataDirectory", databaseDir.getAbsolutePath());
         if( editor.commit() )
         {
           if( ApplicationDEBUG.DEBUG )
-          { Log.d(TAG, "wrote database-file preference to storeage."); }
+          {
+            Log.d(TAG, "wrote database-file preference to storeage.");
+          }
         }
         else
         {
@@ -1688,12 +1797,16 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     if( (keyCode == KeyEvent.KEYCODE_BACK) )
     {
       if( ApplicationDEBUG.DEBUG )
-      { Log.v(TAG, "onKeyDown: BACK pressed!"); }
+      {
+        Log.v(TAG, "onKeyDown: BACK pressed!");
+      }
       if( getFragmentManager().getBackStackEntryCount() <= 1 )
       {
         // in diesem Fall frag mal den user ob er wirklich beenden will
         if( ApplicationDEBUG.DEBUG )
-        { Log.v(TAG, "onKeyDown:BACK pressed => backstack is empty, ask user for exit."); }
+        {
+          Log.v(TAG, "onKeyDown:BACK pressed => backstack is empty, ask user for exit.");
+        }
         AreYouSureDialogFragment sureDial = new AreYouSureDialogFragment(getString(R.string.dialog_sure_exit));
         sureDial.show(getFragmentManager().beginTransaction(), "programexit");
       }
@@ -1713,13 +1826,15 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   @Override
   public void onNavigationDrawerItemSelected(ContentSwitcher.ProgItem pItem)
   {
-    Bundle arguments = new Bundle();
-    boolean isOnline = false;
-    FragmentTransaction fTrans = null;
-    Fragment newFrag = null;
+    Bundle              arguments = new Bundle();
+    boolean             isOnline  = false;
+    FragmentTransaction fTrans    = null;
+    Fragment            newFrag   = null;
     //
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, String.format(Locale.ENGLISH, "onNavigationDrawerItemSelected: id: <%d>, content: <%s>...", pItem.nId, pItem.content)); }
+    {
+      Log.v(TAG, String.format(Locale.ENGLISH, "onNavigationDrawerItemSelected: id: <%d>, content: <%s>...", pItem.nId, pItem.content));
+    }
     //
     // sind wir online?
     //
@@ -1752,7 +1867,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       case R.string.progitem_exit:
         // ENDE
         if( ApplicationDEBUG.DEBUG )
-        { Log.v(TAG, "onNavigationDrawerItemSelected: make dialog for USER..."); }
+        {
+          Log.v(TAG, "onNavigationDrawerItemSelected: make dialog for USER...");
+        }
         AreYouSureDialogFragment sureDial = new AreYouSureDialogFragment(getString(R.string.dialog_sure_exit));
         sureDial.show(getFragmentManager().beginTransaction(), "programexit");
         break;
@@ -1887,8 +2004,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         fTrans = getFragmentManager().beginTransaction();
         fTrans.addToBackStack("OnlineHelpFragment");
         mTitle = getString(R.string.progitem_help);
-        if( PreferenceManager.getDefaultSharedPreferences(this).contains("keyProgOthersOnlineHelpEnabled") &&
-            PreferenceManager.getDefaultSharedPreferences(this).getBoolean("keyProgOthersOnlineHelpEnabled", false) )
+        if( PreferenceManager.getDefaultSharedPreferences(this).contains("keyProgOthersOnlineHelpEnabled") && PreferenceManager.getDefaultSharedPreferences(this).getBoolean("keyProgOthersOnlineHelpEnabled", false) )
         {
           Log.i(TAG, "Online Help ist TRUE");
           (( OnlineHelpFragment ) newFrag).setUrl(getResources().getString(R.string.online_help_remote_url));
@@ -1917,14 +2033,18 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       fTrans.commit();
     }
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "onNavigationDrawerItemSelected:...OK"); }
+    {
+      Log.v(TAG, "onNavigationDrawerItemSelected:...OK");
+    }
   }
 
   @Override
   public void onResume()
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "onResume..."); }
+    {
+      Log.v(TAG, "onResume...");
+    }
     super.onResume();
     //
     if( mBtAdapter == null )
@@ -1975,12 +2095,16 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void onSectionAttached(String pItem)
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, String.format(Locale.ENGLISH, "onSectionAttached: fragment for  <%s>...", pItem)); }
+    {
+      Log.v(TAG, String.format(Locale.ENGLISH, "onSectionAttached: fragment for  <%s>...", pItem));
+    }
     getActionBar().setDisplayShowTitleEnabled(true);
     mTitle = pItem;
     getActionBar().setTitle(mTitle);
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "onSectionAttached: OK"); }
+    {
+      Log.v(TAG, "onSectionAttached: OK");
+    }
   }
 
   @Override
@@ -1988,7 +2112,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   {
     super.onStop();
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, "onStop:..."); }
+    {
+      Log.d(TAG, "onStop:...");
+    }
     doUnbindService(true);
   }
 
@@ -2004,7 +2130,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public boolean openAliasManager()
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, "openAliasManager..."); }
+    {
+      Log.d(TAG, "openAliasManager...");
+    }
     //
     // wenn da einer geöffnet ist, erst mal schliessen
     //
@@ -2018,8 +2146,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     //
     if( databaseDir == null || !databaseDir.isDirectory() || !databaseDir.canWrite() )
     {
-      UserAlertDialogFragment alrt = new UserAlertDialogFragment(getString(R.string.dialog_error_database_dir_header), getString(R.string.dialog_error_database_no_dir) + "/"
-          + getString(R.string.dialog_error_database_not_writable));
+      UserAlertDialogFragment alrt = new UserAlertDialogFragment(getString(R.string.dialog_error_database_dir_header), getString(R.string.dialog_error_database_no_dir) + "/" + getString(R.string.dialog_error_database_not_writable));
       alrt.show(getFragmentManager(), "database_directory_alert");
       return (false);
     }
@@ -2029,13 +2156,17 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       // die Datenbank öffnen, wenn erforderlich
       //
       if( ApplicationDEBUG.DEBUG )
-      { Log.d(TAG, "openAliasManager: create SQLite helper..."); }
+      {
+        Log.d(TAG, "openAliasManager: create SQLite helper...");
+      }
       DataSQLHelper sqlHelper = new DataSQLHelper(getApplicationContext(), databaseDir.getAbsolutePath() + File.separator + ProjectConst.DATABASE_NAME);
       //
       // einen Alias Manager öffnen
       //
       if( ApplicationDEBUG.DEBUG )
-      { Log.d(TAG, "openAliasManager: open Database..."); }
+      {
+        Log.d(TAG, "openAliasManager: open Database...");
+      }
       aliasManager = new SPX42AliasManager(sqlHelper.getWritableDatabase());
     }
     catch( NullPointerException ex )
@@ -2077,7 +2208,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void removeServiceListener(IBtServiceListener listener)
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, "clearServiceListener()..."); }
+    {
+      Log.d(TAG, "clearServiceListener()...");
+    }
     //
     // wenn der listener vorhanden ist, entferne ihn aus der Liste
     //
@@ -2099,7 +2232,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void restoreActionBar()
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "restoreActionBar:..."); }
+    {
+      Log.v(TAG, "restoreActionBar:...");
+    }
     ActionBar actionBar = getActionBar();
     // deprecated since API 21
     if( Build.VERSION.SDK_INT < 21 )
@@ -2109,7 +2244,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     actionBar.setDisplayShowTitleEnabled(true);
     actionBar.setTitle(mTitle);
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "restoreActionBar:...OK"); }
+    {
+      Log.v(TAG, "restoreActionBar:...OK");
+    }
   }
 
   /**
@@ -2166,13 +2303,15 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     String gasKeyTemplate = getResources().getString(R.string.conf_gaslist_gas_key_template);
     String gasListDefault = getResources().getString(R.string.conf_gaslist_default);
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, "setDefaultPreferences: make default preferences..."); }
+    {
+      Log.d(TAG, "setDefaultPreferences: make default preferences...");
+    }
     PreferenceManager.setDefaultValues(this, R.xml.config_spx42_preference_individual, true);
     PreferenceManager.setDefaultValues(this, R.xml.config_program_preference, true);
     //
     // workarround um defaults zu setzen
     //
-    SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
+    SharedPreferences        sPref  = PreferenceManager.getDefaultSharedPreferences(this);
     SharedPreferences.Editor editor = sPref.edit();
     editor.remove(FIRSTTIME);
     editor.putBoolean(FIRSTTIME, true);
@@ -2206,7 +2345,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     if( editor.commit() )
     {
       if( ApplicationDEBUG.DEBUG )
-      { Log.d(TAG, "setDefaultPreferences: wrote preferences to storeage."); }
+      {
+        Log.d(TAG, "setDefaultPreferences: wrote preferences to storeage.");
+      }
     }
     else
     {

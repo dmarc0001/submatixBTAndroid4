@@ -67,19 +67,19 @@ import de.dmarcini.submatix.android4.full.utils.SPX42ReadLogListArrayAdapter;
  */
 public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceListener, OnClickListener, OnItemClickListener
 {
-  @SuppressWarnings("javadoc")
-  public static final String TAG = SPX42LogGraphSelectFragment.class.getSimpleName();
+  @SuppressWarnings( "javadoc" )
+  public static final String          TAG                 = SPX42LogGraphSelectFragment.class.getSimpleName();
   // private CommToast theToast = null;
-  private SPX42LogManager logManager = null;
-  private int selectedDeviceId = -1;
-  private String selectedDeviceAlias = null;
+  private             SPX42LogManager logManager          = null;
+  private             int             selectedDeviceId    = -1;
+  private             String          selectedDeviceAlias = null;
   private MainActivity runningActivity;
-  private Button changeGraphDeviceButton = null;
-  private Button graphLogsButton = null;
-  private ListView graphLogsListView = null;
-  private int dbId = -1;
-  private int diveId = -1;
-  private String fragmentTitle = "unknown";
+  private Button   changeGraphDeviceButton = null;
+  private Button   graphLogsButton         = null;
+  private ListView graphLogsListView       = null;
+  private int      dbId                    = -1;
+  private int      diveId                  = -1;
+  private String   fragmentTitle           = "unknown";
 
   /**
    * Fülle den ListAdapter mit den Einträgen für Tauchgänge aus der Datenbank
@@ -93,9 +93,9 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
    */
   private boolean fillListAdapter(int diveId)
   {
-    Vector<ReadLogItemObj> diveList;
+    Vector<ReadLogItemObj>       diveList;
     SPX42ReadLogListArrayAdapter logListAdapter;
-    Resources res;
+    Resources                    res;
     //
     res = runningActivity.getResources();
     //
@@ -376,8 +376,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     catch( NoDatabaseException ex )
     {
       Log.e(TAG, "NoDatabaseException: <" + ex.getLocalizedMessage() + ">");
-      UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_sqlite_error_header), runningActivity.getResources()
-          .getString(R.string.dialog_sqlite_nodatabase_error));
+      UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_sqlite_error_header), runningActivity.getResources().getString(R.string.dialog_sqlite_nodatabase_error));
       uad.show(getFragmentManager(), "abortProgram");
     }
   }
@@ -386,7 +385,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   public void onClick(View v)
   {
     SPX42ReadLogListArrayAdapter rAdapter = null;
-    Button button = null;
+    Button                       button   = null;
     //
     if( ApplicationDEBUG.DEBUG )
     {
@@ -413,7 +412,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
         rAdapter = ( SPX42ReadLogListArrayAdapter ) graphLogsListView.getAdapter();
         if( rAdapter != null && !rAdapter.getMarkedItems().isEmpty() )
         {
-          int idx = rAdapter.getMarkedItems().firstElement();
+          int            idx = rAdapter.getMarkedItems().firstElement();
           ReadLogItemObj rlo = rAdapter.getItem(idx);
           viewSelectedLogItem(rlo.dbId);
         }
@@ -562,8 +561,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
         {
           Log.w(TAG, "no device selected -> note to user");
         }
-        UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_no_device_selected_header), runningActivity
-            .getResources().getString(R.string.dialog_no_device_selected));
+        UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_no_device_selected_header), runningActivity.getResources().getString(R.string.dialog_no_device_selected));
         uad.show(getFragmentManager(), "noSelectedDevice");
         return;
       }
@@ -584,8 +582,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
         {
           Log.w(TAG, "no logs foir device -> note to user");
         }
-        UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_not_log_entrys_header), runningActivity
-            .getResources().getString(R.string.dialog_not_log_entrys));
+        UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_not_log_entrys_header), runningActivity.getResources().getString(R.string.dialog_not_log_entrys));
         uad.show(getFragmentManager(), "noLogsForDevice");
         return;
       }
@@ -622,7 +619,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   @Override
   public void onItemClick(AdapterView<?> parent, View clickedView, int position, long id)
   {
-    ImageView ivMarked;
+    ImageView                    ivMarked;
     SPX42ReadLogListArrayAdapter rlAdapter = null;
     //
     // Die Liste der Logs
@@ -642,8 +639,8 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
         try
         {
           // Falls vorhanxen, löschen
-          Iterator<Integer> it = markedItems.iterator();
-          int idx = it.next();
+          Iterator<Integer> it  = markedItems.iterator();
+          int               idx = it.next();
           rlAdapter.setMarked(idx, false);
           // View erfragen (Absturz NullPointerException)
           ivMarked = ( ImageView ) graphLogsListView.getChildAt(idx).findViewById(R.id.readLogMarkedIconView);
@@ -754,8 +751,8 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   private void setDiveAdapterForDiveId(int diveId)
   {
     SPX42ReadLogListArrayAdapter rAdapter;
-    ReadLogItemObj rlo;
-    int idx;
+    ReadLogItemObj               rlo;
+    int                          idx;
     //
     rAdapter = ( SPX42ReadLogListArrayAdapter ) graphLogsListView.getAdapter();
     rAdapter.clearMarkedItems();

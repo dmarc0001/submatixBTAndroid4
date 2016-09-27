@@ -23,111 +23,102 @@ package de.dmarcini.submatix.android4.full.interfaces;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 
 /**
- * 
  * Interfacebeschreibung für Bluethooth Service Listener
- * 
+ * <p>
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
- * 
+ *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- * 
+ *         <p>
  *         Stand: 10.11.2013
  */
 public interface IBtServiceListener
 {
   /**
-   * 
    * Behandle alle ankommenden Nachrichten
-   * 
+   * <p>
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
-   * 
+   * <p>
    * Stand: 16.11.2013
-   * 
+   *
    * @param what
    * @param msg
    */
-  public void handleMessages( final int what, final BtServiceMessage msg );
+  public void handleMessages(final int what, final BtServiceMessage msg);
 
   /**
-   * 
    * Behandle ankommende Nachricht über den Versuch eine Verbindung aufzubauen
-   * 
+   * <p>
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
-   * 
+   * <p>
    * Stand: 16.11.2013
-   * 
+   *
    * @param msg
    */
-  public void msgConnecting( final BtServiceMessage msg );
+  public void msgConnecting(final BtServiceMessage msg);
 
   /**
-   * 
    * Behandle Nachricht über den erfolgreichen Aufbau einer Verbindung zum BT Gerät
-   * 
+   * <p>
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
-   * 
+   * <p>
    * Stand: 16.11.2013
-   * 
+   *
    * @param msg
    */
-  public void msgConnected( final BtServiceMessage msg );
+  public void msgConnected(final BtServiceMessage msg);
 
   /**
-   * 
    * Behandle Nachricht über den Verlust der BT-Verbindung
-   * 
+   * <p>
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
-   * 
+   * <p>
    * Stand: 16.11.2013
-   * 
+   *
    * @param msg
    */
-  public void msgDisconnected( final BtServiceMessage msg );
+  public void msgDisconnected(final BtServiceMessage msg);
 
   /**
-   * 
    * Behandle TICK-Nachricht vom Service
-   * 
+   * <p>
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
-   * 
+   * <p>
    * Stand: 16.11.2013
-   * 
+   *
    * @param msg
    */
-  public void msgRecivedTick( final BtServiceMessage msg );
+  public void msgRecivedTick(final BtServiceMessage msg);
 
   /**
-   * 
    * Behandle die Nachricht vom Service, dass er nich arbei
-   * 
+   * <p>
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
-   * 
+   * <p>
    * Stand: 16.11.2013
-   * 
+   *
    * @param msg
    */
-  public void msgRecivedAlive( final BtServiceMessage msg );
+  public void msgRecivedAlive(final BtServiceMessage msg);
 
   /**
-   * 
    * Behandle die Nachricht vom Service, dass der Verbindungsversuch erfolglos war
-   * 
+   * <p>
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
-   * 
+   * <p>
    * Stand: 16.11.2013
-   * 
+   *
    * @param msg
    */
-  public void msgConnectError( final BtServiceMessage msg );
+  public void msgConnectError(final BtServiceMessage msg);
 
   /**
-   * 
    * Behandle die _Nachricht, dass es einen Timeout beim schreiben zum BT-Gerät gab
-   * 
+   * <p>
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
-   * 
+   * <p>
    * Stand: 16.11.2013
-   * 
+   *
    * @param msg
    */
-  public void msgReciveWriteTmeout( final BtServiceMessage msg );
+  public void msgReciveWriteTmeout(final BtServiceMessage msg);
 }

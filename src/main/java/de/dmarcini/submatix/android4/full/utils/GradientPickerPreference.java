@@ -53,15 +53,15 @@ import de.dmarcini.submatix.android4.full.gui.MainActivity;
  */
 public class GradientPickerPreference extends DialogPreference implements OnValueChangeListener
 {
-  private static final String TAG = GradientPickerPreference.class.getSimpleName();
-  private static String defaultReturnValue = "30:80";
-  private NumberPicker lowPicker = null;
-  private NumberPicker highPicker = null;
-  private TextView lowGradientTextView = null;
-  private TextView highGradientTextView = null;
-  private int highGradient = 0;
-  private int lowGradient = 0;
-  private int currentStyleId = R.style.AppDarkTheme;
+  private static final String       TAG                  = GradientPickerPreference.class.getSimpleName();
+  private static       String       defaultReturnValue   = "30:80";
+  private              NumberPicker lowPicker            = null;
+  private              NumberPicker highPicker           = null;
+  private              TextView     lowGradientTextView  = null;
+  private              TextView     highGradientTextView = null;
+  private              int          highGradient         = 0;
+  private              int          lowGradient          = 0;
+  private              int          currentStyleId       = R.style.AppDarkTheme;
 
   /**
    * Der Konstruktor
@@ -200,9 +200,9 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
    */
   private int getGradientColor(int gradient)
   {
-    int color = 0;
-    int blueCol = 0;
-    int redCol = 0;
+    int color    = 0;
+    int blueCol  = 0;
+    int redCol   = 0;
     int greenCol = 0;
     //
     if( currentStyleId == R.style.AppDarkTheme )
@@ -453,8 +453,7 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
    */
   public int[] getValue()
   {
-    int[] val =
-        {lowGradient, highGradient};
+    int[] val = {lowGradient, highGradient};
     return (val);
   }
 
@@ -483,7 +482,9 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
         lowGradient = Integer.parseInt(fields[ 0 ]);
         highGradient = Integer.parseInt(fields[ 1 ]);
         if( ApplicationDEBUG.DEBUG )
-        { Log.d(TAG, "makeValuesFromString: successful set Values"); }
+        {
+          Log.d(TAG, "makeValuesFromString: successful set Values");
+        }
         return (true);
       }
       catch( NumberFormatException ex )
@@ -513,14 +514,18 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
     // versuche aus einer Stringresource einen defaultwert zu machen
     //
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, "onGetDefaultValue:...try read string resource and index <" + index + ">..."); }
+    {
+      Log.d(TAG, "onGetDefaultValue:...try read string resource and index <" + index + ">...");
+    }
     defaultString = a.getString(index);
     if( defaultString != null )
     {
       defaultReturnValue = defaultString;
     }
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, "onGetDefaultValue: defaultString<" + defaultString + ">"); }
+    {
+      Log.d(TAG, "onGetDefaultValue: defaultString<" + defaultString + ">");
+    }
     return (defaultString);
   }
 
@@ -538,7 +543,9 @@ public class GradientPickerPreference extends DialogPreference implements OnValu
     if( shouldSave )
     {
       if( ApplicationDEBUG.DEBUG )
-      { Log.v(TAG, "onDialogClosed: should save..."); }
+      {
+        Log.v(TAG, "onDialogClosed: should save...");
+      }
       persistString(String.format("%d:%d", lowPicker.getValue(), highPicker.getValue()));
     }
   }

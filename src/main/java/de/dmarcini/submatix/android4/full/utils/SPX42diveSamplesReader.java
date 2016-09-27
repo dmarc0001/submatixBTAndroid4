@@ -51,14 +51,14 @@ import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
 @SuppressWarnings( "javadoc" )
 public class SPX42diveSamplesReader
 {
-  public static final String TAG = SPX42diveSamplesReader.class.getSimpleName();
-  public static final int DIVE_TIME = 0;
-  public static final int DIVE_DEPTH = 1;
-  public static final int DIVE_TEMPERATURE = 2;
-  public static final int DIVE_PPO2 = 3;
-  public static final int DIVE_ZEROTIME = 4;
-  private int diveTimeCurrent = 0;
-  private Vector<float[]> sampleVector = null;
+  public static final String          TAG              = SPX42diveSamplesReader.class.getSimpleName();
+  public static final int             DIVE_TIME        = 0;
+  public static final int             DIVE_DEPTH       = 1;
+  public static final int             DIVE_TEMPERATURE = 2;
+  public static final int             DIVE_PPO2        = 3;
+  public static final int             DIVE_ZEROTIME    = 4;
+  private             int             diveTimeCurrent  = 0;
+  private             Vector<float[]> sampleVector     = null;
 
   /**
    * gesperrter Konstruktor
@@ -104,20 +104,24 @@ public class SPX42diveSamplesReader
    */
   private void makeSamples(File xmlFile)
   {
-    SAXParserFactory spf = null;
-    SAXParser sp = null;
-    ContentHandler myHandler = null;
-    XMLReader xr = null;
+    SAXParserFactory spf       = null;
+    SAXParser        sp        = null;
+    ContentHandler   myHandler = null;
+    XMLReader        xr        = null;
     // Liste des Tauchganges machen
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "getDiveList()...scan XML <" + xmlFile.getName() + ">..."); }
+    {
+      Log.v(TAG, "getDiveList()...scan XML <" + xmlFile.getName() + ">...");
+    }
     // versuchen wir es...
     // SAX Parser erzeugen
     spf = SAXParserFactory.newInstance();
     try
     {
       if( ApplicationDEBUG.DEBUG )
-      { Log.v(TAG, "getDiveList()...NEW SAX Parser..."); }
+      {
+        Log.v(TAG, "getDiveList()...NEW SAX Parser...");
+      }
       sp = spf.newSAXParser();
       xr = sp.getXMLReader();
     }
@@ -134,7 +138,9 @@ public class SPX42diveSamplesReader
     // einen nagenleuen Handler erzeugen
     // als implizite Klasse
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "getDiveList()...create ContentHandler..."); }
+    {
+      Log.v(TAG, "getDiveList()...create ContentHandler...");
+    }
     //
     // Lokaler Handler
     //
@@ -261,7 +267,9 @@ public class SPX42diveSamplesReader
           {
             // Jetz einen Eintrag in das Vector-Teil
             if( ApplicationDEBUG.DEBUG )
-            { Log.v(TAG, "create new LogSample..."); }
+            {
+              Log.v(TAG, "create new LogSample...");
+            }
             float[] entArr = new float[ 5 ];
             entArr[ DIVE_TIME ] = entry.time;
             entArr[ DIVE_DEPTH ] = ( float ) entry.depth;

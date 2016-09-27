@@ -47,11 +47,11 @@ import de.dmarcini.submatix.android4.full.gui.MainActivity;
  */
 public class CommToast
 {
-  private static final String TAG = CommToast.class.getSimpleName();
-  private Activity act = null;
-  private Toast theToast = null;
-  private WaitProgressFragmentDialog pd = null;
-  private View toastLayout;
+  private static final String                     TAG      = CommToast.class.getSimpleName();
+  private              Activity                   act      = null;
+  private              Toast                      theToast = null;
+  private              WaitProgressFragmentDialog pd       = null;
+  private View     toastLayout;
   private TextView toastMessageTextView;
 
   //
@@ -226,8 +226,8 @@ public class CommToast
     //
     // wenn ein Dialog da ist, erst mal aus den Fragmenten entfernen
     //
-    FragmentTransaction ft = act.getFragmentManager().beginTransaction();
-    Fragment prev = act.getFragmentManager().findFragmentByTag("dialog");
+    FragmentTransaction ft   = act.getFragmentManager().beginTransaction();
+    Fragment            prev = act.getFragmentManager().findFragmentByTag("dialog");
     if( prev != null )
     {
       ft.remove(prev);

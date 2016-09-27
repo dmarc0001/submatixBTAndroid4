@@ -74,26 +74,26 @@ import de.dmarcini.submatix.android4.full.utils.SPX42ReadLogListArrayAdapter;
  */
 public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener, OnItemClickListener, OnClickListener
 {
-  private static final String TAG = SPX42ReadLogFragment.class.getSimpleName();
-  private static final Pattern fieldPatternUnderln = Pattern.compile("[_.]");
-  private MainActivity runningActivity = null;
-  private ListView mainListView = null;
-  private Button readDirButton = null;
-  private SPX42LogManager logManager = null;
-  private SPX42ReadLogListArrayAdapter logListAdapter = null;
-  private WaitProgressFragmentDialog pd = null;
+  private static final String                       TAG                 = SPX42ReadLogFragment.class.getSimpleName();
+  private static final Pattern                      fieldPatternUnderln = Pattern.compile("[_.]");
+  private              MainActivity                 runningActivity     = null;
+  private              ListView                     mainListView        = null;
+  private              Button                       readDirButton       = null;
+  private              SPX42LogManager              logManager          = null;
+  private              SPX42ReadLogListArrayAdapter logListAdapter      = null;
+  private              WaitProgressFragmentDialog   pd                  = null;
   // aktuelles Log START
-  private int logLineCount = 0;
-  private int logNumberOnSPX = -1;
-  private int currPositionOnItems = -1;
-  private SPX42DiveHeadData diveHeader = null;
-  private LogXMLCreator xmlCreator = null;
+  private              int                          logLineCount        = 0;
+  private              int                          logNumberOnSPX      = -1;
+  private              int                          currPositionOnItems = -1;
+  private              SPX42DiveHeadData            diveHeader          = null;
+  private              LogXMLCreator                xmlCreator          = null;
   // aktuelles Log END
-  private Vector<Integer> items = null;
-  private CommToast theToast = null;
-  private boolean isUnitImperial = false;
-  private boolean showAllLogEntrys = true;
-  private int countDirEntrys = 0;
+  private              Vector<Integer>              items               = null;
+  private              CommToast                    theToast            = null;
+  private              boolean                      isUnitImperial      = false;
+  private              boolean                      showAllLogEntrys    = true;
+  private              int                          countDirEntrys      = 0;
   private String fragmentTitle;
 
   /**
@@ -272,8 +272,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   private String makeDetailText(SPX42DiveHeadData diveHead)
   {
     Resources res = runningActivity.getResources();
-    String detailText = String.format(res.getString(R.string.logread_saved_format), diveHead.maxDepth / 10.0, res.getString(R.string.app_unit_depth_metric),
-        diveHead.diveLength / 60, diveHead.diveLength % 60);
+    String detailText = String.format(res.getString(R.string.logread_saved_format), diveHead.maxDepth / 10.0, res.getString(R.string.app_unit_depth_metric), diveHead.diveLength / 60, diveHead.diveLength % 60);
     return (detailText);
   }
 
@@ -296,9 +295,9 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     if( !showAllLogEntrys )
     {
       // TextView tv = new TextView( getActivity().getApplicationContext() );
-      LayoutInflater mInflater = ( LayoutInflater ) getActivity().getApplicationContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-      View headerView = mInflater.inflate(R.layout.read_log_show_not_all_view_header, ( ViewGroup ) null, false);
-      View footerView = mInflater.inflate(R.layout.read_log_show_not_all_view_footer, ( ViewGroup ) null, false);
+      LayoutInflater mInflater  = ( LayoutInflater ) getActivity().getApplicationContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+      View           headerView = mInflater.inflate(R.layout.read_log_show_not_all_view_header, ( ViewGroup ) null, false);
+      View           footerView = mInflater.inflate(R.layout.read_log_show_not_all_view_footer, ( ViewGroup ) null, false);
       mainListView.addHeaderView(headerView);
       mainListView.addFooterView(footerView);
     }
@@ -320,14 +319,14 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     // 0 => Nummer
     // 1 => Filename
     // 2 => Max Nummer
-    String[] fields;
-    String fileName;
-    int dbId = -1;
-    String detailText;
-    int number, max;
-    int day, month, year, hour, minute, second;
-    boolean isSaved = false;
-    Resources res = runningActivity.getResources();
+    String[]  fields;
+    String    fileName;
+    int       dbId    = -1;
+    String    detailText;
+    int       number, max;
+    int       day, month, year, hour, minute, second;
+    boolean   isSaved = false;
+    Resources res     = runningActivity.getResources();
     //
     if( !(msg.getContainer() instanceof String[]) )
     {
@@ -400,8 +399,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
         //
         // jetzt eintagen in die Anzeige
         //
-        ReadLogItemObj rlio = new ReadLogItemObj(isSaved, String.format("#%03d: %s", number, tm.toString(MainActivity.localTimeFormatter)), fileName, detailText, dbId,
-            number, tm.getMillis());
+        ReadLogItemObj rlio = new ReadLogItemObj(isSaved, String.format("#%03d: %s", number, tm.toString(MainActivity.localTimeFormatter)), fileName, detailText, dbId, number, tm.getMillis());
         // Eintrag an den Anfang stellen
         logListAdapter.insert(rlio, 0);
       }
@@ -419,8 +417,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
       //
       // jetzt eintagen in die Anzeige
       //
-      ReadLogItemObj rlio = new ReadLogItemObj(isSaved, String.format("#%03d: %s", number, tm.toString(MainActivity.localTimeFormatter)), fileName, detailText, dbId, number,
-          tm.getMillis());
+      ReadLogItemObj rlio = new ReadLogItemObj(isSaved, String.format("#%03d: %s", number, tm.toString(MainActivity.localTimeFormatter)), fileName, detailText, dbId, number, tm.getMillis());
       // Eintrag an den Anfang stellen
       logListAdapter.insert(rlio, 0);
     }
@@ -462,7 +459,9 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   public void msgDisconnected(BtServiceMessage msg)
   {
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "msgDisconnected"); }
+    {
+      Log.v(TAG, "msgDisconnected");
+    }
     Intent intent = new Intent(getActivity(), MainActivity.class);
     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     startActivity(intent);
@@ -495,7 +494,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     // UD= 1=Fahrenheit/0=Celsius => immer 0 in der aktuellen Firmware 2.6.7.7_U
     // UL= 0=metrisch 1=imperial
     // UW= 0->Salzwasser 1->Süßwasser
-    int isImperial = 0;
+    int      isImperial = 0;
     String[] unitsParm;
     //
     if( msg.getContainer() instanceof String[] )
@@ -625,8 +624,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     catch( NoDatabaseException ex )
     {
       Log.e(TAG, "NoDatabaseException: <" + ex.getLocalizedMessage() + ">");
-      UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_sqlite_error_header), runningActivity.getResources()
-          .getString(R.string.dialog_sqlite_nodatabase_error));
+      UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_sqlite_error_header), runningActivity.getResources().getString(R.string.dialog_sqlite_nodatabase_error));
       uad.show(getFragmentManager(), "abortProgram");
     }
   }
@@ -812,8 +810,8 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     //
     // wenn ein Dialog da ist, erst mal aus den Fragmenten entfernen
     //
-    FragmentTransaction ft = runningActivity.getFragmentManager().beginTransaction();
-    Fragment prev = runningActivity.getFragmentManager().findFragmentByTag("dialog");
+    FragmentTransaction ft   = runningActivity.getFragmentManager().beginTransaction();
+    Fragment            prev = runningActivity.getFragmentManager().findFragmentByTag("dialog");
     if( prev != null )
     {
       ft.remove(prev);
@@ -872,8 +870,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     //
     // erzeuge eine XML-Datei
     //
-    diveHeader.xmlFile = new File(String.format("%s%s%s-%04d-%s.xml", MainActivity.databaseDir.getAbsolutePath(), File.separator, MainActivity.spxConfig.getSerial(),
-        logNumberOnSPX, MainActivity.mBtAdapter.getAddress().replaceAll(":", "_")));
+    diveHeader.xmlFile = new File(String.format("%s%s%s-%04d-%s.xml", MainActivity.databaseDir.getAbsolutePath(), File.separator, MainActivity.spxConfig.getSerial(), logNumberOnSPX, MainActivity.mBtAdapter.getAddress().replaceAll(":", "_")));
     diveHeader.fileNameOnSpx = rlio.itemNameOnSPX;
     diveHeader.startTime = rlio.startTimeMilis;
     diveHeader.diveNumberOnSPX = rlio.numberOnSPX;
@@ -928,8 +925,8 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
         //
         int firstPos = mainListView.getFirstVisiblePosition();
         mainListView.setAdapter(logListAdapter);
-        View v = mainListView.getChildAt(currPositionOnItems);
-        int top = (v == null) ? 0 : v.getTop();
+        View v   = mainListView.getChildAt(currPositionOnItems);
+        int  top = (v == null) ? 0 : v.getTop();
         mainListView.setSelectionFromTop(firstPos, top);
       }
       catch( NullPointerException ex )

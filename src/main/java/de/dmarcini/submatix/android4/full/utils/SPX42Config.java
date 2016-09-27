@@ -20,9 +20,9 @@
 //@formatter:on
 /**
  * Implementation der Konfiguration für SPX42 Android
- *
- *
- *
+ * <p>
+ * <p>
+ * <p>
  * Stand: 10.10.13
  */
 package de.dmarcini.submatix.android4.full.utils;
@@ -561,7 +561,7 @@ public class SPX42Config
       return false;
     }
     licenseState = vals[ 0 ];
-    customEnabled = vals[1] != 0;
+    customEnabled = vals[ 1 ] != 0;
     return (true);
   }
 
@@ -570,7 +570,8 @@ public class SPX42Config
    *
    * @return ist es so?
    */
-  public boolean isAutoSetpointWithoutOff() {
+  public boolean isAutoSetpointWithoutOff()
+  {
     return (isAutoSetpointWithoutOff);
   }
 

@@ -20,10 +20,10 @@
 //@formatter:on
 /**
  * Eigener Arrayadapter, der Icons beinhaltet
- *
+ * <p>
  * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
- *
- *
+ * <p>
+ * <p>
  * Stand: 23.12.2012
  */
 package de.dmarcini.submatix.android4.full.utils;
@@ -96,10 +96,10 @@ public class FileSelectorArrayAdapterWithPics extends ArrayAdapter<File>
   @Override
   public View getView(int position, View convertView, ViewGroup parent)
   {
-    ViewHolder holder = null;
-    LayoutInflater mInflater = null;
-    File currFileObj = null;
-    boolean isFileUp = false;
+    ViewHolder     holder      = null;
+    LayoutInflater mInflater   = null;
+    File           currFileObj = null;
+    boolean        isFileUp    = false;
     //
     mInflater = ( LayoutInflater ) getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
     if( convertView == null )
@@ -181,7 +181,7 @@ public class FileSelectorArrayAdapterWithPics extends ArrayAdapter<File>
   private class ViewHolder
   {
     public ImageView imageView;
-    public TextView txtTitle;
+    public TextView  txtTitle;
     public ImageView imageRightIndicatorView;
     public ImageView imageLeftIndicatorView;
   }
