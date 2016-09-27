@@ -305,7 +305,7 @@ public class SPX42Config
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
    * <p/>
    * <p/>
-   * Stand: 10.11.2013
+   * Stand: 27.09.2016
    *
    * @param version
    */
@@ -333,13 +333,13 @@ public class SPX42Config
       wasCorrectInitialized = true;
     }
     // Versionen NACH 2.7_V
-    if( firmwareVersion.matches("V2\\.7_V.*") )
+    if( firmwareVersion.matches("V2\\.7_?V.*") )
     {
       wasCorrectInitialized = true;
       isFirmwareSupported = true;
       hasFahrenheidBug = false;
       // Build 198
-      if( (firmwareVersion.matches("V2\\.7_V r83.*")) )
+      if( (firmwareVersion.matches("V2\\.7_?V r83.*")) )
       {
         hasSixValuesIndividual = true;
         isNewerDisplayBrightness = true;
@@ -354,13 +354,13 @@ public class SPX42Config
       }
     }
     // Versionen NACH 2.7_H
-    if( firmwareVersion.matches("V2\\.7_H.*") )
+    if( firmwareVersion.matches("V2\\.7_?H.*") )
     {
       hasFahrenheidBug = false;
       canSetDate = false;
       isFirmwareSupported = true;
       wasCorrectInitialized = true;
-      if( firmwareVersion.matches("V2\\.7_H r83.*") )
+      if( firmwareVersion.matches("V2\\.7_?H r83.*") )
       {
         // Build 197
         // hier kommt bestimmt noch irgendwas nach :-(
