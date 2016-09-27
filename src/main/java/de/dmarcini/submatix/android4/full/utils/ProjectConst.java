@@ -51,9 +51,9 @@ public final class ProjectConst
   public static final String MANUFACTMAIL = "dirk@submatix.com";
   public static final String MANUFACTHOME = "http://www.submatix.com";
   public static final String MANUFACTVERS = "2.0.1";
-  public static final String GENYEAR = "2015";
-  public static final String GENMONTH = "10";
-  public static final String GENDAY = "21";
+  public static final String GENYEAR = "2016";
+  public static final String GENMONTH = "09";
+  public static final String GENDAY = "27";
   public static final boolean CHECK_PHYSICAL_BT = true;
   // ANDROID: Unique UUID für allgemeine (well known) Serielle Schnittstelle
   public static final UUID SERIAL_DEVICE_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");

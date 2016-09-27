@@ -181,6 +181,19 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
     View cView = convertView;
     ViewHolder holder = null;
     LayoutInflater mInflater = (( Activity ) getContext()).getLayoutInflater();
+    if( cView == null || !(cView.getTag() instanceof ViewHolder) )
+    {
+      cView = mInflater.inflate(R.layout.bt_array_with_pic_adapter_view, parent, false);
+      holder = new ViewHolder();
+      holder.txtTitle = ( TextView ) cView.findViewById(R.id.btArrayListTextView);
+      holder.imageView = ( ImageView ) cView.findViewById(R.id.btArrayListIconView);
+      cView.setTag(holder);
+    }
+    else
+    {
+      holder = ( ViewHolder ) cView.getTag();
+    }
+    /*
     if( cView != null && (cView.getTag() instanceof ViewHolder) )
     {
       holder = ( ViewHolder ) cView.getTag();
@@ -190,9 +203,7 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
       cView = mInflater.inflate(R.layout.bt_array_with_pic_adapter_view, parent, false);
       holder = new ViewHolder();
     }
-    holder.txtTitle = ( TextView ) cView.findViewById(R.id.btArrayListTextView);
-    holder.imageView = ( ImageView ) cView.findViewById(R.id.btArrayListIconView);
-    cView.setTag(holder);
+    */
     //
     // Icon setzen
     //
@@ -225,15 +236,20 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
     //
     // ist die Beschriftung die ausgewählte, einfärben
     //
-    if( isFirst )
+    if( this.themeId == R.style.AppDarkTheme )
     {
-      if( this.themeId == R.style.AppDarkTheme )
+      holder.txtTitle.setTextColor(cView.getResources().getColor(R.color.connectFragmentDark_spinnerText));
+      if( !isFirst )
       {
-        holder.txtTitle.setTextColor(cView.getResources().getColor(R.color.connectFragmentDark_spinnerText));
+        cView.setBackgroundColor(cView.getResources().getColor(R.color.connectFragmentDark_spinnerBackgroundColor));
       }
-      else
+    }
+    else
+    {
+      holder.txtTitle.setTextColor(cView.getResources().getColor(R.color.connectFragmentLight_spinnerText));
+      if( !isFirst )
       {
-        holder.txtTitle.setTextColor(cView.getResources().getColor(R.color.connectFragmentLight_spinnerText));
+        cView.setBackgroundColor(cView.getResources().getColor(R.color.connectFragmentLight_spinnerBackgroundColor));
       }
     }
     return cView;
@@ -319,11 +335,7 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
   public boolean isDevicePaired(int position)
   {
     String pairedStr = getStringAt(position, BT_DEVAR_ISPAIRED);
-    if( pairedStr.matches("true") || pairedStr.matches("1") || pairedStr.matches("yes") )
-    {
-      return (true);
-    }
-    return (false);
+    return pairedStr.matches("true") || pairedStr.matches("1") || pairedStr.matches("yes");
   }
 
   /**
@@ -340,11 +352,7 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
   public boolean isDeviceOnline(int position)
   {
     String pairedStr = getStringAt(position, BT_DEVAR_ISONLINE);
-    if( pairedStr.matches("true") || pairedStr.matches("1") || pairedStr.matches("yes") )
-    {
-      return (true);
-    }
-    return (false);
+    return pairedStr.matches("true") || pairedStr.matches("1") || pairedStr.matches("yes");
   }
 
   /**
