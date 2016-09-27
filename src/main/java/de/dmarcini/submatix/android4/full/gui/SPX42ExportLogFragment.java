@@ -107,14 +107,14 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
   private              String                     selectedDeviceAlias = null;
   private              Button                     changeDeviceButton  = null;
   private              Button                     exportLogsButton    = null;
-  private              Button                     exportDeleteButton  = null;
-  private              CommToast                  theToast            = null;
-  private              boolean                    isFileZipped        = false;
-  private              WaitProgressFragmentDialog pd                  = null;
-  private              File                       tempDir             = null;
-  private              String                     mailMainAddr        = null;
+  private       Button                     exportDeleteButton = null;
+  private       CommToast                  theToast           = null;
+  private       boolean                    isFileZipped       = false;
+  private       WaitProgressFragmentDialog pd                 = null;
+  private       File                       tempDir            = null;
+  private       String                     mailMainAddr       = null;
   @SuppressLint( "HandlerLeak" )
-  private final        Handler                    mHandler            = new Handler()
+  private final Handler                    mHandler           = new Handler()
   {
     @Override
     public void handleMessage(Message msg)
@@ -128,7 +128,8 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
       handleMessages(msg.what, smsg);
     }
   };
-  private              String                     fragmentTitle       = "unknown";
+  private       String                     fragmentTitle      = "unknown";
+  private       int                        themeId            = R.style.AppDarkTheme;
 
   /**
    * vernichte rekursiv den Ordner mit allen Dateien darin
@@ -681,6 +682,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
   {
     super.onActivityCreated(savedInstanceState);
     runningActivity = ( MainActivity ) getActivity();
+    themeId = MainActivity.getAppStyle();
     if( ApplicationDEBUG.DEBUG )
     {
       Log.d(TAG, "onActivityCreated: ACTIVITY ATTACH");
@@ -850,7 +852,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
       //
       // oder sollen Daten aus der Datenbank gelöscht werden?
       //
-      else if( ( Button ) v == exportDeleteButton )
+      else if( v == exportDeleteButton )
       {
         rAdapter = ( SPX42ReadLogListArrayAdapter ) mainListView.getAdapter();
         //
@@ -1105,11 +1107,25 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
       {
         if( rlAdapter.getMarked(position) )
         {
-          ivMarked.setImageResource(R.drawable.circle_full_yellow);
+          if( this.themeId == R.style.AppDarkTheme )
+          {
+            ivMarked.setImageResource(R.drawable.circle_full_yellow);
+          }
+          else
+          {
+            ivMarked.setImageResource(R.drawable.circle_full_green);
+          }
         }
         else
         {
-          ivMarked.setImageResource(R.drawable.circle_empty_yellow);
+          if( this.themeId == R.style.AppDarkTheme )
+          {
+            ivMarked.setImageResource(R.drawable.circle_empty_yellow);
+          }
+          else
+          {
+            ivMarked.setImageResource(R.drawable.circle_empty_green);
+          }
         }
       }
     }

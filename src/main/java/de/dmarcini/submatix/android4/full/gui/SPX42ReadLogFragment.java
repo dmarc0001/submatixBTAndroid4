@@ -79,21 +79,22 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   private              MainActivity                 runningActivity     = null;
   private              ListView                     mainListView        = null;
   private              Button                       readDirButton       = null;
-  private              SPX42LogManager              logManager          = null;
-  private              SPX42ReadLogListArrayAdapter logListAdapter      = null;
-  private              WaitProgressFragmentDialog   pd                  = null;
+  private SPX42LogManager              logManager          = null;
+  private SPX42ReadLogListArrayAdapter logListAdapter      = null;
+  private WaitProgressFragmentDialog   pd                  = null;
   // aktuelles Log START
-  private              int                          logLineCount        = 0;
-  private              int                          logNumberOnSPX      = -1;
-  private              int                          currPositionOnItems = -1;
-  private              SPX42DiveHeadData            diveHeader          = null;
-  private              LogXMLCreator                xmlCreator          = null;
+  private int                          logLineCount        = 0;
+  private int                          logNumberOnSPX      = -1;
+  private int                          currPositionOnItems = -1;
+  private SPX42DiveHeadData            diveHeader          = null;
+  private LogXMLCreator                xmlCreator          = null;
   // aktuelles Log END
-  private              Vector<Integer>              items               = null;
-  private              CommToast                    theToast            = null;
-  private              boolean                      isUnitImperial      = false;
-  private              boolean                      showAllLogEntrys    = true;
-  private              int                          countDirEntrys      = 0;
+  private Vector<Integer>              items               = null;
+  private CommToast                    theToast            = null;
+  private boolean                      isUnitImperial      = false;
+  private boolean                      showAllLogEntrys    = true;
+  private int                          countDirEntrys      = 0;
+  private int                          themeId             = R.style.AppDarkTheme;
   private String fragmentTitle;
 
   /**
@@ -223,7 +224,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
       case ProjectConst.MESSAGE_LOGENTRY_STOP:
         if( msg.getContainer() instanceof String )
         {
-          Log.i(TAG, "stop logentry logNumberOnSPX <" + ( String ) msg.getContainer() + "> on SPX");
+          Log.i(TAG, "stop logentry logNumberOnSPX <" + msg.getContainer() + "> on SPX");
           //
           // XML-Datei schliessen
           //
@@ -296,8 +297,8 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     {
       // TextView tv = new TextView( getActivity().getApplicationContext() );
       LayoutInflater mInflater  = ( LayoutInflater ) getActivity().getApplicationContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-      View           headerView = mInflater.inflate(R.layout.read_log_show_not_all_view_header, ( ViewGroup ) null, false);
-      View           footerView = mInflater.inflate(R.layout.read_log_show_not_all_view_footer, ( ViewGroup ) null, false);
+      View           headerView = mInflater.inflate(R.layout.read_log_show_not_all_view_header, null, false);
+      View           footerView = mInflater.inflate(R.layout.read_log_show_not_all_view_footer, null, false);
       mainListView.addHeaderView(headerView);
       mainListView.addFooterView(footerView);
     }
@@ -527,14 +528,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     try
     {
       isImperial = Integer.parseInt(unitsParm[ 1 ], 16);
-      if( isImperial > 0 )
-      {
-        isUnitImperial = true;
-      }
-      else
-      {
-        isUnitImperial = false;
-      }
+      isUnitImperial = isImperial > 0;
     }
     catch( IndexOutOfBoundsException ex )
     {
@@ -558,6 +552,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   {
     super.onActivityCreated(savedInstanceState);
     runningActivity = ( MainActivity ) getActivity();
+    themeId = MainActivity.getAppStyle();
     if( ApplicationDEBUG.DEBUG )
     {
       Log.d(TAG, "onActivityCreated: ACTIVITY ATTACH");
@@ -736,11 +731,25 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     {
       if( logListAdapter.getMarked(position) )
       {
-        ivMarked.setImageResource(R.drawable.circle_full_yellow);
+        if( themeId == R.style.AppDarkTheme )
+        {
+          ivMarked.setImageResource(R.drawable.circle_full_yellow);
+        }
+        else
+        {
+          ivMarked.setImageResource(R.drawable.circle_full_green);
+        }
       }
       else
       {
-        ivMarked.setImageResource(R.drawable.circle_empty_yellow);
+        if( themeId == R.style.AppDarkTheme )
+        {
+          ivMarked.setImageResource(R.drawable.circle_empty_yellow);
+        }
+        else
+        {
+          ivMarked.setImageResource(R.drawable.circle_empty_green);
+        }
       }
     }
   }

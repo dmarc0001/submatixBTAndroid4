@@ -68,18 +68,18 @@ import de.dmarcini.submatix.android4.full.utils.SPX42ReadLogListArrayAdapter;
 public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceListener, OnClickListener, OnItemClickListener
 {
   @SuppressWarnings( "javadoc" )
-  public static final String          TAG                 = SPX42LogGraphSelectFragment.class.getSimpleName();
-  // private CommToast theToast = null;
-  private             SPX42LogManager logManager          = null;
-  private             int             selectedDeviceId    = -1;
-  private             String          selectedDeviceAlias = null;
-  private MainActivity runningActivity;
-  private Button   changeGraphDeviceButton = null;
-  private Button   graphLogsButton         = null;
-  private ListView graphLogsListView       = null;
-  private int      dbId                    = -1;
-  private int      diveId                  = -1;
-  private String   fragmentTitle           = "unknown";
+  public static final String          TAG                     = SPX42LogGraphSelectFragment.class.getSimpleName();
+  private             SPX42LogManager logManager              = null;
+  private             int             selectedDeviceId        = -1;
+  private             String          selectedDeviceAlias     = null;
+  private             MainActivity    runningActivity         = null;
+  private             Button          changeGraphDeviceButton = null;
+  private             Button          graphLogsButton         = null;
+  private             ListView        graphLogsListView       = null;
+  private             int             dbId                    = -1;
+  private             int             diveId                  = -1;
+  private             int             themeId                 = R.style.AppDarkTheme;
+  private             String          fragmentTitle           = "unknown";
 
   /**
    * Fülle den ListAdapter mit den Einträgen für Tauchgänge aus der Datenbank
@@ -274,6 +274,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     dbId = -1;
     diveId = -1;
     runningActivity = ( MainActivity ) getActivity();
+    themeId = MainActivity.getAppStyle();
     if( ApplicationDEBUG.DEBUG )
     {
       Log.d(TAG, "onActivityCreated: ACTIVITY ATTACH");
@@ -647,7 +648,14 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
           if( ivMarked != null )
           {
             // ist ein View vorhanden, geht es schon los
-            ivMarked.setImageResource(R.drawable.circle_empty_yellow);
+            if( themeId == R.style.AppDarkTheme )
+            {
+              ivMarked.setImageResource(R.drawable.circle_empty_yellow);
+            }
+            else
+            {
+              ivMarked.setImageResource(R.drawable.circle_empty_green);
+            }
           }
         }
         catch( NullPointerException ex )
