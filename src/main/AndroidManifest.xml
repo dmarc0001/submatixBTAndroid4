@@ -18,11 +18,13 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/
 -->
 <manifest
+    xmlns:tools="http://schemas.android.com/tools"
     package="de.dmarcini.submatix.android4.full"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:installLocation="auto"
-    android:versionCode="30"
-    android:versionName="2.1">
+    android:versionCode="31"
+    android:versionName="2.1"
+    tools:ignore="GradleOverrides">
 
     <uses-sdk
         android:minSdkVersion="15"

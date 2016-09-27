@@ -35,5 +35,5 @@ public class ApplicationDEBUG
   // dies ist ein Workarround, da BuildConfig.DEBUG nicht funktioniert :-(
   //
   @SuppressWarnings( "javadoc" )
-  public static final boolean DEBUG = true;
+  public static final boolean DEBUG = false;
 }
