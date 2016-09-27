@@ -170,11 +170,25 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
       }
       if( rlio.isMarked )
       {
-        ivMarked.setImageResource(R.drawable.circle_full_yellow);
+        if( themeId == R.style.AppDarkTheme )
+        {
+          ivMarked.setImageResource(R.drawable.circle_full_yellow);
+        }
+        else
+        {
+          ivMarked.setImageResource(R.drawable.circle_full_green);
+        }
       }
       else
       {
-        ivMarked.setImageResource(R.drawable.circle_empty_yellow);
+        if( themeId == R.style.AppDarkTheme )
+        {
+          ivMarked.setImageResource(R.drawable.circle_empty_yellow);
+        }
+        else
+        {
+          ivMarked.setImageResource(R.drawable.circle_empty_green);
+        }
       }
     }
     catch( NullPointerException ex )
