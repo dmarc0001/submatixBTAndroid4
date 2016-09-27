@@ -4,6 +4,7 @@
   <color name="preferenceCategoryDark.backgroundColor">#37373E</color>
   <color name="preferenceDark.backgroundColor">#2a2a2a</color>
   <color name="connectFragmentDark.spinnerText">#408FFF</color>
+  <color name="connectFragmentDark.spinnerBackgroundColor">#2e2e2e</color>
   <color name="connectToastDark.backgroundColor">#C6D6F7</color>
   <color name="connectToastDark.textColor">#057AFF</color>  
   <color name="logReadDark.notSavedColor">#F5F576</color>
@@ -18,6 +19,7 @@
   <color name="preferenceCategoryLight.backgroundColor">#DFDFFF</color>
   <color name="preferenceLight.backgroundColor">#F2F2FF</color>
   <color name="connectFragmentLight.spinnerText">#0600B3</color>
+  <color name="connectFragmentLight.spinnerBackgroundColor">#e6e5ed</color>
   <color name="connectToastLight.backgroundColor">#CAF7FC</color>
   <color name="connectToastLight.textColor">#009E1D</color>  
   <color name="logReadLight.notSavedColor">#85853D</color>
