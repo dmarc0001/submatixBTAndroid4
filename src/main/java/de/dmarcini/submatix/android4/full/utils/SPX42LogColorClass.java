@@ -29,7 +29,7 @@ package de.dmarcini.submatix.android4.full.utils;
  *         <p/>
  *         Stand: 02.02.2014
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings( "javadoc" )
 public class SPX42LogColorClass
 {
   public int spxGraphBackcolor;

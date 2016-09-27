@@ -58,13 +58,13 @@ import de.dmarcini.submatix.android4.full.utils.SPX42LogManager;
  */
 public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceListener
 {
-  @SuppressWarnings("javadoc")
-  public static final String TAG = SPX42LogGraphDetailFragment.class.getSimpleName();
-  protected ProgressDialog progressDialog = null;
-  private SPX42LogManager logManager = null;
-  private MainActivity runningActivity = null;
-  private int dbId = -1;
-  private SPX42LogGraphView sPX42LogGraphView = null;
+  @SuppressWarnings( "javadoc" )
+  public static final String            TAG               = SPX42LogGraphDetailFragment.class.getSimpleName();
+  protected           ProgressDialog    progressDialog    = null;
+  private             SPX42LogManager   logManager        = null;
+  private             MainActivity      runningActivity   = null;
+  private             int               dbId              = -1;
+  private             SPX42LogGraphView sPX42LogGraphView = null;
   private String fragmentTitle;
 
   @Override
@@ -266,8 +266,7 @@ public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceL
     catch( NoDatabaseException ex )
     {
       Log.e(TAG, "NoDatabaseException: <" + ex.getLocalizedMessage() + ">");
-      UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_sqlite_error_header), runningActivity.getResources()
-          .getString(R.string.dialog_sqlite_nodatabase_error));
+      UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_sqlite_error_header), runningActivity.getResources().getString(R.string.dialog_sqlite_nodatabase_error));
       uad.show(getFragmentManager(), "abortProgram");
     }
   }

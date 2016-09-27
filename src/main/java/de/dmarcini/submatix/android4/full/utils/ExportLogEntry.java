@@ -34,20 +34,20 @@ import java.util.Locale;
 @SuppressWarnings( "javadoc" )
 public class ExportLogEntry
 {
-  public int presure = 0;
-  public double depth = -1000;
-  public double temp = -1000;
-  public double acku = -1000;
-  public double ppo2 = -1000;
-  public double setpoint = -1000;
-  public double n2 = -1;
-  public double he = -1;
-  public double o2 = -1;
-  public double ar = 0;
-  public int zerotime = 999;
-  public int time = 0;
-  public String gasSample = null;
-  public boolean gasswitch = false;
+  public int     presure    = 0;
+  public double  depth      = -1000;
+  public double  temp       = -1000;
+  public double  acku       = -1000;
+  public double  ppo2       = -1000;
+  public double  setpoint   = -1000;
+  public double  n2         = -1;
+  public double  he         = -1;
+  public double  o2         = -1;
+  public double  ar         = 0;
+  public int     zerotime   = 999;
+  public int     time       = 0;
+  public String  gasSample  = null;
+  public boolean gasswitch  = false;
   public boolean ppo2switch = false;
 
   /**

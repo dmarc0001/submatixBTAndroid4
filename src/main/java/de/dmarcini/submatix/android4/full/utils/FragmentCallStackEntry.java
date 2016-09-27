@@ -33,10 +33,10 @@ import android.os.Bundle;
  */
 public class FragmentCallStackEntry
 {
-  private int itemNumber = -1;
+  private int    itemNumber = -1;
   private Bundle itemBundle = null;
 
-  @SuppressWarnings("unused")
+  @SuppressWarnings( "unused" )
   private FragmentCallStackEntry()
   {
   }

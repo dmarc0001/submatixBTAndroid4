@@ -24,12 +24,12 @@ package de.dmarcini.submatix.android4.full.exceptions;
 public class NoWritableDatabaseDirException extends Exception
 {
   /**
-   * 
+   *
    */
   private static final long serialVersionUID = 3324521028204996876L;
 
-  public NoWritableDatabaseDirException( String msg )
+  public NoWritableDatabaseDirException(String msg)
   {
-    super( msg );
+    super(msg);
   }
 }

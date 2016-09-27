@@ -73,22 +73,22 @@ import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 public class SPX42ConnectFragment extends Fragment implements IBtServiceListener, OnItemSelectedListener, OnClickListener
 {
   @SuppressWarnings( "javadoc" )
-  public static final String TAG = SPX42ConnectFragment.class.getSimpleName();
-  private static final String LAST_CONNECTED_DEVICE_KEY = "keyLastConnectedDevice";
-  private static final String DIAL_GET_PIN = "get_pin_dial";
-  private static final String DIAL_NO_PIN_ERR = "no_pin_was_there_dial";
-  private final Vector<BluetoothDevice> discoveredDevices = new Vector<BluetoothDevice>();
-  protected ProgressDialog progressDialog = null;
-  private String lastConnectedDeviceMac = null;
-  private BluetoothDeviceArrayAdapter btArrayAdapter = null;
-  private Button discoverButton = null;
-  private Button aliasEditButton = null;
-  private Spinner devSpinner = null;
-  private ImageButton connButton = null;
-  private TextView connectTextView = null;
-  private boolean runDiscovering = false;
-  private MainActivity runningActivity = null;
-  private CommToast theToast = null;
+  public static final  String                      TAG                       = SPX42ConnectFragment.class.getSimpleName();
+  private static final String                      LAST_CONNECTED_DEVICE_KEY = "keyLastConnectedDevice";
+  private static final String                      DIAL_GET_PIN              = "get_pin_dial";
+  private static final String                      DIAL_NO_PIN_ERR           = "no_pin_was_there_dial";
+  private final        Vector<BluetoothDevice>     discoveredDevices         = new Vector<BluetoothDevice>();
+  protected            ProgressDialog              progressDialog            = null;
+  private              String                      lastConnectedDeviceMac    = null;
+  private              BluetoothDeviceArrayAdapter btArrayAdapter            = null;
+  private              Button                      discoverButton            = null;
+  private              Button                      aliasEditButton           = null;
+  private              Spinner                     devSpinner                = null;
+  private              ImageButton                 connButton                = null;
+  private              TextView                    connectTextView           = null;
+  private              boolean                     runDiscovering            = false;
+  private              MainActivity                runningActivity           = null;
+  private              CommToast                   theToast                  = null;
   //
   // der Broadcast Empfänger der Nachrichten über gefundene BT Geräte findet
   //
@@ -293,8 +293,8 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     //
     // Liste der Geräte aus der Datenbank, Abgleich mit gepaarten und discoverten Geräten
     //
-    Vector<HashMap<String, String>> devListStored = MainActivity.aliasManager.getDeviceAdressesList();
-    Iterator<HashMap<String, String>> itStored = devListStored.iterator();
+    Vector<HashMap<String, String>>   devListStored = MainActivity.aliasManager.getDeviceAdressesList();
+    Iterator<HashMap<String, String>> itStored      = devListStored.iterator();
     while( itStored.hasNext() )
     {
       HashMap<String, String> deviceMap = itStored.next();
@@ -417,8 +417,8 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       it = discoveredDevices.iterator();
       while( it.hasNext() )
       {
-        BluetoothDevice device = it.next();
-        String devAlias = MainActivity.aliasManager.getAliasForMac(device.getAddress(), device.getName());
+        BluetoothDevice device   = it.next();
+        String          devAlias = MainActivity.aliasManager.getAliasForMac(device.getAddress(), device.getName());
         // Feld 0 = Geräte Alias / Gerätename
         // Feld 1 = Geräte-MAC
         // Feld 2 = Geräte-Name
@@ -592,7 +592,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     }
     if( showCommToast )
     {
-      String deviceName = (( BluetoothDeviceArrayAdapter ) devSpinner.getAdapter()).getAlias(devSpinner.getSelectedItemPosition());
+      String deviceName       = (( BluetoothDeviceArrayAdapter ) devSpinner.getAdapter()).getAlias(devSpinner.getSelectedItemPosition());
       String connStringFormat = getResources().getString(R.string.toast_connect_connected);
       theToast.showConnectionToast(String.format(connStringFormat, deviceName), false);
       showCommToast = false;
@@ -605,7 +605,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   @Override
   public void msgConnectError(BtServiceMessage msg)
   {
-    String deviceName = (( BluetoothDeviceArrayAdapter ) devSpinner.getAdapter()).getAlias(devSpinner.getSelectedItemPosition());
+    String deviceName       = (( BluetoothDeviceArrayAdapter ) devSpinner.getAdapter()).getAlias(devSpinner.getSelectedItemPosition());
     String connStringFormat = getResources().getString(R.string.toast_connect_cant_bt_connect);
     theToast.showConnectionToastAlert(String.format(connStringFormat, deviceName));
   }
@@ -627,9 +627,9 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
    */
   private void msgConnectNotbound(BtServiceMessage smsg)
   {
-    String msg;
+    String          msg;
     BluetoothDevice device;
-    String dName;
+    String          dName;
     //
     if( MainActivity.aliasManager == null )
     {
@@ -717,7 +717,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
             Log.d(TAG, "get-pin-dialog ends positive");
           }
           BluetoothDevice device = pinDial.getDevice();
-          String newPin = pinDial.getPin();
+          String          newPin = pinDial.getPin();
           // kleine Prüfung, es müssen 4 Ziffern sein
           if( newPin.matches("\\d{4}") )
           {
@@ -1055,7 +1055,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         //
         // erzeuge den Dialog zum Bearbeiten des Alias
         //
-        int pos = devSpinner.getSelectedItemPosition();
+        int            pos    = devSpinner.getSelectedItemPosition();
         DialogFragment dialog = null;
         if( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT )
         {
@@ -1310,13 +1310,17 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       // mit welchem Gerät bin ich verbunden?
       lastConnectedDeviceMac = runningActivity.getConnectedDevice();
       if( ApplicationDEBUG.DEBUG )
-      { Log.v(TAG, "setSpinnerToConnectedDevice connected Device: <" + lastConnectedDeviceMac + ">"); }
+      {
+        Log.v(TAG, "setSpinnerToConnectedDevice connected Device: <" + lastConnectedDeviceMac + ">");
+      }
       if( lastConnectedDeviceMac != null )
       {
         // welcher index gehört zu dem Gerät?
         deviceIndex = btArrayAdapter.getIndexForMac(lastConnectedDeviceMac);
         if( ApplicationDEBUG.DEBUG )
-        { Log.v(TAG, "setSpinnerToConnectedDevice index in Adapter: <" + deviceIndex + ">"); }
+        {
+          Log.v(TAG, "setSpinnerToConnectedDevice index in Adapter: <" + deviceIndex + ">");
+        }
         // Online Markieren
         btArrayAdapter.setDeviceIsOnline(deviceIndex);
         // Update erzwingen
@@ -1324,7 +1328,9 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         // Selektieren
         devSpinner.setSelection(deviceIndex, true);
         if( ApplicationDEBUG.DEBUG )
-        { Log.v(TAG, "setSpinnerToConnectedDevice set Spinner to index <" + deviceIndex + ">"); }
+        {
+          Log.v(TAG, "setSpinnerToConnectedDevice set Spinner to index <" + deviceIndex + ">");
+        }
       }
     }
     catch( Exception ex )
@@ -1512,7 +1518,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     {
       return;
     }
-    SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(runningActivity);
+    SharedPreferences        sPref  = PreferenceManager.getDefaultSharedPreferences(runningActivity);
     SharedPreferences.Editor editor = sPref.edit();
     editor.putString(LAST_CONNECTED_DEVICE_KEY, lastConnectedDeviceMac);
     //

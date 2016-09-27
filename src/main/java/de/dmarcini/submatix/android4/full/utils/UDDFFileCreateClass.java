@@ -86,14 +86,14 @@ import de.dmarcini.submatix.android4.full.exceptions.XMLFileCreatorException;
 public class UDDFFileCreateClass
 {
   @SuppressWarnings( "javadoc" )
-  public static final String TAG = UDDFFileCreateClass.class.getSimpleName();
-  private final Pattern fieldPatternDp = Pattern.compile(":");
-  private Document uddfDoc = null;
-  private Transformer transformer = null;
-  private DocumentBuilder builder = null;
-  private ArrayList<String> gases = null;
-  private int diveTimeCurrent = 0;
-  private Handler mHandler = null;
+  public static final String            TAG             = UDDFFileCreateClass.class.getSimpleName();
+  private final       Pattern           fieldPatternDp  = Pattern.compile(":");
+  private             Document          uddfDoc         = null;
+  private             Transformer       transformer     = null;
+  private             DocumentBuilder   builder         = null;
+  private             ArrayList<String> gases           = null;
+  private             int               diveTimeCurrent = 0;
+  private             Handler           mHandler        = null;
 
   /**
    * Der Konstruktor der Helperklasse
@@ -202,13 +202,15 @@ public class UDDFFileCreateClass
    */
   public File createXML(File file, Handler _mHandler, Vector<ReadLogItemObj> rlos, boolean zipped) throws DOMException, NoXMLDataFileFoundException
   {
-    Element rootNode = null;
-    String msg = null;
-    File retFile = file;
-    Node profileNode = null;
+    Element rootNode    = null;
+    String  msg         = null;
+    File    retFile     = file;
+    Node    profileNode = null;
     //
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "createXML()..."); }
+    {
+      Log.v(TAG, "createXML()...");
+    }
     // Handler für Nachrichten übernehmen
     mHandler = _mHandler;
     if( gases == null )
@@ -296,7 +298,7 @@ public class UDDFFileCreateClass
   private Node makeProfilesData(Document doc, Vector<ReadLogItemObj> rlos) throws DOMException, NoXMLDataFileFoundException
   {
     Element profileNode;
-    int repNumber = 0;
+    int     repNumber = 0;
     //
     profileNode = doc.createElement("profiledata");
     //
@@ -355,10 +357,10 @@ public class UDDFFileCreateClass
     Element diveNode, dateNode, yNode, mNode, dNode;
     Element timeNode, hNode, minNode;
     Element dnNode, atNode, ltNode, gdNode, deNode, noNode, txNode;
-    String year, month, day, hour, minute;
-    String temperature, lowesttemp;
-    String greatestdepth;
-    String density;
+    String  year, month, day, hour, minute;
+    String  temperature, lowesttemp;
+    String  greatestdepth;
+    String  density;
     //
     DateTime startDateTime = new DateTime(rlo.startTimeMilis);
     day = String.format(Locale.ENGLISH, "%02d", startDateTime.getDayOfMonth());
@@ -443,13 +445,13 @@ public class UDDFFileCreateClass
    */
   private Node makeSamplesForDive(final Document doc, ReadLogItemObj rlo) throws NoXMLDataFileFoundException
   {
-    SAXParserFactory spf = null;
-    SAXParser sp = null;
-    ContentHandler myHandler = null;
-    XMLReader xr = null;
-    File xmlFile = null;
-    final Element sampleNode;
-    int diveSamples = 0;
+    SAXParserFactory spf         = null;
+    SAXParser        sp          = null;
+    ContentHandler   myHandler   = null;
+    XMLReader        xr          = null;
+    File             xmlFile     = null;
+    final Element    sampleNode;
+    int              diveSamples = 0;
     sampleNode = doc.createElement("samples");
     // der erste waypoint hat immer Zeit 0, tiefe 0 und switchmix
     diveSamples = rlo.countSamples;
@@ -465,7 +467,9 @@ public class UDDFFileCreateClass
     }
     // Liste des Tauchganges machen
     if( ApplicationDEBUG.DEBUG )
-    { Log.v(TAG, "getDiveList()...scan XML..."); }
+    {
+      Log.v(TAG, "getDiveList()...scan XML...");
+    }
     // versuchen wir es...
     // SAX Parser erzeugen
     spf = SAXParserFactory.newInstance();
@@ -851,8 +855,8 @@ public class UDDFFileCreateClass
    */
   private Node makeGasdefinitions(Document doc)
   {
-    Element gasNode, mixNode, nameNode, o2Node, n2Node, heNode, arNode, h2Node;
-    String gasName;
+    Element  gasNode, mixNode, nameNode, o2Node, n2Node, heNode, arNode, h2Node;
+    String   gasName;
     String[] fields;
     // # gasdefinitions
     gasNode = doc.createElement("gasdefinitions");
@@ -983,8 +987,8 @@ public class UDDFFileCreateClass
       Log.d(TAG, "create writer...");
     }
     StringWriter writer = new StringWriter();
-    DOMSource doc = new DOMSource(document);
-    StreamResult res = new StreamResult(writer);
+    DOMSource    doc    = new DOMSource(document);
+    StreamResult res    = new StreamResult(writer);
     if( ApplicationDEBUG.DEBUG )
     {
       Log.d(TAG, "transform... ");
@@ -1002,7 +1006,7 @@ public class UDDFFileCreateClass
         // Datei ist da, ich will sie ueberschreiben
         file.delete();
       }
-      OutputStream fos = new FileOutputStream(zipFile);
+      OutputStream    fos = new FileOutputStream(zipFile);
       ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(fos));
       try
       {

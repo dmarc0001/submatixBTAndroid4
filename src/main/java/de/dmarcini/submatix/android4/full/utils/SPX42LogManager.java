@@ -227,7 +227,7 @@ public class SPX42LogManager extends SPX42AliasManager
   {
     String sql;
     Cursor cu;
-    File dataFile = null;
+    File   dataFile = null;
     //
     if( ApplicationDEBUG.DEBUG )
     {
@@ -272,8 +272,8 @@ public class SPX42LogManager extends SPX42AliasManager
    */
   public Vector<File> getDatafilesForDevice(int deviceId)
   {
-    String sql;
-    Cursor cu;
+    String       sql;
+    Cursor       cu;
     Vector<File> dataFiles = new Vector<File>();
     //
     if( ApplicationDEBUG.DEBUG )
@@ -325,8 +325,8 @@ public class SPX42LogManager extends SPX42AliasManager
    */
   public SPX42DiveHeadData getDiveHeader(final String devSerial, final String fileOnSPX)
   {
-    String sql;
-    Cursor cu;
+    String            sql;
+    Cursor            cu;
     SPX42DiveHeadData diveHeader = new SPX42DiveHeadData();
     //
     if( ApplicationDEBUG.DEBUG )
@@ -409,9 +409,9 @@ public class SPX42LogManager extends SPX42AliasManager
   @SuppressLint( "DefaultLocale" )
   public Vector<ReadLogItemObj> getDiveListForDevice(int _deviceId, Resources res, boolean descOrder)
   {
-    String sql;
-    Cursor cu;
-    String orderPhrase = " ";
+    String                 sql;
+    Cursor                 cu;
+    String                 orderPhrase  = " ";
     Vector<ReadLogItemObj> diveHeadList = new Vector<ReadLogItemObj>();
     //
     if( ApplicationDEBUG.DEBUG )
@@ -466,12 +466,11 @@ public class SPX42LogManager extends SPX42AliasManager
     {
       do
       {
-        long startTm = cu.getLong(5);
+        long     startTm       = cu.getLong(5);
         DateTime startDateTime = new DateTime(startTm);
-        String detailText = String.format(res.getString(R.string.logread_saved_format), cu.getInt(9) / 10.0, res.getString(R.string.app_unit_depth_metric),
-            cu.getInt(11) / 60, cu.getInt(11) % 60);
-        String itemName = String.format("#%03d: %s", cu.getInt(2), startDateTime.toString(MainActivity.localTimeFormatter));
-        ReadLogItemObj rlo = new ReadLogItemObj();
+        String detailText = String.format(res.getString(R.string.logread_saved_format), cu.getInt(9) / 10.0, res.getString(R.string.app_unit_depth_metric), cu.getInt(11) / 60, cu.getInt(11) % 60);
+        String         itemName = String.format("#%03d: %s", cu.getInt(2), startDateTime.toString(MainActivity.localTimeFormatter));
+        ReadLogItemObj rlo      = new ReadLogItemObj();
         rlo.isSaved = true;
         rlo.itemName = itemName;
         rlo.itemNameOnSPX = cu.getString(3);
@@ -525,8 +524,8 @@ public class SPX42LogManager extends SPX42AliasManager
    */
   public ReadLogItemObj getLogObjForDbId(int dbId, Resources res)
   {
-    String sql;
-    Cursor cu;
+    String         sql;
+    Cursor         cu;
     ReadLogItemObj rlo = new ReadLogItemObj();
     //
     if( ApplicationDEBUG.DEBUG )
@@ -566,10 +565,9 @@ public class SPX42LogManager extends SPX42AliasManager
     }
     if( cu.moveToFirst() )
     {
-      long startTm = cu.getLong(5);
+      long     startTm       = cu.getLong(5);
       DateTime startDateTime = new DateTime(startTm);
-      String detailText = String.format(res.getString(R.string.logread_saved_format), cu.getInt(9) / 10.0, res.getString(R.string.app_unit_depth_metric),
-          cu.getInt(11) / 60, cu.getInt(11) % 60);
+      String detailText = String.format(res.getString(R.string.logread_saved_format), cu.getInt(9) / 10.0, res.getString(R.string.app_unit_depth_metric), cu.getInt(11) / 60, cu.getInt(11) % 60);
       String itemName = String.format(Locale.ENGLISH, "#%03d: %s", cu.getInt(2), startDateTime.toString(MainActivity.localTimeFormatter));
       rlo.isSaved = true;
       rlo.itemName = itemName;
@@ -623,15 +621,14 @@ public class SPX42LogManager extends SPX42AliasManager
   public boolean isLogInDatabase(final String devSerial, final String fileOnSPX)
   {
     String sql;
-    int count = 0;
+    int    count = 0;
     Cursor cu;
     //
     if( ApplicationDEBUG.DEBUG )
     {
       Log.d(TAG, "isLogInDatabase...");
     }
-    sql = String.format(Locale.ENGLISH, "select count(*) from %s where %s like '%s' and %s like '%s';", ProjectConst.H_TABLE_DIVELOGS, ProjectConst.H_DEVICESERIAL, devSerial,
-        ProjectConst.H_FILEONSPX, fileOnSPX);
+    sql = String.format(Locale.ENGLISH, "select count(*) from %s where %s like '%s' and %s like '%s';", ProjectConst.H_TABLE_DIVELOGS, ProjectConst.H_DEVICESERIAL, devSerial, ProjectConst.H_FILEONSPX, fileOnSPX);
     cu = dBase.rawQuery(sql, null);
     // formatter:on
     if( cu.moveToFirst() )

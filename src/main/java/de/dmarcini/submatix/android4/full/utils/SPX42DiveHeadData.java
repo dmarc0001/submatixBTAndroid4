@@ -31,25 +31,25 @@ import java.io.File;
  *         <p/>
  *         Stand: 13.08.2013
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings( "javadoc" )
 public class SPX42DiveHeadData
 {
-  public int diveId = -1;
-  public int deviceId = -1;
-  public int diveNumberOnSPX = -1;
-  public String fileNameOnSpx = "";
-  public File xmlFile = null;
+  public int    diveId             = -1;
+  public int    deviceId           = -1;
+  public int    diveNumberOnSPX    = -1;
+  public String fileNameOnSpx      = "";
+  public File   xmlFile            = null;
   public String deviceSerialNumber = "";
-  public long startTime = 0L;
-  public double airTemp = -1;
-  public double lowestTemp = -1;
-  public int maxDepth = 0;
-  public int countSamples = 0;
-  public int diveLength = 0;
-  public String units = "m";
-  public String longgitude = "";
-  public String latitude = "";
-  public String notes = null;
+  public long   startTime          = 0L;
+  public double airTemp            = -1;
+  public double lowestTemp         = -1;
+  public int    maxDepth           = 0;
+  public int    countSamples       = 0;
+  public int    diveLength         = 0;
+  public String units              = "m";
+  public String longgitude         = "";
+  public String latitude           = "";
+  public String notes              = null;
 
   /**
    * Ist das die niedrigste Temperatur?

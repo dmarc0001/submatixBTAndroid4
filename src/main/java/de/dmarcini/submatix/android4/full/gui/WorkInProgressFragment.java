@@ -44,9 +44,9 @@ import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
  */
 public class WorkInProgressFragment extends Fragment implements IBtServiceListener
 {
-  @SuppressWarnings("javadoc")
-  public static final String TAG = WorkInProgressFragment.class.getSimpleName();
-  private Activity runningActivity = null;
+  @SuppressWarnings( "javadoc" )
+  public static final String   TAG             = WorkInProgressFragment.class.getSimpleName();
+  private             Activity runningActivity = null;
 
   @Override
   public void onActivityCreated(Bundle bundle)

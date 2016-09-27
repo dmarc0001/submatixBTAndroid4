@@ -47,11 +47,11 @@ import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 public class OnlineHelpFragment extends Fragment
 {
   @SuppressWarnings( "javadoc" )
-  public static final String TAG = OnlineHelpFragment.class.getSimpleName();
-  private MainActivity runningActivity = null;
-  private WebView OnlineHelpWebView = null;
-  private String fragmentTitle = "unknown";
-  private String onlineUrl = "file:///android_asset/www/index_de.html";
+  public static final String       TAG               = OnlineHelpFragment.class.getSimpleName();
+  private             MainActivity runningActivity   = null;
+  private             WebView      OnlineHelpWebView = null;
+  private             String       fragmentTitle     = "unknown";
+  private             String       onlineUrl         = "file:///android_asset/www/index_de.html";
 
   @Override
   public void onActivityCreated(Bundle savedInstanceState)
@@ -60,7 +60,9 @@ public class OnlineHelpFragment extends Fragment
     runningActivity = ( MainActivity ) getActivity();
     //
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, "onActivityCreated: ACTIVITY ATTACH"); }
+    {
+      Log.d(TAG, "onActivityCreated: ACTIVITY ATTACH");
+    }
     try
     {
       OnlineHelpWebView = ( WebView ) runningActivity.findViewById(R.id.onlineHelpWebView);
@@ -111,7 +113,9 @@ public class OnlineHelpFragment extends Fragment
     super.onAttach(activity);
     runningActivity = ( MainActivity ) activity;
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, "onAttach: ATTACH"); }
+    {
+      Log.d(TAG, "onAttach: ATTACH");
+    }
   }
 
   /**
@@ -122,7 +126,9 @@ public class OnlineHelpFragment extends Fragment
   {
     super.onCreate(savedInstanceState);
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, "onCreate..."); }
+    {
+      Log.d(TAG, "onCreate...");
+    }
   }
 
   /**
@@ -133,7 +139,9 @@ public class OnlineHelpFragment extends Fragment
   {
     View rootView;
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, "onCreateView..."); }
+    {
+      Log.d(TAG, "onCreateView...");
+    }
     //
     // wenn kein Container vorhanden ist, dann gibts auch keinen View
     //

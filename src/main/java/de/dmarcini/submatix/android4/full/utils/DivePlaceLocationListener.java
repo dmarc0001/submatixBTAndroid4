@@ -64,7 +64,9 @@ public class DivePlaceLocationListener implements LocationListener
     String out = null;
     //
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, "new Location..."); }
+    {
+      Log.d(TAG, "new Location...");
+    }
     if( location.hasAccuracy() )
     {
       out = String.format(Locale.ENGLISH, "accuracy: %2.1f m LAT: %2.6f, LON: %2.6f", location.getAccuracy(), location.getLatitude(), location.getLongitude());
@@ -74,17 +76,21 @@ public class DivePlaceLocationListener implements LocationListener
       out = "accuracy: NONE LAT: NONE, LON: NONE";
     }
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, out); }
+    {
+      Log.d(TAG, out);
+    }
   }
 
   @Override
   public void onStatusChanged(String provider, int status, Bundle extras)
   {
     String stat = "unknown";
-    String out = null;
+    String out  = null;
     //
     if( ApplicationDEBUG.DEBUG )
-    { Log.d(TAG, "status changed..."); }
+    {
+      Log.d(TAG, "status changed...");
+    }
     if( status == LocationProvider.OUT_OF_SERVICE )
     {
       stat = "OUT_OF_SERVICE";

@@ -33,7 +33,7 @@ import android.annotation.SuppressLint;
  */
 public class GasUtilitys
 {
-  private static double barOffset = 1.0D; // Oberflächendruck Meereshöhe
+  private static double barOffset          = 1.0D; // Oberflächendruck Meereshöhe
   // private static double barConstClearWater = 0.0980665D; // Bar per 1 Meter
   private static double barConstClearWater = 1.0D; // Bar per 1 Meter
 

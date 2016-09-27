@@ -54,20 +54,20 @@ import de.dmarcini.submatix.android4.full.R;
 public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
 {
   @SuppressWarnings( "javadoc" )
-  public static final int BT_DEVAR_ALIAS = 0;
+  public static final  int    BT_DEVAR_ALIAS    = 0;
   @SuppressWarnings( "javadoc" )
-  public static final int BT_DEVAR_MAC = 1;
+  public static final  int    BT_DEVAR_MAC      = 1;
   @SuppressWarnings( "javadoc" )
-  public static final int BT_DEVAR_NAME = 2;
+  public static final  int    BT_DEVAR_NAME     = 2;
   @SuppressWarnings( "javadoc" )
-  public static final int BT_DEVAR_ISPAIRED = 3;
+  public static final  int    BT_DEVAR_ISPAIRED = 3;
   @SuppressWarnings( "javadoc" )
-  public static final int BT_DEVAR_ISONLINE = 4;
+  public static final  int    BT_DEVAR_ISONLINE = 4;
   @SuppressWarnings( "javadoc" )
-  public static final int BT_DEVAR_COUNT = 5;
+  public static final  int    BT_DEVAR_COUNT    = 5;
   @SuppressWarnings( "unused" )
-  private static final String TAG = BluetoothDeviceArrayAdapter.class.getSimpleName();
-  private int themeId = R.style.AppDarkTheme;
+  private static final String TAG               = BluetoothDeviceArrayAdapter.class.getSimpleName();
+  private              int    themeId           = R.style.AppDarkTheme;
 
   /**
    * Mein Konstruktor
@@ -178,8 +178,8 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
    */
   private View getCustomView(int position, View convertView, ViewGroup parent, boolean isFirst)
   {
-    View cView = convertView;
-    ViewHolder holder = null;
+    View           cView     = convertView;
+    ViewHolder     holder    = null;
     LayoutInflater mInflater = (( Activity ) getContext()).getLayoutInflater();
     if( cView == null || !(cView.getTag() instanceof ViewHolder) )
     {
@@ -470,6 +470,6 @@ public class BluetoothDeviceArrayAdapter extends ArrayAdapter<String[]>
   private class ViewHolder
   {
     public ImageView imageView;
-    public TextView txtTitle;
+    public TextView  txtTitle;
   }
 }

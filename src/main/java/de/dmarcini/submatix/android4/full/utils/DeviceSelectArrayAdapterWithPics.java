@@ -20,10 +20,10 @@
 //@formatter:on
 /**
  * Eigener Arrayadapter, der Icons beinhaltet fü die Darstellung einer Liste von Geräten
- *
+ * <p>
  * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.utils
- *
- *
+ * <p>
+ * <p>
  * Stand: 23.12.2012
  */
 package de.dmarcini.submatix.android4.full.utils;
@@ -94,9 +94,9 @@ public class DeviceSelectArrayAdapterWithPics extends ArrayAdapter<Pair<Integer,
   @Override
   public View getView(int position, View convertView, ViewGroup parent)
   {
-    ViewHolder holder = null;
+    ViewHolder            holder     = null;
     Pair<Integer, String> deviceItem = getItem(position);
-    LayoutInflater mInflater = ( LayoutInflater ) getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+    LayoutInflater        mInflater  = ( LayoutInflater ) getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
     if( convertView == null )
     {
       convertView = mInflater.inflate(R.layout.device_select_adapter_view, parent, false);
@@ -116,9 +116,9 @@ public class DeviceSelectArrayAdapterWithPics extends ArrayAdapter<Pair<Integer,
   @Override
   public View getDropDownView(int position, View convertView, ViewGroup parent)
   {
-    ViewHolder holder = null;
+    ViewHolder            holder     = null;
     Pair<Integer, String> deviceItem = getItem(position);
-    LayoutInflater mInflater = ( LayoutInflater ) getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+    LayoutInflater        mInflater  = ( LayoutInflater ) getContext().getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
     if( convertView == null )
     {
       convertView = mInflater.inflate(R.layout.device_select_adapter_view, parent, false);
@@ -170,6 +170,6 @@ public class DeviceSelectArrayAdapterWithPics extends ArrayAdapter<Pair<Integer,
   {
     @SuppressWarnings( "unused" )
     public ImageView imageView;
-    public TextView txtTitle;
+    public TextView  txtTitle;
   }
 }

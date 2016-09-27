@@ -47,10 +47,10 @@ import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
  */
 public class DataSQLHelper extends SQLiteOpenHelper
 {
-  private static final String TAG = DataSQLHelper.class.getSimpleName();
+  private static final String  TAG    = DataSQLHelper.class.getSimpleName();
   // Tabellenpfad und -Name
-  private String dbName = null;
-  private Context cx = null;
+  private              String  dbName = null;
+  private              Context cx     = null;
 
   /**
    * Der Konstruktor der Helferklasse.
@@ -263,7 +263,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
   private SQLiteDatabase getOpenDatabase(boolean writable)
   {
     SQLiteDatabase dbObj;
-    int flags;
+    int            flags;
     // Datenbank versuchen zu oeffnen
     if( writable )
     {

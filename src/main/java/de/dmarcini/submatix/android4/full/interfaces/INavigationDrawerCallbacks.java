@@ -9,9 +9,8 @@ public interface INavigationDrawerCallbacks
 {
   /**
    * Called when an item in the navigation drawer is selected.
-   * 
-   * @param pItem
-   *          Der gewählte Programmeintrag mit allen Parametern
+   *
+   * @param pItem Der gewählte Programmeintrag mit allen Parametern
    */
-  void onNavigationDrawerItemSelected( ContentSwitcher.ProgItem pItem );
+  void onNavigationDrawerItemSelected(ContentSwitcher.ProgItem pItem);
 }

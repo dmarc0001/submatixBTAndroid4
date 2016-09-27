@@ -29,28 +29,28 @@ package de.dmarcini.submatix.android4.full.utils;
  *         <p/>
  *         Stand: 10.11.2013
  */
-@SuppressWarnings("javadoc")
+@SuppressWarnings( "javadoc" )
 public class ReadLogItemObj
 {
-  public boolean isSaved = false;
-  public String itemName = null;
-  public String itemNameOnSPX = null;
-  public String itemDetail = null;
-  public int dbId = -1;
-  public int numberOnSPX = -1;
-  public long startTimeMilis = -1;
-  public boolean isMarked = false;
-  public int tagId = -1;
-  public String fileOnMobile = null;
-  public float firstTemp = 0.0F;
-  public float lowTemp = 0.0F;
-  public int maxDepth = -1;
-  public int countSamples = 0;
-  public int diveLen = 0;
-  public String units = "m";
-  public String notes = null;
-  public String geoLon = null;
-  public Object geoLat = null;
+  public boolean isSaved        = false;
+  public String  itemName       = null;
+  public String  itemNameOnSPX  = null;
+  public String  itemDetail     = null;
+  public int     dbId           = -1;
+  public int     numberOnSPX    = -1;
+  public long    startTimeMilis = -1;
+  public boolean isMarked       = false;
+  public int     tagId          = -1;
+  public String  fileOnMobile   = null;
+  public float   firstTemp      = 0.0F;
+  public float   lowTemp        = 0.0F;
+  public int     maxDepth       = -1;
+  public int     countSamples   = 0;
+  public int     diveLen        = 0;
+  public String  units          = "m";
+  public String  notes          = null;
+  public String  geoLon         = null;
+  public Object  geoLat         = null;
 
   /**
    * Konstruktor für einen Loglist Eintrag

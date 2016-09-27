@@ -16,7 +16,7 @@ import android.view.View;
  *         <p/>
  *         Stand: 07.11.2014
  */
-@SuppressWarnings("deprecation")
+@SuppressWarnings( "deprecation" )
 public class NaviActionBarDrawerToggle extends ActionBarDrawerToggle
 {
   /**
@@ -24,7 +24,7 @@ public class NaviActionBarDrawerToggle extends ActionBarDrawerToggle
    */
   public static final String PREF_USER_LEARNED_DRAWER = "navigation_drawer_learned";
   private final Activity parentActivity;
-  private boolean userHasLearnedDrawer;
+  private       boolean  userHasLearnedDrawer;
 
   /**
    * HEADLINE
