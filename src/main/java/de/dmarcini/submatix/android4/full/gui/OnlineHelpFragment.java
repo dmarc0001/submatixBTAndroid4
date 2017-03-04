@@ -31,7 +31,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 
@@ -59,7 +59,7 @@ public class OnlineHelpFragment extends Fragment
     super.onActivityCreated(savedInstanceState);
     runningActivity = ( MainActivity ) getActivity();
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onActivityCreated: ACTIVITY ATTACH");
     }
@@ -112,7 +112,7 @@ public class OnlineHelpFragment extends Fragment
   {
     super.onAttach(activity);
     runningActivity = ( MainActivity ) activity;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onAttach: ATTACH");
     }
@@ -125,7 +125,7 @@ public class OnlineHelpFragment extends Fragment
   public void onCreate(Bundle savedInstanceState)
   {
     super.onCreate(savedInstanceState);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreate...");
     }
@@ -138,7 +138,7 @@ public class OnlineHelpFragment extends Fragment
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
   {
     View rootView;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreateView...");
     }

@@ -31,7 +31,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Vector;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
 
 /**
@@ -97,7 +97,7 @@ public class SPX42AliasManager
   {
     int count = 0;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "deleteAlias...");
     }
@@ -106,7 +106,7 @@ public class SPX42AliasManager
       return;
     }
     count = dBase.delete(ProjectConst.A_TABLE_ALIASES, String.format("%s=%d", ProjectConst.A_DEVICEID, _deviceId), null);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "deleteAlias: <" + count + "> aliases deleted: OK");
     }
@@ -129,7 +129,7 @@ public class SPX42AliasManager
     Cursor  cu;
     boolean retVal = false;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.i(TAG, "getDeviceIdList...");
     }
@@ -146,7 +146,7 @@ public class SPX42AliasManager
         }
       }
       cu.close();
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "exist Devive <" + _deviceId + "> : " + retVal);
       }
@@ -175,7 +175,7 @@ public class SPX42AliasManager
     String sql;
     Cursor cu;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "getAliasForId...");
     }
@@ -203,7 +203,7 @@ public class SPX42AliasManager
     // Cursor schliessen
     //
     cu.close();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "getAliasForId: OK");
     }
@@ -226,7 +226,7 @@ public class SPX42AliasManager
     String pin = null;
     Cursor cu;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "getPINForId...");
     }
@@ -261,7 +261,7 @@ public class SPX42AliasManager
     //
     // Cursor schliessen
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "getPINForId: OK");
     }
@@ -285,7 +285,7 @@ public class SPX42AliasManager
     String sql, alias;
     Cursor cu;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.i(TAG, "getAliasForMac...");
     }
@@ -299,14 +299,14 @@ public class SPX42AliasManager
       // Cursor schliessen
       //
       cu.close();
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.i(TAG, "getAliasForMac: found <" + alias + ">");
       }
       return (alias);
     }
     cu.close();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.i(TAG, "getAliasForMac: not found, use default <" + _defaultAlias + ">");
     }
@@ -329,7 +329,7 @@ public class SPX42AliasManager
     String pin = null;
     Cursor cu;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.i(TAG, "getPINForMac...");
     }
@@ -350,14 +350,14 @@ public class SPX42AliasManager
       // Cursor schliessen
       //
       cu.close();
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.i(TAG, "getPINForMac: found <" + pin + ">");
       }
       return (pin);
     }
     cu.close();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.i(TAG, "getPINForMac: not found");
     }
@@ -380,7 +380,7 @@ public class SPX42AliasManager
     Cursor          cu;
     Vector<Integer> lst = new Vector<Integer>();
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.i(TAG, "getDeviceIdList...");
     }
@@ -425,7 +425,7 @@ public class SPX42AliasManager
     Cursor                        cu;
     Vector<Pair<Integer, String>> devList = new Vector<Pair<Integer, String>>();
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.i(TAG, "getDeviceNameIdList...");
     }
@@ -469,7 +469,7 @@ public class SPX42AliasManager
     Cursor                          cu;
     Vector<HashMap<String, String>> devLists = new Vector<HashMap<String, String>>();
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.i(TAG, "getDeviceAdressesList...");
     }
@@ -490,7 +490,7 @@ public class SPX42AliasManager
         }
         while( cu.moveToNext() );
       }
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "getDeviceAdressesList: read <" + devLists.size() + "> entrys...");
       }
@@ -522,7 +522,7 @@ public class SPX42AliasManager
     int    deviceId = -1;
     Cursor cu;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.i(TAG, "getIdForDevice...");
     }
@@ -536,14 +536,14 @@ public class SPX42AliasManager
       // Cursor schliessen
       //
       cu.close();
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.i(TAG, "getIdForDevice: found <" + deviceId + ">");
       }
       return (deviceId);
     }
     cu.close();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.i(TAG, "getIdForDevice: not found, use default <-1>");
     }
@@ -566,12 +566,12 @@ public class SPX42AliasManager
     int    deviceId = -1;
     Cursor cu;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.i(TAG, "getIdForDeviceFromSerial...");
     }
     sql = String.format("select %s from %s where %s like '%s';", ProjectConst.A_DEVICEID, ProjectConst.A_TABLE_ALIASES, ProjectConst.A_SERIAL, _serial);
-    // if( ApplicationDEBUG.DEBUG ) Log.e( TAG, "getIdForDeviceFromSerial: sql <" + sql + ">" );
+    // if( BuildConfig.DEBUG ) Log.e( TAG, "getIdForDeviceFromSerial: sql <" + sql + ">" );
     cu = dBase.rawQuery(sql, null);
     // formatter:on
     if( cu.moveToFirst() )
@@ -581,14 +581,14 @@ public class SPX42AliasManager
       // Cursor schliessen
       //
       cu.close();
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "getIdForDeviceFromSerial: found <" + deviceId + ">");
       }
       return (deviceId);
     }
     cu.close();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.i(TAG, "getIdForDeviceFromSerial: not found, use default <-1>");
     }
@@ -615,7 +615,7 @@ public class SPX42AliasManager
     Cursor        cu;
     ContentValues values;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.i(TAG, "setAliasForMac...");
     }
@@ -688,7 +688,7 @@ public class SPX42AliasManager
     Cursor        cu;
     ContentValues values;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.i(TAG, "setAliasForMacIfNotExist...");
     }
@@ -740,7 +740,7 @@ public class SPX42AliasManager
     ContentValues values;
     String        whereString;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.i(TAG, "setSerialIfNotExist...");
     }
@@ -791,7 +791,7 @@ public class SPX42AliasManager
     //
     try
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.i(TAG, "setPinForMac...");
       }

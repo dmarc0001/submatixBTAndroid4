@@ -34,7 +34,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Vector;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
 import de.dmarcini.submatix.android4.full.gui.MainActivity;
@@ -100,7 +100,7 @@ public class SPX42LogManager extends SPX42AliasManager
       while( it.hasNext() )
       {
         File toDelFile = it.next();
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "deleteAllDataForDevice: File: <" + toDelFile.getName() + ">...");
         }
@@ -142,7 +142,7 @@ public class SPX42LogManager extends SPX42AliasManager
     }
     else
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "deleteDataForDevice: File: <" + dataFile.getName() + ">...");
       }
@@ -167,7 +167,7 @@ public class SPX42LogManager extends SPX42AliasManager
   {
     int count = 0;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "deleteDivesForDevice...");
     }
@@ -176,7 +176,7 @@ public class SPX42LogManager extends SPX42AliasManager
       return;
     }
     count = dBase.delete(ProjectConst.H_TABLE_DIVELOGS, String.format("%s=%d", ProjectConst.H_DEVICEID, deviceId), null);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "deleteDivesForDevice: <" + count + "> sets deleted: OK");
     }
@@ -197,7 +197,7 @@ public class SPX42LogManager extends SPX42AliasManager
   {
     int count = 0;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "deleteOneDiveLog...");
     }
@@ -206,7 +206,7 @@ public class SPX42LogManager extends SPX42AliasManager
       return (false);
     }
     count = dBase.delete(ProjectConst.H_TABLE_DIVELOGS, String.format("%s=%d", ProjectConst.H_DIVEID, dbId), null);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "deleteOneDiveLog: <" + count + "> sets deleted: OK");
     }
@@ -229,7 +229,7 @@ public class SPX42LogManager extends SPX42AliasManager
     Cursor cu;
     File   dataFile = null;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "getDatafileForDbId...");
     }
@@ -253,7 +253,7 @@ public class SPX42LogManager extends SPX42AliasManager
     // Cursor schliessen
     //
     cu.close();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "getDatafileForDbId: OK");
     }
@@ -276,7 +276,7 @@ public class SPX42LogManager extends SPX42AliasManager
     Cursor       cu;
     Vector<File> dataFiles = new Vector<File>();
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "getDatafilesForDevice...");
     }
@@ -304,7 +304,7 @@ public class SPX42LogManager extends SPX42AliasManager
     // Cursor schliessen
     //
     cu.close();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "getDatafilesForDevice: OK");
     }
@@ -329,7 +329,7 @@ public class SPX42LogManager extends SPX42AliasManager
     Cursor            cu;
     SPX42DiveHeadData diveHeader = new SPX42DiveHeadData();
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "getDiveHeader...");
     }
@@ -357,7 +357,7 @@ public class SPX42LogManager extends SPX42AliasManager
         ProjectConst.H_FILEONSPX, fileOnSPX);     // Dateiname
     // @formatter:on
     cu = dBase.rawQuery(sql, null);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "getDiveHeader had <" + cu.getCount() + "> results.");
     }
@@ -383,7 +383,7 @@ public class SPX42LogManager extends SPX42AliasManager
       // Cursor schliessen
       //
       cu.close();
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "getDiveHeader: OK");
       }
@@ -414,7 +414,7 @@ public class SPX42LogManager extends SPX42AliasManager
     String                 orderPhrase  = " ";
     Vector<ReadLogItemObj> diveHeadList = new Vector<ReadLogItemObj>();
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "getDiveListForDevice...");
     }
@@ -458,7 +458,7 @@ public class SPX42LogManager extends SPX42AliasManager
         orderPhrase);
     // @formatter:on
     cu = dBase.rawQuery(sql, null);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "getDiveListForDevice had <" + cu.getCount() + "> results.");
     }
@@ -501,7 +501,7 @@ public class SPX42LogManager extends SPX42AliasManager
       // Cursor schliessen
       //
       cu.close();
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "getDiveListForDevice: OK");
       }
@@ -528,7 +528,7 @@ public class SPX42LogManager extends SPX42AliasManager
     Cursor         cu;
     ReadLogItemObj rlo = new ReadLogItemObj();
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "getLogObjForDbId...");
     }
@@ -559,7 +559,7 @@ public class SPX42LogManager extends SPX42AliasManager
     );
     // @formatter:on
     cu = dBase.rawQuery(sql, null);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "getLogObjForDbId had <" + cu.getCount() + "> results.");
     }
@@ -596,7 +596,7 @@ public class SPX42LogManager extends SPX42AliasManager
       // Cursor schliessen
       //
       cu.close();
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "getLogObjForDbId: OK");
       }
@@ -624,7 +624,7 @@ public class SPX42LogManager extends SPX42AliasManager
     int    count = 0;
     Cursor cu;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "isLogInDatabase...");
     }
@@ -637,13 +637,13 @@ public class SPX42LogManager extends SPX42AliasManager
       //
       // Cursor schliessen
       //
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "isLogInDatabase: found <" + count + ">");
       }
     }
     cu.close();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "isLogInDatabase... datasets is <" + count + ">");
     }

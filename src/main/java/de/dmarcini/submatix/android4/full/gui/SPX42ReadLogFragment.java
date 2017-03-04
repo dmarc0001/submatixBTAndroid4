@@ -46,7 +46,7 @@ import java.io.File;
 import java.util.Vector;
 import java.util.regex.Pattern;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
@@ -145,7 +145,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     }
     // der Schlüssel ist da, ist da auch eine Mailadresse hinterlegt?
     showAll = sPref.getBoolean("keyProgShowAllLogentrys", true);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.i(TAG, "show all logentrys is <" + showAll + ">");
     }
@@ -252,7 +252,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
       // DEFAULT
       // ################################################################
       default:
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.i(TAG, "unknown messsage with id <" + what + "> recived!");
         }
@@ -406,7 +406,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
       }
       else
       {
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.i(TAG, "ignore saved log while \"show all logitems\" is not set...");
         }
@@ -459,7 +459,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   @Override
   public void msgDisconnected(BtServiceMessage msg)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "msgDisconnected");
     }
@@ -501,7 +501,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     if( msg.getContainer() instanceof String[] )
     {
       unitsParm = ( String[] ) msg.getContainer();
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         try
         {
@@ -553,7 +553,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     super.onActivityCreated(savedInstanceState);
     runningActivity = ( MainActivity ) getActivity();
     themeId = MainActivity.getAppStyle();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onActivityCreated: ACTIVITY ATTACH");
     }
@@ -596,19 +596,19 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   {
     super.onAttach(activity);
     runningActivity = ( MainActivity ) activity;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onAttach: ATTACH");
     }
     //
     // die Datenbank öffnen
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onAttach: create SQLite helper...");
     }
     DataSQLHelper sqlHelper = new DataSQLHelper(getActivity().getApplicationContext(), MainActivity.databaseDir.getAbsolutePath() + File.separator + ProjectConst.DATABASE_NAME);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onAttach: open Database...");
     }
@@ -630,13 +630,13 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   @Override
   public void onClick(View view)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "Click...");
     }
     if( (view instanceof Button) && view.equals(readDirButton) )
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "Click on READ DIR BUTTON...");
       }
@@ -666,7 +666,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   {
     // Layout View
     super.onCreate(savedInstanceState);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onCreate...");
     }
@@ -678,7 +678,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   {
     View rootView = null;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreateView...");
     }
@@ -719,7 +719,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
     {
       position--;
     }
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "Click on ListView! Pos: <" + position + "> Nr SPX: <" + logListAdapter.getNumberOnSPX(position) + ">");
     }
@@ -758,14 +758,14 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   public void onPause()
   {
     super.onPause();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onPause...");
     }
     //
     // die abgeleiteten Objekte führen das auch aus
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onPause: clear service listener for preferences fragment...");
     }
@@ -779,7 +779,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
   public synchronized void onResume()
   {
     super.onResume();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onResume...");
     }
@@ -812,7 +812,7 @@ public class SPX42ReadLogFragment extends Fragment implements IBtServiceListener
    */
   public void openWaitDial(int maxevents, String msg)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "openWaitDial()...");
     }

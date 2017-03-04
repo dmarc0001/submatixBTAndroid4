@@ -37,7 +37,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.exceptions.NoXMLDataFileFoundException;
 
 /**
@@ -94,7 +94,7 @@ public class SPX42DiveSampleClass
     //
     // Liste des Tauchganges machen
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "scan XML <" + xmlFile.getName() + ">...");
     }
@@ -103,7 +103,7 @@ public class SPX42DiveSampleClass
     spf = SAXParserFactory.newInstance();
     try
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.v(TAG, "NEW SAX Parser...");
       }
@@ -122,7 +122,7 @@ public class SPX42DiveSampleClass
     }
     // einen nagenleuen Handler erzeugen
     // als implizite Klasse
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "create ContentHandler...");
     }
@@ -158,7 +158,7 @@ public class SPX42DiveSampleClass
         // Wird aufgerufen bei einem Start-Tag
         if( localName.equalsIgnoreCase(rootTag) )
         {
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.d(TAG, "PARSER: rootElement <" + localName + "> Opened!");
           }
@@ -239,7 +239,7 @@ public class SPX42DiveSampleClass
         // root Tag geschlossen? Dann ist Finito
         if( localName.equalsIgnoreCase(rootTag) )
         {
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.d(TAG, "PARSER: rootElement <" + localName + "> Closed!");
           }
@@ -257,7 +257,7 @@ public class SPX42DiveSampleClass
           if( entry.whereAlDataThere() )
           {
             // Jetz einen Eintrag in das Vector-Teil
-            if( ApplicationDEBUG.DEBUG )
+            if( BuildConfig.DEBUG )
             {
               Log.v(TAG, "create new LogSample...");
             }

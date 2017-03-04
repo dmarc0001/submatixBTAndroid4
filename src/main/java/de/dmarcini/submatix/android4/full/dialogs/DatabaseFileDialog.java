@@ -38,7 +38,7 @@ import android.widget.TextView;
 
 import java.io.File;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.gui.MainActivity;
 import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
@@ -90,7 +90,7 @@ public class DatabaseFileDialog extends DialogFragment implements OnItemClickLis
       //
       // Es wurde ein Nullzeiger übergeben
       //
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.w(TAG, "no directory was selected on constructor!");
       }
@@ -127,7 +127,7 @@ public class DatabaseFileDialog extends DialogFragment implements OnItemClickLis
         //
         // Das zum Fileobjekt gehörende Objekt existiert nicht
         //
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.w(TAG, "the selected directory was not exist on constructor!");
         }
@@ -252,7 +252,7 @@ public class DatabaseFileDialog extends DialogFragment implements OnItemClickLis
       else
       {
         // wenn debug, dann informiere dem Programmierer
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "onItemClick: clicked Object not an FOLDER");
         }

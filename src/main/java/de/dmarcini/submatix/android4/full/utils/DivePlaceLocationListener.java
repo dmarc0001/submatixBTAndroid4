@@ -28,7 +28,7 @@ import android.util.Log;
 
 import java.util.Locale;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 
 /**
  * Klasse für Benachrichtigungen über Locationupdates
@@ -63,7 +63,7 @@ public class DivePlaceLocationListener implements LocationListener
   {
     String out = null;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "new Location...");
     }
@@ -75,7 +75,7 @@ public class DivePlaceLocationListener implements LocationListener
     {
       out = "accuracy: NONE LAT: NONE, LON: NONE";
     }
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, out);
     }
@@ -87,7 +87,7 @@ public class DivePlaceLocationListener implements LocationListener
     String stat = "unknown";
     String out  = null;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "status changed...");
     }
@@ -103,7 +103,7 @@ public class DivePlaceLocationListener implements LocationListener
     {
       stat = "TEMPORARILY_UNAVAILABLE";
     }
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       out = String.format("Provider: %s, Status: %s", provider, stat);
       Log.d(TAG, out);
@@ -114,7 +114,7 @@ public class DivePlaceLocationListener implements LocationListener
   public void onProviderEnabled(String provider)
   {
     String out = null;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       out = String.format("provider %s enabled...", provider);
       Log.d(TAG, out);
@@ -125,7 +125,7 @@ public class DivePlaceLocationListener implements LocationListener
   public void onProviderDisabled(String provider)
   {
     String out = null;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       out = String.format("provider %s disabled...", provider);
       Log.d(TAG, out);

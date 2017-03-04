@@ -33,7 +33,7 @@ import android.view.WindowManager;
 import java.io.File;
 import java.util.Vector;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
@@ -108,7 +108,7 @@ public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceL
       // Sonst....
       // ################################################################
       default:
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.i(TAG, "handleMessages: unhandled message message with id <" + smsg.getId() + "> recived!");
         }
@@ -140,7 +140,7 @@ public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceL
       }
       try
       {
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, String.format("read dive samples from file <%s>...", rlo.fileOnMobile));
         }
@@ -160,7 +160,7 @@ public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceL
   @Override
   public void msgConnected(BtServiceMessage msg)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "msgConnected...");
     }
@@ -189,7 +189,7 @@ public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceL
   @Override
   public void msgRecivedTick(BtServiceMessage msg)
   {
-    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
+    // if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
   }
 
   @Override
@@ -203,7 +203,7 @@ public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceL
   {
     super.onActivityCreated(savedInstanceState);
     runningActivity = ( MainActivity ) getActivity();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onActivityCreated: ACTIVITY ATTACH");
     }
@@ -243,7 +243,7 @@ public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceL
   {
     super.onAttach(activity);
     runningActivity = ( MainActivity ) activity;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onAttach: ATTACH");
     }
@@ -252,12 +252,12 @@ public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceL
     //
     try
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "onAttach: create SQLite helper...");
       }
       DataSQLHelper sqlHelper = new DataSQLHelper(getActivity().getApplicationContext(), MainActivity.databaseDir.getAbsolutePath() + File.separator + ProjectConst.DATABASE_NAME);
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "onAttach: create logManager helper...");
       }
@@ -277,14 +277,14 @@ public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceL
   @Override
   public void onCreate(Bundle savedInstanceState)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreate...");
     }
     super.onCreate(savedInstanceState);
     runningActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     dbId = getArguments().getInt(ProjectConst.ARG_DBID, -1);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreate... DBID=<" + dbId + ">");
     }
@@ -298,7 +298,7 @@ public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceL
   {
     View rootView;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreateView...");
     }
@@ -327,12 +327,12 @@ public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceL
   public void onPause()
   {
     super.onPause();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onPause...");
     }
     // handler loeschen
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onPause: clear service listener for preferences fragment...");
     }
@@ -346,7 +346,7 @@ public class SPX42LogGraphDetailFragment extends Fragment implements IBtServiceL
   public synchronized void onResume()
   {
     super.onResume();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onResume...");
     }

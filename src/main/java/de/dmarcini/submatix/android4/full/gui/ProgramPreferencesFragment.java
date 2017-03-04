@@ -41,7 +41,7 @@ import org.joda.time.format.DateTimeFormat;
 
 import java.io.File;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.dialogs.DatabaseFileDialog;
@@ -177,7 +177,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
   public void onCreate(Bundle savedInstanceState)
   {
     super.onCreate(savedInstanceState);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onCreate()...");
       Log.v(TAG, "onCreate: add Resouce id <" + R.xml.config_program_preference + ">...");
@@ -192,7 +192,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     //
     sPref = getPreferenceManager().getSharedPreferences();
     sPref.registerOnSharedPreferenceChangeListener(this);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onCreate: add Resouce...OK");
     }
@@ -214,7 +214,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     switch( item.getItemId() )
     {
       case android.R.id.home:
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.v(TAG, "onOptionsItemSelected: HOME");
         }
@@ -230,11 +230,11 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
   public void onPause()
   {
     super.onPause();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onPause...");
     }
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onPause: clear service listener for preferences fragment...");
     }
@@ -254,7 +254,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
   @Override
   public boolean onPreferenceClick(Preference preference)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onPreferenceClick: Klicked");
     }
@@ -274,12 +274,12 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
   public void onResume()
   {
     super.onResume();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onResume()");
     }
     PreferenceScreen ps = getPreferenceScreen();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "this preferencescreen has <" + ps.getPreferenceCount() + "> preferenes.");
     }
@@ -302,7 +302,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     Preference         pref = null;
     Resources          res  = getResources();
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onSharedPreferenceChanged()....");
       Log.d(TAG, "onSharedPreferenceChanged: key = <" + key + ">");
@@ -379,7 +379,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
   {
     super.onViewCreated(view, savedInstanceState);
     PreferenceScreen ps = getPreferenceScreen();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onViewCreated...");
       Log.v(TAG, "this preferencescreen has <" + ps.getPreferenceCount() + "> preferenes.");
@@ -388,14 +388,14 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     for( int groupIdx = 0; groupIdx < ps.getPreferenceCount(); groupIdx++ )
     {
       PreferenceGroup pg = ( PreferenceGroup ) ps.getPreference(groupIdx);
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.v(TAG, String.format("The Group <%s> has %d preferences", pg.getTitle(), pg.getPreferenceCount()));
       }
       for( int prefIdx = 0; prefIdx < pg.getPreferenceCount(); prefIdx++ )
       {
         Preference pref = pg.getPreference(prefIdx);
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.v(TAG, String.format("The Preference <%s> is number %d", pref.getTitle(), prefIdx));
         }

@@ -42,7 +42,7 @@ import android.widget.ListView;
 
 import java.util.Locale;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.content.ContentSwitcher;
 import de.dmarcini.submatix.android4.full.content.ContentSwitcher.ProgItem;
@@ -102,7 +102,7 @@ public class NavigatorFragment extends Fragment
   public void onCreate(Bundle savedInstanceState)
   {
     super.onCreate(savedInstanceState);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onCreate:...");
     }
@@ -111,7 +111,7 @@ public class NavigatorFragment extends Fragment
     SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
     hasUserLearnedDrawer = sp.getBoolean(NaviActionBarDrawerToggle.PREF_USER_LEARNED_DRAWER, false);
     // Select either the default item (0) or the last selected item.
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, String.format(Locale.getDefault(), "onCreate: select item <%d>...", currentSelectedPosition));
       Log.v(TAG, "onCreate:...OK");
@@ -122,7 +122,7 @@ public class NavigatorFragment extends Fragment
   public void onActivityCreated(Bundle savedInstanceState)
   {
     super.onActivityCreated(savedInstanceState);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onActivityCreated:...");
     }
@@ -134,7 +134,7 @@ public class NavigatorFragment extends Fragment
     // das Fragment hat ein Options Menü
     // damit reagiert es auf den Click auf den Titel mit dem Anzeigen des Navigators
     setHasOptionsMenu(true);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onActivityCreated:...OK");
     }
@@ -151,7 +151,7 @@ public class NavigatorFragment extends Fragment
    */
   public void setListAdapterForOnlinestatus(boolean isOnline)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "setListAdapterForOnlinestatus()...");
     }
@@ -162,7 +162,7 @@ public class NavigatorFragment extends Fragment
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onCreateView:...");
     }
@@ -187,7 +187,7 @@ public class NavigatorFragment extends Fragment
     {
       menuListView.setBackgroundColor(getResources().getColor(R.color.navigatorLight_backgroundColor));
     }
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onCreateView:...OK");
     }
@@ -217,7 +217,7 @@ public class NavigatorFragment extends Fragment
    */
   public void setUp(int fragmentId, DrawerLayout drawerLayout, int selPosId)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "setUp:...");
     }
@@ -263,7 +263,7 @@ public class NavigatorFragment extends Fragment
       menuListView.setItemChecked(currentSelectedPosition, true);
       Log.i(TAG, "setUp: set inital selected Item....OK");
     }
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "setUp:...OK");
     }
@@ -280,12 +280,12 @@ public class NavigatorFragment extends Fragment
    */
   private void selectItem(int position)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "selectItem:...");
     }
     currentSelectedPosition = position;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "selectItem: Position:<" + position + ">...");
     }
@@ -303,13 +303,13 @@ public class NavigatorFragment extends Fragment
       // Übergib die ID des gewählten Eintrages
       //
       ProgItem pItem = (( ArrayAdapterWithPics ) menuListView.getAdapter()).getItem(position);
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, String.format(Locale.getDefault(), "selectItem: select item-Id: <%d>, String: <%s>", pItem.nId, pItem.content));
       }
       navigatorCallbacks.onNavigationDrawerItemSelected(pItem);
     }
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "selectItem:...OK");
     }
@@ -319,7 +319,7 @@ public class NavigatorFragment extends Fragment
   public void onAttach(Activity activity)
   {
     super.onAttach(activity);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onAttach:...");
     }
@@ -331,7 +331,7 @@ public class NavigatorFragment extends Fragment
     {
       throw new ClassCastException("Activity must implement INavigationDrawerCallbacks.");
     }
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onAttach:...OK");
     }
@@ -341,12 +341,12 @@ public class NavigatorFragment extends Fragment
   public void onDetach()
   {
     super.onDetach();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onDetach:...");
     }
     navigatorCallbacks = null;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onDetach:...OK");
     }
@@ -383,19 +383,19 @@ public class NavigatorFragment extends Fragment
   @Override
   public boolean onOptionsItemSelected(MenuItem item)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onOptionsItemSelected:...");
     }
     if( navigatorDrawerToggle.onOptionsItemSelected(item) )
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.v(TAG, "onOptionsItemSelected:...OK");
       }
       return true;
     }
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onOptionsItemSelected:...OK");
     }
@@ -407,7 +407,7 @@ public class NavigatorFragment extends Fragment
    */
   private void showGlobalContextActionBar()
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "showGlobalContextActionBar:...");
     }
@@ -415,12 +415,12 @@ public class NavigatorFragment extends Fragment
     actionBar.setDisplayShowTitleEnabled(true);
     // deprecated since API 21
     // actionBar.setNavigationMode( ActionBar.NAVIGATION_MODE_STANDARD );
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "showGlobalContextActionBar: show app_name");
     }
     actionBar.setTitle(R.string.app_name);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "showGlobalContextActionBar:...OK");
     }

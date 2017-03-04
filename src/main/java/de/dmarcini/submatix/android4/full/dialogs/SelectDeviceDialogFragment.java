@@ -35,7 +35,7 @@ import android.widget.Spinner;
 
 import java.util.Vector;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
 import de.dmarcini.submatix.android4.full.utils.DeviceSelectArrayAdapterWithPics;
@@ -176,7 +176,7 @@ public class SelectDeviceDialogFragment extends DialogFragment
   public void show(FragmentManager manager, String tag)
   {
     super.show(manager, tag);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "show(manager," + tag + ")...");
     }

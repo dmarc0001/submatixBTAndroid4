@@ -37,7 +37,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 
 /**
  * Klasse zum lesen von Samples aus einer XML-Datei
@@ -109,7 +109,7 @@ public class SPX42diveSamplesReader
     ContentHandler   myHandler = null;
     XMLReader        xr        = null;
     // Liste des Tauchganges machen
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "getDiveList()...scan XML <" + xmlFile.getName() + ">...");
     }
@@ -118,7 +118,7 @@ public class SPX42diveSamplesReader
     spf = SAXParserFactory.newInstance();
     try
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.v(TAG, "getDiveList()...NEW SAX Parser...");
       }
@@ -137,7 +137,7 @@ public class SPX42diveSamplesReader
     }
     // einen nagenleuen Handler erzeugen
     // als implizite Klasse
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "getDiveList()...create ContentHandler...");
     }
@@ -266,7 +266,7 @@ public class SPX42diveSamplesReader
           if( entry.whereAlDataThere() )
           {
             // Jetz einen Eintrag in das Vector-Teil
-            if( ApplicationDEBUG.DEBUG )
+            if( BuildConfig.DEBUG )
             {
               Log.v(TAG, "create new LogSample...");
             }
