@@ -37,7 +37,6 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -67,12 +66,10 @@ import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.content.ContentSwitcher;
 import de.dmarcini.submatix.android4.full.content.ContentSwitcher.ProgItem;
 import de.dmarcini.submatix.android4.full.dialogs.AreYouSureDialogFragment;
-import de.dmarcini.submatix.android4.full.dialogs.DatabaseFileDialog;
 import de.dmarcini.submatix.android4.full.dialogs.EditAliasDialogFragment;
 import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
 import de.dmarcini.submatix.android4.full.exceptions.FirmwareNotSupportetException;
 import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
-import de.dmarcini.submatix.android4.full.exceptions.NoWritableDatabaseDirException;
 import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
 import de.dmarcini.submatix.android4.full.interfaces.INavigationDrawerCallbacks;
 import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
@@ -81,7 +78,6 @@ import de.dmarcini.submatix.android4.full.utils.GasUpdateEntity;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 import de.dmarcini.submatix.android4.full.utils.SPX42AliasManager;
 import de.dmarcini.submatix.android4.full.utils.SPX42Config;
-import de.jockels.tools.Environment4;
 
 /**
  * Die Aktivität der Application
@@ -102,8 +98,10 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   private final static String                        TAG2                  = "BackStackChangeListener";
   private static final String                        SERVICENAME           = BlueThoothComService.class.getCanonicalName();
   private static final String                        PACKAGENAME           = BlueThoothComService.class.getPackage().getName();
-  private static final String                        FIRSTTIME             = "keyFirstTimeInitiated";
-  private static final String                        PREFVERSION           = "keyPreferencesVersion";
+  private static final String                        FIRSTTIME_KEY         = "keyFirstTimeInitiated";
+  private static final String                        PREFVERSION_KEY       = "keyPreferencesVersion";
+  private static final String                        PROG_DATA_DIR_KEY     = "keyProgDataDirectory";
+  private static final String                        PROG_TIME_FORMAT_KEY  = "keyProgUnitsTimeFormat";
   @SuppressWarnings( "javadoc" )
   public static        DateTimeFormatter             localTimeFormatter    = DateTimeFormat.forPattern("yyyy-MM-dd - HH:mm:ss");
   /**
@@ -498,54 +496,6 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   }
 
   /**
-   * Checke und lege ggf das Datenverzeichnis an
-   * <p/>
-   * Project: SubmatixBTAndroid4 Package: de.dmarcini.submatix.android4.full.gui
-   * <p/>
-   * Stand: 08.12.2014
-   *
-   * @param dDir
-   * @throws NoWritableDatabaseDirException
-   */
-  private void checkDatabaseDir(File dDir) throws NoWritableDatabaseDirException
-  {
-    if( BuildConfig.DEBUG )
-    {
-      Log.d(TAG, "checkDatabaseDir: check if Directory exist and is writable...");
-    }
-    if( dDir != null )
-    {
-      if( BuildConfig.DEBUG )
-      {
-        Log.d(TAG, "checkDatabaseDir: Directory exist..");
-      }
-      if( !dDir.exists() )
-      {
-        Log.i(TAG, "checkDatabaseDir: create database root dir...");
-        if( !dDir.mkdirs() )
-        {
-          dDir = null;
-        }
-      }
-    }
-    //
-    // Ist das Datenbankverzeichnis da?
-    //
-    if( dDir == null || !dDir.canWrite() )
-    {
-      Log.e(TAG, "checkDatabaseDir: database directory not set! User must select one!");
-      if( dDir == null )
-      {
-        throw new NoWritableDatabaseDirException(getString(R.string.dialog_error_database_no_dir));
-      }
-      if( !dDir.canWrite() )
-      {
-        throw new NoWritableDatabaseDirException(getString(R.string.dialog_error_database_not_writable));
-      }
-    }
-  }
-
-  /**
    * Service binden, ggf starten
    * <p/>
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
@@ -769,63 +719,49 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    */
   private File getDatabaseDir()
   {
-    File                extSdCard;
-    File                dataBaseRoot;
-    Environment4.Device devs[] = Environment4.getExternalStorage(this);
-    Environment4.setUseReceiver(this, false);
-    //
-    if( (devs != null) && (devs.length >= 2) )
-    {
-      extSdCard = devs[ 1 ].getAbsoluteFile();
-      Log.i(TAG, String.format(Locale.ENGLISH, "extern SDCARD =  %s", extSdCard.getAbsolutePath()));
-      if( extSdCard.exists() && extSdCard.isDirectory() && extSdCard.canWrite() )
-      {
-        //
-        // das hat funktioniert!
-        //
-        Log.i(TAG, "datastore Directory is: <" + extSdCard + ">");
-        dataBaseRoot = new File(extSdCard + File.separator + ProjectConst.APPROOTDIR);
-        return (dataBaseRoot);
-      }
-    }
-    //
-    // Kein Verzeichnis gefunden, Versuche Fallbacks
-    //
-    extSdCard = Environment.getExternalStorageDirectory();
-    if( extSdCard.exists() && extSdCard.isDirectory() && extSdCard.canWrite() )
-    {
-      //
-      // Fallback #1 hat geklappt
-      //
-      Log.i(TAG, "fallback #1: datastore Directory (ExternalStorageDirectory) is: <" + extSdCard + ">");
-      dataBaseRoot = new File(extSdCard + File.separator + ProjectConst.APPROOTDIR);
-      return (dataBaseRoot);
-    }
-    else
-    {
-      //
-      // Fallback #1 hat versagt, versuche Methode 2
-      //
-      extSdCard = Environment.getDataDirectory();
-      if( extSdCard.exists() && extSdCard.isDirectory() && extSdCard.canWrite() )
-      {
-        //
-        // Fallback #2 hat geklappt!
-        //
-        Log.i(TAG, "fallback #2: datastore Directory (DataDirectory) is: <" + extSdCard + ">");
-        dataBaseRoot = new File(extSdCard + File.separator + ProjectConst.APPROOTDIR);
-        return (dataBaseRoot);
-      }
-    }
+    File databaseDir;
     //
     // bei neueren Androiden ist das sehr restriktiv, versuche den Standart
     //
-    extSdCard = getBaseContext().getFilesDir().getAbsoluteFile();
-    if( extSdCard.exists() && extSdCard.isDirectory() && extSdCard.canWrite() )
+    databaseDir = getBaseContext().getFilesDir().getAbsoluteFile();
+    //
+    // der Standartpfad
+    //
+    if( databaseDir.exists() && databaseDir.isDirectory() && databaseDir.canWrite() )
     {
-      dataBaseRoot = new File(extSdCard + File.separator + ProjectConst.APPROOTDIR);
-      Log.i(TAG, "last fallback, use system files dir...");
-      return( dataBaseRoot );
+      databaseDir = getBaseContext().getDir( ProjectConst.DATABASE_SUBDIR, 0 );
+      if( databaseDir.exists() && databaseDir.isDirectory() && databaseDir.canWrite() )
+      {
+        return( databaseDir );
+      }
+      /*
+      databaseDir = new File(databaseDir.getAbsolutePath() + File.separator + ProjectConst.DATABASE_SUBDIR);
+      if( databaseDir.exists() && databaseDir.isDirectory() && databaseDir.canWrite() )
+      {
+        Log.i(TAG, String.format("use database dir <%s>...", databaseDir.getAbsolutePath()));
+        return (databaseDir);
+      }
+      //
+      // Unterverzeichnis nicht vorhanden, versuche es zu erzeugen
+      //
+      if( databaseDir.mkdirs() )
+      {
+        //
+        // ist es nun vorhanden
+        if( databaseDir.exists() && databaseDir.isDirectory() && databaseDir.canWrite() )
+        {
+          Log.i(TAG, String.format("use created database dir <%s>...", databaseDir.getAbsolutePath()));
+          return (databaseDir);
+        }
+      }
+      */
+
+      //
+      // doch den Standart nutzen
+      //
+      databaseDir = getBaseContext().getFilesDir().getAbsoluteFile();
+      Log.i(TAG, String.format("use system files dir <%s>...", databaseDir.getAbsolutePath()));
+      return (databaseDir);
     }
     //
     // nichts hat geklappt: NULL zurück
@@ -1485,7 +1421,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       FragmentTransaction fTrans = getFragmentManager().beginTransaction();
       fTrans.replace(R.id.main_container, ppFragment);
       fTrans.addToBackStack("ProgramPreferencesFragment");
-      fTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE | FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+      fTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE /*| FragmentTransaction.TRANSIT_FRAGMENT_OPEN*/);
       firstId = fTrans.commit();
     }
     else
@@ -1516,7 +1452,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       FragmentTransaction fTrans = getFragmentManager().beginTransaction();
       fTrans.replace(R.id.main_container, defaultFragment);
       fTrans.addToBackStack("FIRSTFragment");
-      fTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE | FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+      fTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE /*| FragmentTransaction.TRANSIT_FRAGMENT_OPEN*/);
       firstId = fTrans.commit();
     }
   }
@@ -1666,16 +1602,6 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         // Warung wegen fehlender Mailadresse, einfach diese Meldung ignorieren
         return;
       }
-      if( dialog.getTag().matches("database_directory_alert") )
-      {
-        //
-        // Nochmal die Dateiauswahlbox zeigen
-        //
-        dialog.dismiss();
-        DatabaseFileDialog dl = new DatabaseFileDialog(databaseDir);
-        dl.show(getFragmentManager(), "set_database_directory");
-        return;
-      }
       if( dialog.getTag().matches("abortProgram") )
       {
         //
@@ -1708,87 +1634,6 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
           aliasManager = null;
         }
         finish();
-      }
-    }
-    else if( dialog instanceof DatabaseFileDialog )
-    {
-      if( dialog.getTag().matches("set_database_directory") || dialog.getTag().matches("set_database_directory_pref") )
-      {
-        //
-        // Ok, das verlief positiv
-        //
-        File currPath = (( DatabaseFileDialog ) dialog).getCurrDir();
-        dialog.dismiss();
-        if( currPath != null )
-        {
-          //
-          // Ja, es gibt einen Pfad
-          //
-          if( currPath.getAbsolutePath().endsWith(ProjectConst.APPROOTDIR) )
-          {
-            // Ok, das ist ein schon vorhandenes Verzeichnis
-            databaseDir = currPath;
-          }
-          else
-          {
-            databaseDir = new File(currPath.getAbsolutePath() + File.separator + ProjectConst.APPROOTDIR);
-          }
-        }
-        else
-        {
-          //
-          // Nein, es gibt keinen Pfad
-          //
-          databaseDir = null;
-          UserAlertDialogFragment alrt = new UserAlertDialogFragment(getString(R.string.dialog_error_database_dir_header), getString(R.string.dialog_error_database_no_dir));
-          alrt.show(getFragmentManager(), "database_directory_alert");
-          return;
-        }
-        try
-        {
-          checkDatabaseDir(databaseDir);
-        }
-        catch( NoWritableDatabaseDirException ex )
-        {
-          UserAlertDialogFragment alrt = new UserAlertDialogFragment(getString(R.string.dialog_error_database_dir_header), ex.getLocalizedMessage());
-          alrt.show(getFragmentManager(), "database_directory_alert");
-          return;
-        }
-        //
-        // Daten in Prefs und Main schreiben
-        //
-        SharedPreferences        sPref  = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = sPref.edit();
-        editor.putString("keyProgDataDirectory", databaseDir.getAbsolutePath());
-        if( editor.commit() )
-        {
-          if( BuildConfig.DEBUG )
-          {
-            Log.d(TAG, "wrote database-file preference to storeage.");
-          }
-        }
-        else
-        {
-          Log.e(TAG, "CAN'T wrote preference to storage.");
-        }
-        //
-        // Die Datenbank schließen, wenn geöffnet
-        //
-        if( aliasManager != null )
-        {
-          aliasManager.close();
-          aliasManager = null;
-        }
-        if( dialog.getTag().matches("set_database_directory") )
-        {
-          dialog = null;
-          // Code nach stackoverflow
-          Intent intent = new Intent(Intent.ACTION_MAIN);
-          intent.addCategory(Intent.CATEGORY_HOME);
-          intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-          intent.putExtra("EXIT", false);
-          startActivity(intent);
-        }
       }
     }
     // hat sonst irgendwer Verwendung dafür?
@@ -2039,7 +1884,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     if( fTrans != null )
     {
       fTrans.replace(R.id.main_container, newFrag);
-      fTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN | FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+      fTrans.setTransition( /*FragmentTransaction.TRANSIT_FRAGMENT_OPEN |*/ FragmentTransaction.TRANSIT_FRAGMENT_FADE);
       fTrans.commit();
     }
     if( BuildConfig.DEBUG )
@@ -2077,8 +1922,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     //
     if( databaseDir == null || !databaseDir.canWrite() )
     {
-      DatabaseFileDialog dl = new DatabaseFileDialog(Environment.getExternalStorageDirectory());
-      dl.show(getFragmentManager(), "set_database_directory");
+      Toast.makeText(this, R.string.toast_main_no_databasedir, Toast.LENGTH_LONG).show();
+      finish();
+      return;
     }
     //
     if( !mBtAdapter.isEnabled() )
@@ -2270,10 +2116,10 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    */
   private void setAppPreferences(SharedPreferences sPref)
   {
-    if( !sPref.contains(FIRSTTIME) )
+    if( !sPref.contains(FIRSTTIME_KEY) )
     {
       Log.w(TAG, "onCreate: not found firsttime key == make first time preferences...");
-      if( !sPref.getBoolean(FIRSTTIME, false) )
+      if( !sPref.getBoolean(FIRSTTIME_KEY, false) )
       {
         setDefaultPreferences();
       }
@@ -2281,10 +2127,11 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     //
     // sind die Preferenzen in der richtigen version?
     //
-    if( sPref.contains(PREFVERSION) )
+    if( sPref.contains(PREFVERSION_KEY) )
     {
-      if( ProjectConst.PREF_VERSION != sPref.getInt(PREFVERSION, 0) )
+      if( ProjectConst.PREF_VERSION != sPref.getInt(PREFVERSION_KEY, 0) )
       {
+        //FIXME: alte Datenbank übernehmen, sofern vorhanden
         Log.w(TAG, "onCreate: pref version to old == make first time preferences...");
         setDefaultPreferences();
       }
@@ -2294,15 +2141,15 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       Log.w(TAG, "onCreate: pref version not found == make first time preferences...");
       setDefaultPreferences();
     }
-    if( sPref.contains("keyProgUnitsTimeFormat") )
+    if( sPref.contains(PROG_TIME_FORMAT_KEY) )
     {
-      localTimeFormatter = DateTimeFormat.forPattern(sPref.getString("keyProgUnitsTimeFormat", "yyyy/dd/MM - hh:mm:ss a"));
+      localTimeFormatter = DateTimeFormat.forPattern(sPref.getString(PROG_TIME_FORMAT_KEY, "yyyy/dd/MM - hh:mm:ss a"));
     }
     //
     // Verzeichnis für Datenbanken etc
     // Suche den Datenbankpfad aus den Preferenzen oder, falls nicht vorhanden aus getDatabaseDir
     //
-    databaseDir = new File(sPref.getString("keyProgDataDirectory", "."));
+    databaseDir = new File(sPref.getString( PROG_DATA_DIR_KEY, getDatabaseDir().getAbsolutePath() ));
   }
 
   /**
@@ -2323,10 +2170,10 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     //
     SharedPreferences        sPref  = PreferenceManager.getDefaultSharedPreferences(this);
     SharedPreferences.Editor editor = sPref.edit();
-    editor.remove(FIRSTTIME);
-    editor.putBoolean(FIRSTTIME, true);
-    editor.remove(PREFVERSION);
-    editor.putInt(PREFVERSION, ProjectConst.PREF_VERSION);
+    editor.remove(FIRSTTIME_KEY);
+    editor.putBoolean(FIRSTTIME_KEY, true);
+    editor.remove(PREFVERSION_KEY);
+    editor.putInt(PREFVERSION_KEY, ProjectConst.PREF_VERSION);
     //
     // Gaslistenpresets eintragen
     //
@@ -2335,19 +2182,19 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       editor.putString(String.format(Locale.getDefault(), gasKeyTemplate, i), gasListDefault);
     }
     //
-    // external Storage eintragen
+    // Storage eintragen
     //
     databaseDir = getDatabaseDir();
     //
-    // Wenn nix gefunden, dann null eintragen
+    // Wenn nix gefunden, dann current eintragen
     //
-    if( databaseDir != null && databaseDir.isDirectory() )
+    if( databaseDir != null )
     {
-      editor.putString("keyProgDataDirectory", databaseDir.getAbsolutePath());
+      editor.putString(PROG_DATA_DIR_KEY, databaseDir.getAbsolutePath());
     }
     else
     {
-      editor.putString("keyProgDataDirectory", ".");
+      editor.putString(PROG_DATA_DIR_KEY, ".");
     }
     //
     // alles in die Propertys

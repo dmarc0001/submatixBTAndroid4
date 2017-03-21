@@ -59,7 +59,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
    * @param dbn     (Database Name)
    * @see android.database.sqlite.SQLiteOpenHelper
    */
-  public DataSQLHelper(Context context, String dbn)
+  public DataSQLHelper(Context context, String dbn )
   {
     super(context, ProjectConst.DATABASE_NAME, null, ProjectConst.DATABASE_VERSION);
     if( BuildConfig.DEBUG )

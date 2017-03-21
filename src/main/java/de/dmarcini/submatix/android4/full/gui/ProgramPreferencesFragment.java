@@ -25,11 +25,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
@@ -39,12 +37,9 @@ import android.view.View;
 
 import org.joda.time.format.DateTimeFormat;
 
-import java.io.File;
-
 import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
-import de.dmarcini.submatix.android4.full.dialogs.DatabaseFileDialog;
 import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 
@@ -57,7 +52,7 @@ import de.dmarcini.submatix.android4.full.utils.ProjectConst;
  *         <p/>
  *         Stand: 10.11.2013
  */
-public class ProgramPreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener, OnPreferenceClickListener, IBtServiceListener
+public class ProgramPreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener, IBtServiceListener
 {
   private static final String            TAG           = ProgramPreferencesFragment.class.getSimpleName();
   private static final String            DATA_DIR_KEY  = "keyProgDataDirectory";
@@ -70,35 +65,6 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     // was war denn los? Welche Nachricht kam rein?
     switch( what )
     {
-      //
-      // ################################################################
-      // Dialog Abgebrochen
-      // ################################################################
-      case ProjectConst.MESSAGE_DIALOG_NEGATIVE:
-        if( smsg.getContainer() instanceof DatabaseFileDialog )
-        {
-          DatabaseFileDialog dl = ( DatabaseFileDialog ) smsg.getContainer();
-          dl.dismiss();
-        }
-        break;
-      // ################################################################
-      // Dialog Abgebrochen
-      // ################################################################
-      case ProjectConst.MESSAGE_DIALOG_POSITIVE:
-        if( smsg.getContainer() instanceof DatabaseFileDialog )
-        {
-          //
-          // Alle Aktionen in MainActivity abgearbeitet, jetzt noch Zusätzlich
-          // die Summary machen
-          //
-          Preference       pP;
-          PreferenceScreen pS = getPreferenceScreen();
-          // auf dem Screen die Voreinstellung finden
-          pP = pS.findPreference(DATA_DIR_KEY);
-          // Die Summary schreiben
-          pP.setSummary(String.format(getResources().getString(R.string.conf_prog_datadir_summary), MainActivity.databaseDir.getAbsolutePath()));
-        }
-        break;
     }
   }
 
@@ -162,14 +128,6 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     {
       fragmentTitle = savedInstanceState.getString(ProjectConst.ARG_ITEM_CONTENT);
       (( MainActivity ) getActivity()).onSectionAttached(fragmentTitle);
-    }
-    //
-    // Callback, wenn das Verzeichnis angeklickt werden soll
-    //
-    Preference pref = getPreferenceScreen().findPreference(DATA_DIR_KEY);
-    if( pref != null )
-    {
-      pref.setOnPreferenceClickListener(this);
     }
   }
 
@@ -239,35 +197,6 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
       Log.d(TAG, "onPause: clear service listener for preferences fragment...");
     }
     (( MainActivity ) getActivity()).removeServiceListener(this);
-  }
-
-  /**
-   * Wenn eine Preference angeklickt wird
-   * <p/>
-   * Project: SubmatixBTAndroid4 Package: de.dmarcini.submatix.android4.full.gui
-   * <p/>
-   * Stand: 07.12.2014
-   *
-   * @param preference
-   * @return true, wenn der Klick bearbeitet wurde
-   */
-  @Override
-  public boolean onPreferenceClick(Preference preference)
-  {
-    if( BuildConfig.DEBUG )
-    {
-      Log.d(TAG, "onPreferenceClick: Klicked");
-    }
-    //
-    // ist das die Datenverzeichnis-Preferenz?
-    //
-    if( preference.getKey().equals(DATA_DIR_KEY) )
-    {
-      DatabaseFileDialog dl = new DatabaseFileDialog(new File(sPref.getString(DATA_DIR_KEY, Environment.getExternalStorageDirectory().getAbsolutePath())));
-      dl.show(getFragmentManager(), "set_database_directory_pref");
-      return (true);
-    }
-    return (false);
   }
 
   @Override

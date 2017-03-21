@@ -105,6 +105,10 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     public void onReceive(Context context, Intent intent)
     {
       String action = intent.getAction();
+      if( BuildConfig.DEBUG )
+      {
+        Log.v(TAG, String.format("broadcast reciver: recived action: %s...", action ) );
+      }
       //
       // wenn ein Gerät gefunden wurde
       //
@@ -247,6 +251,13 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
           }
           // und nun die Liste frisch befüllen....
           fillNewAdapterWithKnownDevices();
+        }
+      }
+      else
+      {
+        if( BuildConfig.DEBUG )
+        {
+          Log.v(TAG, String.format("broadcast reciver: action: %s ignored...", action ) );
         }
       }
     }
@@ -1460,15 +1471,11 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       stopDiscoverBt();
     }
     //
-    // Register broadcasts während Geräte gesucht werden
+    // Register broadcasts wenn die Suche beendet wurde, wenn gerät gefunden wurde
     //
-    IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-    runningActivity.registerReceiver(mReceiver, filter);
-    //
-    // Register broadcasts wenn die Suche beendet wurde
-    //
-    filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-    runningActivity.registerReceiver(mReceiver, filter);
+    IntentFilter filter1 = new IntentFilter(BluetoothDevice.ACTION_FOUND );
+    filter1.addAction( BluetoothAdapter.ACTION_DISCOVERY_FINISHED );
+    runningActivity.registerReceiver( mReceiver, filter1);
     //
     // Discovering Marker setzen
     this.runDiscovering = true;

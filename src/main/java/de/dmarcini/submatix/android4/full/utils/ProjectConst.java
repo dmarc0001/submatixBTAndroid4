@@ -50,10 +50,10 @@ public final class ProjectConst
   public static final String MANUFACTNAME = "Dirk Marciniak";
   public static final String MANUFACTMAIL = "dirk@submatix.com";
   public static final String MANUFACTHOME = "http://www.submatix.com";
-  public static final String MANUFACTVERS = "2.1";
-  public static final String GENYEAR = "2016";
-  public static final String GENMONTH = "09";
-  public static final String GENDAY = "27";
+  public static final String MANUFACTVERS = "2.2beta";
+  public static final String GENYEAR = "2017";
+  public static final String GENMONTH = "03";
+  public static final String GENDAY = "21";
   public static final boolean CHECK_PHYSICAL_BT = true;
   // ANDROID: Unique UUID für allgemeine (well known) Serielle Schnittstelle
   public static final UUID SERIAL_DEVICE_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
@@ -81,9 +81,7 @@ public final class ProjectConst
   public static final int SPX_LICENSE_NORMOXICTX = 1;
   public static final int SPX_LICENSE_FULLTX = 2;
   // ANDROID:Verzeichnis für Datenbanken
-  public static final String APPROOTDIR = "SUBMATIXDatabase";
-  // Verzeichnis für Datenbanken
-  public static final String DEFAULTDATADIR = "database";
+  public static final String DATABASE_SUBDIR = "database";
   public static final String DEFAULTEXPORTDIR = "export";
   public static final String DATABASE_NAME = "submatixDatabase.db";
   public static final int DATABASE_VERSION = 6;
@@ -241,8 +239,11 @@ public final class ProjectConst
   // globale Pattern
   //
   public static final String PATTERN_EMAIL = "[\\w|-]+@\\w[\\w|-]*\\.[a-z]{2,3}";
+  public static final String PATTERN_UDDF_UNZIP = ".*uddf$";
+  public static final String PATTERN_UDDF_ZIPPED = ".*uddf\\.zip$";
+
   // ANDROID: Preferences Version
-  public static int PREF_VERSION = 1;
+  public static int PREF_VERSION = 3;
 
   // Android (für PC MUSS die Klasse auskommentiert werden )
   public static final class ActionEvent

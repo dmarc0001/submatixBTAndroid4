@@ -3,3 +3,4 @@ lib/
 *.log
 .memdump
 /.project
+*.apk

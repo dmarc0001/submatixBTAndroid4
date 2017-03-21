@@ -997,8 +997,8 @@ public class UDDFFileCreateClass
     // nun zur Frage: gezippt oder nicht
     if( zipped )
     {
-      // File zipFile = new File( file.getAbsoluteFile() + ".zip" );
-      File zipFile = new File(file.getAbsolutePath().replace("uddf", "zip"));
+      File zipFile = new File( file.getAbsoluteFile() + ".zip" );
+      //File zipFile = new File(file.getAbsolutePath().replace("uddf", "zip"));
       // gezipptes File erzeugen
       Log.i(TAG, "write to zipped file <" + zipFile.getName() + ">... ");
       if( file.exists() )

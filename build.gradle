@@ -15,26 +15,26 @@ android {
         minSdkVersion 19
         targetSdkVersion 25
         signingConfig signingConfigs.DirksKey
-        versionCode 31
-        versionName '2.0.1'
+        versionCode 33
+        versionName '2.2'
     }
-    buildTypes {
-        debug {
-            ant.importBuild "utils\\versionsScript.xml"
-            tasks.makeVersion.execute()
-            signingConfig signingConfigs.DirksKey
-            proguardFile 'C:/DATEN/androidStudioWorkspace/SubmatixBTAndroid4/app/utils/proguard-project.txt'
-            versionNameSuffix 'debug'
-        }
-        release {
-            ant.importBuild "utils\\versionsScript.xml"
-            tasks.makeVersion.execute()
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            signingConfig signingConfigs.DirksKey
-            proguardFile 'C:/DATEN/androidStudioWorkspace/SubmatixBTAndroid4/app/utils/proguard-project.txt'
-            versionNameSuffix 'release'
-        }
+  buildTypes {
+    debug {
+      ant.importBuild "utils\\versionsScript.xml"
+      tasks.makeVersion.execute()
+      signingConfig signingConfigs.DirksKey
+      proguardFile 'C:/DATEN/androidStudioWorkspace/SubmatixBTAndroid4/app/utils/proguard-project.txt'
+      versionNameSuffix '_debug'
     }
+    release {
+      ant.importBuild "utils\\versionsScript.xml"
+      tasks.makeVersion.execute()
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+      signingConfig signingConfigs.DirksKey
+      proguardFile 'C:/DATEN/androidStudioWorkspace/SubmatixBTAndroid4/app/utils/proguard-project.txt'
+      versionNameSuffix '_release'
+    }
+  }
     dependencies {
         compile fileTree(dir: 'lib', include: '*.jar')
     }
