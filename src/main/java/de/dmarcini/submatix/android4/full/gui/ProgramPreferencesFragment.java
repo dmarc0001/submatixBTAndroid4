@@ -25,11 +25,9 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceScreen;
@@ -39,12 +37,9 @@ import android.view.View;
 
 import org.joda.time.format.DateTimeFormat;
 
-import java.io.File;
-
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
-import de.dmarcini.submatix.android4.full.dialogs.DatabaseFileDialog;
 import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 
@@ -57,7 +52,7 @@ import de.dmarcini.submatix.android4.full.utils.ProjectConst;
  *         <p/>
  *         Stand: 10.11.2013
  */
-public class ProgramPreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener, OnPreferenceClickListener, IBtServiceListener
+public class ProgramPreferencesFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener, IBtServiceListener
 {
   private static final String            TAG           = ProgramPreferencesFragment.class.getSimpleName();
   private static final String            DATA_DIR_KEY  = "keyProgDataDirectory";
@@ -70,35 +65,6 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     // was war denn los? Welche Nachricht kam rein?
     switch( what )
     {
-      //
-      // ################################################################
-      // Dialog Abgebrochen
-      // ################################################################
-      case ProjectConst.MESSAGE_DIALOG_NEGATIVE:
-        if( smsg.getContainer() instanceof DatabaseFileDialog )
-        {
-          DatabaseFileDialog dl = ( DatabaseFileDialog ) smsg.getContainer();
-          dl.dismiss();
-        }
-        break;
-      // ################################################################
-      // Dialog Abgebrochen
-      // ################################################################
-      case ProjectConst.MESSAGE_DIALOG_POSITIVE:
-        if( smsg.getContainer() instanceof DatabaseFileDialog )
-        {
-          //
-          // Alle Aktionen in MainActivity abgearbeitet, jetzt noch Zusätzlich
-          // die Summary machen
-          //
-          Preference       pP;
-          PreferenceScreen pS = getPreferenceScreen();
-          // auf dem Screen die Voreinstellung finden
-          pP = pS.findPreference(DATA_DIR_KEY);
-          // Die Summary schreiben
-          pP.setSummary(String.format(getResources().getString(R.string.conf_prog_datadir_summary), MainActivity.databaseDir.getAbsolutePath()));
-        }
-        break;
     }
   }
 
@@ -163,21 +129,13 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
       fragmentTitle = savedInstanceState.getString(ProjectConst.ARG_ITEM_CONTENT);
       (( MainActivity ) getActivity()).onSectionAttached(fragmentTitle);
     }
-    //
-    // Callback, wenn das Verzeichnis angeklickt werden soll
-    //
-    Preference pref = getPreferenceScreen().findPreference(DATA_DIR_KEY);
-    if( pref != null )
-    {
-      pref.setOnPreferenceClickListener(this);
-    }
   }
 
   @Override
   public void onCreate(Bundle savedInstanceState)
   {
     super.onCreate(savedInstanceState);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onCreate()...");
       Log.v(TAG, "onCreate: add Resouce id <" + R.xml.config_program_preference + ">...");
@@ -192,7 +150,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     //
     sPref = getPreferenceManager().getSharedPreferences();
     sPref.registerOnSharedPreferenceChangeListener(this);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onCreate: add Resouce...OK");
     }
@@ -214,7 +172,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     switch( item.getItemId() )
     {
       case android.R.id.home:
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.v(TAG, "onOptionsItemSelected: HOME");
         }
@@ -230,56 +188,27 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
   public void onPause()
   {
     super.onPause();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onPause...");
     }
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onPause: clear service listener for preferences fragment...");
     }
     (( MainActivity ) getActivity()).removeServiceListener(this);
   }
 
-  /**
-   * Wenn eine Preference angeklickt wird
-   * <p/>
-   * Project: SubmatixBTAndroid4 Package: de.dmarcini.submatix.android4.full.gui
-   * <p/>
-   * Stand: 07.12.2014
-   *
-   * @param preference
-   * @return true, wenn der Klick bearbeitet wurde
-   */
-  @Override
-  public boolean onPreferenceClick(Preference preference)
-  {
-    if( ApplicationDEBUG.DEBUG )
-    {
-      Log.d(TAG, "onPreferenceClick: Klicked");
-    }
-    //
-    // ist das die Datenverzeichnis-Preferenz?
-    //
-    if( preference.getKey().equals(DATA_DIR_KEY) )
-    {
-      DatabaseFileDialog dl = new DatabaseFileDialog(new File(sPref.getString(DATA_DIR_KEY, Environment.getExternalStorageDirectory().getAbsolutePath())));
-      dl.show(getFragmentManager(), "set_database_directory_pref");
-      return (true);
-    }
-    return (false);
-  }
-
   @Override
   public void onResume()
   {
     super.onResume();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onResume()");
     }
     PreferenceScreen ps = getPreferenceScreen();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "this preferencescreen has <" + ps.getPreferenceCount() + "> preferenes.");
     }
@@ -302,7 +231,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     Preference         pref = null;
     Resources          res  = getResources();
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onSharedPreferenceChanged()....");
       Log.d(TAG, "onSharedPreferenceChanged: key = <" + key + ">");
@@ -379,7 +308,7 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
   {
     super.onViewCreated(view, savedInstanceState);
     PreferenceScreen ps = getPreferenceScreen();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onViewCreated...");
       Log.v(TAG, "this preferencescreen has <" + ps.getPreferenceCount() + "> preferenes.");
@@ -388,14 +317,14 @@ public class ProgramPreferencesFragment extends PreferenceFragment implements On
     for( int groupIdx = 0; groupIdx < ps.getPreferenceCount(); groupIdx++ )
     {
       PreferenceGroup pg = ( PreferenceGroup ) ps.getPreference(groupIdx);
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.v(TAG, String.format("The Group <%s> has %d preferences", pg.getTitle(), pg.getPreferenceCount()));
       }
       for( int prefIdx = 0; prefIdx < pg.getPreferenceCount(); prefIdx++ )
       {
         Preference pref = pg.getPreference(prefIdx);
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.v(TAG, String.format("The Preference <%s> is number %d", pref.getTitle(), prefIdx));
         }

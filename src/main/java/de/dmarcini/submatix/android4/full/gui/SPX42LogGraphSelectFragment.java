@@ -42,7 +42,7 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.Vector;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.dialogs.AreYouSureToDeleteFragment;
@@ -108,7 +108,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     //
     // lese eine Liste der Tauchgänge ein
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "read divelist for dbId: <" + diveId + ">...");
     }
@@ -182,7 +182,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
       // Sonst....
       // ################################################################
       default:
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.i(TAG, "handleMessages: unhadled message message with id <" + smsg.getId() + "> recived!");
         }
@@ -205,7 +205,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   {
     View rootView;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "makeGraphSelectionView...");
     }
@@ -229,7 +229,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   @Override
   public void msgConnected(BtServiceMessage msg)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "msgConnected...");
     }
@@ -258,7 +258,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   @Override
   public void msgRecivedTick(BtServiceMessage msg)
   {
-    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
+    // if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
   }
 
   @Override
@@ -275,7 +275,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     diveId = -1;
     runningActivity = ( MainActivity ) getActivity();
     themeId = MainActivity.getAppStyle();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onActivityCreated: ACTIVITY ATTACH");
     }
@@ -304,7 +304,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
       {
         // Gerät vorselektieren
         dbId = arguments.getInt(ProjectConst.ARG_SELECTED_DEVICE);
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "onActivityCreated: marked device <" + arguments.getInt(ProjectConst.ARG_SELECTED_DEVICE) + ">");
         }
@@ -335,7 +335,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     if( savedInstanceState != null && savedInstanceState.containsKey(ProjectConst.ARG_SELECTED_DEVICE) )
     {
       dbId = savedInstanceState.getInt(ProjectConst.ARG_SELECTED_DEVICE);
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "onActivityCreated: marked device <" + savedInstanceState.getInt(ProjectConst.ARG_SELECTED_DEVICE) + ">");
       }
@@ -354,7 +354,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   {
     super.onAttach(activity);
     runningActivity = ( MainActivity ) activity;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onAttach: ATTACH");
     }
@@ -363,12 +363,12 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     //
     try
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "onAttach: create SQLite helper...");
       }
       DataSQLHelper sqlHelper = new DataSQLHelper(getActivity().getApplicationContext(), MainActivity.databaseDir.getAbsolutePath() + File.separator + ProjectConst.DATABASE_NAME);
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "onAttach: create logManager helper...");
       }
@@ -388,7 +388,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     SPX42ReadLogListArrayAdapter rAdapter = null;
     Button                       button   = null;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "Click");
     }
@@ -403,7 +403,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
       //
       if( button == graphLogsButton )
       {
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "onClick: VIEW selected Item");
         }
@@ -432,7 +432,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
       else if( button == changeGraphDeviceButton )
       {
         // Hier wird dann ein Dialog gebraucht!
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "onClick: call changeGraphDeviceButton!");
         }
@@ -452,7 +452,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
     super.onCreate(savedInstanceState);
     dbId = -1;
     diveId = -1;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreate...");
     }
@@ -465,7 +465,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
   {
     View rootView;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreateView...");
     }
@@ -499,7 +499,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
    */
   public void onDialogNegative(DialogFragment dialog)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "Negative dialog click!");
     }
@@ -519,7 +519,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   {
     Bundle arguments;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "Positive dialog click!");
     }
@@ -529,7 +529,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
       SelectDeviceDialogFragment deviceDialog = ( SelectDeviceDialogFragment ) dialog;
       selectedDeviceId = deviceDialog.getSelectedDeviceId();
       selectedDeviceAlias = logManager.getAliasForId(selectedDeviceId);
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.i(TAG, "onDialogNegative: selected Device Alias: <" + deviceDialog.getSelectedDeviceName() + "> Device-ID <" + deviceDialog.getSelectedDeviceId() + ">");
       }
@@ -558,7 +558,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
           arguments.remove(ProjectConst.ARG_SELECTED_DEVICE);
         }
         // Das wird nix, kein Gerät ausgewählt
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.w(TAG, "no device selected -> note to user");
         }
@@ -579,7 +579,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
           arguments.remove(ProjectConst.ARG_SELECTED_DEVICE);
         }
         // Das wird auch nix, Keine Einträge in der Datenbank
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.w(TAG, "no logs foir device -> note to user");
         }
@@ -598,7 +598,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
         //
         // ALLE Daten des Gerätes (einschliesslich ALIAS und Datendateien) löschen
         //
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.w(TAG, "DELETE ALL Data for device: <" + selectedDeviceAlias + "...");
         }
@@ -666,7 +666,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
       //
       // setze die Markierung im Adapter
       //
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "set item <" + position + "> as marked");
       }
@@ -688,12 +688,12 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   public void onPause()
   {
     super.onPause();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onPause...");
     }
     // handler loeschen
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onPause: clear service listener for preferences fragment...");
     }
@@ -707,7 +707,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
   public synchronized void onResume()
   {
     super.onResume();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onResume...");
     }
@@ -771,7 +771,7 @@ public class SPX42LogGraphSelectFragment extends Fragment implements IBtServiceL
       if( rlo.dbId == diveId )
       {
         rAdapter.setMarked(idx, true);
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "setDiveAdapterForDiveId: marked IDX <" + idx + ">");
         }

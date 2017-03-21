@@ -38,7 +38,7 @@ import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
@@ -126,7 +126,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
           if( prefD1 && gasParms.d1 )
           {
             // ups, das muss korrigiert werden!
-            if( ApplicationDEBUG.DEBUG )
+            if( BuildConfig.DEBUG )
             {
               Log.d(TAG, String.format("checkDiluentSets: gas number <%d> was diluent 1 changed, write to Preference", idx));
             }
@@ -141,7 +141,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
           if( prefD2 && gasParms.d2 )
           {
             // ups, das muss korrigiert werden!
-            if( ApplicationDEBUG.DEBUG )
+            if( BuildConfig.DEBUG )
             {
               Log.d(TAG, String.format("checkDiluentSets: gas number <%d> was diluent 2 changed, write to Preference", idx));
             }
@@ -234,7 +234,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
       // Sonst....
       // ################################################################
       default:
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.i(TAG, "unhandled message with id <" + smsg.getId() + "> recived!");
         }
@@ -244,12 +244,12 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   @Override
   public void msgConnected(BtServiceMessage msg)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "msgConnected()...ask for SPX config...");
     }
     MainActivity fActivity = runningActivity;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "msgConnected(): ask for SPX config...");
     }
@@ -286,7 +286,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   @Override
   public void msgDisconnected(BtServiceMessage msg)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "msgDisconnected");
     }
@@ -298,7 +298,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   @Override
   public void msgRecivedAlive(BtServiceMessage msg)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "SPX Alive <" + ( String ) msg.getContainer() + "> recived");
     }
@@ -365,7 +365,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
       Log.e(TAG, "msgReciveGasSetup: gas setup object is not an correct integer! (" + ex.getLocalizedMessage() + ")");
       return;
     }
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, String.format("msgReciveGasSetup: gas: %d, n2:%02d%%, he:%02d%%, bailout:%b, dil: %d, currentGas: %d", gasNr, gasParms.n2, gasParms.he, gasParms.bo, dil, cg));
     }
@@ -402,7 +402,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   {
     int gasNr;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "SPX SET GAS settings ACK recived");
     }
@@ -458,7 +458,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
       // artig die richtige Meldung absetzen
       //
       case ProjectConst.SPX_SET_SETUP_GASLIST:
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "SPX gas setup was not correct set!");
         }
@@ -517,12 +517,12 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   {
     Resources res;
     super.onCreate(savedInstanceState);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onCreate()...");
     }
     theToast = new CommToast(getActivity());
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onCreate: add Resouce id <" + R.xml.config_spx42_gaslist_preference + ">...");
     }
@@ -545,7 +545,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
       gasPrefs.add(gP);
     }
     // setAllSummarys();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onCreate: add Resouce...OK");
     }
@@ -580,7 +580,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   public void onPause()
   {
     super.onPause();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onPause...");
     }
@@ -588,7 +588,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     // lösche Listener, der überwacht, wenn Preferenzen geändert wurden
     //
     getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onPause(): clear service listener for preferences fragment...");
     }
@@ -599,7 +599,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   public synchronized void onResume()
   {
     super.onResume();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onResume...");
     }
@@ -612,7 +612,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     waitForGasNumber = 0;
     // Service Listener setzen
     MainActivity fActivity = runningActivity;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onResume(): set service listener for preferences fragment...");
     }
@@ -635,17 +635,17 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     Vector<GasUpdateEntity> gasUpdates;
     int                     gasNr;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onSharedPreferenceChanged....");
     }
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onSharedPreferenceChanged: key = <" + key + ">");
     }
     if( ignorePrefChange )
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "onSharedPreferenceChanged: ignore change...");
       }
@@ -686,7 +686,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     // Den Vector für die Gasupdates anlegen
     gasUpdates = new Vector<GasUpdateEntity>();
     // das aktuelle Gas schon mal eintragen
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onSharedPreferenceChanged: gas to update to list: <" + gasNr + ">");
     }
@@ -699,7 +699,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
       gpp = gasPrefs.get(gasNr);
       gasParms = gpp.getValue();
       setGasSummary(gasNr, gasParms);
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "onSharedPreferenceChanged: gas to update to list: <" + gasNr + ">");
       }
@@ -718,7 +718,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
       UserAlertDialogFragment dialog = new UserAlertDialogFragment(getString(R.string.dialog_firmware_not_supportet_header), getString(R.string.dialog_firmware_not_supportet));
       dialog.show(getFragmentManager(), "firmware_not_supportet_error");
     }
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onSharedPreferenceChanged....OK");
     }
@@ -728,7 +728,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
   public void onViewCreated(View view, Bundle savedInstanceState)
   {
     super.onViewCreated(view, savedInstanceState);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onViewCreated...");
     }
@@ -739,7 +739,7 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     {
       GasPickerPreference gP = gasPrefs.get(idx);
       gasPrefs.add(gP);
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, String.format("The Preference <%s> is number %d", gP.getTitle(), idx));
       }
@@ -837,12 +837,12 @@ public class SPX42GaslistPreferencesFragment extends PreferenceFragment implemen
     }
     gasName = GasUtilitys.getNameForGas(gasParms.o2, gasParms.he) + gasExt;
     // schreib schön!
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, String.format("setGasSummary: gas number <%02d> has O2 <%02d%%>, MOD: %f ", gasNr, gasParms.o2, GasUtilitys.getMODForGasMetric(gasParms.o2)));
     }
     gpp.setSummary(String.format(getResources().getString(R.string.conf_gaslist_summary_first), gasNr + 1, gasName, Math.round(GasUtilitys.getMODForGasMetric(gasParms.o2))));
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, String.format("setGasSummary: gas number <%02d> has now summary <%s>", gasNr, gasName));
     }

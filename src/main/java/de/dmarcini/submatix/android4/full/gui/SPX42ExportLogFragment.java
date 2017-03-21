@@ -38,6 +38,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
@@ -68,7 +69,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.dialogs.AreYouSureToDeleteFragment;
@@ -100,6 +101,8 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
 {
   private static final String                     TAG                 = SPX42ExportLogFragment.class.getSimpleName();
   private final        Pattern                    mailPattern         = Pattern.compile(ProjectConst.PATTERN_EMAIL);
+  private final        Pattern                    uddfUnzipPattern    = Pattern.compile(ProjectConst.PATTERN_UDDF_UNZIP);
+  private final        Pattern                    uddfZipPattern      = Pattern.compile(ProjectConst.PATTERN_UDDF_ZIPPED);
   private              MainActivity               runningActivity     = null;
   private              ListView                   mainListView        = null;
   private              SPX42LogManager            logManager          = null;
@@ -107,14 +110,14 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
   private              String                     selectedDeviceAlias = null;
   private              Button                     changeDeviceButton  = null;
   private              Button                     exportLogsButton    = null;
-  private       Button                     exportDeleteButton = null;
-  private       CommToast                  theToast           = null;
-  private       boolean                    isFileZipped       = false;
-  private       WaitProgressFragmentDialog pd                 = null;
-  private       File                       tempDir            = null;
-  private       String                     mailMainAddr       = null;
+  private              Button                     exportDeleteButton  = null;
+  private              CommToast                  theToast            = null;
+  private              boolean                    isFileZipped        = false;
+  private              WaitProgressFragmentDialog pd                  = null;
+  private              File                       tempDir             = null;
+  private              String                     mailMainAddr        = null;
   @SuppressLint( "HandlerLeak" )
-  private final Handler                    mHandler           = new Handler()
+  private final        Handler                    mHandler            = new Handler()
   {
     @Override
     public void handleMessage(Message msg)
@@ -128,8 +131,9 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
       handleMessages(msg.what, smsg);
     }
   };
-  private       String                     fragmentTitle      = "unknown";
-  private       int                        themeId            = R.style.AppDarkTheme;
+  private              String                     fragmentTitle       = "unknown";
+  private              int                        themeId             = R.style.AppDarkTheme;
+  private              String                     uddfFileName        = "";
 
   /**
    * vernichte rekursiv den Ordner mit allen Dateien darin
@@ -138,25 +142,26 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
    * <p/>
    * Stand: 08.01.2014
    *
-   * @param fileOrDirectory
+   * @param fileToDelete
    */
-  private void deleteDir(File fileOrDirectory)
+  private void deleteUddfFromDir(File fileToDelete)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( fileToDelete.exists() && fileToDelete.isFile() )
     {
-      Log.d(TAG, "deleteDir <" + fileOrDirectory.getAbsolutePath());
-    }
-    if( fileOrDirectory.isDirectory() )
-    {
-      for( File child : fileOrDirectory.listFiles() )
+      if( BuildConfig.DEBUG )
       {
-        if( child.isFile() )
+        Log.d(TAG, "deleteUddfFromDir <" + fileToDelete.getAbsolutePath());
+      }
+      if( ! fileToDelete.delete() )
+      {
+        Log.w( TAG, String.format( "file <%s> can't delete, try delete on exit...", fileToDelete.getName() ));
+        fileToDelete.deleteOnExit();
+      }
+      else
+      {
+        if( BuildConfig.DEBUG )
         {
-          if( ApplicationDEBUG.DEBUG )
-          {
-            Log.d(TAG, "delete file <" + child.getAbsolutePath());
-          }
-          child.delete();
+          Log.d( TAG, String.format( "file <%s> deleted...", fileToDelete.getName() ));
         }
       }
     }
@@ -167,9 +172,10 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
    * <p/>
    * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.gui
    * <p/>
-   * Stand: 09.01.2014
+   * Stand: 14.3.2017
    *
-   * @param rlo
+   * @param lItems Obkete der zu exportierenden Logs
+   * @param _tempDir das temporäre Verzeichnis
    */
   private void exportLogItemsAsThread(final Vector<ReadLogItemObj> lItems, File _tempDir)
   {
@@ -177,13 +183,14 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     final File                   tempDir      = _tempDir;
     Thread                       exportThread = null;
     //
+    //
     exportThread = new Thread()
     {
       @Override
       public void run()
       {
         UDDFFileCreateClass uddfClass    = null;
-        String              uddfFileName = null;
+        //String              uddfFileName = null;
         //
         try
         {
@@ -200,7 +207,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
           }
           if( rlos.size() == 1 )
           {
-            if( ApplicationDEBUG.DEBUG )
+            if( BuildConfig.DEBUG )
             {
               Log.i(TAG, String.format("exportThread: export dive %d db-id: %d...", rlos.firstElement().numberOnSPX, rlos.firstElement().dbId));
             }
@@ -209,17 +216,27 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
           }
           else
           {
-            if( ApplicationDEBUG.DEBUG )
+            if( BuildConfig.DEBUG )
             {
               Log.i(TAG, String.format("exportThread: export %d dives ...", rlos.size()));
             }
             DateTime st = new DateTime(rlos.firstElement().startTimeMilis);
-            uddfFileName = String.format(Locale.ENGLISH, "%s%sdive_%07d_at_%04d%02d%02d%02d%02d%02d-plus-%03d.uddf", tempDir.getAbsolutePath(), File.separator, rlos.firstElement().numberOnSPX, st.getYear(), st.getMonthOfYear(), st.getDayOfMonth(), st.getHourOfDay(), st.getMinuteOfHour(), st.getSecondOfMinute(), rlos.size());
+            uddfFileName = String.format(Locale.ENGLISH, "%s%sdive_%07d_at_%04d%02d%02d%02d%02d%02d-plus-%03d.uddf",
+                                         tempDir.getAbsolutePath(),
+                                         File.separator,
+                                         rlos.firstElement().numberOnSPX,
+                                         st.getYear(),
+                                         st.getMonthOfYear(),
+                                         st.getDayOfMonth(),
+                                         st.getHourOfDay(),
+                                         st.getMinuteOfHour(),
+                                         st.getSecondOfMinute(),
+                                         rlos.size());
           }
           //
           // erzeuge die XML...
           //
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.d(TAG, "create uddf-file: <" + uddfFileName + ">");
           }
@@ -298,7 +315,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
       uad.show(getFragmentManager(), "noSelectedLogitems");
       return;
     }
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, String.format("exportSelectedLogItems: export %d selected items...", rAdapter.getMarkedItems().size()));
     }
@@ -321,29 +338,17 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     //
     if( !lItems.isEmpty() )
     {
-      //
-      // temporaeres Verzeichnis für die zu exportierenden Dateien
-      //
-      tempDir = new File(MainActivity.databaseDir.getAbsolutePath() + File.separator + "temp");
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "temporary path: " + tempDir.getAbsolutePath());
-      }
-      // alte Elemente vernichten, falls vorhanden
-      if( tempDir.exists() && tempDir.isDirectory() )
-      {
-        deleteDir(tempDir);
       }
       //
       // stelle sicher, dass ein exportverzeichnis existiert
       //
       if( !tempDir.exists() || !tempDir.isDirectory() )
       {
-        if( !tempDir.mkdirs() )
-        {
-          theToast.showConnectionToastAlert(String.format(getResources().getString(R.string.toast_export_cant_create_dir), tempDir.getAbsolutePath()));
-          return;
-        }
+        theToast.showConnectionToastAlert(String.format(getResources().getString(R.string.toast_export_cant_create_dir), tempDir.getAbsolutePath()));
+        return;
       }
       //
       // den warten.Dialog zeigen
@@ -381,7 +386,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     //
     // lese eine Liste der Tauchgänge ein
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "read divelist for dbId: <" + diveId + ">...");
     }
@@ -490,7 +495,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
       // DEFAULT
       // ################################################################
       default:
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.i(TAG, "unknown messsage with id <" + what + "> recived!");
         }
@@ -557,10 +562,9 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     //
     // Aufräumen
     //
-    if( tempDir != null )
+    if( !uddfFileName.isEmpty() )
     {
-      deleteDir(tempDir);
-      tempDir = null;
+      deleteUddfFromDir(new File(uddfFileName));
     }
   }
 
@@ -575,19 +579,19 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
    */
   private void msgExportOk(BtServiceMessage msg)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "export ok");
     }
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "send message...");
+      Log.d(TAG, "send message (" + uddfFileName + ")...");
     }
     //
     // alle Elemente exortiert, jetzt bitte Mail fertig machen und versenden
     //
-    sendMailToAddr(tempDir, new String[]{mailMainAddr}, selectedDeviceAlias);
+    sendMailToAddr( new File(uddfFileName), new String[]{mailMainAddr}, selectedDeviceAlias);
     //
     // Aufräumen
     //
@@ -611,7 +615,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
   {
     ReadLogItemObj rlo;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "export ok, check next entry...");
     }
@@ -683,10 +687,14 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     super.onActivityCreated(savedInstanceState);
     runningActivity = ( MainActivity ) getActivity();
     themeId = MainActivity.getAppStyle();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onActivityCreated: ACTIVITY ATTACH");
     }
+    //
+    // temporaeres Verzeichnis für die zu exportierenden Dateien
+    //
+    tempDir = getTempFilesDir();
     try
     {
       mainListView = ( ListView ) runningActivity.findViewById(R.id.exportLogsListView);
@@ -719,19 +727,68 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     }
   }
 
+  /**
+   * versuche ein temporäres Verzeichnis für Daten zu finden
+   * @return
+   */
+  private File getTempFilesDir()
+  {
+    File tempFilesDir;
+    //
+    // bei neueren Androiden ist das sehr restriktiv, versuche den Standart
+    //
+    tempFilesDir = Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_DOWNLOADS );
+    //tempFilesDir = runningActivity.getBaseContext().getFilesDir().getAbsoluteFile();
+    //
+    // der Standartpfad
+    //
+    if( tempFilesDir.exists() && tempFilesDir.isDirectory() && tempFilesDir.canWrite() )
+    {
+      //tempFilesDir = new File(tempFilesDir.getAbsolutePath() + File.separator + ProjectConst.DEFAULTEXPORTDIR);
+      //if( tempFilesDir.exists() && tempFilesDir.isDirectory() && tempFilesDir.canWrite() )
+      //{
+      Log.i(TAG, String.format("use export dir <%s>...", tempFilesDir.getAbsolutePath()));
+      return (tempFilesDir);
+      //}
+      //
+      // Unterverzeichnis nicht vorhanden, versuche es zu erzeugen
+      //
+      //if( tempFilesDir.mkdirs() )
+      //{
+      //
+      // ist es nun vorhanden
+      //if( tempFilesDir.exists() && tempFilesDir.isDirectory() && tempFilesDir.canWrite() )
+      //{
+      //  Log.i(TAG, String.format("use created export dir <%s>...", tempFilesDir.getAbsolutePath()));
+      //  return (tempFilesDir);
+      //}
+      //}
+    }
+    //
+    // doch den Standart nutzen
+    //
+    tempFilesDir = runningActivity.getBaseContext().getFilesDir().getAbsoluteFile();
+    Log.i(TAG, String.format("use system files dir <%s>...", tempFilesDir.getAbsolutePath()));
+    return (tempFilesDir);
+  }
+
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onActivityResult()... ");
     }
     switch( requestCode )
     {
       case ProjectConst.REQUEST_SEND_MAIL:
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "send logs via mail...OK");
+          if( !uddfFileName.isEmpty())
+          {
+            deleteUddfFromDir(new File(uddfFileName));
+          }
         }
         break;
       default:
@@ -744,7 +801,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
   {
     super.onAttach(activity);
     runningActivity = ( MainActivity ) activity;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onAttach: ATTACH");
     }
@@ -759,12 +816,12 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     //
     // die Datenbank öffnen
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onAttach: create SQLite helper...");
     }
     DataSQLHelper sqlHelper = new DataSQLHelper(getActivity().getApplicationContext(), MainActivity.databaseDir.getAbsolutePath() + File.separator + ProjectConst.DATABASE_NAME);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onAttach: open Database...");
     }
@@ -791,7 +848,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     SPX42ReadLogListArrayAdapter rAdapter;
     Button                       button = null;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "Click");
     }
@@ -807,7 +864,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
       if( button == changeDeviceButton )
       {
         // Hier wird dann ein Dialog gebraucht!
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "onClick: call changeDeviceDialog!");
         }
@@ -820,7 +877,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
       //
       else if( button == exportLogsButton )
       {
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "onClick: EXPORT selected Items");
         }
@@ -830,21 +887,13 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
         if( mailMainAddr == null )
         {
           // Das wird nix, keine Mail angegeben
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.w(TAG, "not valid mail -> note to user");
           }
           UserAlertDialogFragment uad = new UserAlertDialogFragment(runningActivity.getResources().getString(R.string.dialog_not_mail_exist_header), runningActivity.getResources().getString(R.string.dialog_not_mail_exist));
           uad.show(getFragmentManager(), "noMailaddrWarning");
           return;
-        }
-        //
-        // exportiere alle markierten Elemente
-        //
-        if( tempDir != null )
-        {
-          deleteDir(tempDir);
-          tempDir = null;
         }
         rAdapter = ( SPX42ReadLogListArrayAdapter ) mainListView.getAdapter();
         exportSelectedLogItems(rAdapter);
@@ -861,7 +910,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
         if( rAdapter == null )
         {
           // Das wird nix, kein Gerät ausgewählt
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.w(TAG, "not valid mail -> note to user");
           }
@@ -897,7 +946,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
   {
     View rootView = null;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreateView...");
     }
@@ -937,7 +986,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
    */
   public void onDialogNegative(DialogFragment dialog)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "Negative dialog click!");
     }
@@ -954,7 +1003,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
    */
   public void onDialogPositive(DialogFragment dialog)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "Positive dialog click!");
     }
@@ -963,7 +1012,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
       SelectDeviceDialogFragment deviceDialog = ( SelectDeviceDialogFragment ) dialog;
       selectedDeviceId = deviceDialog.getSelectedDeviceId();
       selectedDeviceAlias = logManager.getAliasForId(selectedDeviceId);
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.i(TAG, "onDialogNegative: selected Device Alias: <" + deviceDialog.getSelectedDeviceName() + "> Device-ID <" + deviceDialog.getSelectedDeviceId() + ">");
       }
@@ -978,7 +1027,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
       else
       {
         // Das wird nix, kein Gerät ausgewählt
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.w(TAG, "no device selected -> note to user");
         }
@@ -992,7 +1041,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
       if( mainListView.getAdapter().isEmpty() )
       {
         // Das wird auch nix, Keine Einträge in der Datenbank
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.w(TAG, "no logs foir device -> note to user");
         }
@@ -1013,7 +1062,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
         //
         if( selectedDeviceId >= 0 )
         {
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.w(TAG, "DELETE ALL Data for device: <" + selectedDeviceAlias + "...");
           }
@@ -1031,7 +1080,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
         //
         // Selektierte Daten aus der Datenbank und die entsprechenden Dateien löschen
         //
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.w(TAG, "DELETE selectred logs...");
         }
@@ -1084,7 +1133,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     if( mailMainAddr == null )
     {
       // Das wird nix, keine Mail angegeben
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.w(TAG, "not valid mail -> note to user");
       }
@@ -1135,7 +1184,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
   public void onPause()
   {
     super.onPause();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onPause...");
     }
@@ -1147,7 +1196,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
   public synchronized void onResume()
   {
     super.onResume();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onResume...");
     }
@@ -1196,7 +1245,7 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
    */
   public void openWaitDial(int maxevents, String msg)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "openWaitDial()...");
     }
@@ -1230,18 +1279,19 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
    * <p/>
    * Stand: 10.01.2014
    *
-   * @param uddfDir
+   * @param uddfFile
    * @param deviceAlias
    * @param mailAddr
    */
-  private void sendMailToAddr(final File uddfDir, final String[] mailAddr, String deviceAlias)
+  private void sendMailToAddr(final File uddfFile, final String[] mailAddr, String deviceAlias)
   {
     // String diveTime = null;
     String         diveMessage;
-    ArrayList<Uri> uddfURIs = new ArrayList<Uri>();
-    // ArrayList<CharSequence> mailBody = new ArrayList<CharSequence>();
+    //ArrayList<Uri> uddfURIs = new ArrayList<Uri>();
+    Uri uddfURI;
+    Vector<File>   filtered;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "send logs via mail...");
     }
@@ -1249,9 +1299,9 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     // Dateien zusammensuchen
     // OHNE Unterverzeichnisse
     //
-    if( uddfDir.exists() && uddfDir.canRead() && uddfDir.isDirectory() )
+    if( uddfFile.exists() && uddfFile.canRead()  )
     {
-      Log.i(TAG, "uddf-directory exist und is readable...");
+      Log.i(TAG, "uddf-file exist und is readable...");
     }
     else
     {
@@ -1259,12 +1309,30 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
       uad.show(getFragmentManager(), "noUddfDirectory");
       return;
     }
-    File[] fileArray = uddfDir.listFiles();
-    if( fileArray.length <= 0 )
+    /*
+    File[] fileArray = uddfFile.listFiles();
+    filtered = new Vector<File>();
+    //
+    // Filtern auf Einträge, die ich brauche
+    //
+    for( File fl : fileArray )
+    {
+      Matcher m1 = uddfZipPattern.matcher(fl.getName());
+      Matcher m2 = uddfUnzipPattern.matcher(fl.getName());
+      if( m1.matches() || m2.matches() )
+      {
+        filtered.add(fl);
+      }
+    }
+    //
+    // Das Ergebnis feststellen
+    //
+    if( filtered.size() <= 0 )
     {
       Log.e(TAG, "uddf-directory is empty...");
       return;
     }
+    */
     //
     // Mailabsicht kundtun als INTEND
     //
@@ -1281,29 +1349,33 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     //
     // URIS der Dateien in das Array tun
     //
-    for( File fl : fileArray )
+    /*
+    for( File fl : filtered )
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "append file <" + fl.getAbsoluteFile() + "> ");
       }
       uddfURIs.add(Uri.parse("file://" + fl.getAbsoluteFile()));
     }
+    */
     diveMessage = getResources().getString(R.string.export_mail_bodytext) + "\n\n" + getResources().getString(R.string.app_name);
     emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, mailAddr);
-    emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Divelog (" + deviceAlias + ")");
+    emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, new String("Divelog (" + deviceAlias + ")" ) );
     emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, diveMessage);
-    if( fileArray.length == 1 )
-    {
+    //if( filtered.size() == 1 )
+    //{
+      uddfURI = Uri.parse("file://" + uddfFile.getAbsoluteFile());
       emailIntent.setAction(Intent.ACTION_SEND);
-      emailIntent.putExtra(Intent.EXTRA_STREAM, uddfURIs.get(0));
-    }
-    else
-    {
-      emailIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
-      emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uddfURIs);
-    }
-    startActivityForResult(Intent.createChooser(emailIntent, "Send mail..."), ProjectConst.REQUEST_SEND_MAIL);
+      emailIntent.putExtra(Intent.EXTRA_STREAM, uddfURI);
+      //emailIntent.putExtra(Intent.EXTRA_STREAM, uddfURIs.get(0));
+    //}
+    //else
+    //{
+    //  emailIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
+    //  emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uddfURIs);
+    //}
+    startActivityForResult( Intent.createChooser( emailIntent, "Send mail..."), ProjectConst.REQUEST_SEND_MAIL);
   }
 
   /**

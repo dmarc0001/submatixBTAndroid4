@@ -28,7 +28,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
@@ -53,7 +53,7 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
   {
     super.onActivityCreated(bundle);
     runningActivity = getActivity();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onActivityCreated: ACTIVITY ATTACH");
     }
@@ -64,7 +64,7 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
   {
     super.onAttach(activity);
     runningActivity = activity;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onAttach: ATTACH");
     }
@@ -77,7 +77,7 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
   public void onCreate(Bundle savedInstanceState)
   {
     super.onCreate(savedInstanceState);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreate...");
     }
@@ -90,7 +90,7 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
   {
     View rootView;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreateView...");
     }
@@ -107,14 +107,14 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
     //
     // if( runningActivity instanceof AreaDetailActivity )
     // {
-    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
+    // if( BuildConfig.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
     // return( null );
     // }
     //
     // Verbindungsseite via twoPane ausgewählt
     //
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "makeConnectionView...");
     }
@@ -135,14 +135,14 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
   public void onPause()
   {
     super.onPause();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onPause...");
     }
     //
     // die abgeleiteten Objekte führen das auch aus
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onPause: clear service listener for preferences fragment...");
     }
@@ -156,7 +156,7 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
   public synchronized void onResume()
   {
     super.onResume();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onResume...");
     }

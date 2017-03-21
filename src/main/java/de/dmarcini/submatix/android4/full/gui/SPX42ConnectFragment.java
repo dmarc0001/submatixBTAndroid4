@@ -51,7 +51,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.dialogs.EditAliasDialogFragment;
@@ -105,6 +105,10 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     public void onReceive(Context context, Intent intent)
     {
       String action = intent.getAction();
+      if( BuildConfig.DEBUG )
+      {
+        Log.v(TAG, String.format("broadcast reciver: recived action: %s...", action ) );
+      }
       //
       // wenn ein Gerät gefunden wurde
       //
@@ -123,7 +127,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
         if( progressDialog != null )
         {
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.i(TAG, "device add to progressDialog...");
           }
@@ -139,7 +143,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         if( (device.getBondState() != BluetoothDevice.BOND_BONDED) && (device.getName() != null)
             && (device.getBluetoothClass().getMajorDeviceClass() == ProjectConst.SPX_BTDEVICE_CLASS) )
         {
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.d(TAG, String.format("<%s> is an RFCOMM, Add...", device.getName()));
           }
@@ -148,7 +152,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         else
         {
           // kein RFCOMM-Gerät
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.d(TAG, String.format("<%s> is not RFCOMM, Ignore...", device.getName()));
           }
@@ -159,7 +163,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       }
       else if( BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action) )
       {
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         { Log.v(TAG, "discover finished, enable button."); }
         runDiscovering = false;
         stopDiscoverBt();
@@ -177,7 +181,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
           //
           // das klappt nur bei Android >= 4.4, vorher gibt es die API nicht
           //
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.d(TAG, "device pairing request");
           }
@@ -190,7 +194,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
             String devicePin = MainActivity.aliasManager.getPINForMac(device.getAddress());
             if( devicePin != null )
             {
-              if( ApplicationDEBUG.DEBUG )
+              if( BuildConfig.DEBUG )
               {
                 Log.d(TAG, String.format("device pin from databese is <%s>", devicePin));
               }
@@ -201,7 +205,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
             }
             else
             {
-              if( ApplicationDEBUG.DEBUG )
+              if( BuildConfig.DEBUG )
               {
                 Log.d(TAG, "device pairing request: database has no pin for device...");
               }
@@ -241,12 +245,19 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         }
         else if( state == BluetoothDevice.BOND_NONE && prevState == BluetoothDevice.BOND_BONDED )
         {
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.d(TAG, "device pairing changed: device unpaired...");
           }
           // und nun die Liste frisch befüllen....
           fillNewAdapterWithKnownDevices();
+        }
+      }
+      else
+      {
+        if( BuildConfig.DEBUG )
+        {
+          Log.v(TAG, String.format("broadcast reciver: action: %s ignored...", action ) );
         }
       }
     }
@@ -270,7 +281,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   {
     Iterator<BluetoothDevice> it;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "fillNewAdapterWithKnownDevices: fill an ArrayAdapter with devices...");
     }
@@ -298,13 +309,13 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     while( itStored.hasNext() )
     {
       HashMap<String, String> deviceMap = itStored.next();
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "fillNewAdapterWithKnownDevices: check stored Device <" + deviceMap.get(ProjectConst.A_DEVNAME) + ">...");
       }
       // eintrag in Arrayadapter vorbereiten
       String[] entr = new String[ BluetoothDeviceArrayAdapter.BT_DEVAR_COUNT ];
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "stored device: " + deviceMap.get(ProjectConst.A_DEVNAME));
       }
@@ -320,7 +331,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         BluetoothDevice device = it.next();
         if( device.getAddress().equals(deviceMap.get(ProjectConst.A_MAC)) )
         {
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.d(TAG, "fillNewAdapterWithKnownDevices: Device <" + deviceMap.get(ProjectConst.A_DEVNAME) + "> was in paired devices, remove from list...");
           }
@@ -343,7 +354,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         BluetoothDevice device = it.next();
         if( device.getAddress().equals(deviceMap.get(ProjectConst.A_MAC)) )
         {
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.d(TAG, "fillNewAdapterWithKnownDevices: Device <" + deviceMap.get(ProjectConst.A_DEVNAME) + "> was in discovered devices, remove from list...");
           }
@@ -369,7 +380,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     //
     if( pairedDevices.size() > 0 || discoveredDevices.size() > 0 )
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "fillNewAdapterWithKnownDevices: fill List with paired devices...");
       }
@@ -389,7 +400,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
             // Feld 3 = Gerät gepart?
             // Feld 4 = Gerät online?
             String[] entr = new String[ BluetoothDeviceArrayAdapter.BT_DEVAR_COUNT ];
-            if( ApplicationDEBUG.DEBUG )
+            if( BuildConfig.DEBUG )
             {
               Log.d(TAG, "paired Device: " + device.getName());
             }
@@ -410,7 +421,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       //
       // hinterher die discoverten Geräte
       //
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "fillNewAdapterWithKnownDevices: fill List with discovered devices...");
       }
@@ -435,7 +446,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     }
     else
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "fillNewAdapterWithKnownDevices: no Devices : " + runningActivity.getString(R.string.no_device));
       }
@@ -473,7 +484,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       // Dialog negativ beendet
       // ################################################################
       case ProjectConst.MESSAGE_DIALOG_NEGATIVE:
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "dialog negative closed");
         }
@@ -537,7 +548,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       // Sonst....
       // ################################################################
       default:
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.i(TAG, "handleMessages: unhadled message message with id <" + smsg.getId() + "> recived!");
         }
@@ -560,7 +571,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   {
     View rootView;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "makeConnectionView...");
     }
@@ -586,7 +597,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   @Override
   public void msgConnected(BtServiceMessage msg)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "msgConnected...");
     }
@@ -712,7 +723,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         PinErrorDialog pinDial = ( PinErrorDialog ) smsg.getContainer();
         if( pinDial.getTag().equals(DIAL_GET_PIN) )
         {
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.d(TAG, "get-pin-dialog ends positive");
           }
@@ -724,7 +735,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
             //
             // Die PIN könnte passen, das Format stimmt schon mal
             //
-            if( ApplicationDEBUG.DEBUG )
+            if( BuildConfig.DEBUG )
             {
               Log.d(TAG, "pin in an valid format!");
             }
@@ -733,7 +744,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
             MainActivity.aliasManager.setPinForMac(device.getAddress(), newPin);
             runningActivity.doConnectBtDevice(device.getAddress());
             //
-            if( ApplicationDEBUG.DEBUG )
+            if( BuildConfig.DEBUG )
             {
               Log.d(TAG, "pin saved");
             }
@@ -769,14 +780,14 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   private void msgReciveDeviceAliasSet(BtServiceMessage msg)
   {
     int dIndex;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "msgReciveDeviceAliasSet...");
     }
     // ist das das Stringarray?
     if( msg.getContainer() instanceof String[] )
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "msgReciveDeviceAliasSet: is String[]...");
       }
@@ -784,7 +795,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       String[] parm = ( String[] ) msg.getContainer();
       if( parm.length == 4 )
       {
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "msgReciveDeviceAliasSet: is 4 params");
         }
@@ -795,7 +806,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
           Log.e(TAG, "msgReciveDeviceAliasSet: can't find device mac addr in device array adapter!");
           return;
         }
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "msgReciveDeviceAliasSet: Set alias to <" + parm[ 1 ] + ">");
         }
@@ -833,7 +844,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   @Override
   public void msgRecivedTick(BtServiceMessage msg)
   {
-    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
+    // if( BuildConfig.DEBUG ) Log.d( TAG, String.format( "recived Tick <%x08x>", msg.getTimeStamp() ) );
   }
 
   @Override
@@ -848,7 +859,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   {
     super.onActivityCreated(savedInstanceState);
     runningActivity = ( MainActivity ) getActivity();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onActivityCreated: ...");
     }
@@ -861,7 +872,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       connectTextView = ( TextView ) runningActivity.findViewById(R.id.connectStatusText);
       if( (MainActivity.mBtAdapter != null) && (MainActivity.mBtAdapter.isEnabled()) )
       {
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "onActivityCreated: set SPX42ConnectFragment eventhandler...");
         }
@@ -879,7 +890,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       }
       else
       {
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.e(TAG, "onActivityCreated: NOT BT Adapter/not enabled => NOT set onClick eventhandler...");
         }
@@ -936,7 +947,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   {
     super.onAttach(activity);
     runningActivity = ( MainActivity ) activity;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onAttach: ATTACH");
     }
@@ -961,7 +972,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   public void onClick(View cView)
   {
     int connState = runningActivity.getConnectionStatus();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onClick: ON CLICK!");
     }
@@ -987,7 +998,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       {
         case ProjectConst.CONN_STATE_NONE:
         default:
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.d(TAG, "onClick: switch connect to ON");
           }
@@ -1005,7 +1016,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
           Log.i(TAG, "cancel connecting..");
           runningActivity.doDisconnectBtDevice();
         case ProjectConst.CONN_STATE_CONNECTED:
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.d(TAG, "onClick: switch connect to OFF");
           }
@@ -1034,7 +1045,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
           Log.w(TAG, "onClick: not devices in Adapter yet...");
           btArrayAdapter.clear();
         }
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "onClick: start discovering for BT Devices...OK");
         }
@@ -1082,7 +1093,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   public void onCreate(Bundle savedInstanceState)
   {
     super.onCreate(savedInstanceState);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreate...");
     }
@@ -1097,7 +1108,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
   {
     View rootView;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreateView...");
     }
@@ -1143,7 +1154,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   @Override
   public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onItemSelected: ITEM Selected!");
     }
@@ -1152,7 +1163,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   @Override
   public void onNothingSelected(AdapterView<?> arg0)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onItemSelected: ITEM NOT Selected!");
     }
@@ -1162,14 +1173,14 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   public void onPause()
   {
     super.onPause();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onPause...");
     }
     //
     // die abgeleiteten Objekte führen das auch aus
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onPause: clear service listener for preferences fragment...");
     }
@@ -1183,7 +1194,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   public synchronized void onResume()
   {
     super.onResume();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onResume...");
     }
@@ -1243,7 +1254,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   {
     if( progressDialog != null )
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "setItemsEnabledwhileDiscover: dialog dismiss....");
       }
@@ -1252,7 +1263,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     }
     if( !enabled )
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "setItemsEnabledwhileDiscover: dialog show....");
       }
@@ -1295,7 +1306,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   {
     // String deviceAddr = null;
     int deviceIndex = -1;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "setSpinnerToConnectedDevice...");
     }
@@ -1309,7 +1320,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       // ArrayAdapter erfragen
       // mit welchem Gerät bin ich verbunden?
       lastConnectedDeviceMac = runningActivity.getConnectedDevice();
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.v(TAG, "setSpinnerToConnectedDevice connected Device: <" + lastConnectedDeviceMac + ">");
       }
@@ -1317,7 +1328,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       {
         // welcher index gehört zu dem Gerät?
         deviceIndex = btArrayAdapter.getIndexForMac(lastConnectedDeviceMac);
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.v(TAG, "setSpinnerToConnectedDevice index in Adapter: <" + deviceIndex + ">");
         }
@@ -1327,7 +1338,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         devSpinner.setAdapter(btArrayAdapter);
         // Selektieren
         devSpinner.setSelection(deviceIndex, true);
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.v(TAG, "setSpinnerToConnectedDevice set Spinner to index <" + deviceIndex + ">");
         }
@@ -1346,7 +1357,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     //
     // guck mal, ob da was gespeichert war...
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "fillNewAdapterWithPairedDevices: try set last connected device (" + ((lastConnectedDeviceMac == null) ? "none" : lastConnectedDeviceMac) + ")");
     }
@@ -1356,7 +1367,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       if( sPref.contains(LAST_CONNECTED_DEVICE_KEY) )
       {
         lastConnectedDeviceMac = sPref.getString(LAST_CONNECTED_DEVICE_KEY, null);
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "fillNewAdapterWithPairedDevices: try from preference (" + ((lastConnectedDeviceMac == null) ? "none" : lastConnectedDeviceMac) + ")");
         }
@@ -1369,7 +1380,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     {
       // welcher Index gehört zu dem Gerät?
       int deviceIndex = btArrayAdapter.getIndexForMac(lastConnectedDeviceMac);
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.i(TAG, "set to last connected device MAC:<" + lastConnectedDeviceMac + "> on Index <" + deviceIndex + ">");
       }
@@ -1460,15 +1471,11 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       stopDiscoverBt();
     }
     //
-    // Register broadcasts während Geräte gesucht werden
+    // Register broadcasts wenn die Suche beendet wurde, wenn gerät gefunden wurde
     //
-    IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-    runningActivity.registerReceiver(mReceiver, filter);
-    //
-    // Register broadcasts wenn die Suche beendet wurde
-    //
-    filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-    runningActivity.registerReceiver(mReceiver, filter);
+    IntentFilter filter1 = new IntentFilter(BluetoothDevice.ACTION_FOUND );
+    filter1.addAction( BluetoothAdapter.ACTION_DISCOVERY_FINISHED );
+    runningActivity.registerReceiver( mReceiver, filter1);
     //
     // Discovering Marker setzen
     this.runDiscovering = true;
@@ -1526,7 +1533,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     //
     if( editor.commit() )
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "writePreferences: wrote preference to storeage.");
       }

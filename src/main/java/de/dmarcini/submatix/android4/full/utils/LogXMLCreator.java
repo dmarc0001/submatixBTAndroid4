@@ -42,7 +42,7 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.exceptions.XMLFileCreatorException;
 
 /**
@@ -82,25 +82,25 @@ public class LogXMLCreator
     try
     {
       // So den XML-Erzeuger Creieren
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "LogXMLCreator: create Transformer...");
       }
       transformer = TransformerFactory.newInstance().newTransformer();
       transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
       transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "LogXMLCreator: create factory...");
       }
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       factory.setNamespaceAware(false);
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "LogXMLCreator: create builder...");
       }
       builder = factory.newDocumentBuilder();
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "LogXMLCreator: ...OK");
       }
@@ -223,12 +223,12 @@ public class LogXMLCreator
    */
   public boolean closeLog() throws XMLFileCreatorException
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "closeLog: normalize DOM Object...");
     }
     logXmlFile.normalizeDocument();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "closeLog: create writer...");
     }
@@ -237,14 +237,14 @@ public class LogXMLCreator
       StringWriter writer = new StringWriter();
       DOMSource    doc    = new DOMSource(logXmlFile);
       StreamResult res    = new StreamResult(writer);
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "closeLog: transform... ");
       }
       transformer.transform(doc, res);
       // ungezipptes file erzeugen
 
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.v(TAG, "domToFile()...write to unzipped file... ");
         Log.d(TAG, "closeLog: fileName:<" + diveHeader.xmlFile.getAbsoluteFile() + ">");

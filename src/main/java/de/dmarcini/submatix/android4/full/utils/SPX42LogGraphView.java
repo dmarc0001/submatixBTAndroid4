@@ -40,7 +40,7 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Vector;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.R;
 
 /**
@@ -344,7 +344,7 @@ public class SPX42LogGraphView extends View implements OnTouchListener
     maxValue = getMaxValue(origProfil);
     // Die Tiefe muß ich nun noch skalieren, passend auf den Schirm
     depthFactor = (viewHeight - margin_top - margin_bottom - 30) / maxValue;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, String.format("drawDepthPath() -> max depth value: <%03.1f>, depthFactor: <%03.2f>", maxValue, depthFactor));
     }
@@ -512,7 +512,7 @@ public class SPX42LogGraphView extends View implements OnTouchListener
     int   samplePos;
     //
     markScale = viewWidth / countTimeMark;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, String.format("drawTimeLine() -> divelength: <%d> secounds, timeStep: <%d> secounds, timeFactor: <%03.2f>", diveLength, timeStep, timeFactor));
     }
@@ -606,7 +606,7 @@ public class SPX42LogGraphView extends View implements OnTouchListener
     maxOxigen = getMaxValue(oxyProfil);
     // Die PPO2 muß ich nun noch skalieren, passend auf den Schirm und verkleinert
     oxygenFactor = (viewHeight - margin_bottom_ox - (viewHeight / 4)) / maxOxigen;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, String.format("drawOxigenLine() -> max oxy value: <%03.1f>, oxigenFactor: <%03.2f>", maxOxigen, oxygenFactor));
     }
@@ -733,7 +733,7 @@ public class SPX42LogGraphView extends View implements OnTouchListener
     }
     // Die Temperatur muß ich nun noch skalieren, passend auf den Schirm und verkleinert
     temperatureFactor = (viewHeight - margin_bottom_temp - (viewHeight / 3)) / (maxTemperature - minTemperature);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, String.format("drawTemperatureLine() -> max temp value: <%03.1f>, min temp value: <%03.2f>, tempFactor: <%03.2f>", maxTemperature, minTemperature, temperatureFactor));
     }
@@ -1105,7 +1105,7 @@ public class SPX42LogGraphView extends View implements OnTouchListener
     public boolean onScale(ScaleGestureDetector detector)
     {
       masterScale *= detector.getScaleFactor();
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, String.format("Skalierung: %03.2f", masterScale));
       }

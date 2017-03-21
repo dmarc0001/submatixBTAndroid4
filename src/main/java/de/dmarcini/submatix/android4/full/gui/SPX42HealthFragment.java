@@ -30,7 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
@@ -82,7 +82,7 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
       // DEFAULT
       // ################################################################
       default:
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.i(TAG, "unknown messsage with id <" + what + "> recived!");
         }
@@ -122,21 +122,21 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
     switch( MainActivity.spxConfig.getLicenseState() )
     {
       case ProjectConst.SPX_LICENSE_FULLTX:
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "SPX MIX License : FULL TRIMIX licensed");
         }
         licenseTMXTextView.setText(res.getString(R.string.health_license_enable));
         licenseTMXTextView.setTextColor(res.getColor(R.color.licenseEnabled));
       case ProjectConst.SPX_LICENSE_NORMOXICTX:
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "SPX MIX License : NORMOXIX TRIMIX licensed");
         }
         licenseNTMXTextView.setText(res.getString(R.string.health_license_enable));
         licenseNTMXTextView.setTextColor(res.getColor(R.color.licenseEnabled));
       case ProjectConst.SPX_LICENSE_NITROX:
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "SPX MIX License : NITROX licensed");
         }
@@ -144,7 +144,7 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
         licenseNitroxTextView.setTextColor(res.getColor(R.color.licenseEnabled));
         break;
       default:
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "SPX MIX License : UNKNOWN");
         }
@@ -154,7 +154,7 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
     //
     if( 1 == MainActivity.spxConfig.getCustomEnabled() )
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "SPX CUSTOM License : licensed");
       }
@@ -199,7 +199,7 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
   {
     super.onActivityCreated(savedInstanceState);
     runningActivity = ( MainActivity ) getActivity();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onActivityCreated: ACTIVITY ATTACH");
     }
@@ -232,7 +232,7 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
   {
     super.onAttach(activity);
     runningActivity = ( MainActivity ) activity;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onAttach: ATTACH");
     }
@@ -245,7 +245,7 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
   public void onCreate(Bundle savedInstanceState)
   {
     super.onCreate(savedInstanceState);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreate...");
     }
@@ -258,7 +258,7 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
   {
     View rootView;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreateView...");
     }
@@ -275,14 +275,14 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
     //
     // if( runningActivity instanceof AreaDetailActivity )
     // {
-    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
+    // if( BuildConfig.DEBUG ) Log.d( TAG, "onCreateView: running from AreaDetailActivity ..." );
     // return( null );
     // }
     //
     // Verbindungsseite via twoPane ausgewählt
     //
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "makeConnectionView...");
     }
@@ -314,14 +314,14 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
   public void onPause()
   {
     super.onPause();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onPause...");
     }
     //
     // die abgeleiteten Objekte führen das auch aus
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onPause: clear service listener for preferences fragment...");
     }
@@ -335,7 +335,7 @@ public class SPX42HealthFragment extends Fragment implements IBtServiceListener
   public synchronized void onResume()
   {
     super.onResume();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onResume...");
     }

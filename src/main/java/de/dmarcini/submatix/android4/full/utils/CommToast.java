@@ -31,7 +31,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.dialogs.WaitProgressFragmentDialog;
 import de.dmarcini.submatix.android4.full.gui.MainActivity;
@@ -219,7 +219,7 @@ public class CommToast
    */
   public void openWaitDial(int maxevents, String title, String msg)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "openWaitDial()...");
     }
@@ -256,7 +256,7 @@ public class CommToast
    */
   public void dismissDial()
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "dismissDial()...");
     }

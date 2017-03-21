@@ -34,7 +34,7 @@ import android.widget.Toast;
 
 import java.io.File;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 
 /**
  * Helferklasse für den Umgang mit SQLite Datenbanken. Die Klasse nimmt die Arbeit des Öffnens, Erzeugens und Updaten der Datenbanken ab.
@@ -59,10 +59,10 @@ public class DataSQLHelper extends SQLiteOpenHelper
    * @param dbn     (Database Name)
    * @see android.database.sqlite.SQLiteOpenHelper
    */
-  public DataSQLHelper(Context context, String dbn)
+  public DataSQLHelper(Context context, String dbn )
   {
     super(context, ProjectConst.DATABASE_NAME, null, ProjectConst.DATABASE_VERSION);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "DataSQLHelper...");
     }
@@ -76,7 +76,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
     //
     Log.i(TAG, "createAliasTable...");
     // Alias Tabelle
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "create table " + ProjectConst.A_TABLE_ALIASES + "...");
     }
@@ -147,7 +147,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
       return;
     }
     // Erzeuge index
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "create INDEX  on Table " + ProjectConst.H_TABLE_DIVELOGS + "...");
     }
@@ -195,14 +195,14 @@ public class DataSQLHelper extends SQLiteOpenHelper
     Log.i(TAG, "dropTables...");
     // Aliase
     sql = "drop table " + ProjectConst.A_TABLE_ALIASES + ";";
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "SQL: <" + sql + ">");
     }
     try
     {
       db.execSQL(sql);
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "SQL: <" + sql + ">.... OK");
       }
@@ -215,14 +215,14 @@ public class DataSQLHelper extends SQLiteOpenHelper
     }
     // Maindaten
     sql = "drop table " + ProjectConst.H_TABLE_DIVELOGS + ";";
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "SQL: <" + sql + ">");
     }
     try
     {
       db.execSQL(sql);
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "SQL: <" + sql + ">.... OK");
       }
@@ -313,7 +313,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
   public SQLiteDatabase getReadableDatabase()
   {
     SQLiteDatabase dbObj;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "getReadableDatabase()... ");
       Log.d(TAG, "Datepath: " + dbName);
@@ -344,7 +344,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
   public SQLiteDatabase getWritableDatabase()
   {
     SQLiteDatabase dbObj;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "getWritableDatabase... ");
       Log.d(TAG, "Datepath: " + dbName);
@@ -374,12 +374,12 @@ public class DataSQLHelper extends SQLiteOpenHelper
   @Override
   public void onCreate(SQLiteDatabase db)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreate...");
     }
     createTables(db);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreate...OK");
     }
@@ -394,7 +394,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
   @Override
   public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onUpgrade Old: <" + oldVersion + "> New: <" + newVersion + ">...");
     }
@@ -460,7 +460,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
     try
     {
       // indizi loeschen
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "drop old indizies...");
       }
@@ -469,7 +469,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
       sql = "drop index idx_" + ProjectConst.H_DEVICEID + ";";
       db.execSQL(sql);
       // Tabelle umbenennen
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "rename old table...");
       }
@@ -478,14 +478,14 @@ public class DataSQLHelper extends SQLiteOpenHelper
       // tabelle neu anlegen
       createMainTable(db);
       // Daten in neue Tablelle übernehmen
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "convert data...");
       }
       sql = "insert into " + ProjectConst.H_TABLE_DIVELOGS + " select * from " + ProjectConst.H_TABLE_DIVELOGS + "_old;";
       db.execSQL(sql);
       // alte Tabelle entfernen
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "drop old table...");
       }
@@ -515,7 +515,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
     String sql;
     try
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "rename old table...");
       }
@@ -524,7 +524,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
       // tabelle neu anlegen
       createAliasTable(db);
       // Daten in neue Tablelle übernehmen
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "convert data...");
       }
@@ -548,7 +548,7 @@ public class DataSQLHelper extends SQLiteOpenHelper
       //@formatter:on 
       db.execSQL(sql);
       // alte Tabelle entfernen
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "drop old table...");
       }

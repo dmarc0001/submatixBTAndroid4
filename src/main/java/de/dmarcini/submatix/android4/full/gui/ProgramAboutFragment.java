@@ -29,7 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.utils.BuildVersion;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
@@ -60,7 +60,7 @@ public class ProgramAboutFragment extends Fragment
     super.onActivityCreated(savedInstanceState);
     runningActivity = ( MainActivity ) getActivity();
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onActivityCreated: ACTIVITY ATTACH");
     }
@@ -73,7 +73,7 @@ public class ProgramAboutFragment extends Fragment
       aboutVersionTextView.setText(String.format("%s: %s", runningActivity.getResources().getString(R.string.app_version_prefix), BuildVersion.getVersion()));
       aboutProgrammerTextView.setText(runningActivity.getResources().getString(R.string.app_programmer_name));
       aboutBuildTextView.setText(String.format("%s: %s", runningActivity.getResources().getString(R.string.app_build_prefix), BuildVersion.getBuildAsString()));
-      aboutBuildDateTextView.setText(String.format("%s: %s", runningActivity.getResources().getString(R.string.app_build_date_prefix), BuildVersion.getdefaukltDateString()));
+      aboutBuildDateTextView.setText(String.format("%s: %s", runningActivity.getResources().getString(R.string.app_build_date_prefix), BuildVersion.getdefaultDateString()));
     }
     catch( NullPointerException ex )
     {
@@ -108,7 +108,7 @@ public class ProgramAboutFragment extends Fragment
   {
     super.onAttach(activity);
     runningActivity = ( MainActivity ) activity;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onAttach: ATTACH");
     }
@@ -121,7 +121,7 @@ public class ProgramAboutFragment extends Fragment
   public void onCreate(Bundle savedInstanceState)
   {
     super.onCreate(savedInstanceState);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreate...");
     }
@@ -134,7 +134,7 @@ public class ProgramAboutFragment extends Fragment
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
   {
     View rootView;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreateView...");
     }

@@ -29,7 +29,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
 
@@ -131,7 +131,7 @@ public class AreYouSureDialogFragment extends DialogFragment
   public void show(FragmentManager manager, String tag)
   {
     super.show(manager, tag);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "show(manager,tag)...");
     }

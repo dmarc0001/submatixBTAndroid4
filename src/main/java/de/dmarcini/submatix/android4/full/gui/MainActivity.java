@@ -37,7 +37,6 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -59,7 +58,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Vector;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.R;
 import de.dmarcini.submatix.android4.full.comm.BlueThoothComService;
 import de.dmarcini.submatix.android4.full.comm.BlueThoothComService.LocalBinder;
@@ -67,12 +66,10 @@ import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.content.ContentSwitcher;
 import de.dmarcini.submatix.android4.full.content.ContentSwitcher.ProgItem;
 import de.dmarcini.submatix.android4.full.dialogs.AreYouSureDialogFragment;
-import de.dmarcini.submatix.android4.full.dialogs.DatabaseFileDialog;
 import de.dmarcini.submatix.android4.full.dialogs.EditAliasDialogFragment;
 import de.dmarcini.submatix.android4.full.dialogs.UserAlertDialogFragment;
 import de.dmarcini.submatix.android4.full.exceptions.FirmwareNotSupportetException;
 import de.dmarcini.submatix.android4.full.exceptions.NoDatabaseException;
-import de.dmarcini.submatix.android4.full.exceptions.NoWritableDatabaseDirException;
 import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
 import de.dmarcini.submatix.android4.full.interfaces.INavigationDrawerCallbacks;
 import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
@@ -81,7 +78,6 @@ import de.dmarcini.submatix.android4.full.utils.GasUpdateEntity;
 import de.dmarcini.submatix.android4.full.utils.ProjectConst;
 import de.dmarcini.submatix.android4.full.utils.SPX42AliasManager;
 import de.dmarcini.submatix.android4.full.utils.SPX42Config;
-import de.jockels.tools.Environment4;
 
 /**
  * Die Aktivität der Application
@@ -102,8 +98,10 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   private final static String                        TAG2                  = "BackStackChangeListener";
   private static final String                        SERVICENAME           = BlueThoothComService.class.getCanonicalName();
   private static final String                        PACKAGENAME           = BlueThoothComService.class.getPackage().getName();
-  private static final String                        FIRSTTIME             = "keyFirstTimeInitiated";
-  private static final String                        PREFVERSION           = "keyPreferencesVersion";
+  private static final String                        FIRSTTIME_KEY         = "keyFirstTimeInitiated";
+  private static final String                        PREFVERSION_KEY       = "keyPreferencesVersion";
+  private static final String                        PROG_DATA_DIR_KEY     = "keyProgDataDirectory";
+  private static final String                        PROG_TIME_FORMAT_KEY  = "keyProgUnitsTimeFormat";
   @SuppressWarnings( "javadoc" )
   public static        DateTimeFormatter             localTimeFormatter    = DateTimeFormat.forPattern("yyyy-MM-dd - HH:mm:ss");
   /**
@@ -157,7 +155,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     @Override
     public void onServiceConnected(ComponentName name, IBinder service)
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       { Log.d(TAG, "onServiceConnected()..."); }
       binder = ( LocalBinder ) service;
       mService = binder.getService();
@@ -167,11 +165,11 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     @Override
     public void onServiceDisconnected(ComponentName name)
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       { Log.d(TAG, "onServiceDisconnected..."); }
       if( mService != null && binder != null )
       {
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         { Log.d(TAG, "onServiceDisconnected...unregister Handler..."); }
         binder.unregisterServiceHandler(mHandler);
       }
@@ -212,7 +210,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    */
   public void addServiceListener(IBtServiceListener listener)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "setServiceListener...");
     }
@@ -280,7 +278,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     {
       if( deviceUnis != null )
       {
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.i(TAG, "read units from cache...");
         }
@@ -299,13 +297,13 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    */
   private void askEnableBT()
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "askEnableBT...");
     }
     Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
     startActivityForResult(enableIntent, ProjectConst.REQUEST_ENABLE_BT);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "askEnableBT...OK");
     }
@@ -431,7 +429,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       }
       else
       {
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.i(TAG, "read directory from cache...");
         }
@@ -498,54 +496,6 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   }
 
   /**
-   * Checke und lege ggf das Datenverzeichnis an
-   * <p/>
-   * Project: SubmatixBTAndroid4 Package: de.dmarcini.submatix.android4.full.gui
-   * <p/>
-   * Stand: 08.12.2014
-   *
-   * @param dDir
-   * @throws NoWritableDatabaseDirException
-   */
-  private void checkDatabaseDir(File dDir) throws NoWritableDatabaseDirException
-  {
-    if( ApplicationDEBUG.DEBUG )
-    {
-      Log.d(TAG, "checkDatabaseDir: check if Directory exist and is writable...");
-    }
-    if( dDir != null )
-    {
-      if( ApplicationDEBUG.DEBUG )
-      {
-        Log.d(TAG, "checkDatabaseDir: Directory exist..");
-      }
-      if( !dDir.exists() )
-      {
-        Log.i(TAG, "checkDatabaseDir: create database root dir...");
-        if( !dDir.mkdirs() )
-        {
-          dDir = null;
-        }
-      }
-    }
-    //
-    // Ist das Datenbankverzeichnis da?
-    //
-    if( dDir == null || !dDir.canWrite() )
-    {
-      Log.e(TAG, "checkDatabaseDir: database directory not set! User must select one!");
-      if( dDir == null )
-      {
-        throw new NoWritableDatabaseDirException(getString(R.string.dialog_error_database_no_dir));
-      }
-      if( !dDir.canWrite() )
-      {
-        throw new NoWritableDatabaseDirException(getString(R.string.dialog_error_database_not_writable));
-      }
-    }
-  }
-
-  /**
    * Service binden, ggf starten
    * <p/>
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
@@ -558,7 +508,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     //
     // Service starten, wenn er nicht schon läuft
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "doBindService()...");
     }
@@ -572,7 +522,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       {
         if( SERVICENAME.equals(services.get(i).service.getClassName()) )
         {
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.d(TAG, "Service is running, need not start...");
           }
@@ -582,7 +532,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     }
     if( !isServiceFound )
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "Starting Service (package:<" + PACKAGENAME + ">)...");
       }
@@ -610,7 +560,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    */
   public void doConnectBtDevice(String device)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, String.format(Locale.ENGLISH, "recived do connect device <%s>", device));
     }
@@ -634,7 +584,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    */
   public void doDisconnectBtDevice()
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "recived do disconnect device ");
     }
@@ -665,7 +615,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       //
       if( mService != null )
       {
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.v(TAG, "doUnbindService...");
         }
@@ -673,7 +623,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         {
           if( mService != null && binder != null )
           {
-            if( ApplicationDEBUG.DEBUG )
+            if( BuildConfig.DEBUG )
             {
               Log.d(TAG, "doUnbindService...unregister Handler...");
             }
@@ -684,7 +634,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
           binder = null;
         }
         mIsBound = false;
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.v(TAG, "doUnbindService...OK");
         }
@@ -769,53 +719,49 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    */
   private File getDatabaseDir()
   {
-    File                extSdCard;
-    File                dataBaseRoot;
-    Environment4.Device devs[] = Environment4.getExternalStorage(this);
-    Environment4.setUseReceiver(this, false);
+    File databaseDir;
     //
-    if( (devs != null) && (devs.length >= 2) )
+    // bei neueren Androiden ist das sehr restriktiv, versuche den Standart
+    //
+    databaseDir = getBaseContext().getFilesDir().getAbsoluteFile();
+    //
+    // der Standartpfad
+    //
+    if( databaseDir.exists() && databaseDir.isDirectory() && databaseDir.canWrite() )
     {
-      extSdCard = devs[ 1 ].getAbsoluteFile();
-      Log.i(TAG, String.format(Locale.ENGLISH, "extern SDCARD =  %s", extSdCard.getAbsolutePath()));
-      if( extSdCard.exists() && extSdCard.isDirectory() && extSdCard.canWrite() )
+      databaseDir = getBaseContext().getDir( ProjectConst.DATABASE_SUBDIR, 0 );
+      if( databaseDir.exists() && databaseDir.isDirectory() && databaseDir.canWrite() )
+      {
+        return( databaseDir );
+      }
+      /*
+      databaseDir = new File(databaseDir.getAbsolutePath() + File.separator + ProjectConst.DATABASE_SUBDIR);
+      if( databaseDir.exists() && databaseDir.isDirectory() && databaseDir.canWrite() )
+      {
+        Log.i(TAG, String.format("use database dir <%s>...", databaseDir.getAbsolutePath()));
+        return (databaseDir);
+      }
+      //
+      // Unterverzeichnis nicht vorhanden, versuche es zu erzeugen
+      //
+      if( databaseDir.mkdirs() )
       {
         //
-        // das hat funktioniert!
-        //
-        Log.i(TAG, "datastore Directory is: <" + extSdCard + ">");
-        dataBaseRoot = new File(extSdCard + File.separator + ProjectConst.APPROOTDIR);
-        return (dataBaseRoot);
+        // ist es nun vorhanden
+        if( databaseDir.exists() && databaseDir.isDirectory() && databaseDir.canWrite() )
+        {
+          Log.i(TAG, String.format("use created database dir <%s>...", databaseDir.getAbsolutePath()));
+          return (databaseDir);
+        }
       }
-    }
-    //
-    // Kein Verzeichnis gefunden, Versuche Fallbacks
-    //
-    extSdCard = Environment.getExternalStorageDirectory();
-    if( extSdCard.exists() && extSdCard.isDirectory() && extSdCard.canWrite() )
-    {
+      */
+
       //
-      // Fallback #1 hat geklappt
+      // doch den Standart nutzen
       //
-      Log.w(TAG, "fallback #1: datastore Directory (ExternalStorageDirectory) is: <" + extSdCard + ">");
-      dataBaseRoot = new File(extSdCard + File.separator + ProjectConst.APPROOTDIR);
-      return (dataBaseRoot);
-    }
-    else
-    {
-      //
-      // Fallback #1 hat versagt, versuche Methode 2
-      //
-      extSdCard = Environment.getDataDirectory();
-      if( extSdCard.exists() && extSdCard.isDirectory() && extSdCard.canWrite() )
-      {
-        //
-        // Fallback #2 hat geklappt!
-        //
-        Log.w(TAG, "fallback #2: datastore Directory (DataDirectory) is: <" + extSdCard + ">");
-        dataBaseRoot = new File(extSdCard + File.separator + ProjectConst.APPROOTDIR);
-        return (dataBaseRoot);
-      }
+      databaseDir = getBaseContext().getFilesDir().getAbsoluteFile();
+      Log.i(TAG, String.format("use system files dir <%s>...", databaseDir.getAbsolutePath()));
+      return (databaseDir);
     }
     //
     // nichts hat geklappt: NULL zurück
@@ -850,7 +796,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         // die Menüs anpassen
         if( appNavigatorFragment != null )
         {
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.v(TAG, "ICONS auf CONNECTED stellen...");
           }
@@ -858,7 +804,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         }
         else
         {
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.v(TAG, "no fragment found: ICONS auf CONNECTED... ");
           }
@@ -872,7 +818,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         // die Menüs anpassen
         if( appNavigatorFragment != null )
         {
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.v(TAG, "ICONS auf DISCONNECTED stellen");
           }
@@ -880,7 +826,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         }
         else
         {
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.v(TAG, "no fragment found: ICONS auf DISCONNECTED... ");
           }
@@ -894,7 +840,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         // die Menüs anpassen
         if( appNavigatorFragment != null )
         {
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.v(TAG, "ICONS auf DISCONNECTED stellen");
           }
@@ -902,7 +848,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         }
         else
         {
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.v(TAG, "no fragment found: ICONS auf DISCONNECTED... ");
           }
@@ -972,7 +918,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       // Sonst....
       // ################################################################
       default:
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "unknown message with id <" + smsg.getId() + "> recived!");
         }
@@ -984,7 +930,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    */
   private void initStaticContenSwitcher()
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "initStaticContent...");
     }
@@ -1057,7 +1003,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   @Override
   public void msgConnected(BtServiceMessage msg)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "connected...");
     }
@@ -1069,22 +1015,22 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       // wenn das Gerät noch nicht ausgelesen wurde alles abfragen
       //
       spxConfig.setConnectedDeviceMac(getConnectedDevice());
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "msgConnected(): ask for manufacturer number...");
       }
       askForManufacturer();
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "msgConnected(): ask for serial number...");
       }
       askForSerialNumber();
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "msgConnected(): ask for SPX license...");
       }
       askForLicenseFromSPX();
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "msgConnected(): ask for Firmware version...");
       }
@@ -1096,7 +1042,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   @Override
   public void msgConnectError(BtServiceMessage msg)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "connection error (device not online?)");
     }
@@ -1119,7 +1065,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   @Override
   public void msgConnecting(BtServiceMessage msg)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "connecting...");
     }
@@ -1139,7 +1085,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   @Override
   public void msgDisconnected(BtServiceMessage msg)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "disconnected...");
     }
@@ -1155,7 +1101,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       // Alle Einträge auf dem Stack löschen, aber nur einmal ;-)
       //
       lastStatusConnected = ProjectConst.CONN_STATE_NONE;
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.e(TAG, "disconnected, cleaning Fragment stack!");
       }
@@ -1168,7 +1114,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   {
     String amsg;
     int    val = 0;
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "message alive with acku voltage recived");
     }
@@ -1192,14 +1138,14 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       }
       ackuValue = ( float ) (val / 100.0);
       // Hauptfenster
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, String.format(Locale.ENGLISH, "Acku value: %02.02f", ackuValue));
       }
     }
     else
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "Acku value was not an STRING");
       }
@@ -1219,7 +1165,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   private void msgRecivedFwVersion(BtServiceMessage msg)
   {
     spxConfig.setFirmwareVersion(( String ) msg.getContainer());
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.i(TAG, "license: custom: " + spxConfig.getCustomEnabled());
       Log.i(TAG, "fahrenheid bug: " + spxConfig.hasFahrenheidBug());
@@ -1234,7 +1180,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     //
     // Jetzt währe es an der Zeit, auch an Datum und Zeit zu denken
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "msgConnected(): set Date and Time to Device (if possible)...");
     }
@@ -1259,7 +1205,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    */
   public void msgRecivedSerial(BtServiceMessage msg)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "serial <" + msg.getContainer() + "> recived");
     }
@@ -1269,7 +1215,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   @Override
   public void msgRecivedTick(BtServiceMessage msg)
   {
-    // if( ApplicationDEBUG.DEBUG ) Log.d( TAG, String.format( Locale.ENGLISH, "recived Tick <%x08x>", msg.getTimeStamp() ) );
+    // if( BuildConfig.DEBUG ) Log.d( TAG, String.format( Locale.ENGLISH, "recived Tick <%x08x>", msg.getTimeStamp() ) );
   }
 
   /**
@@ -1288,11 +1234,11 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     // CE : Custom Enabled 0= disabled, 1=enabled
     String[] lic = ( String[] ) msg.getContainer();
     spxConfig.setLicenseStatus(lic);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "SPX License state <" + lic[ 0 ] + "," + lic[ 1 ] + "> recived");
     }
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "SPX License INDIVIDUAL: <" + spxConfig.getCustomEnabled() + ">");
       switch( spxConfig.getLicenseState() )
@@ -1324,7 +1270,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    */
   public void msgReciveManufacturer(BtServiceMessage msg)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "SPX Manufacturer <" + msg.getContainer() + "> recived. Ignore.");
     }
@@ -1338,7 +1284,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   @Override
   public void onActivityResult(int requestCode, int resultCode, Intent data)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onActivityResult()... ");
     }
@@ -1351,7 +1297,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         // Wenn BT eingeschaltet wurde
         if( resultCode == Activity.RESULT_OK )
         {
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.v(TAG, "REQUEST_ENABLE_BT => BT Device ENABLED");
           }
@@ -1361,7 +1307,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         else
         {
           // Der User hats verboten oder ein Fehler trat auf
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.v(TAG, "REQUEST_ENABLE_BT => BT Device NOT ENABLED");
           }
@@ -1384,7 +1330,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void onCreate(Bundle savedInstanceState)
   {
     super.onCreate(savedInstanceState);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreate...");
     }
@@ -1395,7 +1341,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     initStaticContenSwitcher();
     serviceListener.clear();
     serviceListener.add(this);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       //
       // zum DEBUGGEN den Stack überwachen
@@ -1404,7 +1350,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     }
     // den defaultadapter lesen
     mBtAdapter = BluetoothAdapter.getDefaultAdapter();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreate: setContentView...");
     }
@@ -1418,7 +1364,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       boolean whishedTheme = sPref.getBoolean("keyProgOthersThemeIsDark", false);
       if( whishedTheme )
       {
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "onCreate: select DARK theme while preference was set");
         }
@@ -1427,7 +1373,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       }
       else
       {
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.d(TAG, "onCreate: select Blue theme while preference was set");
         }
@@ -1444,7 +1390,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     //
     if( wasRestartForNewTheme )
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.v(TAG, "onCreate: it was an restart for new Theme..");
       }
@@ -1454,7 +1400,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       wasRestartForNewTheme = false;
       appNavigatorFragment = ( NavigatorFragment ) getFragmentManager().findFragmentById(R.id.navi_drawer);
       mTitle = getTitle();
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.v(TAG, "onCreate: restart for new Theme: set navigation drawer...");
       }
@@ -1475,7 +1421,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       FragmentTransaction fTrans = getFragmentManager().beginTransaction();
       fTrans.replace(R.id.main_container, ppFragment);
       fTrans.addToBackStack("ProgramPreferencesFragment");
-      fTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE | FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+      fTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE /*| FragmentTransaction.TRANSIT_FRAGMENT_OPEN*/);
       firstId = fTrans.commit();
     }
     else
@@ -1485,7 +1431,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       //
       appNavigatorFragment = ( NavigatorFragment ) getFragmentManager().findFragmentById(R.id.navi_drawer);
       mTitle = getTitle();
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.v(TAG, "onCreate: set navigation drawer...");
       }
@@ -1506,7 +1452,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       FragmentTransaction fTrans = getFragmentManager().beginTransaction();
       fTrans.replace(R.id.main_container, defaultFragment);
       fTrans.addToBackStack("FIRSTFragment");
-      fTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE | FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+      fTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE /*| FragmentTransaction.TRANSIT_FRAGMENT_OPEN*/);
       firstId = fTrans.commit();
     }
   }
@@ -1530,13 +1476,13 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void onDestroy()
   {
     super.onDestroy();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       //
       // zum DEBUGGEN den Stack überwachen
       //
       getFragmentManager().removeOnBackStackChangedListener(this);
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "onDestroy:...");
       }
@@ -1551,7 +1497,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   @Override
   public void onDialogNegativeClick(DialogFragment dialog)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "Negative dialog click!");
     }
@@ -1581,7 +1527,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   @Override
   public void onDialogPositiveClick(DialogFragment dialog)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "Positive dialog click!");
     }
@@ -1608,7 +1554,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
           SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
           if( sPref.getBoolean("keyProgOthersDisableBTOnExit", true) )
           {
-            if( ApplicationDEBUG.DEBUG )
+            if( BuildConfig.DEBUG )
             {
               Log.d(TAG, "disable BT Adapter on exit!");
             }
@@ -1656,16 +1602,6 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         // Warung wegen fehlender Mailadresse, einfach diese Meldung ignorieren
         return;
       }
-      if( dialog.getTag().matches("database_directory_alert") )
-      {
-        //
-        // Nochmal die Dateiauswahlbox zeigen
-        //
-        dialog.dismiss();
-        DatabaseFileDialog dl = new DatabaseFileDialog(databaseDir);
-        dl.show(getFragmentManager(), "set_database_directory");
-        return;
-      }
       if( dialog.getTag().matches("abortProgram") )
       {
         //
@@ -1679,7 +1615,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
           SharedPreferences sPref = PreferenceManager.getDefaultSharedPreferences(this);
           if( sPref.getBoolean("keyProgOthersDisableBTOnExit", true) )
           {
-            if( ApplicationDEBUG.DEBUG )
+            if( BuildConfig.DEBUG )
             {
               Log.d(TAG, "disable BT Adapter on exit!");
             }
@@ -1700,87 +1636,6 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         finish();
       }
     }
-    else if( dialog instanceof DatabaseFileDialog )
-    {
-      if( dialog.getTag().matches("set_database_directory") || dialog.getTag().matches("set_database_directory_pref") )
-      {
-        //
-        // Ok, das verlief positiv
-        //
-        File currPath = (( DatabaseFileDialog ) dialog).getCurrDir();
-        dialog.dismiss();
-        if( currPath != null )
-        {
-          //
-          // Ja, es gibt einen Pfad
-          //
-          if( currPath.getAbsolutePath().endsWith(ProjectConst.APPROOTDIR) )
-          {
-            // Ok, das ist ein schon vorhandenes Verzeichnis
-            databaseDir = currPath;
-          }
-          else
-          {
-            databaseDir = new File(currPath.getAbsolutePath() + File.separator + ProjectConst.APPROOTDIR);
-          }
-        }
-        else
-        {
-          //
-          // Nein, es gibt keinen Pfad
-          //
-          databaseDir = null;
-          UserAlertDialogFragment alrt = new UserAlertDialogFragment(getString(R.string.dialog_error_database_dir_header), getString(R.string.dialog_error_database_no_dir));
-          alrt.show(getFragmentManager(), "database_directory_alert");
-          return;
-        }
-        try
-        {
-          checkDatabaseDir(databaseDir);
-        }
-        catch( NoWritableDatabaseDirException ex )
-        {
-          UserAlertDialogFragment alrt = new UserAlertDialogFragment(getString(R.string.dialog_error_database_dir_header), ex.getLocalizedMessage());
-          alrt.show(getFragmentManager(), "database_directory_alert");
-          return;
-        }
-        //
-        // Daten in Prefs und Main schreiben
-        //
-        SharedPreferences        sPref  = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = sPref.edit();
-        editor.putString("keyProgDataDirectory", databaseDir.getAbsolutePath());
-        if( editor.commit() )
-        {
-          if( ApplicationDEBUG.DEBUG )
-          {
-            Log.d(TAG, "wrote database-file preference to storeage.");
-          }
-        }
-        else
-        {
-          Log.e(TAG, "CAN'T wrote preference to storage.");
-        }
-        //
-        // Die Datenbank schließen, wenn geöffnet
-        //
-        if( aliasManager != null )
-        {
-          aliasManager.close();
-          aliasManager = null;
-        }
-        if( dialog.getTag().matches("set_database_directory") )
-        {
-          dialog = null;
-          // Code nach stackoverflow
-          Intent intent = new Intent(Intent.ACTION_MAIN);
-          intent.addCategory(Intent.CATEGORY_HOME);
-          intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-          intent.putExtra("EXIT", false);
-          startActivity(intent);
-        }
-      }
-    }
     // hat sonst irgendwer Verwendung dafür?
     mHandler.obtainMessage(ProjectConst.MESSAGE_DIALOG_POSITIVE, new BtServiceMessage(ProjectConst.MESSAGE_DIALOG_POSITIVE, dialog)).sendToTarget();
   }
@@ -1796,14 +1651,14 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     //
     if( (keyCode == KeyEvent.KEYCODE_BACK) )
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.v(TAG, "onKeyDown: BACK pressed!");
       }
       if( getFragmentManager().getBackStackEntryCount() <= 1 )
       {
         // in diesem Fall frag mal den user ob er wirklich beenden will
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.v(TAG, "onKeyDown:BACK pressed => backstack is empty, ask user for exit.");
         }
@@ -1831,7 +1686,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     FragmentTransaction fTrans    = null;
     Fragment            newFrag   = null;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, String.format(Locale.ENGLISH, "onNavigationDrawerItemSelected: id: <%d>, content: <%s>...", pItem.nId, pItem.content));
     }
@@ -1866,7 +1721,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     {
       case R.string.progitem_exit:
         // ENDE
-        if( ApplicationDEBUG.DEBUG )
+        if( BuildConfig.DEBUG )
         {
           Log.v(TAG, "onNavigationDrawerItemSelected: make dialog for USER...");
         }
@@ -2029,10 +1884,10 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     if( fTrans != null )
     {
       fTrans.replace(R.id.main_container, newFrag);
-      fTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN | FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+      fTrans.setTransition( /*FragmentTransaction.TRANSIT_FRAGMENT_OPEN |*/ FragmentTransaction.TRANSIT_FRAGMENT_FADE);
       fTrans.commit();
     }
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onNavigationDrawerItemSelected:...OK");
     }
@@ -2041,7 +1896,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   @Override
   public void onResume()
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onResume...");
     }
@@ -2067,8 +1922,9 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     //
     if( databaseDir == null || !databaseDir.canWrite() )
     {
-      DatabaseFileDialog dl = new DatabaseFileDialog(Environment.getExternalStorageDirectory());
-      dl.show(getFragmentManager(), "set_database_directory");
+      Toast.makeText(this, R.string.toast_main_no_databasedir, Toast.LENGTH_LONG).show();
+      finish();
+      return;
     }
     //
     if( !mBtAdapter.isEnabled() )
@@ -2094,14 +1950,14 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    */
   public void onSectionAttached(String pItem)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, String.format(Locale.ENGLISH, "onSectionAttached: fragment for  <%s>...", pItem));
     }
     getActionBar().setDisplayShowTitleEnabled(true);
     mTitle = pItem;
     getActionBar().setTitle(mTitle);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "onSectionAttached: OK");
     }
@@ -2111,7 +1967,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   public void onStop()
   {
     super.onStop();
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onStop:...");
     }
@@ -2129,7 +1985,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    */
   public boolean openAliasManager()
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "openAliasManager...");
     }
@@ -2155,7 +2011,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       //
       // die Datenbank öffnen, wenn erforderlich
       //
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "openAliasManager: create SQLite helper...");
       }
@@ -2163,7 +2019,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       //
       // einen Alias Manager öffnen
       //
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "openAliasManager: open Database...");
       }
@@ -2207,7 +2063,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    */
   public void removeServiceListener(IBtServiceListener listener)
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "clearServiceListener()...");
     }
@@ -2231,7 +2087,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   @SuppressWarnings( "deprecation" )
   public void restoreActionBar()
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "restoreActionBar:...");
     }
@@ -2243,7 +2099,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     }
     actionBar.setDisplayShowTitleEnabled(true);
     actionBar.setTitle(mTitle);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "restoreActionBar:...OK");
     }
@@ -2260,10 +2116,10 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
    */
   private void setAppPreferences(SharedPreferences sPref)
   {
-    if( !sPref.contains(FIRSTTIME) )
+    if( !sPref.contains(FIRSTTIME_KEY) )
     {
       Log.w(TAG, "onCreate: not found firsttime key == make first time preferences...");
-      if( !sPref.getBoolean(FIRSTTIME, false) )
+      if( !sPref.getBoolean(FIRSTTIME_KEY, false) )
       {
         setDefaultPreferences();
       }
@@ -2271,10 +2127,11 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     //
     // sind die Preferenzen in der richtigen version?
     //
-    if( sPref.contains(PREFVERSION) )
+    if( sPref.contains(PREFVERSION_KEY) )
     {
-      if( ProjectConst.PREF_VERSION != sPref.getInt(PREFVERSION, 0) )
+      if( ProjectConst.PREF_VERSION != sPref.getInt(PREFVERSION_KEY, 0) )
       {
+        //FIXME: alte Datenbank übernehmen, sofern vorhanden
         Log.w(TAG, "onCreate: pref version to old == make first time preferences...");
         setDefaultPreferences();
       }
@@ -2284,15 +2141,15 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       Log.w(TAG, "onCreate: pref version not found == make first time preferences...");
       setDefaultPreferences();
     }
-    if( sPref.contains("keyProgUnitsTimeFormat") )
+    if( sPref.contains(PROG_TIME_FORMAT_KEY) )
     {
-      localTimeFormatter = DateTimeFormat.forPattern(sPref.getString("keyProgUnitsTimeFormat", "yyyy/dd/MM - hh:mm:ss a"));
+      localTimeFormatter = DateTimeFormat.forPattern(sPref.getString(PROG_TIME_FORMAT_KEY, "yyyy/dd/MM - hh:mm:ss a"));
     }
     //
     // Verzeichnis für Datenbanken etc
     // Suche den Datenbankpfad aus den Preferenzen oder, falls nicht vorhanden aus getDatabaseDir
     //
-    databaseDir = new File(sPref.getString("keyProgDataDirectory", "."));
+    databaseDir = new File(sPref.getString( PROG_DATA_DIR_KEY, getDatabaseDir().getAbsolutePath() ));
   }
 
   /**
@@ -2302,7 +2159,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   {
     String gasKeyTemplate = getResources().getString(R.string.conf_gaslist_gas_key_template);
     String gasListDefault = getResources().getString(R.string.conf_gaslist_default);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "setDefaultPreferences: make default preferences...");
     }
@@ -2313,10 +2170,10 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     //
     SharedPreferences        sPref  = PreferenceManager.getDefaultSharedPreferences(this);
     SharedPreferences.Editor editor = sPref.edit();
-    editor.remove(FIRSTTIME);
-    editor.putBoolean(FIRSTTIME, true);
-    editor.remove(PREFVERSION);
-    editor.putInt(PREFVERSION, ProjectConst.PREF_VERSION);
+    editor.remove(FIRSTTIME_KEY);
+    editor.putBoolean(FIRSTTIME_KEY, true);
+    editor.remove(PREFVERSION_KEY);
+    editor.putInt(PREFVERSION_KEY, ProjectConst.PREF_VERSION);
     //
     // Gaslistenpresets eintragen
     //
@@ -2325,26 +2182,26 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       editor.putString(String.format(Locale.getDefault(), gasKeyTemplate, i), gasListDefault);
     }
     //
-    // external Storage eintragen
+    // Storage eintragen
     //
     databaseDir = getDatabaseDir();
     //
-    // Wenn nix gefunden, dann null eintragen
+    // Wenn nix gefunden, dann current eintragen
     //
-    if( databaseDir != null && databaseDir.isDirectory() )
+    if( databaseDir != null )
     {
-      editor.putString("keyProgDataDirectory", databaseDir.getAbsolutePath());
+      editor.putString(PROG_DATA_DIR_KEY, databaseDir.getAbsolutePath());
     }
     else
     {
-      editor.putString("keyProgDataDirectory", ".");
+      editor.putString(PROG_DATA_DIR_KEY, ".");
     }
     //
     // alles in die Propertys
     //
     if( editor.commit() )
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "setDefaultPreferences: wrote preferences to storeage.");
       }

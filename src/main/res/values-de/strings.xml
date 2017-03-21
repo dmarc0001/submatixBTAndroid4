@@ -2,8 +2,7 @@
 <resources>
 
     <string name="app_name">SubmatixBTLogger</string>
-    <string name="app_name_light">SubmatixBTLogger LIGHT</string>
-    <string name="title_area_detail">Detail</string>
+  <string name="title_area_detail">Detail</string>
     <string name="app_description">Diese App verbindet sich mit dem SUBMATIX SPX42 und liest Logdaten bzw. konfiguriert den Tauchcomputer</string>
     <string name="app_description_light">Diese App verbindet sich mit dem SUBMATIX SPX42 und konfiguriert den Tauchcomputer</string>
     <string name="dummy_filler">SUBMATIX BT Config</string>
@@ -398,6 +397,7 @@
     <string name="conf_prog_others_online_help_header">Online Hilfe erlauben?</string>
     <string name="online_help_local_url">file:///android_asset/www/index_de.html</string>
     <string name="online_help_remote_url">http://spx42.submatix.com/de/v200/</string>
+  <string name="toast_main_no_databasedir">Kann Datenbankverzeichnis nicht finden! BEENDE!</string>
 
 
 </resources>

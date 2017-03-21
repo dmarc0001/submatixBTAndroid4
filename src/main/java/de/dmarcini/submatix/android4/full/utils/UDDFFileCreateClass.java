@@ -69,7 +69,7 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import de.dmarcini.submatix.android4.full.ApplicationDEBUG;
+import de.dmarcini.submatix.android4.full.BuildConfig;
 import de.dmarcini.submatix.android4.full.comm.BtServiceMessage;
 import de.dmarcini.submatix.android4.full.exceptions.NoXMLDataFileFoundException;
 import de.dmarcini.submatix.android4.full.exceptions.XMLFileCreatorException;
@@ -111,32 +111,32 @@ public class UDDFFileCreateClass
   public UDDFFileCreateClass() throws ParserConfigurationException, TransformerException, TransformerFactoryConfigurationError, XMLFileCreatorException
   {
     // initialisiere die Klasse
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreate()...");
     }
     try
     {
       // So den XML-Erzeuger Creieren
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "LogXMLCreator: create Transformer...");
       }
       transformer = TransformerFactory.newInstance().newTransformer();
       transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
       transformer.setOutputProperty(OutputKeys.STANDALONE, "yes");
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "LogXMLCreator: create factory...");
       }
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       factory.setNamespaceAware(false);
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "LogXMLCreator: create builder...");
       }
       builder = factory.newDocumentBuilder();
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "LogXMLCreator: ...OK");
       }
@@ -156,7 +156,7 @@ public class UDDFFileCreateClass
       Log.e(TAG, "LogXMLCreator: builder <" + ex.getLocalizedMessage() + ">");
       throw new XMLFileCreatorException(ex.getMessage());
     }
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onCreate()...OK");
     }
@@ -207,7 +207,7 @@ public class UDDFFileCreateClass
     File    retFile     = file;
     Node    profileNode = null;
     //
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "createXML()...");
     }
@@ -227,7 +227,7 @@ public class UDDFFileCreateClass
     // Programmname einfügen
     rootNode.appendChild(uddfDoc.createComment(ProjectConst.CREATORPROGRAM));
     // Appliziere Generator
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "generator node...");
     }
@@ -242,13 +242,13 @@ public class UDDFFileCreateClass
     gases.addAll(uniqueSet);
     //
     // appliziere Gasdefinitionen
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "gasdefinitions node...");
     }
     rootNode.appendChild(makeGasdefinitions(uddfDoc));
     // appliziere profiledata
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "profiles node...");
     }
@@ -466,7 +466,7 @@ public class UDDFFileCreateClass
       throw new NoXMLDataFileFoundException("Cant found data-XML-File: <" + xmlFile.getFreeSpace() + ">");
     }
     // Liste des Tauchganges machen
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.v(TAG, "getDiveList()...scan XML...");
     }
@@ -475,7 +475,7 @@ public class UDDFFileCreateClass
     spf = SAXParserFactory.newInstance();
     try
     {
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "getDiveList()...NEW SAX Parser...");
       }
@@ -494,7 +494,7 @@ public class UDDFFileCreateClass
     }
     // einen nagenleuen Handler erzeugen
     // als implizite Klasse
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "getDiveList()...create ContentHandler...");
     }
@@ -532,7 +532,7 @@ public class UDDFFileCreateClass
         // Wird aufgerufen bei einem Start-Tag
         if( localName.equalsIgnoreCase(rootTag) )
         {
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.d(TAG, "PARSER: rootElement <" + localName + "> Opened!");
           }
@@ -613,7 +613,7 @@ public class UDDFFileCreateClass
         // root Tag geschlossen? Dann ist Finito
         if( localName.equalsIgnoreCase(rootTag) )
         {
-          if( ApplicationDEBUG.DEBUG )
+          if( BuildConfig.DEBUG )
           {
             Log.d(TAG, "PARSER: rootElement <" + localName + "> Closed!");
           }
@@ -977,19 +977,19 @@ public class UDDFFileCreateClass
    */
   private File domToFile(File file, Document document, boolean zipped) throws IOException, TransformerException
   {
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "domToFile()... ");
     }
     // die Vorbereitungen treffen
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "create writer...");
     }
     StringWriter writer = new StringWriter();
     DOMSource    doc    = new DOMSource(document);
     StreamResult res    = new StreamResult(writer);
-    if( ApplicationDEBUG.DEBUG )
+    if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "transform... ");
     }
@@ -997,8 +997,8 @@ public class UDDFFileCreateClass
     // nun zur Frage: gezippt oder nicht
     if( zipped )
     {
-      // File zipFile = new File( file.getAbsoluteFile() + ".zip" );
-      File zipFile = new File(file.getAbsolutePath().replace("uddf", "zip"));
+      File zipFile = new File( file.getAbsoluteFile() + ".zip" );
+      //File zipFile = new File(file.getAbsolutePath().replace("uddf", "zip"));
       // gezipptes File erzeugen
       Log.i(TAG, "write to zipped file <" + zipFile.getName() + ">... ");
       if( file.exists() )
@@ -1022,7 +1022,7 @@ public class UDDFFileCreateClass
       {
         zos.close();
       }
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "domToString()...ok ");
       }
@@ -1040,7 +1040,7 @@ public class UDDFFileCreateClass
       RandomAccessFile xmlFile = new RandomAccessFile(file, "rw");
       xmlFile.writeBytes(writer.toString());
       xmlFile.close();
-      if( ApplicationDEBUG.DEBUG )
+      if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "domToString()...ok ");
       }
