@@ -396,5 +396,7 @@
     <string name="online_help_local_url">file:///android_asset/www/index_en.html</string>
     <string name="online_help_remote_url">http://spx42.submatix.com/en/v200/</string>
     <string name="toast_main_no_databasedir">can\'t find database directory! EXIT!</string>
+    <string name="toast_main_no_rights">The APP has not enough rights! ABORT!</string>
+    <string name="toast_connect_nopairing">this android version can\'t pair BT in user apps</string>
 
 </resources>

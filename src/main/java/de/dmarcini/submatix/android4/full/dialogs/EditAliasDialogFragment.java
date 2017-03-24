@@ -25,6 +25,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
@@ -57,6 +58,7 @@ public class EditAliasDialogFragment extends DialogFragment
   private String                devicePin  = null;
   // Use this instance of the interface to deliver action events
   private INoticeDialogListener mListener  = null;
+  private boolean               apiCanPair = false;
 
   /**
    * Der Default-Konstruktor ist gesperrt
@@ -119,6 +121,15 @@ public class EditAliasDialogFragment extends DialogFragment
   public Dialog onCreateDialog(Bundle savedInstanceState)
   {
     //
+    if( (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) &&
+        (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.M))
+    {
+      apiCanPair = true;
+    }
+    else
+    {
+      apiCanPair = false;
+    }
     // Benutze die Builderklasse zum erstellen des Dialogs
     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
     // Get the layout inflater
@@ -138,7 +149,7 @@ public class EditAliasDialogFragment extends DialogFragment
     //
     // ud, wenn Android ab 4.4 läuft
     //
-    if( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT )
+    if( apiCanPair )
     {
       EditText edPin = ( EditText ) rootView.findViewById(R.id.aliasEditDialogPINEditTextView);
       edPin.setVisibility(View.VISIBLE);
@@ -158,7 +169,7 @@ public class EditAliasDialogFragment extends DialogFragment
         // Gib in der App bescheid, ich will es so!
         ed = ( EditText ) rootView.findViewById(R.id.aliasEditDialogAliasEditTextView);
         aliasName = ed.getText().toString();
-        if( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT )
+        if( apiCanPair )
         {
           // bei Android ab 4.4
           EditText edPin = ( EditText ) rootView.findViewById(R.id.aliasEditDialogPINEditTextView);
@@ -182,19 +193,19 @@ public class EditAliasDialogFragment extends DialogFragment
 
   // Überschreibe onAttach für meine Zwecke mit dem Listener
   @Override
-  public void onAttach(Activity activity)
+  public void onAttach(Context ctx)
   {
-    super.onAttach(activity);
+    super.onAttach( ctx );
     // Implementiert die Activity den Listener?
     try
     {
       // Instanziere den Listener, wenn möglich, ansonsten wirft das eine exception
-      mListener = ( INoticeDialogListener ) activity;
+      mListener = ( INoticeDialogListener ) getActivity();
     }
     catch( ClassCastException ex )
     {
       // Die activity implementiert den Listener nicht, werfe eine Exception
-      throw new ClassCastException(activity.toString() + " must implement INoticeDialogListener");
+      throw new ClassCastException( getActivity().toString() + " must implement INoticeDialogListener");
     }
   }
 
