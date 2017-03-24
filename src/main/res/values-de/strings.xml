@@ -398,6 +398,8 @@
     <string name="online_help_local_url">file:///android_asset/www/index_de.html</string>
     <string name="online_help_remote_url">http://spx42.submatix.com/de/v200/</string>
   <string name="toast_main_no_databasedir">Kann Datenbankverzeichnis nicht finden! BEENDE!</string>
+  <string name="toast_main_no_rights">Die App hat nicht genug Rechte! ABBRUCH!</string>
+  <string name="toast_connect_nopairing">Diese Android Version kann BT nicht in Apps paaren</string>
 
 
 </resources>

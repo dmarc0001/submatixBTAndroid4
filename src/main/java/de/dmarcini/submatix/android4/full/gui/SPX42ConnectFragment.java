@@ -20,10 +20,11 @@
 //@formatter:on
 package de.dmarcini.submatix.android4.full.gui;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -33,6 +34,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -77,7 +79,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   private static final String                      LAST_CONNECTED_DEVICE_KEY = "keyLastConnectedDevice";
   private static final String                      DIAL_GET_PIN              = "get_pin_dial";
   private static final String                      DIAL_NO_PIN_ERR           = "no_pin_was_there_dial";
-  private final        Vector<BluetoothDevice>     discoveredDevices         = new Vector<BluetoothDevice>();
+  private final        Vector<BluetoothDevice>     discoveredDevices         = new Vector<>();
   protected            ProgressDialog              progressDialog            = null;
   private              String                      lastConnectedDeviceMac    = null;
   private              BluetoothDeviceArrayAdapter btArrayAdapter            = null;
@@ -89,6 +91,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   private              boolean                     runDiscovering            = false;
   private              MainActivity                runningActivity           = null;
   private              CommToast                   theToast                  = null;
+  private              boolean                     apiCanPair                = false;
   //
   // der Broadcast Empfänger der Nachrichten über gefundene BT Geräte findet
   //
@@ -171,15 +174,25 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         fillNewAdapterWithKnownDevices();
         setItemsEnabledwhileDiscover(true);
       }
+      else if( BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action) )
+      {
+        if( BuildConfig.DEBUG )
+        { Log.v(TAG, "discover started, disable button."); }
+        runDiscovering = true;
+        discoveredDevices.clear();
+        // Adapter frisch befüllen
+        fillNewAdapterWithKnownDevices();
+        setItemsEnabledwhileDiscover(false);
+      }
       //
       // Das Ereignis, wenn ein Gerät gepaart werden muss
       //
       else if( BluetoothDevice.ACTION_PAIRING_REQUEST.equals(action) )
       {
-        if( (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) && (MainActivity.aliasManager != null) )
+        if( apiCanPair && (MainActivity.aliasManager != null) )
         {
           //
-          // das klappt nur bei Android >= 4.4, vorher gibt es die API nicht
+          // das klappt nur bei Android >= 4.4, vorher gibt es die API nicht, und nur bis Android kleiner 6.0
           //
           if( BuildConfig.DEBUG )
           {
@@ -300,15 +313,16 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     //
     // eine Liste der bereits gepaarten Devices
     //
-    Vector<BluetoothDevice> pairedDevices = new Vector<BluetoothDevice>(MainActivity.mBtAdapter.getBondedDevices());
+    Vector<BluetoothDevice> pairedDevices = new Vector<>(MainActivity.mBtAdapter.getBondedDevices());
     //
     // Liste der Geräte aus der Datenbank, Abgleich mit gepaarten und discoverten Geräten
     //
     Vector<HashMap<String, String>>   devListStored = MainActivity.aliasManager.getDeviceAdressesList();
-    Iterator<HashMap<String, String>> itStored      = devListStored.iterator();
-    while( itStored.hasNext() )
+    //Iterator<HashMap<String, String>> itStored      = devListStored.iterator();
+    for( HashMap<String, String> deviceMap : devListStored )
+    //while( itStored.hasNext() )
     {
-      HashMap<String, String> deviceMap = itStored.next();
+      //HashMap<String, String> deviceMap = itStored.next();
       if( BuildConfig.DEBUG )
       {
         Log.d(TAG, "fillNewAdapterWithKnownDevices: check stored Device <" + deviceMap.get(ProjectConst.A_DEVNAME) + ">...");
@@ -414,7 +428,6 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
           catch( NullPointerException ex )
           {
             Log.e(TAG, "Nullpointer (alias manager not initialized? <" + ex.getLocalizedMessage() + ">");
-            continue;
           }
         }
       }
@@ -563,9 +576,9 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
    * <p/>
    * Stand: 04.11.2012
    *
-   * @param inflater
-   * @param container
-   * @return
+   * @param inflater Layout Inflator
+   * @param container Container für das View
+   * @return das erzeugte View
    */
   private View makeConnectionView(LayoutInflater inflater, ViewGroup container)
   {
@@ -583,6 +596,11 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     // Objekte lokalisieren
     //
     discoverButton = ( Button ) rootView.findViewById(R.id.connectDiscoverButton);
+    if( ! apiCanPair )
+    {
+      discoverButton.setEnabled( false );
+      discoverButton.setVisibility( View.INVISIBLE );
+    }
     devSpinner = ( Spinner ) rootView.findViewById(R.id.connectBlueToothDeviceSpinner);
     connButton = ( ImageButton ) rootView.findViewById(R.id.connectButton);
     connectTextView = ( TextView ) rootView.findViewById(R.id.connectStatusText);
@@ -659,21 +677,23 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     device = ( BluetoothDevice ) smsg.getContainer();
     dName = String.format("%s/%s", MainActivity.aliasManager.getAliasForMac(device.getAddress(), device.getName()), device.getName());
     //
-    if( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT )
+    FragmentTransaction ft = getFragmentManager().beginTransaction();
+    if( apiCanPair )
     {
       // Bei KITKAT kann ich hier die PIN eintragen lassen, in die DB schreiben und den Pairungprozess starten
       msg = String.format(getResources().getString(R.string.dialog_get_pin_msg), dName);
       PinErrorDialog eDial = new PinErrorDialog(getResources().getString(R.string.dialog_no_pin_headline), msg, device);
-      eDial.show(getFragmentManager().beginTransaction(), DIAL_GET_PIN);
+      eDial.show( ft, DIAL_GET_PIN);
     }
     else
     {
-      // bei App < 4.4 gebe ich nur den Hinweis an den User, er muss das Gerät paaren
+      // bei App < 4.4 oder >= 6.0 gebe ich nur den Hinweis an den User, er muss das Gerät paaren
       // Message ist der container des Messageobjektes == String
       msg = String.format(getResources().getString(R.string.dialog_no_pin_errmsg), dName);
       PinErrorDialog eDial = new PinErrorDialog(getResources().getString(R.string.dialog_no_pin_headline), msg);
-      eDial.show(getFragmentManager().beginTransaction(), DIAL_NO_PIN_ERR);
+      eDial.show( ft, DIAL_NO_PIN_ERR);
     }
+    ft.commit();
   }
 
   @Override
@@ -714,9 +734,9 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   private void msgRecivedDialogPositive(BtServiceMessage smsg)
   {
     //
-    // hier ist nur der PIN-Dialog interessant, und nur bei API >= 19
+    // hier ist nur der PIN-Dialog interessant, und nur bei API >= 19 <= 22
     //
-    if( (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) && (MainActivity.aliasManager != null) )
+    if( apiCanPair && (MainActivity.aliasManager != null) )
     {
       if( smsg.getContainer() instanceof PinErrorDialog )
       {
@@ -760,7 +780,9 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
             // Bei KITKAT kann ich hier die PIN eintragen lassen, in die DB schreiben und den Pairungprozess starten
             String msg = String.format(getResources().getString(R.string.dialog_pin_wrong_format), device.getName());
             pinDial = new PinErrorDialog(getResources().getString(R.string.dialog_no_pin_headline), msg, device);
-            pinDial.show(getFragmentManager().beginTransaction(), DIAL_GET_PIN);
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            pinDial.show( ft, DIAL_GET_PIN);
+            ft.commit();
           }
         }
       }
@@ -775,7 +797,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
    * <p/>
    * Stand: 26.07.2013
    *
-   * @param msg
+   * @param msg Die Nachricht über den Änderungswunsch
    */
   private void msgReciveDeviceAliasSet(BtServiceMessage msg)
   {
@@ -815,7 +837,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         //
         if( MainActivity.aliasManager.setAliasForMac(parm[ 2 ], parm[ 0 ], parm[ 1 ], null) )
         {
-          if( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT )
+          if( apiCanPair )
           {
             //
             // wenn Android >= API 19 (4.4) läuft
@@ -922,16 +944,6 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       fragmentTitle = savedInstanceState.getString(ProjectConst.ARG_ITEM_CONTENT);
       runningActivity.onSectionAttached(fragmentTitle);
     }
-    //
-    // Intend-Filter und Intend für Pairing Anfragen
-    //
-    IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
-    if( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT )
-    {
-      // Nur bei Android Versionen größer oder gleich 4.4
-      filter.addAction(BluetoothDevice.ACTION_PAIRING_REQUEST);
-    }
-    runningActivity.registerReceiver(mReceiver, filter);
   }
 
   @Override
@@ -943,10 +955,10 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   }
 
   @Override
-  public void onAttach(Activity activity)
+  public void onAttach(Context ctx )
   {
-    super.onAttach(activity);
-    runningActivity = ( MainActivity ) activity;
+    super.onAttach( ctx );
+    runningActivity = ( MainActivity ) getActivity();
     if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "onAttach: ATTACH");
@@ -966,9 +978,35 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       }
     }
     lastConnectedDeviceMac = null;
+    //
+    // Register broadcasts
+    //
+    IntentFilter intentFilter = new IntentFilter( BluetoothDevice.ACTION_FOUND );
+    intentFilter.addAction( BluetoothAdapter.ACTION_DISCOVERY_FINISHED );
+    intentFilter.addAction( BluetoothAdapter.ACTION_DISCOVERY_STARTED );
+    if( apiCanPair )
+    {
+      // Nur bei Android Versionen größer oder gleich 4.4 und kleiner 6.0
+      intentFilter.addAction(BluetoothDevice.ACTION_PAIRING_REQUEST);
+    }
+    runningActivity.registerReceiver( mReceiver, intentFilter );
+    //
   }
 
   @Override
+  public void onDetach()
+  {
+    super.onDetach();
+    try
+    {
+      runningActivity.unregisterReceiver(mReceiver);
+    }
+    catch( Exception ex )
+    {
+      Log.e(TAG, "Exception while unregister broadcast reciver: " + ex.getMessage() );
+    }
+  }
+
   public void onClick(View cView)
   {
     int connState = runningActivity.getConnectionStatus();
@@ -1036,7 +1074,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       //
       // es war der Geräte-Such-Button
       //
-      if( ( Button ) cView == discoverButton )
+      if( cView == discoverButton )
       {
         Log.i(TAG, "onClick: start discovering for BT Devices...");
         // ist da nur die Kennzeichnung für LEER?
@@ -1050,12 +1088,12 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
           Log.d(TAG, "onClick: start discovering for BT Devices...OK");
         }
         startDiscoverBt();
-        return;
+        //return;
       }
       //
       // es war der EDIT-Alias Button
       //
-      else if( ( Button ) cView == aliasEditButton )
+      else if( cView == aliasEditButton )
       {
         Log.i(TAG, "onClick: start edit current alias...");
         if( btArrayAdapter.isEmpty() || btArrayAdapter.getAlias(0).startsWith(runningActivity.getString(R.string.no_device).substring(0, 5)) )
@@ -1067,8 +1105,8 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         // erzeuge den Dialog zum Bearbeiten des Alias
         //
         int            pos    = devSpinner.getSelectedItemPosition();
-        DialogFragment dialog = null;
-        if( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT )
+        DialogFragment dialog;
+        if( apiCanPair )
         {
           String oldPin = MainActivity.aliasManager.getPINForMac(btArrayAdapter.getMAC(pos));
           if( oldPin == null )
@@ -1079,7 +1117,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
         }
         else
         {
-          dialog = new EditAliasDialogFragment(btArrayAdapter.getDevName(pos), btArrayAdapter.getAlias(pos), btArrayAdapter.getMAC(pos));
+          dialog = new EditAliasDialogFragment(btArrayAdapter.getDevName(pos), btArrayAdapter.getAlias(pos), btArrayAdapter.getMAC(pos) );
         }
         dialog.show(getFragmentManager(), "EditAliasDialogFragment");
       }
@@ -1099,6 +1137,21 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     }
     theToast = new CommToast(getActivity());
     showCommToast = false;
+    //
+    // entscheide anhand der API Version, ob das Gerät / Android pairing erlaubt
+    // dann ist natürlich auch discovering sinnlos
+    //
+    if( (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) &&
+        (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.M))
+    {
+      apiCanPair = true;
+      Log.i( TAG, "onCreate: API (" + android.os.Build.VERSION.SDK_INT + ") can BT pairing....");
+    }
+    else
+    {
+      apiCanPair = false;
+      Log.i( TAG, "onCreate: API (" + android.os.Build.VERSION.SDK_INT + ") can't BT pairing....");
+    }
   }
 
   /**
@@ -1120,12 +1173,12 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
       Log.e(TAG, "onCreateView: container is NULL ...");
       return (null);
     }
-    rootView = makeConnectionView(inflater, container);
-    if( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT )
+    rootView = makeConnectionView( inflater, container);
+    if( apiCanPair )
     {
       try
       {
-        // Falls PIN editierbar (ab Version 4.4)
+        // Falls PIN editierbar (ab Version 4.4) und nur bis unter 6.0
         Button aliasButton = ( Button ) rootView.findViewById(R.id.connectAliasEditButton);
         aliasButton.setText(R.string.connect_editaliasv4_button_title);
       }
@@ -1141,14 +1194,18 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   public void onDestroy()
   {
     super.onDestroy();
-    // Unregister broadcast listeners
-    runningActivity.unregisterReceiver(mReceiver);
     // Stelle sicher, dass hier nix mehr discovered wird
     if( MainActivity.mBtAdapter != null )
     {
       MainActivity.mBtAdapter.cancelDiscovery();
     }
     runningActivity.removeServiceListener(this);
+  }
+
+  @Override
+  public void onDestroyView()
+  {
+    super.onDestroyView();
   }
 
   @Override
@@ -1220,6 +1277,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     }
     // setze den verbindungsstatus visuell
     setToggleButtonTextAndStat(runningActivity.getConnectionStatus());
+    //
   }
 
   /**
@@ -1229,8 +1287,8 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
    * <p/>
    * Stand: 03.12.2013
    *
-   * @param _mac
-   * @param _deviceName
+   * @param _mac MAC Addr für Alias
+   * @param _deviceName Gerätename für den Alias
    */
   private void setAliasForDeviceIfNotExist(String _mac, String _deviceName)
   {
@@ -1248,7 +1306,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
    * <p/>
    * Stand: 17.02.2013
    *
-   * @param enabled
+   * @param enabled Erlaube/sperre die Buttons
    */
   private void setItemsEnabledwhileDiscover(boolean enabled)
   {
@@ -1283,8 +1341,8 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
    * <p/>
    * Stand: 03.12.2013
    *
-   * @param _mac
-   * @param _serial
+   * @param _mac Mac des Gerätes
+   * @param _serial Seriennummer, wenn noch nciht vorhanden
    */
   private void setSerialIfNotExist(String _mac, String _serial)
   {
@@ -1305,7 +1363,7 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   private void setSpinnerToConnectedDevice()
   {
     // String deviceAddr = null;
-    int deviceIndex = -1;
+    int deviceIndex;
     if( BuildConfig.DEBUG )
     {
       Log.d(TAG, "setSpinnerToConnectedDevice...");
@@ -1458,10 +1516,13 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
    */
   private void startDiscoverBt()
   {
+    if( ! apiCanPair )
+    {
+      theToast.showConnectionToast( getResources().getString(R.string.toast_connect_nopairing), false );
+      return;
+    }
     // If we're already discovering, stop it
     Log.i(TAG, "startDiscoverBt: start discovering...");
-    discoveredDevices.clear();
-    setItemsEnabledwhileDiscover(false);
     if( MainActivity.mBtAdapter == null )
     {
       return;
@@ -1470,17 +1531,6 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
     {
       stopDiscoverBt();
     }
-    //
-    // Register broadcasts wenn die Suche beendet wurde, wenn gerät gefunden wurde
-    //
-    IntentFilter filter1 = new IntentFilter(BluetoothDevice.ACTION_FOUND );
-    filter1.addAction( BluetoothAdapter.ACTION_DISCOVERY_FINISHED );
-    runningActivity.registerReceiver( mReceiver, filter1);
-    //
-    // Discovering Marker setzen
-    this.runDiscovering = true;
-    // Adapter frisch befüllen
-    fillNewAdapterWithKnownDevices();
     // Discovering starten
     MainActivity.mBtAdapter.startDiscovery();
   }
@@ -1497,18 +1547,6 @@ public class SPX42ConnectFragment extends Fragment implements IBtServiceListener
   private void stopDiscoverBt()
   {
     MainActivity.mBtAdapter.cancelDiscovery();
-    // Unregister broadcast listeners
-    runningActivity.unregisterReceiver(mReceiver);
-    //
-    // Intend-Filter und Intend für Pairing Anfragen wieder aktivieren
-    //
-    IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
-    if( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT )
-    {
-      // Nur bei Android Versionen größer oder gleich 4.4
-      filter.addAction(BluetoothDevice.ACTION_PAIRING_REQUEST);
-    }
-    runningActivity.registerReceiver(mReceiver, filter);
   }
 
   /**

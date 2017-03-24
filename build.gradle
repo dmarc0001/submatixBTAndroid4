@@ -15,7 +15,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 25
         signingConfig signingConfigs.DirksKey
-        versionCode 33
+        versionCode 34
         versionName '2.2'
     }
   buildTypes {
@@ -45,6 +45,23 @@ android {
         abortOnError false
     }
   productFlavors {
+    Lollipop {
+      minSdkVersion 22
+      applicationId 'de.dmarcini.submatix.android4.full'
+      signingConfig signingConfigs.DirksKey
+      targetSdkVersion 25
+      versionCode 34
+      versionName '2.2'
+      versionNameSuffix 'lollipop'
+    }
+    Kitkat {
+      applicationId 'de.dmarcini.submatix.android4.full'
+      signingConfig signingConfigs.DirksKey
+      targetSdkVersion 25
+      versionCode 34
+      versionName '2.2'
+      versionNameSuffix 'kitkat'
+    }
   }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7

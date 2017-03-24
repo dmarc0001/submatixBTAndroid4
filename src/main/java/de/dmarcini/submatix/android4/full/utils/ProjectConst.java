@@ -157,6 +157,9 @@ public final class ProjectConst
   // Android: ID für Intentrequests
   public static final int REQUEST_ENABLE_BT = 1;
   public static final int REQUEST_SEND_MAIL = 2;
+  public static final int REQUEST_FINE_LOCATION = 3;
+  public static final int REQUEST_BT_PRIVELEGED_LOCATION = 4;
+  public static final int REQUEST_MAIN_ACCESS = 5;
   // Message Bezeichnungen
   public static final int MESSAGE_NONE = ActionEvent.RESERVED_ID_MAX + 1;
   public static final int MESSAGE_TICK = ActionEvent.RESERVED_ID_MAX + 2;

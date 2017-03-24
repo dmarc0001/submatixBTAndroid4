@@ -20,6 +20,7 @@
 //@formatter:on
 package de.dmarcini.submatix.android4.full.gui;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -35,6 +36,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -120,6 +122,14 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
   private static       int                           firstId               = -1;                                                  // Die ID des ersten Eintrages
   private static       int                           lastStatusConnected   = ProjectConst.CONN_STATE_NONE;                        // War der letzte Status Connected?
   private final        ArrayList<IBtServiceListener> serviceListener       = new ArrayList<IBtServiceListener>();
+  private static final String[]                      storagePerm           = {
+                                                                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                                                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                                                                Manifest.permission.BLUETOOTH,
+                                                                                Manifest.permission.BLUETOOTH_ADMIN,
+                                                                                Manifest.permission.ACCESS_COARSE_LOCATION,
+                                                                                Manifest.permission.INTERNET
+                                                                              };
   //
   // Ein Messagehandler, der vom Service kommende Messages bearbeitet
   //
@@ -236,29 +246,14 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         case ProjectConst.CONN_STATE_NONE:
           msg = new BtServiceMessage(ProjectConst.MESSAGE_DISCONNECTED);
           listener.msgDisconnected(msg);
-          // an alle Listener versenden!
-          // while( it.hasNext() )
-          // {
-          // it.next().msgDisconnected( msg );
-          // }
           break;
         case ProjectConst.CONN_STATE_CONNECTING:
           msg = new BtServiceMessage(ProjectConst.MESSAGE_CONNECTING);
           listener.msgConnecting(msg);
-          // an alle Listener versenden!
-          // while( it.hasNext() )
-          // {
-          // it.next().msgConnecting( msg );
-          // }
           break;
         case ProjectConst.CONN_STATE_CONNECTED:
           msg = new BtServiceMessage(ProjectConst.MESSAGE_CONNECTED);
           listener.msgConnected(msg);
-          // an alle Listener versenden!
-          // while( it.hasNext() )
-          // {
-          // it.next().msgConnected( msg );
-          // }
           break;
       }
     }
@@ -734,28 +729,6 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
       {
         return( databaseDir );
       }
-      /*
-      databaseDir = new File(databaseDir.getAbsolutePath() + File.separator + ProjectConst.DATABASE_SUBDIR);
-      if( databaseDir.exists() && databaseDir.isDirectory() && databaseDir.canWrite() )
-      {
-        Log.i(TAG, String.format("use database dir <%s>...", databaseDir.getAbsolutePath()));
-        return (databaseDir);
-      }
-      //
-      // Unterverzeichnis nicht vorhanden, versuche es zu erzeugen
-      //
-      if( databaseDir.mkdirs() )
-      {
-        //
-        // ist es nun vorhanden
-        if( databaseDir.exists() && databaseDir.isDirectory() && databaseDir.canWrite() )
-        {
-          Log.i(TAG, String.format("use created database dir <%s>...", databaseDir.getAbsolutePath()));
-          return (databaseDir);
-        }
-      }
-      */
-
       //
       // doch den Standart nutzen
       //
@@ -1884,7 +1857,7 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     if( fTrans != null )
     {
       fTrans.replace(R.id.main_container, newFrag);
-      fTrans.setTransition( /*FragmentTransaction.TRANSIT_FRAGMENT_OPEN |*/ FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+      fTrans.setTransition( FragmentTransaction.TRANSIT_FRAGMENT_FADE);
       fTrans.commit();
     }
     if( BuildConfig.DEBUG )
@@ -1917,6 +1890,23 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
         return;
       }
     }
+    if( android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M )
+    {
+      //
+      // ab Android 6 erst mal die Rechte checken
+      //
+      if( !checkPermissions() )
+      {
+        //
+        // Check initiieren
+        //
+        requestPermissions( storagePerm, ProjectConst.REQUEST_MAIN_ACCESS);
+        return;
+      }
+      //
+      // hier weiter wenn alles klar ist
+      //
+    }
     //
     // Ist das Datenbankverzeichnis da?
     //
@@ -1939,6 +1929,113 @@ public class MainActivity extends Activity implements INavigationDrawerCallbacks
     }
   }
 
+  boolean checkPermissions()
+  {
+    boolean result = true;
+
+    if( android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M )
+    {
+      if( PackageManager.PERMISSION_DENIED == checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) )
+      {
+        result = false;
+      }
+      if( PackageManager.PERMISSION_DENIED == checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) )
+      {
+        result = false;
+      }
+      if( PackageManager.PERMISSION_DENIED == checkSelfPermission(Manifest.permission.BLUETOOTH) )
+      {
+        result = false;
+      }
+      if( PackageManager.PERMISSION_DENIED == checkSelfPermission(Manifest.permission.BLUETOOTH_ADMIN) )
+      {
+        result = false;
+      }
+    }
+    return( result );
+  }
+
+  @Override
+  public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults)
+  {
+    boolean result = true;
+    //
+    switch (requestCode)
+    {
+      case ProjectConst.REQUEST_MAIN_ACCESS:
+        // If request is cancelled, the result arrays are empty.
+        for( int number = 0; number < grantResults.length; number++ )
+        {
+          Log.v( TAG, "Permission" + permissions[number] + " is " + grantResults[number] );
+          if( grantResults[number] == PackageManager.PERMISSION_DENIED )
+          {
+            result = false;
+          }
+        }
+        if( result )
+        {
+          //
+          // da ich onResume unterbrochen habe, hier weitermachen, wenn erlaubt!
+          // Ist das Datenbankverzeichnis da?
+          //
+          if( databaseDir == null || !databaseDir.canWrite() )
+          {
+            Toast.makeText(this, R.string.toast_main_no_databasedir, Toast.LENGTH_LONG).show();
+            finish();
+            return;
+          }
+          //
+          if( !mBtAdapter.isEnabled() )
+          {
+            // Eh, kein BT erlaubt!
+            askEnableBT();
+          }
+          else
+          {
+            // Service wieder anbinden / starten
+            doBindService();
+          }
+        }
+        else
+        {
+          //
+          // wenn die Rechte nicht eingeräumt wurden
+          //
+          Log.e(TAG, "onRequestPermissionsResult: not enough rights for APP!");
+          Toast.makeText(this, R.string.toast_main_no_rights, Toast.LENGTH_LONG).show();
+          finish();
+          return;
+        }
+        break;
+
+      case ProjectConst.REQUEST_BT_PRIVELEGED_LOCATION:
+        // If request is cancelled, the result arrays are empty.
+        for( int number = 0; number < grantResults.length; number++ )
+        {
+          Log.v( TAG, "Permission" + permissions[number] + " is " + grantResults[number] );
+          if( grantResults[number] == PackageManager.PERMISSION_DENIED )
+          {
+            result = false;
+          }
+        }
+        break;
+
+      case ProjectConst.REQUEST_FINE_LOCATION:
+        // If request is cancelled, the result arrays are empty.
+        for( int number = 0; number < grantResults.length; number++ )
+        {
+          Log.v( TAG, "Permission" + permissions[number] + " is " + grantResults[number] );
+          if( grantResults[number] == PackageManager.PERMISSION_DENIED )
+          {
+            result = false;
+          }
+        }
+        break;
+
+      default:
+        Log.e( TAG, "onRequestPermissionsResult: wrong intent number: " + requestCode );
+    }
+  }
   /**
    * Den Programmtitel entsprechend der Selektion setzen, Callback des aufgerufenen Fragmentes
    * <p/>
