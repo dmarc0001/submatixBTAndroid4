@@ -15,7 +15,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 25
         signingConfig signingConfigs.DirksKey
-        versionCode 34
+        versionCode 35
         versionName '2.2'
     }
   buildTypes {
@@ -50,7 +50,7 @@ android {
       applicationId 'de.dmarcini.submatix.android4.full'
       signingConfig signingConfigs.DirksKey
       targetSdkVersion 25
-      versionCode 34
+      versionCode 35
       versionName '2.2'
       versionNameSuffix 'lollipop'
     }
@@ -58,7 +58,7 @@ android {
       applicationId 'de.dmarcini.submatix.android4.full'
       signingConfig signingConfigs.DirksKey
       targetSdkVersion 25
-      versionCode 34
+      versionCode 35
       versionName '2.2'
       versionNameSuffix 'kitkat'
       minSdkVersion 19
