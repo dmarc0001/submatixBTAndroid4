@@ -61,6 +61,7 @@ android {
       versionCode 34
       versionName '2.2'
       versionNameSuffix 'kitkat'
+      minSdkVersion 19
     }
   }
     compileOptions {
