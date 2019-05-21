@@ -27,7 +27,6 @@
     tools:ignore="GradleOverrides">
 
     <uses-sdk
-        android:minSdkVersion="15"
         android:targetSdkVersion="22"/>
     <!--  Berechtigungen  -->
     <uses-permission android:name="android.permission.BLUETOOTH" />

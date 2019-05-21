@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 android {
     flavorDimensions "default"
     compileSdkVersion 25
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '28.0.3'
     signingConfigs {
         DirksKey {
             storeFile file('C:/DATEN/Entwicklung/dirksPrivaterAndroidEntwicklerkey.key')
@@ -38,7 +38,7 @@ android {
     }
   }
     dependencies {
-        compile fileTree(dir: 'lib', include: '*.jar')
+      implementation fileTree(dir: 'lib', include: '*.jar')
     }
     lintOptions {
         checkReleaseBuilds false
