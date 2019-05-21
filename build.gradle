@@ -1,7 +1,8 @@
 apply plugin: 'com.android.application'
 android {
+    flavorDimensions "default"
     compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    buildToolsVersion '28.0.3'
     signingConfigs {
         DirksKey {
             storeFile file('C:/DATEN/Entwicklung/dirksPrivaterAndroidEntwicklerkey.key')
@@ -10,14 +11,15 @@ android {
             keyPassword 'energie'
         }
     }
-    defaultConfig {
-        applicationId "de.dmarcini.submatix.android4.full"
-        minSdkVersion 19
-        targetSdkVersion 25
-        signingConfig signingConfigs.DirksKey
-        versionCode 35
-        versionName '2.2'
-    }
+  defaultConfig {
+    applicationId "de.dmarcini.submatix.android4.full"
+    minSdkVersion 19
+    targetSdkVersion 25
+    signingConfig signingConfigs.DirksKey
+    versionCode 35
+    versionName '2.2'
+    versionNameSuffix 'default'
+  }
   buildTypes {
     debug {
       ant.importBuild "utils\\versionsScript.xml"
@@ -36,7 +38,7 @@ android {
     }
   }
     dependencies {
-        compile fileTree(dir: 'lib', include: '*.jar')
+      implementation fileTree(dir: 'lib', include: '*.jar')
     }
     lintOptions {
         checkReleaseBuilds false
@@ -65,8 +67,8 @@ android {
     }
   }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 }
 
