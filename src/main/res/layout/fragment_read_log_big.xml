@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/readLogOuterLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:paddingLeft="25dp"
+    android:paddingRight="25dp" >
+
+    <ListView
+        android:id="@+id/readLogDirListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/icon_margin_left_big"
+        android:layout_marginRight="@dimen/icon_margin_left_big"
+        android:layout_weight="0.65"
+        android:drawSelectorOnTop="false" />
+    
+    <Button
+        style="?android:attr/buttonBarButtonStyle"
+        android:id="@+id/readLogDirButton"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_gravity="bottom"
+        android:layout_marginRight="@dimen/icon_margin_left_big"
+        android:layout_marginTop="@dimen/icon_margin_left_big"
+        android:layout_weight="0.35"
+        android:hapticFeedbackEnabled="true"
+        android:text="@string/logread_doit_button"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/connectToastAlert.textColor" />
+    
+</LinearLayout>

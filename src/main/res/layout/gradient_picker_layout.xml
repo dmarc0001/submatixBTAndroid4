@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/decoGradientLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:orientation="vertical" >
+
+    <GridLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:alignmentMode="alignBounds"
+        android:columnCount="2"
+        android:columnOrderPreserved="true"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:rowCount="2"
+        android:rowOrderPreserved="true"
+        android:scrollbars="none"
+        android:useDefaultMargins="true"
+        tools:ignore="UselessParent" >
+
+        <!-- Zeile 0 -->
+
+        <TextView
+            android:id="@+id/lowGradientTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_column="0"
+            android:layout_gravity="center"
+            android:layout_row="0"
+            android:text="@string/conf_deco_gradient_low_header"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/highGradientTextView"
+            android:layout_column="1"
+            android:layout_gravity="center"
+            android:layout_row="0"
+            android:text="@string/conf_deco_gradient_high_header"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <!-- Zeile 2 -->
+
+        <NumberPicker
+            android:id="@+id/gradientLowPicker"
+            android:layout_width="95dp"
+            android:layout_height="wrap_content"
+            android:layout_column="0"
+            android:layout_gravity="center"
+            android:layout_row="1"
+            android:gravity="center_horizontal" />
+
+        <NumberPicker
+            android:id="@+id/gradientHighPicker"
+            android:layout_width="95dp"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_gravity="center"
+            android:layout_row="1"
+            android:gravity="center_horizontal" />
+
+        <Space
+            android:layout_column="0"
+            android:layout_row="0" />
+    </GridLayout>
+
+</LinearLayout>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/logGraphOuterLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp" >
+
+    <ListView
+        android:id="@+id/graphLogsListView"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/icon_margin_left"
+        android:layout_marginRight="@dimen/icon_margin_left"
+        android:layout_weight="0.75"
+        android:drawSelectorOnTop="false" />
+
+    <LinearLayout
+        style="?android:attr/buttonBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp" >
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/changeGraphDeviceButton"
+            android:layout_width="220dp"
+            android:layout_height="120dp"
+            android:layout_gravity="bottom"
+            android:layout_marginRight="@dimen/icon_margin_left_big"
+            android:layout_marginTop="@dimen/icon_margin_left_big"
+            android:hapticFeedbackEnabled="true"
+            android:text="@string/graphlog_change_drive_button"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/exportDeviceButton.textColor" />
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/graphLogsButton"
+            android:layout_width="220dp"
+            android:layout_height="120dp"
+            android:layout_gravity="bottom"
+            android:layout_marginRight="@dimen/icon_margin_left_big"
+            android:layout_marginTop="@dimen/icon_margin_left_big"
+            android:hapticFeedbackEnabled="true"
+            android:text="@string/graphlog_do_view"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/exportLogsButton.textColor" />
+    </LinearLayout>
+
+</LinearLayout>

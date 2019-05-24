@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/conf_prog_preferencescreen"
+    android:title="@string/conf_prog_headline" >
+
+    <!-- Abschnitt Einheiten -->
+    <de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory
+        android:key="keyProgUnitViews"
+        android:title="@string/conf_prog_units_head" >
+        <ListPreference
+            android:title="@string/conf_prog_temp_units_title"
+            android:entries="@array/timeFormatNamesArray"
+            android:entryValues="@array/timeFormatValuesArray"
+            android:key="keyProgUnitsTimeFormat" 
+            android:summary="@string/conf_prog_temp_units_summary" 
+            android:defaultValue="@string/conf_prog_temp_units_default"/>
+    </de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory>
+    
+    <!-- Abschnitt Programmdaten (Datenbank etc) -->    
+    <de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory
+        android:key="keyProgData"
+        android:title="@string/conf_prog_filesystem" >
+        <Preference
+            android:defaultValue="null"
+            android:key="keyProgDataDirectory"
+            android:title="@string/conf_prog_datadir" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="keyProgShowAllLogentrys"
+            android:summaryOff="@string/conf_prog_showall_off_summary"
+            android:summaryOn="@string/conf_prog_showall_on_summary"
+            android:switchTextOff="@string/conf_prog_showall_off"
+            android:switchTextOn="@string/conf_prog_showall_on"
+            android:title="@string/conf_prog_showall_header" />
+    </de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory>
+    
+    <!-- Abschnitt Mails versenden  -->
+    <de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory
+        android:key="keyProgMail"
+        android:title="@string/conf_prog_mail_header" >
+        <EditTextPreference
+            android:key="keyProgMailMain"
+            android:title="@string/conf_prog_mail_main" />
+        <EditTextPreference
+            android:key="keyProgMail2nd"
+            android:title="@string/conf_prog_mail_2nd" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="keyProgMailCompressed"
+            android:summaryOff="@string/conf_prog_mail_compressed_off_summary"
+            android:summaryOn="@string/conf_prog_mail_compressed_on_summary"
+            android:title="@string/conf_prog_mail_compressed_header" />
+    </de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory>
+    
+    <!-- Abschnitt "sonstiges"  -->
+    <de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory
+        android:key="keyProgOthers"
+        android:title="@string/conf_prog_others_header" >
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="keyProgOthersThemeIsDark"
+            android:summaryOff="@string/conf_prog_others_off_light_summary"
+            android:summaryOn="@string/conf_prog_others_on_dark_summary"
+            android:switchTextOff="@string/conf_prog_others_off_light"
+            android:switchTextOn="@string/conf_prog_others_on_dark"
+            android:title="@string/conf_prog_others_theme_header" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="keyProgOthersDisableBTOnExit"
+            android:summaryOff="@string/conf_prog_others_off_disable_bt_summary"
+            android:summaryOn="@string/conf_prog_others_on_disable_bt_summary"
+            android:switchTextOff="@string/conf_prog_others_off_disable_bt"
+            android:switchTextOn="@string/conf_prog_others_on_disable_bt"
+            android:title="@string/conf_prog_others_bt_disable_bt_header" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="keyProgOthersOnlineHelpEnabled"
+            android:summaryOff="@string/conf_prog_others_off_online_help"
+            android:summaryOn="@string/conf_prog_others_on_online_help"
+            android:switchTextOff="@string/conf_prog_others_off_online_help_key"
+            android:switchTextOn="@string/conf_prog_others_on_online_help_key"
+            android:title="@string/conf_prog_others_online_help_header" />
+    </de.dmarcini.submatix.android4.full.utils.ColorizedPreferenceCategory>
+    
+</PreferenceScreen>

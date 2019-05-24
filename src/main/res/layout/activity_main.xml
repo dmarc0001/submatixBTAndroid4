@@ -1,0 +1,39 @@
+<!-- 
+  Das DrawerLayout ist fuer beide Anzeigen (Mein und Navigation gedacht
+-->
+<android.support.v4.widget.DrawerLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="de.dmarcini.submatix.android4.full.gui.MainActivity" >
+
+    <!--
+      In das Frame Layout kommt der Main Content
+      (beansprucht ALLEN Raum)
+    -->
+    <FrameLayout
+        android:id="@+id/main_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" 
+    />
+
+    <!--
+      In das Fragment kommt das Navigationsfragment.
+      Die ist fix in db dimensioniert (@dimen)
+      und ist in der vollen Höhe des Displays
+      
+      android:layout_gravity="start" bei api <= 17 ="left"
+    -->
+
+    <fragment
+        android:id="@+id/navi_drawer"
+        android:name="de.dmarcini.submatix.android4.full.gui.NavigatorFragment"
+        android:layout_width="@dimen/navigation_drawer_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        tools:layout="@layout/fragment_navigator" 
+    />
+
+</android.support.v4.widget.DrawerLayout>

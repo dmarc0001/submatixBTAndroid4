@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SubmatixBTLogger</string>
+    <string name="title_area_detail">Detail</string>
+    <string name="app_description">this app connects with SUBMATIX SPX42 an read logs or read \/write configuration of this device</string>
+    <string name="app_description_light">this app connects with SUBMATIX SPX42 an read \/write configuration of this device</string>
+    <string name="dummy_filler">SUBMATIX BT Config</string>
+    <string name="app_bt_service">BluethootService</string>
+    <string name="app_locale_timeformat_date">yyyy/MM/dd hh:mm:ss a</string>
+    <string name="app_version_prefix">Version</string>
+    <string name="app_build_prefix">Build</string>
+    <string name="app_build_date_prefix">Build date</string>
+    <string name="app_programmer_name">programm by: Dirk Marciniak</string>
+    <string name="app_unit_depth_metric">meters</string>
+    <string name="app_unit_minute">min</string>
+    <string name="app_empty"> </string>
+
+    <!-- About Frame  -->
+    <string name="about_headline">About SubmatixBTLogger</string>
+
+    <!-- Liste der Programmaktivitäten -->
+    <string name="progitem_connect">Connection</string>
+    <string name="progitem_spx_status">SPX42 Status</string>
+    <string name="progitem_config">SPX42 Config</string>
+    <string name="progitem_gaslist">Gases editing</string>
+    <string name="progitem_logging">Logfiles read</string>
+    <string name="progitem_loggraph">Visualize logs</string>
+    <string name="progitem_loggraph_detail">Visualize logs detail</string>
+    <string name="progitem_export">Export logs</string>
+    <string name="progitem_progpref">Program prefs</string>
+    <string name="progitem_about">About program</string>
+    <string name="progitem_exit">EXIT</string>
+
+    <!-- Toasts -->
+    <string name="toast_exit">exiting app</string>
+    <string name="toast_exit_nobt">exiting app NO BT ADAPTER!</string>
+    <string name="toast_bt_enabled">bluethooth enabled!</string>
+    <string name="toast_dummy">communicate</string>
+    <string name="toast_comm_timeout">communication timeout!</string>
+    <string name="toast_comm_set_autosetpoint">send O2 setpoint</string>
+    <string name="toast_comm_set_autosetpoint_ok">send O2 setpoint: OK</string>
+    <string name="toast_comm_set_autosetpoint_alert">send O2 setpoint: ERROR</string>
+    <string name="toast_comm_set_deco">send deco settings</string>
+    <string name="toast_comm_set_deco_ok">send deco settings: OK</string>
+    <string name="toast_comm_set_deco_alert">send deco settings: ERROR</string>
+    <string name="toast_comm_set_display">send display settings</string>
+    <string name="toast_comm_set_display_ok">send display settings: OK</string>
+    <string name="toast_comm_set_display_alert">send display settings: ERROR</string>
+    <string name="toast_comm_set_individuals">send individual settings</string>
+    <string name="toast_comm_set_individuals_ok">send individual settings: OK</string>
+    <string name="toast_comm_set_individuals_alert">send individual settings: ERROR</string>
+    <string name="toast_comm_set_units">send unit settings</string>
+    <string name="toast_comm_set_units_ok">send unit settings: OK</string>
+    <string name="toast_comm_set_units_alert">send unit settings: ERROR</string>
+    <string name="toast_comm_set_gas">send gas setup</string>
+    <string name="toast_comm_set_gas_count" formatted="false">send gas #%02d from #%02d</string>
+    <string name="toast_comm_set_gas_ok">send gas setup: OK</string>
+    <string name="toast_comm_set_gas_alert">send gas setup: ERROR</string>
+    <string name="toast_read_logdir_no_selected_entrys">Not entrys selected yet!</string>
+    <string name="toast_connect_connected">connected to &lt;%s&gt;</string>
+    <string name="toast_connect_disconnected">connection disconnected</string>
+    <string name="toast_connect_cant_bt_connect">can not connect to &lt;%s&gt;</string>
+    <string name="toast_connect_device_paired">device %s was paired</string>
+    <string name="toast_connect_device_pairing_request">device %s pairing requested</string>
+    <string name="toast_connect_device_automatic_pairing">pairing automatic device %s</string>
+    <string name="toast_export_cant_create_dir">can\'t create dir &lt;%s&gt;</string>
+    <string name="toast_export_cant_find_xmldata">can\'t find data-xml file</string>
+    <string name="toast_export_internal_xml_error">internal XML-DOM-Error!</string>
+
+    <!-- Dialogboxen  -->
+    <string name="dialog_sure_exit">Are you sure?</string>
+    <string name="dialog_exit_button">EXIT</string>
+    <string name="dialog_cancel_button">Cancel</string>
+    <string name="dialog_understand_button">understanding</string>
+    <string name="dialog_please_wait_title" formatted="false">please wait...</string>
+    <string name="dialog_please_wait_read_config" formatted="false">read SPX config...</string>
+    <string name="dialog_alias_edit_title">Edit alias for Device</string>
+    <string name="dialog_save_button">Save</string>
+    <string name="dialog_sqlite_error_header">Database ERROR</string>
+    <string name="dialog_sqlite_nodatabase_error">no database found or\ndatabase can not open/create!\nprogram must abort!</string>
+    <string name="dialog_error_database_dir_header">Database directory</string>
+    <string name="dialog_error_database_no_dir">Not an database directory selected!</string>
+    <string name="dialog_error_database_not_writable">Database directory not writable!</string>
+    <string name="dialog_device_select_title">Select Device for exports</string>
+    <string name="dialog_device_select_button">Select</string>
+    <string name="dialog_not_mail_exist_header">No Mail in prefs</string>
+    <string name="dialog_not_mail_exist">Sorry, not Mail in preferences,\nPlease enter valid mailaddress\nin program preferences!</string>
+    <string name="dialog_not_selected_items_header">nothing selected</string>
+    <string name="dialog_not_selected_items">noting selelected to export!</string>
+    <string name="dialog_not_selected_items_graph">noting selelected to view!</string>
+    <string name="dialog_no_uddfdir_header">not UDDF-directory</string>
+    <string name="dialog_no_uddfdir">there ist not an directory with UDDF-Files\nor the directory is not readable.</string>
+    <string name="dialog_no_device_selected_header">select device</string>
+    <string name="dialog_no_device_selected">there is not an device selected</string>
+    <string name="dialog_not_log_entrys_header">log entrys</string>
+    <string name="dialog_not_log_entrys">there are not logs in \ndatabase for this device</string>
+    <string name="dialog_delete_header">DELETE</string>
+    <string name="dialog_delete_nothing_selected">nothing selected to delete</string>
+    <string name="dialog_delete_are_you_sure_header">are you sure?</string>
+    <string name="dialog_delete_device">delete ALL data from device\n\"%s\"</string>
+    <string name="dialog_delete_selected_logs">delete the selected Logs</string>
+    <string name="dialog_delete_button">DELETE!</string>
+    <string name="dialog_no_pin_headline">Not paired</string>
+    <string name="dialog_no_pin_errmsg">Device\n\"%s\"\nis not paired yet.\nPlease do it in device BT Options.</string>
+    <string name="dialog_get_pin_msg">Get PIN for Device\n\"%s\"</string>
+    <string name="dialog_pin_wrong_format">PIN has wrong format! Retry?\n(device: \"%s\")</string>
+    <string name="dialog_file_select_no_data">No data!</string>
+    <string name="dialog_firmware_not_supportet_header">Firmware error</string>
+    <string name="dialog_firmware_not_supportet">Firmware version not supported!</string>
+
+    <!-- BT Discover Box -->
+    <string name="progress_wait_for_discover_title" formatted="false">Searching BT Devices..</string>
+    <string name="progress_wait_for_discover_message_start" formatted="false">not found device yet...</string>
+    <string name="progress_wait_for_discover_message_continue" formatted="false">last device found: %s...</string>
+
+    <!--  DUMMY Detailseite  -->
+    <string name="dummy_headline">dummy page</string>
+    <string name="spacer_string">spacer</string>
+
+    <!-- Detailseite für Konfiguration des SPX42 -->
+    <string name="conf_headline">Config SPX42</string>
+    <!-- ### Kategorie Setpoint ###  -->
+    <string name="conf_setpoint_header">SETPOINT</string>
+    <!-- autosetpoint -->
+    <string name="conf_autoset_label">autosetpoint</string>
+    <string name="conf_autoset_summary">current selection is: %s</string>
+    <string name="conf_autoset_default">5</string>
+    <!-- tiefe für autosetpint -->
+    <string name="conf_highset_header">select whished higsetpoint</string>
+    <string name="conf_highset_summary">current selection is %s</string>
+    <string name="conf_highset_default">1.0</string>
+    <!--  ### kategorie Decompression ### -->
+    <string name="conf_deco_header">DECOMPRESSION</string>
+    <!-- deco presets -->
+    <string name="conf_deco_preset_header">select preset</string>
+    <string name="conf_deco_presets_summary">current selected preset is \"%s\"</string>
+    <!-- der Eintrag aus config_presets_preference.xml (Values)-->
+    <string name="conf_deco_presets_default">30:85</string>
+    <!-- labes in der layoutdatei zum gradient picker -->
+    <string name="conf_deco_gradient_low_header">LOW</string>
+    <string name="conf_deco_gradient_high_header">HIGH</string>
+    <!-- gradienten -->
+    <string name="conf_deco_gradient">set gradients</string>
+    <string name="conf_deco_gradient_summary" formatted="false">current values low: %d high: %d</string>
+    <string name="conf_deco_gradient_default">40:80</string>
+    <!-- gradient number picker buttons -->
+    <string name="conf_deco_gradient_button_positive">set gradient</string>
+    <string name="conf_deco_gradient_button_negative">Cancel</string>
+    <!-- last decostop -->
+    <string name="conf_deco_last_stop_header">depth for last stop</string>
+    <string name="conf_deco_last_stop_on">3m</string>
+    <string name="conf_deco_last_stop_off">6m</string>
+    <string name="conf_deco_last_stop_on_summary">last stop in 3 meters</string>
+    <string name="conf_deco_last_stop_off_summary">last stop in 6 meters</string>
+    <string name="conf_deco_last_stop_default">6</string>
+    <!-- dynamische gradienten (bei Notfall) -->
+    <string name="conf_deco_dyn_gradients_header">dyn. gradients</string>
+    <string name="conf_deco_dyn_gradients_on">Dyn.</string>
+    <string name="conf_deco_dyn_gradients_off">OFF</string>
+    <string name="conf_deco_dyn_gradients_summary_on">dyn gradients are active</string>
+    <string name="conf_deco_dyn_gradients_summary_off">dyn gradients are inactive</string>
+    <!-- tiefe decostops -->
+    <string name="conf_deco_deppstops_header">deep stops</string>
+    <string name="conf_deco_deepstops_summary_on">deep stops are active</string>
+    <string name="conf_deco_deppstops_summary_off">deep stops are inactive</string>
+    <string name="conf_deco_deepstops_on">deep stop</string>
+    <string name="conf_deco_deepstops_off">no deep</string>
+    <!-- ### kategorie display ### -->
+    <string name="conf_display_header">DISPLAY</string>
+    <string name="conf_display_header_new">DISPLAY</string>
+    <!-- display helligkeit -->
+    <string name="conf_display_luminance_header">luminance</string>
+    <string name="conf_luminance_header_summary">current luminance is %s percent on SPX42</string>
+    <string name="conf_luminance_default">100</string>
+    <!-- display orientierung -->
+    <string name="conf_display_orientation_header">display orientation</string>
+    <string name="conf_display_orientation_header_summary">current is \"%s\"</string>
+    <string name="conf_display_orientation_default">0</string>
+    <!-- ### kategorie Einheiten ### -->
+    <string name="conf_units_header">SPX42 UNITS</string>
+    <!-- temperatureinheiten -->
+    <string name="conf_units_temp_header">unit for temperature</string>
+    <string name="conf_units_temp_metric">celsius</string>
+    <string name="conf_units_temp_fahrenheid">fahrenheid</string>
+    <string name="conf_units_temp_metric_summary">temperature ist in celsius</string>
+    <string name="conf_units_temp_fahrenheid_summary">temperature unit is fahrenheid</string>
+    <!--  tiefeneinheiten -->
+    <string name="conf_units_depth_header">unit for depth</string>
+    <string name="conf_units_depth_meters">meters</string>
+    <string name="conf_units_depth_foot">foot</string>
+    <string name="conf_units_depth_meters_summary">depth is in meters</string>
+    <string name="conf_units_depth_foot_summary">depth is in foot</string>
+    <!-- süß oder salzwasser -->
+    <string name="conf_units_watertype_header">type of water</string>
+    <string name="conf_units_freshwater">freshwater</string>
+    <string name="conf_units_saltwater">salty water</string>
+    <string name="conf_units_freshwater_summary">property is freshwater</string>
+    <string name="conf_units_saltwater_summary">property is salty water</string>
+    <!-- ### kategorie individual ### -->
+    <string name="conf_ind_header">Individuals</string>
+    <!-- sensoren ein/aus -->
+    <string name="conf_ind_sensors_onoff_header">switch sensors on or off</string>
+    <string name="conf_ind_sensors_text_on">ON</string>
+    <string name="conf_ind_sensors_text_off">OFF</string>
+    <string name="conf_ind_sensors_text_on_summary">sensors are on</string>
+    <string name="conf_ind_sensors_text_off_summary">sensors are OFF!</string>
+    <!-- passive semiclosed rebreather mode on/off -->
+    <string name="conf_ind_pscr_onoff_header">switch PSCR Mode</string>
+    <string name="conf_ind_pscr_text_on">ON</string>
+    <string name="conf_ind_pscr_text_off">OFF</string>
+    <string name="conf_ind_pscr_summary_on">the pscr mode is on</string>
+    <string name="conf_ind_pscr_summary_off">the pscr mode is off</string>
+    <!-- anzahl der berücksichtigten sensoren -->
+    <string name="conf_ind_count_sensorwarning_header">sensor warnings</string>
+    <string name="conf_ind_count_sensorwarning_header_summary">current %s for warning</string>
+    <string name="conf_ind_count_default">3</string>
+    <!-- akustische warnungen on/off -->
+    <string name="conf_ind_acoustic_warning_header">acoustic warnings</string>
+    <string name="conf_ind_acoustic_warning_on">ON</string>
+    <string name="conf_ind_acoustic_warning_off">OFF</string>
+    <string name="conf_ind_acoustic_warning_on_summary">acoustic warnings are on</string>
+    <string name="conf_ind_acoustic_warning_off_summary">acoustic warnings are off</string>
+    <!-- log intervall -->
+    <string name="conf_ind_interval_header">loginterval</string>
+    <string name="conf_ind_interval_header_summary">interval %s between two logentrys</string>
+    <string name="conf_ind_interval_default">60</string>
+    <!--  tempstick Version  -->
+    <string name="conf_ind_tempstick_header">tempstick type</string>
+    <string name="conf_ind_tempstick_header_summary">type of tempstick: %s </string>
+    <string name="conf_ind_tempstick_default">T1</string>
+
+    <!-- Detailseite connect mit spx -->
+    <string name="connect_headline">Connection to SPX42</string>
+    <string name="connect_discover_button_title">Discover BT Devices</string>
+    <string name="connect_button_off_text">ON/OFF</string>
+    <string name="connect_disconnect_device">disconnected</string>
+    <string name="connect_connecting_device">connecting</string>
+    <string name="connect_connected_device">connected</string>
+    <string name="connect_editalias_button_title">Edit alias</string>
+    <string name="connect_editaliasv4_button_title">Edit Alias/PIN</string>
+
+    <!-- Detailseite für Gaslisten-Editor -->
+    <string name="conf_gaslist_headline">SPX42 gaslist edit</string>
+    <string name="conf_gaslist_default">21:0:79:0:0:0</string>
+    <string name="conf_gaslist_o2">O2</string>
+    <string name="conf_gaslist_he">HE</string>
+    <string name="conf_gaslist_n2">N2</string>
+    <string name="conf_gaslist_diluent1">D1</string>
+    <string name="conf_gaslist_diluent2">D2</string>
+    <string name="conf_gaslist_bailout">B</string>
+    <string name="conf_gaslist_button_positive">Set Gas</string>
+    <string name="conf_gaslist_button_negative">Cancel</string>
+
+    <!-- Detailseite Gasliste -->
+    <string name="gaslist_headline">Gaslist SPX42</string>
+    <string name="conf_gaslist_summary_first" formatted="false">current gas %02d is %s, MOD is %dm (clearwater)</string>
+    <string name="conf_gaslist_summary_diluent1"> - DIL1</string>
+    <string name="conf_gaslist_summary_diluent2"> - DIL2</string>
+    <string name="conf_gaslist_summary_no_diluent">       </string>
+    <string name="conf_gaslist_summary_bailout"> - BO</string>
+    <string name="conf_gaslist_noname">not init yet</string>
+
+    <!-- ### Kategorie Gas  ## -->
+    <string name="conf_gaslist_gas_key_template" formatted="false">keyGaslistGas%02d</string>
+    <string name="conf_gaslist_gas_key">keyGaslistGas</string>
+    <string name="conf_gaslist_gas01_header">gas #01</string>
+    <string name="conf_gaslist_gas02_header">gas #02</string>
+    <string name="conf_gaslist_gas03_header">gas #03</string>
+    <string name="conf_gaslist_gas04_header">gas #04</string>
+    <string name="conf_gaslist_gas05_header">gas #05</string>
+    <string name="conf_gaslist_gas06_header">gas #06</string>
+    <string name="conf_gaslist_gas07_header">gas #07</string>
+    <string name="conf_gaslist_gas08_header">gas #08</string>
+
+    <!-- Detailseite für Programmkonfiguration -->
+    <string name="conf_prog_headline">app preferences</string>
+    <!-- ### Kategorie Zeitanzeige ### -->
+    <string name="conf_prog_units_head">unit view</string>
+    <!-- Format für die Zeitanzeige -->
+    <string name="conf_prog_temp_units_title">Timeformat</string>
+    <string name="conf_prog_temp_units_summary" formatted="false">Standard format: &lt;%s&gt;</string>
+    <string name="conf_prog_temp_units_default">yyyy/dd/MM - hh:mm:ss a</string>
+
+    <!-- ### Kategorie Dateisystem ### -->
+    <string name="conf_prog_filesystem">FILESYSTEM PREFERENCES</string>
+    <!-- datenverzeichnis für Logdaten -->
+    <string name="conf_prog_datadir">data dir</string>
+    <string name="conf_prog_datadir_summary">logdata stored in \"%s\"</string>
+    <!-- nur neue Logdaten oder alle Logdaten auf dem Gerät zeigen? -->
+    <string name="conf_prog_showall_header">show all new logentrys?</string>
+    <string name="conf_prog_showall_on_summary">showing all logentrys</string>
+    <string name="conf_prog_showall_off_summary">showing only new logentrys</string>
+    <string name="conf_prog_showall_on">SHOW</string>
+    <string name="conf_prog_showall_off">NO</string>
+    <!-- ### Kategorie Mail ### -->
+    <string name="conf_prog_mail_header">MAILCONFIG</string>
+    <!-- Mailversand an wen? -->
+    <string name="conf_prog_mail_main">main reciver</string>
+    <string name="conf_prog_mail_2nd">cc reciver</string>
+    <string name="conf_prog_mail_main_summary">send mail to &lt;%s&gt;</string>
+    <!-- soll die uddf (xml) datei komprimiert werden? -->
+    <string name="conf_prog_mail_compressed_header">compress uddf</string>
+    <string name="conf_prog_mail_compressed_on_summary">uddf file will compressed</string>
+    <string name="conf_prog_mail_compressed_off_summary">uddf file will NOT compressed</string>
+    <!-- ### Kategorie Anderes ### -->
+    <string name="conf_prog_others_header">OTHERS</string>
+    <!-- BT disable on exit?  -->
+    <string name="conf_prog_others_bt_disable_bt_header">Bluethooth</string>
+    <string name="conf_prog_others_on_disable_bt">active</string>
+    <string name="conf_prog_others_off_disable_bt">let</string>
+    <string name="conf_prog_others_on_disable_bt_summary">disable BT on exit</string>
+    <string name="conf_prog_others_off_disable_bt_summary">"let BT active on exit"</string>
+    <!-- Programmtheme -->
+    <string name="conf_prog_others_theme_header">switch theme</string>
+    <string name="conf_prog_others_on_dark">dark</string>
+    <string name="conf_prog_others_off_light">light</string>
+    <string name="conf_prog_others_on_dark_summary">app theme DARK selected</string>
+    <string name="conf_prog_others_off_light_summary">app theme LIGHT selected</string>
+
+    <!--  Strings für ConnectSeite  -->
+    <string name="connect_togglebtn_disconn">OFF</string>
+    <string name="connect_togglebtn_doconn">WAIT</string>
+    <string name="connect_togglebtn_conn">CONN</string>
+
+    <!-- NotificationBar  -->
+    <string name="notify_service">Submatix BT service</string>
+    <string name="notify_service_started">BT service started</string>
+    <string name="notify_service_connected">BT service connected</string>
+    <string name="notify_service_disconnected">BT service disconnected</string>
+    <string name="notify_service_running">Submatix BT service running</string>
+    <string name="notify_service_ticker">SUBMATIX BT Service</string>
+
+    <!-- IN-PROGRESS-Frame -->
+    <string name="in_progress_header">page in progress</string>
+    <string name="in_progress_msg" formatted="false">this page is under progress...</string>
+
+    <!-- Fragment SPXReadLogFragment  -->
+    <string name="logread_headline">read logs from SPX</string>
+    <string name="logread_doit_button">Read!</string>
+    <string name="logread_please_wait_dialog_header" formatted="false">Read log #%02d</string>
+    <string name="logread_please_wait_dialog_count_items" formatted="false">line %03d readet</string>
+    <string name="logread_please_wait_dialog_directory" formatted="false">Read logentry %03d</string>
+    <string name="logread_not_saved_yet_msg">log not saved yet</string>
+    <string name="logread_saved_format" formatted="false">dive depth: %02.1f %s length: %d:%02d </string>
+    <string name="logread_please_patient">Please patient</string>
+    <string name="logread_file_message">read log nr %d from database</string>
+    <string name="logread_file_message_empty">read next log from database</string>
+    <string name="logread_show_not_all_header">only new logs</string>
+    <string name="logread_show_not_all_footer">end of new logs</string>
+
+    <!-- Fragment SPXExportLogFragment -->
+    <string name="export_header">Export logs from device</string>
+    <string name="export_header_device" formatted="false">Export logs from device &lt;%s&gt;</string>
+    <string name="export_subheader" formatted="false">Device: %s</string>
+    <string name="export_change_drive_button">Device...</string>
+    <string name="export_delete_button">DELETE</string>
+    <string name="export_do_export">Export!</string>
+    <string name="export_mail_bodytext">Here your divelogs in attachement from this mail!\n\nRegards, your ANDROID Device\n\n</string>
+
+    <!--  Fragment SPX Gesundheit  -->
+    <string name="health_header">status/health SPX42</string>
+    <string name="health_serial_number_label">SPX42 serial number</string>
+    <string name="health_firmware_version_label">SPX42 firmware version</string>
+    <string name="health_license_label">SPX42 license</string>
+    <string name="health_license_enable">licensed</string>
+    <string name="health_license_disable">not licensed</string>
+    <string name="health_license_nitrox_label">nitrox</string>
+    <string name="health_license_normoxic_trimix_label">normoxic TMX</string>
+    <string name="health_license_full_trimix_label">full TMX</string>
+    <string name="health_license_individual_label">individual</string>
+    <string name="health_acku_volatage_label">Acku voltage:</string>
+    <string name="health_acku_volatage" formatted="false">%02.02f volts</string>
+
+    <!-- Fragment Logs grafisch darstellen  -->
+    <string name="graphlog_title">logs graphial</string>
+    <string name="graphlog_header">logs graphial</string>
+    <string name="graphlog_header_device" formatted="false">view logs from device &lt;%s&gt;</string>
+    <string name="graphlog_do_view">Show!</string>
+    <string name="graphlog_change_drive_button">Device...</string>
+
+    <!-- Navigator Strings  -->
+    <string name="navigation_drawer_open">Open navigator</string>
+    <string name="navigation_drawer_close">Close navigator</string>
+
+    <!-- sonstig  -->
+    <string name="no_device">- no device -</string>
+    <string name="array_with_pic_adapter_dummy">PROGRAMITEM</string>
+    <string name="progitem_help">Help!(online)</string>
+    <string name="conf_prog_others_off_online_help">Disable online help</string>
+    <string name="conf_prog_others_on_online_help">Enable online help</string>
+    <string name="conf_prog_others_off_online_help_key">disable</string>
+    <string name="conf_prog_others_on_online_help_key">Enable</string>
+    <string name="conf_prog_others_enable_online_help_header">Online help enable?</string>
+    <string name="conf_prog_others_online_help_header">Online help enable?</string>
+    <string name="online_help_local_url">file:///android_asset/www/index_en.html</string>
+    <string name="online_help_remote_url">http://spx42.submatix.com/en/v200/</string>
+    <string name="toast_main_no_databasedir">can\'t find database directory! EXIT!</string>
+    <string name="toast_main_no_rights">The APP has not enough rights! ABORT!</string>
+    <string name="toast_connect_nopairing">this android version can\'t pair BT in user apps</string>
+
+</resources>

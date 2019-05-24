@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/connectOuterLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".gui.areaDetailActivity" >
+
+    <TableRow
+        android:id="@+id/spacerRowTop"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" >
+
+       <ImageView
+           android:id="@+id/spaceImageView00"
+           android:layout_width="30dp"
+           android:layout_height="55dp"
+           android:layout_weight="1.0"
+           android:contentDescription="@string/spacer_string" />
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/contentRow01"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_marginBottom="45dp"
+        android:layout_marginTop="45dp" >
+
+        <ImageView
+            android:id="@+id/spaceImageView01"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:contentDescription="@string/spacer_string" />
+
+        <Spinner
+            style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/connectBlueToothDeviceSpinner"
+            android:layout_width="match_parent"
+            android:layout_weight="0.4" />
+
+        <ImageButton
+            style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/connectButton"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2"
+            android:src="@drawable/bluetooth_icon_bw"
+            android:text="@string/connect_button_off_text" />
+
+        <ImageView
+            android:id="@+id/spaceImageView02"
+            android:layout_height="match_parent"
+            android:layout_weight="0.2" 
+            android:contentDescription="@string/spacer_string" />
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/contentRow2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="45dp" >
+
+        <ImageView
+            android:id="@+id/spaceImageView03"
+            android:layout_weight="0.2"
+            android:layout_height="match_parent" 
+            android:contentDescription="@string/spacer_string"/>
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/connectDiscoverButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/default_left_right_margin"
+            android:layout_weight="0.6"
+            android:text="@string/connect_discover_button_title" />
+
+        <ImageView
+            android:id="@+id/spaceImageView04"
+            android:layout_weight="0.2"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/spacer_string" />
+    </TableRow>
+    
+    <TableRow
+        android:id="@+id/contentRow4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="45dp" >
+
+        <ImageView
+            android:id="@+id/spaceImageView07"
+            android:layout_weight="0.2"
+            android:layout_height="match_parent" 
+            android:contentDescription="@string/spacer_string"/>
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:id="@+id/connectAliasEditButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/default_left_right_margin"
+            android:layout_weight="0.6"
+            android:text="@string/connect_editalias_button_title" />
+        
+        <ImageView
+            android:id="@+id/spaceImageView08"
+            android:layout_weight="0.2"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/spacer_string" />
+    </TableRow>
+    
+    
+    <TableRow
+        android:id="@+id/contentRow3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="45dp"
+        android:layout_marginTop="5dp" >
+        
+        <ImageView
+            android:id="@+id/spaceImageView05"
+            android:layout_weight="0.2"
+            android:layout_height="match_parent" 
+            android:contentDescription="@string/spacer_string"/>
+
+        <TextView
+            android:id="@+id/connectStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/default_left_right_margin"
+            android:layout_marginRight="@dimen/default_left_right_margin"
+            android:gravity="center"
+            android:layout_weight="0.6"
+            android:text="@string/connect_disconnect_device"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@color/connectFragment.disconnectText" />
+        
+        <ImageView
+            android:id="@+id/spaceImageView06"
+            android:layout_weight="0.2"
+            android:layout_height="match_parent" 
+            android:contentDescription="@string/spacer_string"/>
+
+        
+    </TableRow>
+    
+    
+    <TableRow
+        android:id="@+id/spacerRowBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="55dp" >
+
+       <ImageView
+           android:id="@+id/spaceImageView09"
+           android:layout_width="30dp"
+           android:layout_height="55dp"
+           android:layout_weight="1.0"
+           android:contentDescription="@string/spacer_string" />
+
+    </TableRow>
+
+
+</TableLayout>

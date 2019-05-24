@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/aboutOuterLayout"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:orientation="vertical"
+              tools:context=".gui.ProgramAboutFragment" >
+
+    <TextView
+        android:id="@+id/aboutHeadlineTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/standart_margin"
+        android:gravity="center_horizontal"
+        android:text="@string/about_headline"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/aboutHeadlineColor" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <ImageView
+        android:id="@+id/logoImageViewBig"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/standart_margin"
+        android:contentDescription="LOGO"
+        android:src="@drawable/logosub_400"
+        tools:ignore="HardcodedText" />
+
+  <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+      <TextView
+          android:id="@+id/aboutVersionTextView"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/standart_margin"
+          android:gravity="center_horizontal"
+          android:text="@string/dummy_filler"
+          android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+      <TextView
+          android:id="@+id/aboutProgrammerTextView"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/standart_margin"
+          android:gravity="center_horizontal"
+          android:text="@string/dummy_filler"/>
+
+      <TextView
+          android:id="@+id/aboutBuildTextView"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/standart_margin"
+          android:gravity="center_horizontal"
+          android:text="@string/dummy_filler"/>
+
+      <TextView
+          android:id="@+id/aboutBuildDateTextView"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/standart_margin"
+          android:gravity="center_horizontal"
+          android:text="@string/dummy_filler"/>
+    </LinearLayout>
+
+  </ScrollView>
+
+</LinearLayout>

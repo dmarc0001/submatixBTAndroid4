@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/connectOuterLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    style="?android:attr/buttonBarStyle"
+    tools:context=".gui.areaDetailActivity" >
+    
+    <LinearLayout
+        android:id="@+id/connectLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_left_right_margin"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal"
+        style="?android:attr/buttonBarStyle" >
+
+        <Spinner
+            android:id="@+id/connectBlueToothDeviceSpinner"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.75" />
+
+       <ImageButton
+           style="?android:attr/buttonBarButtonStyle"
+           android:id="@+id/connectButton"
+           android:layout_width="180dp"
+           android:layout_height="wrap_content"
+           android:src="@drawable/bluetooth_icon_bw"
+           android:text="@string/connect_button_off_text" />
+            
+    </LinearLayout>
+
+    <Button
+        style="?android:attr/buttonBarButtonStyle"
+        android:id="@+id/connectDiscoverButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="@dimen/default_left_right_margin"
+        android:text="@string/connect_discover_button_title" />
+
+    <Button
+        style="?android:attr/buttonBarButtonStyle"
+        android:id="@+id/connectAliasEditButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_margin="@dimen/default_left_right_margin"
+        android:text="@string/connect_editalias_button_title" />
+
+    <TextView
+        android:id="@+id/connectStatusText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/default_left_right_margin"
+        android:layout_marginRight="@dimen/default_left_right_margin"
+        android:gravity="center"
+        android:text="@string/connect_disconnect_device"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/connectFragment.disconnectText" />
+
+    
+</LinearLayout>

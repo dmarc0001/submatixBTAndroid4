@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/aliasEditDialogTitleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/standart_margin"
+        android:gravity="center_horizontal"
+        android:text="@string/dialog_alias_edit_title"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/aliasEditDialogDeviceTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/standart_margin"
+        android:layout_marginRight="@dimen/standart_margin"
+        android:layout_marginTop="@dimen/standart_margin"
+        android:gravity="center_horizontal"
+        android:text="@string/dummy_filler" />
+
+    <EditText
+        android:id="@+id/aliasEditDialogAliasEditTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_left_right_margin"
+        android:layout_marginRight="@dimen/default_left_right_margin"
+        android:ems="10"
+        android:gravity="center_horizontal"
+        android:singleLine="true" >
+
+        <requestFocus />
+    </EditText>
+    
+    <EditText
+        android:id="@+id/aliasEditDialogPINEditTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_left_right_margin"
+        android:layout_marginRight="@dimen/default_left_right_margin"
+        android:inputType="number"
+        android:digits="0123456789"
+        android:ems="10"
+        android:gravity="center_horizontal"
+        android:singleLine="true"
+        android:visibility="invisible" />
+
+</LinearLayout>

@@ -1,0 +1,635 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE>help for android app SPX.42</TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice 4.1.1  (Win32)">
+	<META NAME="AUTHOR" CONTENT="Dirk Marciniak">
+	<META NAME="CREATED" CONTENT="0;0">
+	<META NAME="CHANGEDBY" CONTENT="Christian ">
+	<META NAME="CHANGED" CONTENT="20150224;22205443">
+	<META NAME="CHANGEDBY" CONTENT="Christian ">
+	<STYLE TYPE="text/css">
+	<!--
+		P { color: #070082; font-family: sans-serif }
+		H1 { margin-left: 0.42cm; margin-top: 0.99cm; color: #ff0000 }
+		H2 { margin-left: 0.49cm; margin-top: 0.64cm; color: #386bf5 }
+		H2.cjk { font-family: "SimSun" }
+		H2.ctl { font-family: "Mangal" }
+		H3 { margin-left: 0.35cm; margin-top: 0.64cm; color: #00912e }
+		H3.western { font-size: 18pt }
+		H3.cjk { font-family: "SimSun"; font-size: 18pt }
+		H3.ctl { font-family: "Mangal"; font-size: 18pt }
+		A:link { color: #5e89ff; text-decoration: none }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="de-DE" TEXT="#070082" LINK="#5e89ff" BGCOLOR="#adadad" DIR="LTR">
+<P><A NAME="content"></A>&iuml;&raquo;&iquest;<!-- #############################################################################
+  #### Sprungliste                                                         ####
+  #############################################################################
+ -->
+</P>
+<H1>Inhalt</H1>
+<P STYLE="margin-bottom: 0cm"><!--a class="contentNavigator" href="#appstart">Allgemein</a -->General
+</P>
+<P STYLE="margin-bottom: 0cm">First run 
+</P>
+<P STYLE="margin-bottom: 0cm">Program propertys 
+</P>
+<P STYLE="margin-bottom: 0cm">Connect to SPX.42 
+</P>
+<P STYLE="margin-bottom: 0cm">Expanding of the menu 
+</P>
+<P STYLE="margin-bottom: 0cm">SPX.42 state 
+</P>
+<P STYLE="margin-bottom: 0cm">SPX.42 propertys 
+</P>
+<P STYLE="margin-bottom: 0cm">Edit gases 
+</P>
+<P STYLE="margin-bottom: 0cm">Read logs 
+</P>
+<P STYLE="margin-bottom: 0cm">Visualize logs 
+</P>
+<P>Logs exporting / erasing 
+</P>
+<H1>Allgemeines</H1>
+<H2 CLASS="western">Der SPX.42</H2>
+<P>Der SPX.42 ist ein vollst&auml;ndig Trimix (TMX) tauglicher
+Tauchcomputer/Systemcontroller. Das verwendete farbige OLED-Display
+(2.4&ldquo;/320 x 240 Pixel) bietet eine optimale Anzeigesch&auml;rfe
+mit gr&ouml;&szlig;tm&ouml;glichem Betrachtungswinkel. <BR>Au&szlig;erdem
+beinhaltet der SPX.42:</P>
+<UL>
+	<LI><P STYLE="margin-bottom: 0cm">Setpoint-Controller zur
+	Ansteuerung eines Solenoid (GEM) 
+	</P>
+	<LI><P STYLE="margin-bottom: 0cm">Anschluss eines TCM (Temperatur
+	Cluster Monitor) nur in Verbindung mit Solenoid Platine m&ouml;glich.
+		</P>
+	<LI><P STYLE="margin-bottom: 0cm">Anschluss eines Submatix
+	CO2-Sensors 
+	</P>
+	<LI><P>Head Up Display (HUD) 
+	</P>
+</UL>
+<P><BR>Vollst&auml;ndige Auflistung aller Informationen unter
+<A HREF="http://www.submatix.com/">submatix.com</A> 
+</P>
+<H2 CLASS="western">Diese App</H2>
+<P STYLE="margin-bottom: 0cm">Diese App konfiguriert den SPX.42
+Tauchcomputer, programmiert bis zu 8 Gase im SPX.42, liest
+Tauchgangsprotokolle der Tauchg&auml;nge, speichert und exportiert
+diese Protokolle und stellt die Tauchprotokolle grafisch dar.<BR><BR>Die
+App kann nahezu beliebig viele SPX.42 Tauchcomputer verwalten. Dies
+ist nur von den vorhandenen Ressourcen auf dem Android-Ger&auml;t
+abh&auml;ngig. <BR>Die Daten werden intern in einer SQL-Datenbank und
+Datendateien (Datendateien? Falls das Wort existiert, ist es
+furchtbar. Daten und Dateien sind der Plural von Datum) gespeichert.</P>
+<P><A HREF="#content">[ content ]</A> 
+</P>
+<H1><A NAME="appstart"></A><!-- #############################################################################
+  #### Programmstart                                                       ####
+  #############################################################################
+ -->Programmstart
+/ App-Start</H1>
+<H2 CLASS="western">Erster Programmstart</H2>
+<P STYLE="margin-bottom: 0cm">Beim ersten Programmstart bleibt der
+&quot;Navigator&quot; also das Anzeigeelement f&uuml;r die Navigation
+sichtbar, um dem neuen Benutzer dessen Vorhandensein zu
+zeigen.<BR>Dieser wird nur beim ersten Programmstart angezeigt. 
+</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_firstStart.png" NAME="Grafik1" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Erster Start 
+</P>
+<P><BR><BR>
+</P>
+<P><A HREF="#content">[ content ]</A> 
+</P>
+<H1><A NAME="app-propertys"></A><!-- #############################################################################
+  #### Programmeinstellungen                                               ####
+  #############################################################################
+ -->Programmeinstellungen</H1>
+<P STYLE="margin-bottom: 0cm">Es k&ouml;nnen verschiedene Parameter
+der App &uuml;ber den Men&uuml;punkt &quot;Einstellungen&quot;
+festgelegt werden.<BR>Die Einstellungen sind thematisch gegliedert
+und werden sp&auml;ter kurz erl&auml;utert. 
+</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_preferences_dark.png" NAME="Grafik2" ALIGN=BOTTOM WIDTH=1920 HEIGHT=2324 BORDER=0>
+Einstellungen dunkel 
+</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_preferences_light.png" NAME="Grafik3" ALIGN=BOTTOM WIDTH=1920 HEIGHT=2316 BORDER=0>
+Einstellungen hell 
+</P>
+<H3 CLASS="western">Einheitenanzeige</H3>
+<UL>
+	<LI><P>Hier gibt es nur einen Eintrag. Dieser bestimmt die
+	Formatierung der Datums- und Zeitangaben. 
+	</P>
+</UL>
+<H3 CLASS="western">Dateisystem-Einstellungen</H3>
+<UL>
+	<LI><P STYLE="margin-bottom: 0cm">Datenverzeichnis<BR>Zeigt auf das
+	Verzeichnis, in welchem die Daten und die Datenbank der Logdaten
+	gespeichert werden.</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm">Tippen &ouml;ffnet einen
+		Auswahldialog<BR><FONT COLOR="#ff0000">(Hinweis: Verschiebt KEINE
+		vorhandene Daten)</FONT> 
+		</P>
+	</UL>
+	<LI><P STYLE="margin-bottom: 0cm">Zeige alle neuen Logeintr&auml;ge<BR>Es
+	sind zwei Einstellungen m&ouml;glich</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm">NEIN 
+		</P>
+		<LI><P>ZEIGE 
+		</P>
+	</UL>
+</UL>
+<H3 CLASS="western">eMail-Konfiguration</H3>
+<UL>
+	<LI><P STYLE="margin-bottom: 0cm">Hauptempf&auml;nger</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm">Sollen Logdaten exportiert und
+		per Mail versendet werden, ist hier die Empf&auml;nger-Mailadresse
+		einzugetragen. 
+		</P>
+	</UL>
+	<LI><P STYLE="margin-bottom: 0cm">Copy-Empf&auml;nger</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm">Ist hier eine Mailadresse
+		eingetragen, wird zus&auml;tzlich eine Kopie der Mail via &quot;cc&quot;
+		an diese Adresse gesendet. 
+		</P>
+	</UL>
+	<LI><P STYLE="margin-bottom: 0cm">komprimiere UDDF</P>
+	<UL>
+		<LI><P>Diese Option komprimiert die zu versendenden Daten vor dem
+		Versenden mit dem ZIP-Algorithmus. 
+		</P>
+	</UL>
+</UL>
+<H3 CLASS="western">Sonstiges</H3>
+<UL>
+	<LI><P STYLE="margin-bottom: 0cm">Thema wechseln<BR>Dieser Schalter
+	wechselt zwischen einem dunklen (default, auf AMOLED Displays Strom
+	sparend) und einem hellen Thema.<BR>Dieser Wechsel wird unmittelbar
+	vorgenommen. 
+	</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm">Hell 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">Dunkel 
+		</P>
+	</UL>
+	<LI><P STYLE="margin-bottom: 0cm">BT deaktivieren<BR>Dieser Schalter
+	bestimmt, ob die Bluethooth-Schnittstelle beim Beenden des
+	Programmes (wieder) deaktiviert wird oder aktiv bleibt. 
+	</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm">aktiv 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">aus 
+		</P>
+	</UL>
+	<LI><P STYLE="margin-bottom: 0cm">Online Hilfe erlauben?<BR>Dieser
+	Schalter aktiviert/deaktiviert diese Onlinehilfe auf dem
+	Mobilger&auml;t.<BR>Dies dient dazu, bei Mobilfunkvertr&auml;gen mit
+	Volumenberechnung Geb&uuml;hren zu sparen. 
+	</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm">gesperrt 
+		</P>
+		<LI><P>erlaubt 
+		</P>
+	</UL>
+</UL>
+<P><A HREF="#content">[ content ]</A> 
+</P>
+<H1><A NAME="spx42-connecting"></A><!-- #############################################################################
+  #### Verbinden mit SPX.42                                                ####
+  #############################################################################
+ -->Mit
+dem SPX.42 verbinden</H1>
+<P STYLE="margin-bottom: 0cm">Der SPX.42 muss eingeschaltet sein und
+die Funktion &quot;Synchronisation&quot; muss <B>ausgew&auml;hlt und
+aktiviert</B> sein. <BR>Bei Einschalten der Synchronisation erscheint
+f&uuml;r einige Zeit die PIN. Diese wird f&uuml;r die
+Verbindungsaufnahme ben&ouml;tigt. <BR><BR><I>Ab Firmwareversion
+V2.7_H wird automatisch beim Verbinden die Uhrzeit des SPX.42 mit dem
+Androidger&auml;t synchronisiert.</I> 
+</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_connect_start.png" NAME="Grafik4" ALIGN=BOTTOM WIDTH=1920 HEIGHT=1080 BORDER=0>
+Verbindung mit SPX.42 
+</P>
+<H2 CLASS="western">Verbinden mit neuem Ger&auml;t</H2>
+<P STYLE="margin-bottom: 0cm">Um die App mit einem Ger&auml;t zu
+verbinden, welches noch nicht &quot;gepaart&quot;, d.h noch nicht mit
+dem Androidger&auml;t &quot;bekannt gemacht&quot; wurde, muss
+zun&auml;chst eine Suche nach neuen Bluethooth-Ger&auml;ten
+durchgef&uuml;hrt werden. <BR>Diese wird mit der Schaltfl&auml;che
+&quot;Finden von BT Ger&auml;ten&quot; gestartet: 
+</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_connect_searching_bt.png" NAME="Grafik5" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Ger&auml;te suchen 
+</P>
+<P STYLE="margin-bottom: 0cm">Das neue Ger&auml;t wird danach in der
+Liste (hier rot markiert) angezeigt. 
+</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_connect_new_device.png" NAME="Grafik6" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Neues Ger&auml;t (markiert) 
+</P>
+<P STYLE="margin-bottom: 0cm">Anschlie&szlig;end sollte zur besseren
+Wiedererkennbarkeit ein Alias f&uuml;r das Ger&auml;t vergeben
+werden, da die Ger&auml;te sich nur mit einer numerischen Kennung
+&uuml;ber die Bluethoothverbindung melden. 
+</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_connect_edit_alias_and_pin.png" NAME="Grafik7" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Alias und PIN setzen (ab Android Version 4.4) 
+</P>
+<P STYLE="margin-bottom: 0cm">Leider ist diese einfache Art der
+Vergabe der PIN nur ab Android 4.4 m&ouml;glich. Android von Version
+4.03 bis einschlie&szlig;lich Android Version 4.3 lassen nur die
+Vergabe des Aliasnamens zu. Das &quot;Paaren&quot; mit der PIN muss
+hier &uuml;ber die Systemfunktionen des Ger&auml;tes erfolgen. 
+</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_connect_with_alias.png" NAME="Grafik8" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Ansicht mit Alias. Dieser wird in allen anderen Ansichten so
+angezeigt. <BR>Verbunden wird das Ger&auml;t mit dem
+Bluethooth-Symbol oben rechts (rot markiert). 
+</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_connect_connected.png" NAME="Grafik9" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Ansicht Verbunden. (Symbolfarben sind ver&auml;ndert) 
+</P>
+<H2 CLASS="western">Verbinden mit vorhandenem Ger&auml;t</H2>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_connect_with_alias.png" NAME="Grafik10" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Ansicht mit Alias. Dieser wird in allen anderen Ansichten so
+angezeigt. <BR>Verbunden wird das Ger&auml;t mit dem
+Bluethooth-Symbol oben rechts (rot markiert) 
+</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_connect_connected.png" NAME="Grafik11" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Ansicht Verbunden. (Symbolfarben sind ver&auml;ndert) 
+</P>
+<P><A HREF="#content">[ content ]</A> 
+</P>
+<H1><A NAME="extend-menu"></A><!-- #############################################################################
+  #### Erweiterung der Menüs                                               ####
+  #############################################################################
+ -->Erweiterung
+des Men&uuml;s</H1>
+<P STYLE="margin-bottom: 0cm">Wenn das Ger&auml;t (SPX.42)
+erfolgreich mit dem Androidger&auml;t verbunden wurde, erweitert sich
+das Men&uuml; auf der linken Seite des Bildschirmes automatisch um
+die nun &quot;online&quot; verf&uuml;gbaren Funktionen.</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_full_meinmenu.png" NAME="Grafik12" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Men&uuml; Komplett 
+</P>
+<P><A HREF="#content">[ content ]</A> 
+</P>
+<H1><A NAME="spx42-status"></A><!-- #############################################################################
+  #### SPX.42 Status                                                       ####
+  #############################################################################
+ -->SPX.42
+Status</H1>
+<P STYLE="margin-bottom: 0cm">In dieser Ansicht wird der aktuelle
+Status des SPX.42 angezeigt: <BR>Die Akkuspannung, Seriennummer,
+Firmwareversion und der Lizenzierungsstatus werden angezeigt. 
+</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_spx42_status.png" NAME="Grafik13" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+SPX.42 Status / Lizenzierung 
+</P>
+<P><A HREF="#content">[ content ]</A> 
+</P>
+<H1><A NAME="spx42-propertys"></A><!-- #############################################################################
+  #### SPX.42 Einstellungen                                                ####
+  #############################################################################
+ -->SPX.42
+Einstellungen</H1>
+<P STYLE="margin-bottom: 0cm">Der SPX.42 kann an Land mit Hilfe der
+Bluethooth-Schnittstelle &uuml;ber Ihr Androidger&auml;t konfiguriert
+werden. Einzig die Lizenzierung kann ausschlie&szlig;lich am SPX.42
+selbst vorgenommen werden.</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_spx42_propertys.png" NAME="Grafik14" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+SPX.42 Einstellungen 
+</P>
+<H3 CLASS="western">Setpoint</H3>
+<UL>
+	<LI><P STYLE="margin-bottom: 0cm">Autosetpoint<BR>Hier wird
+	vorgegeben, ob und ab wann der eingestellte Setpoint aktiviert
+	wird.<BR>Folgende Einstellungen sind m&ouml;glich:</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm">off 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">5/6 Meter (je nach Firmware
+		Version) 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">10 Meter 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">15 Meter 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">20 Meter 
+		</P>
+	</UL>
+	<LI><P STYLE="margin-bottom: 0cm">W&auml;hle gew&uuml;nschten
+	Highsetpoint<BR>Hier wird der gew&uuml;nschte PPO2 eingestellt.
+	G&uuml;ltig ist dieser ab der Tiefe, die im &quot;Autosetpoint&quot;
+	gew&auml;hlt wurde<BR>Der Setpoint kann unter Wasser
+	selbstverst&auml;ndlich jederzeit ver&auml;ndert werden.<BR>Folgende
+	Einstellungen sind m&ouml;glich:</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm">1.0 Bar 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">1.1 Bar 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">1.2 Bar 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">1.3 Bar 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">1.4 Bar 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">1.5 Bar 
+		</P>
+		<LI><P>1.6 Bar 
+		</P>
+	</UL>
+</UL>
+<H3 CLASS="western">Dekompression</H3>
+<UL>
+	<LI><P STYLE="margin-bottom: 0cm">Auswahl Voreinstellung<BR>Hier
+	werden die Gradienten entsprechend folgender Voreinstellungen
+	gesetzt:</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm">Sehr Konsevativ 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">Standard 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">Moderat 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">Aggressiv 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">Sehr aggressiv 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">Benutzerdef. 
+		</P>
+	</UL>
+	<LI><P>setze Gradient<BR>Will der Benutzer eigene Gradienten
+	abweichend von den Voreinstellungen setzen, kann &uuml;ber diese
+	Funktion eine eigene Einstellung in den SPX.42 &uuml;bertragen
+	werden. 
+	</P>
+</UL>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_spx42_config_gradient.png" NAME="Grafik15" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Einstellungen Gradienten f&uuml;r Dekompression 
+</P>
+<UL>
+	<LI><P STYLE="margin-bottom: 0cm">Tiefe f&uuml;r letzten Stop<BR>Der
+	letzte Sicherheits-/Dekostop findet in der folgenden
+	voreingestellten Tiefe statt:</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm">6 Meter 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">3 Meter 
+		</P>
+	</UL>
+	<LI><P STYLE="margin-bottom: 0cm">dyn. Gradienten<BR>Die Einstellung
+	dynamische Gradienten beeinflusst die Gradienten im Falle eines
+	Bailouts mit offenem Ger&auml;t insofern, als eine aggressive
+	Einstellung f&uuml;r Dekompression automatisch gew&auml;hlt wird, um
+	die Dekompressionszeit in diesem Fall zu verk&uuml;rzen.<BR>(Siehe
+	Handbuch zum SPX.42)<BR>Die Einstellungen umfassen die beiden
+	folgenden Punkte:</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm">Dyn. 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">aus 
+		</P>
+	</UL>
+	<LI><P STYLE="margin-bottom: 0cm">Deep Stops<BR>Wenn aktiviert,
+	werden hier tiefe (kurze) Dekompressionsstops im SPX.42
+	ber&uuml;cksichtigt und angezeigt.<BR>Es gibt folgende zwei
+	Einstellungen:</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm">kein tiefer Stop 
+		</P>
+		<LI><P>tiefer Stop 
+		</P>
+	</UL>
+</UL>
+<H3 CLASS="western">Anzeige</H3>
+<UL>
+	<LI><P STYLE="margin-bottom: 0cm">Helligkeit<BR>Der SPX.42 kann
+	verschiedene Helligkeiten der Anzeige voreinstellen.<BR>Diese k&ouml;nnen
+	unter Wasser selbstverst&auml;ndlich jederzeit ver&auml;ndert
+	werden.<BR>M&ouml;glich sind folgende Werte:</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm">bei neueren Firmwareversionen</P>
+		<LI><P STYLE="margin-bottom: 0cm">20% 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">40% 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">60% 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">80% 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">100% 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">bei &auml;lteren
+		Firmwareversionen</P>
+		<LI><P STYLE="margin-bottom: 0cm">10% 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">50% 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">100% 
+		</P>
+	</UL>
+	<LI><P STYLE="margin-bottom: 0cm">Display-Ausrichtung<BR>Hier kann
+	die Anzeige des SPX.42 um 180 Grad gedreht werden<BR>Die Einstellung
+	wirkt nach beenden der Synchronisation am SPX.42.<BR>Es gibt zwei
+	Einstellungen:</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm">landsc. normal 
+		</P>
+		<LI><P>landsc. 180&deg; 
+		</P>
+	</UL>
+</UL>
+<H3 CLASS="western">SPX42 Einheiten</H3>
+<UL>
+	<LI><P STYLE="margin-bottom: 0cm">Temperatureinheit<BR>Der SPX.42
+	kann mit den Temperatureinheiten Grad Celsius und Fahrenheir
+	arbeiten.<BR>Es gibt diese Einstellungen:</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm">Fahrenheit 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">Celsius 
+		</P>
+	</UL>
+	<LI><P STYLE="margin-bottom: 0cm">Einheit f&uuml;r die Tiefe</P>
+	<P STYLE="margin-bottom: 0cm">Der SPX.42 kann zwei Einheitensysteme
+	f&uuml;r die Tiefe nutzen.<BR>Es gibt diese Einstellungen:</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm">Fu&szlig; 
+		</P>
+		<LI><P STYLE="margin-bottom: 0cm">Meter 
+		</P>
+	</UL>
+	<LI><P STYLE="margin-bottom: 0cm">Art des Wassers</P>
+	<P STYLE="margin-bottom: 0cm">Die Tiefenkalibrierung des SPX.42 ist
+	f&uuml;r folgende Einstellungen vorgesehen:</P>
+	<UL>
+		<LI><P STYLE="margin-bottom: 0cm">Salzwasser 
+		</P>
+		<LI><P>S&uuml;&szlig;wasser 
+		</P>
+	</UL>
+</UL>
+<P><A HREF="#content">[ content ]</A> 
+</P>
+<H1><A NAME="gases"></A><!-- #############################################################################
+  #### Gase bearbeiten                                                     ####
+  #############################################################################
+ -->Gase
+bearbeiten</H1>
+<P STYLE="margin-bottom: 0cm">Der Tauchcomputer SPX.42 ist in der
+Lage 8 Gase zu speichern, wovon 2 Gase als Diluent, und alle Gase als
+Bailoutgas eingerichtet werden k&ouml;nnen. So ist eine gro&szlig;e
+Bandbreite an Einsatzm&ouml;glichkeiten in verschiedenen
+Konfigurationen denkbar.<BR>Unter der Nummer des Gases ist eine Zeile
+mit Informationen zum gespeicherten Gas eingeblendet: die Gasnummer
+und danach die Bezeichnung des Gases nach der international &uuml;blichen
+Bezeichnung der Gemische. <BR>Die Bezeichnungen <B>DIL1</B> und <B>DIL2</B>
+stehen f&uuml;r Diluent Nr. 1 und Diluent Nr. 2; die Bezeichnung <B>BO</B>
+steht f&uuml;r Bailoutgas.<BR>Nach deser Information folgt die <B>MOD</B>
+(Maximum Operation Depth), welche die maximale Einsatztiefe des Gases
+darstellt. Diese ist mit einem maximalen PPO2 von 1.6 Bar berechnet. 
+</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_spx42_gasedit.png" NAME="Grafik16" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Gaseinstellungen des SPX.42 (8 m&ouml;gliche Gase) 
+</P>
+<P STYLE="margin-bottom: 0cm">Soll ein Gas bearbeitet werden, gen&uuml;gt
+ein Tippen auf die entsprechende Zeile und ein Bearbeitungsdialog
+&ouml;ffnet sich.<BR>Die M&ouml;glichkeiten des Dialoges sind durch
+die Lizenzierung des SPX.42 vorgegeben.</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_spx42_gasedit_detail.png" NAME="Grafik17" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Gaseinstellungen f&uuml;r ein einzelnes Gas 
+</P>
+<P><A HREF="#content">[ content ]</A> 
+</P>
+<H1><A NAME="logs-read"></A><!-- #############################################################################
+  #### Logdaten lesen                                                      ####
+  #############################################################################
+ -->Protokolle
+lesen</H1>
+<P>Der SPX.42 speichert in den Zeitabst&auml;nden, welche in den
+Einstellungen zum Ger&auml;t festgelegt wurden, Tauchdaten in eine
+Protokolldatei. Diese Protokolle k&ouml;nnen mit dieser App gelesen,
+gespeichert, exportiert und grafisch dargestellt werden.<BR>Die
+Speicherung folgt in einer internen Datenbank und Datendateien
+(??).<BR>Der Export erfolgt in einem speziellen Dateiformat (uddf
+Version 2.2.0). Dieses kann von einigen Logbuchprogrammen (wie zum
+Beispiel <I>Diving Log</I> von <I>Sven Koch</I> ) gelesen werden und
+samt Tauchprofil und PPO2 in das Logbuch &uuml;bernommen
+werden.<BR><BR>Informationen unter www.divinglog.de</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_read_loglist.png" NAME="Grafik18" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Protokollliste vom SPX.42 lesen 
+</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_mark_logs.png" NAME="Grafik19" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Protokolle zum Auslesen markieren 
+</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_read_logs.png" NAME="Grafik20" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Protokolle nach Tippen auf &quot;Lese!&quot; auslesen und speichern 
+</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_readet_logs.png" NAME="Grafik21" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Gespeicherte Protokolle sind mit Symbol gekennzeichnet 
+</P>
+<P><A HREF="#content">[ content ]</A> 
+</P>
+<H1><A NAME="logs-vis"></A><!-- #############################################################################
+  #### Logdaten visualisieren                                              ####
+  #############################################################################
+ -->Protokolle
+visualisieren</H1>
+<P STYLE="margin-bottom: 0cm">Diese App kann nahezu beliebig viele
+SPX.42 Tauchcomputer verwalten. Daher muss zu Beginn der
+Visualisierung der SPX.42 Tauchcomputer ausgew&auml;hlt werden.</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_logvis_device.png" NAME="Grafik22" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Zuerst das Ger&auml;t ausw&auml;hlen 
+</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_logvis_mark.png" NAME="Grafik23" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Das zu visualisierende Protokoll ausw&auml;hlen 
+</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_logvis_full.png" NAME="Grafik24" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Anzeige komplettes Protokoll 
+</P>
+<P STYLE="margin-bottom: 0cm">Um Details sehen zu k&ouml;nnen, kann
+wie bei Android &uuml;blich durch Gesten eine Ausschnittsvergr&ouml;&szlig;erung
+/ Verkleinerung erreicht werden.<BR>Der sichtbare Aussschnitt ist der
+gelbe Balken am oberen Rand:</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_logvis_zoom.png" NAME="Grafik25" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Vergr&ouml;&szlig;erung durch Spreizgeste 
+</P>
+<P><A HREF="#content">[ content ]</A> 
+</P>
+<H1><A NAME="logs-export"></A><!-- #############################################################################
+  #### Logdaten exportieren oder löschen                                   ####
+  #############################################################################
+ -->Protokolle
+exportieren / l&ouml;schen</H1>
+<P STYLE="margin-bottom: 0cm">Die im SPX.42 gespeicherten Protokolle
+k&ouml;nnen f&uuml;r eine weitere Verwendung (z. B. in einem
+Logprogramm) exportiert werden. <BR>Der Export erfolgt drahtlos &uuml;ber
+WLAN oder Mobilfunkverbindung mittels eMail. Daf&uuml;r ist in den
+allgemeinen Programmeinstellungen eine Vorgabe-Mailadresse zu
+hinterlegen.</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_export_screen.png" NAME="Grafik26" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Export / L&ouml;schen 
+</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_export_device_select.png" NAME="Grafik27" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Ausw&auml;hlen eines Ger&auml;tes f&uuml;r Export / L&ouml;schen 
+</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_export_log_select.png" NAME="Grafik28" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+Protokoll(e) w&auml;hlen Export / L&ouml;schen 
+</P>
+<P STYLE="margin-bottom: 0cm">In diesem Abschnitt k&ouml;nnen auch
+einzelne Protokolle oder alle Protokolle eines SPX.42 Tauchcomputers
+vom Androidger&auml;t gel&ouml;scht werden.<BR>Die Komplette L&ouml;schung
+erfolgt (nach einer Warnmeldung), wenn kein Protokoll ausgew&auml;hlt
+wurde. 
+</P>
+<P STYLE="margin-top: 0.32cm; margin-bottom: 0.64cm; border: 1.00pt solid #202020; padding: 0.05cm">
+<IMG SRC="v200_de_export_delete_all.png" NAME="Grafik29" ALIGN=BOTTOM WIDTH=75 HEIGHT=38 BORDER=0>
+L&ouml;schen aller Protokolle 
+</P>
+<P STYLE="margin-bottom: 0cm"><A HREF="#content">[ content ]</A> 
+</P>
+</BODY>
+</HTML>
