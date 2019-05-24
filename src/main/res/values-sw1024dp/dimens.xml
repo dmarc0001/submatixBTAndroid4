@@ -1,8 +1,0 @@
-<resources>
-
-    <!--
-      fuer Displays > 1024dp
-    -->
-     <dimen name="navigation_drawer_width">320dp</dimen>
-
-</resources>
