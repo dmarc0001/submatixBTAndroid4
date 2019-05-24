@@ -53,12 +53,12 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.support.v4.content.FileProvider;
 
 import org.joda.time.DateTime;
 import org.w3c.dom.DOMException;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Vector;
@@ -738,31 +738,13 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     // bei neueren Androiden ist das sehr restriktiv, versuche den Standart
     //
     tempFilesDir = Environment.getExternalStoragePublicDirectory( Environment.DIRECTORY_DOWNLOADS );
-    //tempFilesDir = runningActivity.getBaseContext().getFilesDir().getAbsoluteFile();
     //
     // der Standartpfad
     //
     if( tempFilesDir.exists() && tempFilesDir.isDirectory() && tempFilesDir.canWrite() )
     {
-      //tempFilesDir = new File(tempFilesDir.getAbsolutePath() + File.separator + ProjectConst.DEFAULTEXPORTDIR);
-      //if( tempFilesDir.exists() && tempFilesDir.isDirectory() && tempFilesDir.canWrite() )
-      //{
       Log.i(TAG, String.format("use export dir <%s>...", tempFilesDir.getAbsolutePath()));
       return (tempFilesDir);
-      //}
-      //
-      // Unterverzeichnis nicht vorhanden, versuche es zu erzeugen
-      //
-      //if( tempFilesDir.mkdirs() )
-      //{
-      //
-      // ist es nun vorhanden
-      //if( tempFilesDir.exists() && tempFilesDir.isDirectory() && tempFilesDir.canWrite() )
-      //{
-      //  Log.i(TAG, String.format("use created export dir <%s>...", tempFilesDir.getAbsolutePath()));
-      //  return (tempFilesDir);
-      //}
-      //}
     }
     //
     // doch den Standart nutzen
@@ -1309,30 +1291,6 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
       uad.show(getFragmentManager(), "noUddfDirectory");
       return;
     }
-    /*
-    File[] fileArray = uddfFile.listFiles();
-    filtered = new Vector<File>();
-    //
-    // Filtern auf Einträge, die ich brauche
-    //
-    for( File fl : fileArray )
-    {
-      Matcher m1 = uddfZipPattern.matcher(fl.getName());
-      Matcher m2 = uddfUnzipPattern.matcher(fl.getName());
-      if( m1.matches() || m2.matches() )
-      {
-        filtered.add(fl);
-      }
-    }
-    //
-    // Das Ergebnis feststellen
-    //
-    if( filtered.size() <= 0 )
-    {
-      Log.e(TAG, "uddf-directory is empty...");
-      return;
-    }
-    */
     //
     // Mailabsicht kundtun als INTEND
     //
@@ -1349,32 +1307,14 @@ public class SPX42ExportLogFragment extends Fragment implements IBtServiceListen
     //
     // URIS der Dateien in das Array tun
     //
-    /*
-    for( File fl : filtered )
-    {
-      if( BuildConfig.DEBUG )
-      {
-        Log.d(TAG, "append file <" + fl.getAbsoluteFile() + "> ");
-      }
-      uddfURIs.add(Uri.parse("file://" + fl.getAbsoluteFile()));
-    }
-    */
     diveMessage = getResources().getString(R.string.export_mail_bodytext) + "\n\n" + getResources().getString(R.string.app_name);
     emailIntent.putExtra(android.content.Intent.EXTRA_EMAIL, mailAddr);
     emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, new String("Divelog (" + deviceAlias + ")" ) );
     emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, diveMessage);
-    //if( filtered.size() == 1 )
-    //{
-      uddfURI = Uri.parse("file://" + uddfFile.getAbsoluteFile());
-      emailIntent.setAction(Intent.ACTION_SEND);
-      emailIntent.putExtra(Intent.EXTRA_STREAM, uddfURI);
-      //emailIntent.putExtra(Intent.EXTRA_STREAM, uddfURIs.get(0));
-    //}
-    //else
-    //{
-    //  emailIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
-    //  emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uddfURIs);
-    //}
+    uddfURI = FileProvider.getUriForFile(getContext(), "de.dmarcini.submatix.android4.full.provider", uddfFile );
+    //uddfURI = Uri.parse("file://" + uddfFile.getAbsoluteFile());
+    emailIntent.setAction(Intent.ACTION_SEND);
+    emailIntent.putExtra(Intent.EXTRA_STREAM, uddfURI);
     startActivityForResult( Intent.createChooser( emailIntent, "Send mail..."), ProjectConst.REQUEST_SEND_MAIL);
   }
 
