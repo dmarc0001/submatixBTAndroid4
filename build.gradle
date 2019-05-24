@@ -1,36 +1,42 @@
 apply plugin: 'com.android.application'
 android {
     flavorDimensions "default"
-    compileSdkVersion 25
+    compileSdkVersion 28
     buildToolsVersion '28.0.3'
     signingConfigs {
         DirksKey {
-            storeFile file('C:/DATEN/Entwicklung/dirksPrivaterAndroidEntwicklerkey.key')
+            storeFile file('C:\\localProg\\androidStudioWorkspace\\dirksPrivaterAndroidEntwicklerkey.key')
             storePassword 'energie'
             keyAlias 'android develpoment dirk marciniak'
+            keyPassword 'energie'
+        }
+        debug {
+            storeFile file('C:\\localProg\\androidStudioWorkspace\\dirksPrivaterAndroidEntwicklerkey.key')
+            keyAlias = 'android develpoment dirk marciniak'
+            storePassword 'energie'
             keyPassword 'energie'
         }
     }
   defaultConfig {
     applicationId "de.dmarcini.submatix.android4.full"
-    minSdkVersion 19
-    targetSdkVersion 25
+    minSdkVersion 23
+    targetSdkVersion 28
     signingConfig signingConfigs.DirksKey
-    versionCode 35
-    versionName '2.2'
+    versionCode 36
+    versionName '2.3'
     versionNameSuffix 'default'
   }
   buildTypes {
     debug {
       ant.importBuild "utils\\versionsScript.xml"
-      tasks.makeVersion.execute()
+      tasks.makeVersion
       signingConfig signingConfigs.DirksKey
       proguardFile 'C:/DATEN/androidStudioWorkspace/SubmatixBTAndroid4/app/utils/proguard-project.txt'
       versionNameSuffix '_debug'
     }
     release {
       ant.importBuild "utils\\versionsScript.xml"
-      tasks.makeVersion.execute()
+      tasks.makeVersion
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
       signingConfig signingConfigs.DirksKey
       proguardFile 'C:/DATEN/androidStudioWorkspace/SubmatixBTAndroid4/app/utils/proguard-project.txt'
@@ -47,28 +53,28 @@ android {
         abortOnError false
     }
   productFlavors {
-    Lollipop {
-      minSdkVersion 22
+    Marshmallow {
+      minSdkVersion 23
       applicationId 'de.dmarcini.submatix.android4.full'
       signingConfig signingConfigs.DirksKey
-      targetSdkVersion 25
+      targetSdkVersion 28
       versionCode 35
       versionName '2.2'
-      versionNameSuffix 'lollipop'
+      versionNameSuffix 'marshmallow'
     }
-    Kitkat {
+      Pie {
       applicationId 'de.dmarcini.submatix.android4.full'
       signingConfig signingConfigs.DirksKey
-      targetSdkVersion 25
+      targetSdkVersion 28
       versionCode 35
       versionName '2.2'
       versionNameSuffix 'kitkat'
-      minSdkVersion 19
+      minSdkVersion 28
     }
   }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility '1.8'
+        targetCompatibility '1.8'
     }
 }
 

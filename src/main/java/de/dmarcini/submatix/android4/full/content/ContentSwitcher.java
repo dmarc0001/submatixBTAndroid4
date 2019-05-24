@@ -30,7 +30,7 @@ import java.util.Map;
 import de.dmarcini.submatix.android4.full.R;
 
 /**
- * Objekt zum Erzeugen der Liteinträge in der AreaListActivity
+ * Objekt zum Erzeugen der Listeinträge in der AreaListActivity
  * <p>
  * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.content
  *
