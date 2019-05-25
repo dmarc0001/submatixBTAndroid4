@@ -26,8 +26,8 @@ package de.dmarcini.submatix.android4.full.utils;
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.full.utils
  *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- *         <p/>
- *         Stand: 02.02.2014
+ * <p/>
+ * Stand: 02.02.2014
  */
 @SuppressWarnings( "javadoc" )
 public class SPX42LogColorClass

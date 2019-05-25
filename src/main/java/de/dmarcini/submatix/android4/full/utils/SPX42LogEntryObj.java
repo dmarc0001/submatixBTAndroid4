@@ -28,8 +28,8 @@ import java.util.Locale;
  * Project: SubmatixBTLogger Package: de.dmarcini.bluethooth.support
  *
  * @author Dirk Marciniak (dirk_marcinia@arcor.de)
- *         <p/>
- *         Stand: 13.12.2011
+ * <p/>
+ * Stand: 13.12.2011
  */
 @SuppressWarnings( "javadoc" )
 //@formatter:off
@@ -62,14 +62,14 @@ public class SPX42LogEntryObj
   public void clean()
   {
     presure = 0;
-    depth = -1000;
-    temp = -1000;
-    acku = -1000;
-    ppo2 = -1000;
-    setpoint = -1000;
-    n2 = -1;
-    he = -1;
-    o2 = -1;
+    depth = - 1000;
+    temp = - 1000;
+    acku = - 1000;
+    ppo2 = - 1000;
+    setpoint = - 1000;
+    n2 = - 1;
+    he = - 1;
+    o2 = - 1;
     ar = 0;
     zerotime = 999;
     time = 0;
@@ -89,42 +89,42 @@ public class SPX42LogEntryObj
   {
     if( presure == 0 )
     {
-      return (false);
+      return ( false );
     }
-    else if( depth == -1000 )
+    else if( depth == - 1000 )
     {
-      return (false);
+      return ( false );
     }
-    else if( temp == -1000 )
+    else if( temp == - 1000 )
     {
-      return (false);
+      return ( false );
     }
-    else if( acku == -1000 )
+    else if( acku == - 1000 )
     {
-      return (false);
+      return ( false );
     }
-    else if( ppo2 == -1000 )
+    else if( ppo2 == - 1000 )
     {
-      return (false);
+      return ( false );
     }
-    else if( setpoint == -1000 )
+    else if( setpoint == - 1000 )
     {
-      return (false);
+      return ( false );
     }
-    else if( n2 == -1 )
+    else if( n2 == - 1 )
     {
-      return (false);
+      return ( false );
     }
-    else if( he == -1 )
+    else if( he == - 1 )
     {
-      return (false);
+      return ( false );
     }
-    o2 = (1 - n2 - he);
+    o2 = ( 1 - n2 - he );
     if( o2 < 0 )
     {
-      return (false);
+      return ( false );
     }
-    gasSample = String.format(Locale.ENGLISH, "%.3f:%.3f:%.3f:%.3f:%.3f", o2, n2, he, 0.0, 0.0);
-    return (true);
+    gasSample = String.format( Locale.ENGLISH, "%.3f:%.3f:%.3f:%.3f:%.3f", o2, n2, he, 0.0, 0.0 );
+    return ( true );
   }
 }

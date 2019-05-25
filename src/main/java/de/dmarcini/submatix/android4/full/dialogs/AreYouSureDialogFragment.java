@@ -39,8 +39,8 @@ import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
  *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- *         <p>
- *         Stand: 10.11.2013
+ * <p>
+ * Stand: 10.11.2013
  */
 public class AreYouSureDialogFragment extends DialogFragment
 {
@@ -73,46 +73,46 @@ public class AreYouSureDialogFragment extends DialogFragment
    *
    * @param msg
    */
-  public AreYouSureDialogFragment(String msg)
+  public AreYouSureDialogFragment( String msg )
   {
     super();
     this.msg = msg;
   }
 
   @Override
-  public Dialog onCreateDialog(Bundle savedInstanceState)
+  public Dialog onCreateDialog( Bundle savedInstanceState )
   {
     // Benutze die Builderklasse zum erstellen des Dialogs
-    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-    builder.setMessage(msg);
-    builder.setPositiveButton(R.string.dialog_exit_button, new DialogInterface.OnClickListener()
+    AlertDialog.Builder builder = new AlertDialog.Builder( getActivity() );
+    builder.setMessage( msg );
+    builder.setPositiveButton( R.string.dialog_exit_button, new DialogInterface.OnClickListener()
     {
       @Override
-      public void onClick(DialogInterface dialog, int id)
+      public void onClick( DialogInterface dialog, int id )
       {
         // Gib in der App bescheid, ich will es so!
-        mListener.onDialogPositiveClick(AreYouSureDialogFragment.this);
+        mListener.onDialogPositiveClick( AreYouSureDialogFragment.this );
       }
-    });
-    builder.setNegativeButton(R.string.dialog_cancel_button, new DialogInterface.OnClickListener()
+    } );
+    builder.setNegativeButton( R.string.dialog_cancel_button, new DialogInterface.OnClickListener()
     {
       @Override
-      public void onClick(DialogInterface dialog, int id)
+      public void onClick( DialogInterface dialog, int id )
       {
         // Abbruch!
-        mListener.onDialogNegativeClick(AreYouSureDialogFragment.this);
+        mListener.onDialogNegativeClick( AreYouSureDialogFragment.this );
       }
-    });
+    } );
     // Create the AlertDialog object and return it
     alDial = builder.create();
-    return (alDial);
+    return ( alDial );
   }
 
   // Überschreibe onAttach für meine Zwecke mit dem Listener
   @Override
-  public void onAttach(Activity activity)
+  public void onAttach( Activity activity )
   {
-    super.onAttach(activity);
+    super.onAttach( activity );
     // Implementiert die Activity den Listener?
     try
     {
@@ -122,18 +122,18 @@ public class AreYouSureDialogFragment extends DialogFragment
     catch( ClassCastException ex )
     {
       // Die activity implementiert den Listener nicht, werfe eine Exception
-      throw new ClassCastException(activity.toString() + " must implement INoticeDialogListener");
+      throw new ClassCastException( activity.toString() + " must implement INoticeDialogListener" );
     }
   }
 
   // Überschreibe show fürs debugging
   @Override
-  public void show(FragmentManager manager, String tag)
+  public void show( FragmentManager manager, String tag )
   {
-    super.show(manager, tag);
+    super.show( manager, tag );
     if( BuildConfig.DEBUG )
     {
-      Log.v(TAG, "show(manager,tag)...");
+      Log.v( TAG, "show(manager,tag)..." );
     }
   }
 }

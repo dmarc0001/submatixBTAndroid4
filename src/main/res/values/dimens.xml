@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--
-         Per the design guidelines, navigation drawers should be between 240dp and 320dp:
-         https://developer.android.com/design/patterns/navigation-drawer.html
-    -->
-    <dimen name="navigation_drawer_width">240dp</dimen>
-    <!-- für klein -->
-    <dimen name="text_margin_left">12dp</dimen>
-    <dimen name="item_top_margin">15dp</dimen>
-    <dimen name="icon_margin_left">16dp</dimen>
-    <dimen name="icon_margin_top">24dp</dimen>
-    <dimen name="default_left_right_margin">14dp</dimen>
-    <dimen name="standart_margin">8dp</dimen>
-    <!-- fuer GROSS -->
-    <dimen name="text_margin_left_big">24dp</dimen>
-    <dimen name="item_top_margin_big">30dp</dimen>
-    <dimen name="icon_margin_left_big">32dp</dimen>
-    <dimen name="icon_margin_top_big">48dp</dimen>
-    <dimen name="default_left_right_margin_big">28dp</dimen>
-    <dimen name="standart_margin_big">24dp</dimen>
+  <!--
+       Per the design guidelines, navigation drawers should be between 240dp and 320dp:
+       https://developer.android.com/design/patterns/navigation-drawer.html
+  -->
+  <dimen name = "navigation_drawer_width">240dp</dimen>
+  <!-- für klein -->
+  <dimen name = "text_margin_left">12dp</dimen>
+  <dimen name = "item_top_margin">15dp</dimen>
+  <dimen name = "icon_margin_left">16dp</dimen>
+  <dimen name = "icon_margin_top">24dp</dimen>
+  <dimen name = "default_left_right_margin">14dp</dimen>
+  <dimen name = "standart_margin">8dp</dimen>
+  <!-- fuer GROSS -->
+  <dimen name = "text_margin_left_big">24dp</dimen>
+  <dimen name = "item_top_margin_big">30dp</dimen>
+  <dimen name = "icon_margin_left_big">32dp</dimen>
+  <dimen name = "icon_margin_top_big">48dp</dimen>
+  <dimen name = "default_left_right_margin_big">28dp</dimen>
+  <dimen name = "standart_margin_big">24dp</dimen>
 </resources>

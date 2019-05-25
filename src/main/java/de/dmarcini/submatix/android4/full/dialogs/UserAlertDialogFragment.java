@@ -40,18 +40,18 @@ import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
  *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- *         <p>
- *         Stand: 10.11.2013
+ * <p>
+ * Stand: 10.11.2013
  */
 public class UserAlertDialogFragment extends DialogFragment
 {
   @SuppressWarnings( "unused" )
-  private static final String TAG = EditAliasDialogFragment.class.getSimpleName();
-  private View   rootView;
-  private String headLine;
-  private String msg;
+  private static final String                TAG       = EditAliasDialogFragment.class.getSimpleName();
+  private              View                  rootView;
+  private              String                headLine;
+  private              String                msg;
   // Use this instance of the interface to deliver action events
-  private INoticeDialogListener mListener = null;
+  private              INoticeDialogListener mListener = null;
 
   /**
    * Der Default-Konstruktor ist gesperrt
@@ -77,7 +77,7 @@ public class UserAlertDialogFragment extends DialogFragment
    * @param headLine
    * @param msg
    */
-  public UserAlertDialogFragment(String headLine, String msg)
+  public UserAlertDialogFragment( String headLine, String msg )
   {
     super();
     this.headLine = headLine;
@@ -85,47 +85,47 @@ public class UserAlertDialogFragment extends DialogFragment
   }
 
   @Override
-  public Dialog onCreateDialog(Bundle savedInstanceState)
+  public Dialog onCreateDialog( Bundle savedInstanceState )
   {
     //
     // Benutze die Builderklasse zum erstellen des Dialogs
-    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+    AlertDialog.Builder builder = new AlertDialog.Builder( getActivity() );
     // Get the layout inflater
     LayoutInflater inflater = getActivity().getLayoutInflater();
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    rootView = inflater.inflate(R.layout.fragment_dialog_alert, ( ViewGroup ) null);
+    rootView = inflater.inflate( R.layout.fragment_dialog_alert, ( ViewGroup ) null );
     //
     // die Texte einfügen, natürlich
     //
-    TextView tv = ( TextView ) rootView.findViewById(R.id.alertHeadlineTextView);
-    tv.setText(headLine);
+    TextView tv = ( TextView ) rootView.findViewById( R.id.alertHeadlineTextView );
+    tv.setText( headLine );
     // das wird ein editierbarer Text!
-    tv = ( TextView ) rootView.findViewById(R.id.alertMessageTextView);
-    tv.setText(msg, TextView.BufferType.EDITABLE);
+    tv = ( TextView ) rootView.findViewById( R.id.alertMessageTextView );
+    tv.setText( msg, TextView.BufferType.EDITABLE );
     //
     // jetzt dem Builder das View übergeben
     //
-    builder.setView(rootView);
+    builder.setView( rootView );
     // Buttons erzeugen
-    builder.setNegativeButton(R.string.dialog_exit_button, new DialogInterface.OnClickListener()
+    builder.setNegativeButton( R.string.dialog_exit_button, new DialogInterface.OnClickListener()
     {
       @Override
-      public void onClick(DialogInterface dialog, int id)
+      public void onClick( DialogInterface dialog, int id )
       {
         // Gib in der App bescheid, ich will es so!
-        mListener.onDialogNegativeClick(UserAlertDialogFragment.this);
+        mListener.onDialogNegativeClick( UserAlertDialogFragment.this );
       }
-    });
+    } );
     // Create the AlertDialog object and return it
-    return (builder.create());
+    return ( builder.create() );
   }
 
   // Überschreibe onAttach für meine Zwecke mit dem Listener
   @Override
-  public void onAttach(Activity activity)
+  public void onAttach( Activity activity )
   {
-    super.onAttach(activity);
+    super.onAttach( activity );
     // Implementiert die Activity den Listener?
     try
     {
@@ -135,7 +135,7 @@ public class UserAlertDialogFragment extends DialogFragment
     catch( ClassCastException ex )
     {
       // Die activity implementiert den Listener nicht, werfe eine Exception
-      throw new ClassCastException(activity.toString() + " must implement INoticeDialogListener");
+      throw new ClassCastException( activity.toString() + " must implement INoticeDialogListener" );
     }
   }
 }

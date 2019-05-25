@@ -33,8 +33,8 @@ package de.dmarcini.submatix.android4.full.utils;
  * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.gui
  *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- *         <p/>
- *         Stand: 18.07.2013
+ * <p/>
+ * Stand: 18.07.2013
  */
 @SuppressWarnings( "javadoc" )
 public class SPX42GasParms

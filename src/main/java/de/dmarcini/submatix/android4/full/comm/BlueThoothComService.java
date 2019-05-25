@@ -67,31 +67,31 @@ public class BlueThoothComService extends Service
 {
   // @formatter:on
 
-  private static final    String              TAG                         = BlueThoothComService.class.getSimpleName();
-  private static final    long                msToEndService              = 35000L;                                    // Zeit, bis der Service ohne Verbindung Selbstmord begeht
-  private static final    Pattern             fieldPatternDp              = Pattern.compile(":");
-  private static final    Pattern             fieldPatternTab             = Pattern.compile("\t");
-  static                  int                 NOTIFICATION                = 815;
-  private static          ConnectThread       mConnectThread              = null;
-  private static          ReaderThread        mReaderThread               = null;
-  private static          WriterThread        mWriterThread               = null;
-  private static volatile int                 mConnectionState            = ProjectConst.CONN_STATE_NONE;              // aktueller Verbindungsstatus
-  private final           Timer               timerThread                 = new Timer();
-  private final           IBinder             mBinder                     = new LocalBinder();
-  private                 ArrayList<Handler>  mClientHandler              = new ArrayList<Handler>();                  // Messagehandler für Clienten
-  private                 long                tickToCounter               = 0L;
-  private                 long                timeToStopService           = 0L;
-  private                 NotificationManager nm                          = null;
-  private                 long                timerCounter                = 0;
-  private                 int                 writeWatchDog               = -1;
-  private                 String              sendStr                     = null;                                      // Zwischenspeicher für zu sendendes Kommando (für watchdog)
-  private                 BluetoothAdapter    mAdapter                    = null;
-  private volatile        boolean             isLogentryMode              = false;
-  private                 String              connectedDeviceMac          = null;
-  private                 String              connectedDeviceSerialNumber = null;
-  private                 String              connectedDeviceManufacturer = null;
-  private                 String              connectedDeviceFWVersion    = null;
-  private                 String[]            connectedDeviceLicense      = null;
+  private static final    String               TAG                         = BlueThoothComService.class.getSimpleName();
+  private static final    long                 msToEndService              = 35000L;                                    // Zeit, bis der Service ohne Verbindung Selbstmord begeht
+  private static final    Pattern              fieldPatternDp              = Pattern.compile( ":" );
+  private static final    Pattern              fieldPatternTab             = Pattern.compile( "\t" );
+  static                  int                  NOTIFICATION                = 815;
+  private static          ConnectThread        mConnectThread              = null;
+  private static          ReaderThread         mReaderThread               = null;
+  private static          WriterThread         mWriterThread               = null;
+  private static volatile int                  mConnectionState            = ProjectConst.CONN_STATE_NONE;              // aktueller Verbindungsstatus
+  private final           Timer                timerThread                 = new Timer();
+  private final           IBinder              mBinder                     = new LocalBinder();
+  private                 ArrayList< Handler > mClientHandler              = new ArrayList< Handler >();                  // Messagehandler für Clienten
+  private                 long                 tickToCounter               = 0L;
+  private                 long                 timeToStopService           = 0L;
+  private                 NotificationManager  nm                          = null;
+  private                 long                 timerCounter                = 0;
+  private                 int                  writeWatchDog               = - 1;
+  private                 String               sendStr                     = null;                                      // Zwischenspeicher für zu sendendes Kommando (für watchdog)
+  private                 BluetoothAdapter     mAdapter                    = null;
+  private volatile        boolean              isLogentryMode              = false;
+  private                 String               connectedDeviceMac          = null;
+  private                 String               connectedDeviceSerialNumber = null;
+  private                 String               connectedDeviceManufacturer = null;
+  private                 String               connectedDeviceFWVersion    = null;
+  private                 String[]             connectedDeviceLicense      = null;
 
   /**
    * Lese die Konfiguration vom SPX42
@@ -104,12 +104,12 @@ public class BlueThoothComService extends Service
   public void askForConfigFromSPX42()
   {
     String kdoString;
-    kdoString = String.format("%s~%x~%x~%x~%x~%x~%x~%x%s", ProjectConst.STX, ProjectConst.SPX_GET_SETUP_DEKO, ProjectConst.SPX_GET_SETUP_SETPOINT, ProjectConst.SPX_GET_SETUP_DISPLAYSETTINGS, ProjectConst.SPX_GET_SETUP_UNITS, ProjectConst.SPX_GET_SETUP_INDIVIDUAL, ProjectConst.SPX_LICENSE_STATE, ProjectConst.SPX_ALIVE, ProjectConst.ETX);
+    kdoString = String.format( "%s~%x~%x~%x~%x~%x~%x~%x%s", ProjectConst.STX, ProjectConst.SPX_GET_SETUP_DEKO, ProjectConst.SPX_GET_SETUP_SETPOINT, ProjectConst.SPX_GET_SETUP_DISPLAYSETTINGS, ProjectConst.SPX_GET_SETUP_UNITS, ProjectConst.SPX_GET_SETUP_INDIVIDUAL, ProjectConst.SPX_LICENSE_STATE, ProjectConst.SPX_ALIVE, ProjectConst.ETX );
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "askForConfigFromSPX42()...send <" + kdoString + ">");
+      Log.d( TAG, "askForConfigFromSPX42()...send <" + kdoString + ">" );
     }
-    this.writeToDevice(kdoString);
+    this.writeToDevice( kdoString );
   }
 
   /**
@@ -123,12 +123,12 @@ public class BlueThoothComService extends Service
   public void aksForUnitsFromSPX42()
   {
     String kdoString;
-    kdoString = String.format("%s~%x%s", ProjectConst.STX, ProjectConst.SPX_GET_SETUP_UNITS, ProjectConst.ETX);
+    kdoString = String.format( "%s~%x%s", ProjectConst.STX, ProjectConst.SPX_GET_SETUP_UNITS, ProjectConst.ETX );
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "aksForUnitsFromSPX42()...send <" + kdoString + ">");
+      Log.d( TAG, "aksForUnitsFromSPX42()...send <" + kdoString + ">" );
     }
-    this.writeToDevice(kdoString);
+    this.writeToDevice( kdoString );
   }
 
   /**
@@ -142,12 +142,12 @@ public class BlueThoothComService extends Service
   public void askForDecoConfig()
   {
     String kdoString;
-    kdoString = String.format("%s~%x~%x%s", ProjectConst.STX, ProjectConst.SPX_GET_SETUP_DEKO, ProjectConst.SPX_ALIVE, ProjectConst.ETX);
+    kdoString = String.format( "%s~%x~%x%s", ProjectConst.STX, ProjectConst.SPX_GET_SETUP_DEKO, ProjectConst.SPX_ALIVE, ProjectConst.ETX );
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "askForDecoConfig()...send <" + kdoString + ">");
+      Log.d( TAG, "askForDecoConfig()...send <" + kdoString + ">" );
     }
-    this.writeToDevice(kdoString);
+    this.writeToDevice( kdoString );
   }
 
   /**
@@ -162,16 +162,16 @@ public class BlueThoothComService extends Service
   {
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "askForSerialNumber...");
+      Log.d( TAG, "askForSerialNumber..." );
     }
     if( connectedDeviceFWVersion != null )
     {
-      BtServiceMessage msg = new BtServiceMessage(ProjectConst.MESSAGE_FWVERSION_READ, new String(connectedDeviceFWVersion));
-      sendMessageToApp(msg);
+      BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_FWVERSION_READ, new String( connectedDeviceFWVersion ) );
+      sendMessageToApp( msg );
     }
     else
     {
-      this.writeSPXMsgToDevice(String.format("~%x", ProjectConst.SPX_APPLICATION_ID));
+      this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_APPLICATION_ID ) );
     }
   }
 
@@ -186,12 +186,12 @@ public class BlueThoothComService extends Service
   public void askForGasFromSPX()
   {
     String kdoString;
-    kdoString = String.format("%s~%x~%x%s", ProjectConst.STX, ProjectConst.SPX_GET_SETUP_GASLIST, ProjectConst.SPX_ALIVE, ProjectConst.ETX);
+    kdoString = String.format( "%s~%x~%x%s", ProjectConst.STX, ProjectConst.SPX_GET_SETUP_GASLIST, ProjectConst.SPX_ALIVE, ProjectConst.ETX );
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "askForGasFromSPX: sending <" + kdoString + ">");
+      Log.d( TAG, "askForGasFromSPX: sending <" + kdoString + ">" );
     }
-    this.writeSPXMsgToDevice(kdoString);
+    this.writeSPXMsgToDevice( kdoString );
   }
 
   /**
@@ -206,16 +206,16 @@ public class BlueThoothComService extends Service
   {
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "askForLicenseFromSPX...");
+      Log.d( TAG, "askForLicenseFromSPX..." );
     }
     if( connectedDeviceLicense != null )
     {
-      BtServiceMessage msg = new BtServiceMessage(ProjectConst.MESSAGE_LICENSE_STATE_READ, connectedDeviceLicense);
-      sendMessageToApp(msg);
+      BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_LICENSE_STATE_READ, connectedDeviceLicense );
+      sendMessageToApp( msg );
     }
     else
     {
-      this.writeSPXMsgToDevice(String.format("~%x", ProjectConst.SPX_LICENSE_STATE));
+      this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_LICENSE_STATE ) );
     }
   }
 
@@ -231,19 +231,19 @@ public class BlueThoothComService extends Service
   {
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "askForLicenseFromSPX...");
+      Log.d( TAG, "askForLicenseFromSPX..." );
     }
     //
     // wenn der schon mal abgefragt wurde, kann ich das "cachen"
     //
     if( connectedDeviceManufacturer != null )
     {
-      BtServiceMessage msg = new BtServiceMessage(ProjectConst.MESSAGE_MANUFACTURER_READ, new String(connectedDeviceManufacturer));
-      sendMessageToApp(msg);
+      BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_MANUFACTURER_READ, new String( connectedDeviceManufacturer ) );
+      sendMessageToApp( msg );
     }
     else
     {
-      this.writeSPXMsgToDevice(String.format("~%x", ProjectConst.SPX_MANUFACTURERS));
+      this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_MANUFACTURERS ) );
     }
   }
 
@@ -259,16 +259,16 @@ public class BlueThoothComService extends Service
   {
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "askForSerialNumber...");
+      Log.d( TAG, "askForSerialNumber..." );
     }
     if( connectedDeviceSerialNumber != null )
     {
-      BtServiceMessage msg = new BtServiceMessage(ProjectConst.MESSAGE_SERIAL_READ, new String(connectedDeviceSerialNumber));
-      sendMessageToApp(msg);
+      BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_SERIAL_READ, new String( connectedDeviceSerialNumber ) );
+      sendMessageToApp( msg );
     }
     else
     {
-      this.writeSPXMsgToDevice(String.format("~%x", ProjectConst.SPX_SERIAL_NUMBER));
+      this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_SERIAL_NUMBER ) );
     }
   }
 
@@ -284,9 +284,9 @@ public class BlueThoothComService extends Service
   {
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "askForSPXAlive...");
+      Log.d( TAG, "askForSPXAlive..." );
     }
-    this.writeSPXMsgToDevice(String.format("~%x", ProjectConst.SPX_ALIVE));
+    this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_ALIVE ) );
   }
 
   /**
@@ -301,9 +301,9 @@ public class BlueThoothComService extends Service
   {
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "askForLogDirectoryFromSPX...");
+      Log.d( TAG, "askForLogDirectoryFromSPX..." );
     }
-    this.writeSPXMsgToDevice(String.format("~%x", ProjectConst.SPX_GET_LOG_INDEX));
+    this.writeSPXMsgToDevice( String.format( "~%x", ProjectConst.SPX_GET_LOG_INDEX ) );
   }
 
   /**
@@ -316,19 +316,19 @@ public class BlueThoothComService extends Service
    *
    * @param addr (MAC)
    */
-  public synchronized void connect(String addr)
+  public synchronized void connect( String addr )
   {
     BluetoothDevice device = null;
-    Log.v(TAG, "connect to: " + addr);
+    Log.v( TAG, "connect to: " + addr );
     connectedDeviceMac = null;
     connectedDeviceSerialNumber = null;
     // connectedDeviceAlias = null;
     if( mAdapter == null )
     {
-      Log.e(TAG, "None bt-adapter found!");
+      Log.e( TAG, "None bt-adapter found!" );
       return;
     }
-    device = mAdapter.getRemoteDevice(addr);
+    device = mAdapter.getRemoteDevice( addr );
     // Thread stoppen, bevor eine Verbindung aufgebaut werden kann
     if( mConnectionState == ProjectConst.CONN_STATE_CONNECTING )
     {
@@ -345,7 +345,7 @@ public class BlueThoothComService extends Service
       mReaderThread = null;
     }
     // Start the thread to connect with the given device
-    mConnectThread = new ConnectThread(device);
+    mConnectThread = new ConnectThread( device );
     connectedDeviceMac = addr;
     mConnectThread.start();
   }
@@ -361,13 +361,13 @@ public class BlueThoothComService extends Service
   private void connectionFailed()
   {
     // connectedDeviceAlias = null;
-    setState(ProjectConst.CONN_STATE_NONE);
-    BtServiceMessage msg = new BtServiceMessage(ProjectConst.MESSAGE_DISCONNECTED);
+    setState( ProjectConst.CONN_STATE_NONE );
+    BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
     // Melde des Status an die Clienten
-    sendMessageToApp(msg);
-    BtServiceMessage msg1 = new BtServiceMessage(ProjectConst.MESSAGE_CONNECTERROR);
+    sendMessageToApp( msg );
+    BtServiceMessage msg1 = new BtServiceMessage( ProjectConst.MESSAGE_CONNECTERROR );
     // Melde des Status an die Clienten
-    sendMessageToApp(msg1);
+    sendMessageToApp( msg1 );
   }
 
   /**
@@ -381,10 +381,10 @@ public class BlueThoothComService extends Service
   private void connectionLost()
   {
     // connectedDeviceAlias = null;
-    setState(ProjectConst.CONN_STATE_NONE);
-    BtServiceMessage msg = new BtServiceMessage(ProjectConst.MESSAGE_DISCONNECTED);
+    setState( ProjectConst.CONN_STATE_NONE );
+    BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
     // Melde des Status an die Clienten
-    sendMessageToApp(msg);
+    sendMessageToApp( msg );
   }
 
   /**
@@ -398,18 +398,18 @@ public class BlueThoothComService extends Service
    * @param socket,Socket zuum verbinden
    * @param device        Gerät zum verbinden
    */
-  private void deviceConnected(BluetoothSocket socket, BluetoothDevice device)
+  private void deviceConnected( BluetoothSocket socket, BluetoothDevice device )
   {
     if( BuildConfig.DEBUG )
     {
-      Log.v(TAG, "connected()...");
+      Log.v( TAG, "connected()..." );
     }
     // den Verbindunsthread stoppen, seine Aufgabe ist erfüllt
     if( mConnectThread != null )
     {
       if( BuildConfig.DEBUG )
       {
-        Log.d(TAG, "stop old mConnectThread...");
+        Log.d( TAG, "stop old mConnectThread..." );
       }
       // mConnectThread.cancel();
       mConnectThread = null;
@@ -419,7 +419,7 @@ public class BlueThoothComService extends Service
     {
       if( BuildConfig.DEBUG )
       {
-        Log.d(TAG, "stop old mReaderThread...");
+        Log.d( TAG, "stop old mReaderThread..." );
       }
       mReaderThread.cancel();
       mReaderThread = null;
@@ -428,7 +428,7 @@ public class BlueThoothComService extends Service
     {
       if( BuildConfig.DEBUG )
       {
-        Log.d(TAG, "stop old mWriterThread...");
+        Log.d( TAG, "stop old mWriterThread..." );
       }
       mWriterThread.cancel();
       mWriterThread = null;
@@ -436,30 +436,30 @@ public class BlueThoothComService extends Service
     // starte den Lesethread zur Bearbeitung der Daten vom SPX
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "create mReaderThread...");
+      Log.d( TAG, "create mReaderThread..." );
     }
-    mReaderThread = new ReaderThread(socket);
+    mReaderThread = new ReaderThread( socket );
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "start mReaderThread...");
+      Log.d( TAG, "start mReaderThread..." );
     }
     mReaderThread.start();
     // starte den Schreibhread zur Bearbeitung der Kommandos zum SPX
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "create mWriterThread...");
+      Log.d( TAG, "create mWriterThread..." );
     }
-    mWriterThread = new WriterThread(socket);
+    mWriterThread = new WriterThread( socket );
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "start mWriterThread...");
+      Log.d( TAG, "start mWriterThread..." );
     }
     mWriterThread.start();
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "call setState");
+      Log.d( TAG, "call setState" );
     }
-    setState(ProjectConst.CONN_STATE_CONNECTED);
+    setState( ProjectConst.CONN_STATE_CONNECTED );
     timerCounter = System.currentTimeMillis() + 100;
   }
 
@@ -475,7 +475,7 @@ public class BlueThoothComService extends Service
   {
     if( BuildConfig.DEBUG )
     {
-      Log.v(TAG, "stopping bt-connection");
+      Log.v( TAG, "stopping bt-connection" );
     }
     if( mConnectThread != null )
     {
@@ -492,7 +492,7 @@ public class BlueThoothComService extends Service
       mWriterThread.cancel();
       mWriterThread = null;
     }
-    setState(ProjectConst.CONN_STATE_NONE);
+    setState( ProjectConst.CONN_STATE_NONE );
   }
 
   /**
@@ -511,10 +511,10 @@ public class BlueThoothComService extends Service
     {
       if( connectedDeviceMac != null )
       {
-        return (connectedDeviceMac);
+        return ( connectedDeviceMac );
       }
     }
-    return (null);
+    return ( null );
   }
 
   /**
@@ -529,7 +529,7 @@ public class BlueThoothComService extends Service
    */
   public synchronized String getConnectedDeviceSerialNumber()
   {
-    return (connectedDeviceSerialNumber);
+    return ( connectedDeviceSerialNumber );
   }
 
   /**
@@ -544,20 +544,20 @@ public class BlueThoothComService extends Service
    */
   public int getConnectionState()
   {
-    return (mConnectionState);
+    return ( mConnectionState );
   }
 
   /**
    * Wird immer beim Binden eines Clienten aufgerufen
    */
   @Override
-  public IBinder onBind(Intent intent)
+  public IBinder onBind( Intent intent )
   {
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "onBind...");
+      Log.d( TAG, "onBind..." );
     }
-    showNotification(getText(R.string.notify_service), getText(R.string.notify_service_connected));
+    showNotification( getText( R.string.notify_service ), getText( R.string.notify_service_connected ) );
     return mBinder;
   }
 
@@ -566,20 +566,20 @@ public class BlueThoothComService extends Service
   {
     super.onCreate();
     timeToStopService = 0L;
-    nm = ( NotificationManager ) getSystemService(NOTIFICATION_SERVICE);
-    Log.i(TAG, "Service Started.");
+    nm = ( NotificationManager ) getSystemService( NOTIFICATION_SERVICE );
+    Log.i( TAG, "Service Started." );
     // isRunning = true;
     // der Überwachungsthread läuft solange der Service aktiv ist aller 1 Sekunde
-    timerThread.scheduleAtFixedRate(new TimerTask()
+    timerThread.scheduleAtFixedRate( new TimerTask()
     {
       @Override
       public void run()
       {
         onTimerTick();
       }
-    }, 100, 1000L);
+    }, 100, 1000L );
     // Service ist Erzeugt!
-    showNotification(getText(R.string.notify_service), getText(R.string.notify_service_started));
+    showNotification( getText( R.string.notify_service ), getText( R.string.notify_service_started ) );
     mAdapter = BluetoothAdapter.getDefaultAdapter();
   }
 
@@ -592,14 +592,14 @@ public class BlueThoothComService extends Service
       timerThread.cancel();
     }
     // Beende die Benachrichtigung in der Statuszeile
-    nm.cancel(NOTIFICATION);
-    Log.i(TAG, "Service Stopped.");
+    nm.cancel( NOTIFICATION );
+    Log.i( TAG, "Service Stopped." );
   }
 
   @Override
-  public int onStartCommand(Intent intent, int flags, int startId)
+  public int onStartCommand( Intent intent, int flags, int startId )
   {
-    Log.i(TAG, "Received start id " + startId + ": " + intent);
+    Log.i( TAG, "Received start id " + startId + ": " + intent );
     return START_STICKY;
   }
 
@@ -621,7 +621,7 @@ public class BlueThoothComService extends Service
     {
       if( System.currentTimeMillis() > timeToStopService )
       {
-        Log.i(TAG, "Service stopping time to stop after last client...");
+        Log.i( TAG, "Service stopping time to stop after last client..." );
         stopSelf();
       }
     }
@@ -633,13 +633,13 @@ public class BlueThoothComService extends Service
       tickToCounter = System.currentTimeMillis() + 2000L;
       try
       {
-        msg = new BtServiceMessage(ProjectConst.MESSAGE_TICK);
-        sendMessageToApp(msg);
+        msg = new BtServiceMessage( ProjectConst.MESSAGE_TICK );
+        sendMessageToApp( msg );
       }
       catch( Throwable t )
       {
         // you should always ultimately catch all exceptions in timerThread tasks.
-        Log.e(TAG, "Timer Tick Failed.", t);
+        Log.e( TAG, "Timer Tick Failed.", t );
       }
     }
     //
@@ -658,7 +658,7 @@ public class BlueThoothComService extends Service
       //
       // soll der Soft-Watchdog aktiv sein?
       //
-      if( writeWatchDog > -1 )
+      if( writeWatchDog > - 1 )
       {
         // ist der Timout aubgelaufen?
         if( writeWatchDog == 0 )
@@ -666,14 +666,14 @@ public class BlueThoothComService extends Service
           // ein Wachhund ist abgelaufen, benachrichtige den User!
           if( sendStr != null )
           {
-            msg = new BtServiceMessage(ProjectConst.MESSAGE_COMMTIMEOUT, sendStr);
+            msg = new BtServiceMessage( ProjectConst.MESSAGE_COMMTIMEOUT, sendStr );
           }
           else
           {
-            msg = new BtServiceMessage(ProjectConst.MESSAGE_COMMTIMEOUT);
+            msg = new BtServiceMessage( ProjectConst.MESSAGE_COMMTIMEOUT );
           }
-          sendMessageToApp(msg);
-          writeWatchDog = -1;
+          sendMessageToApp( msg );
+          writeWatchDog = - 1;
         }
         // runterzählen, bei -1 ist eh schluss
         writeWatchDog--;
@@ -682,14 +682,14 @@ public class BlueThoothComService extends Service
   }
 
   @Override
-  public boolean onUnbind(Intent intent)
+  public boolean onUnbind( Intent intent )
   {
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "onUnbind...");
+      Log.d( TAG, "onUnbind..." );
     }
-    showNotification(getText(R.string.notify_service), getText(R.string.notify_service_disconnected));
-    return (super.onUnbind(intent));
+    showNotification( getText( R.string.notify_service ), getText( R.string.notify_service_disconnected ) );
+    return ( super.onUnbind( intent ) );
   }
 
   /**
@@ -702,22 +702,22 @@ public class BlueThoothComService extends Service
    *
    * @param msg
    */
-  private void sendMessageToApp(BtServiceMessage msg)
+  private void sendMessageToApp( BtServiceMessage msg )
   {
     for( int i = mClientHandler.size() - 1; i >= 0; i-- )
     {
       try
       {
-        mClientHandler.get(i).obtainMessage(msg.getId(), msg).sendToTarget();
+        mClientHandler.get( i ).obtainMessage( msg.getId(), msg ).sendToTarget();
       }
       catch( NullPointerException ex )
       {
         // das ging schief, den Clienten NICHT mehr benutzen
-        mClientHandler.remove(i);
+        mClientHandler.remove( i );
       }
       catch( Exception ex )
       {
-        Log.e(TAG, "error while sendMessageToApp: " + ex.getLocalizedMessage());
+        Log.e( TAG, "error while sendMessageToApp: " + ex.getLocalizedMessage() );
       }
     }
   }
@@ -732,7 +732,7 @@ public class BlueThoothComService extends Service
    *
    * @param state
    */
-  private void setState(int state)
+  private void setState( int state )
   {
     BtServiceMessage msg;
     //
@@ -743,7 +743,7 @@ public class BlueThoothComService extends Service
       mConnectionState = state;
       if( BuildConfig.DEBUG )
       {
-        Log.v(TAG, "setState to <" + mConnectionState + ">  " + state);
+        Log.v( TAG, "setState to <" + mConnectionState + ">  " + state );
       }
       switch( state )
       {
@@ -755,17 +755,17 @@ public class BlueThoothComService extends Service
           connectedDeviceManufacturer = null;
           connectedDeviceFWVersion = null;
           connectedDeviceLicense = null;
-          msg = new BtServiceMessage(ProjectConst.MESSAGE_DISCONNECTED);
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
           break;
         case ProjectConst.CONN_STATE_CONNECTING:
-          msg = new BtServiceMessage(ProjectConst.MESSAGE_CONNECTING);
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECTING );
           break;
         case ProjectConst.CONN_STATE_CONNECTED:
-          msg = new BtServiceMessage(ProjectConst.MESSAGE_CONNECTED);
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECTED );
           break;
       }
       // Melde des Status an die Clienten
-      sendMessageToApp(msg);
+      sendMessageToApp( msg );
     }
   }
 
@@ -777,10 +777,10 @@ public class BlueThoothComService extends Service
    * <p/>
    * Stand: 21.02.2013
    */
-  private void showNotification(CharSequence head, CharSequence msg)
+  private void showNotification( CharSequence head, CharSequence msg )
   {
     // Icon Titel und Inhalt anzeigen, Intent beim Ancklicken setzen
-    PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(), 0, new Intent(getApplicationContext(), MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+    PendingIntent contentIntent = PendingIntent.getActivity( getApplicationContext(), 0, new Intent( getApplicationContext(), MainActivity.class ), PendingIntent.FLAG_UPDATE_CURRENT );
     //@formatter:off
     @SuppressWarnings( "deprecation" )
     Notification notification = new Notification.Builder(getBaseContext())
@@ -792,7 +792,7 @@ public class BlueThoothComService extends Service
         .getNotification();
     //@formatter:on
     // Send the notification.
-    nm.notify(NOTIFICATION, notification);
+    nm.notify( NOTIFICATION, notification );
   }
 
   /**
@@ -806,21 +806,22 @@ public class BlueThoothComService extends Service
    * @param cf
    * @param auto
    * @param pressure
+   *
    * @throws FirmwareNotSupportetException
    */
-  public void writeAutoSetpoint(SPX42Config cf, int auto, int pressure) throws FirmwareNotSupportetException
+  public void writeAutoSetpoint( SPX42Config cf, int auto, int pressure ) throws FirmwareNotSupportetException
   {
     String kdoString;
     String debugString;
     //
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "write setpoint propertys");
+      Log.d( TAG, "write setpoint propertys" );
     }
-    if( !cf.isFirmwareSupported() )
+    if( ! cf.isFirmwareSupported() )
     {
-      Log.e(TAG, "firmware not supportet for write settings!");
-      throw new FirmwareNotSupportetException("write Auto Setpoint");
+      Log.e( TAG, "firmware not supportet for write settings!" );
+      throw new FirmwareNotSupportetException( "write Auto Setpoint" );
     }
     if( cf.isOldParamSorting() )
     {
@@ -829,11 +830,11 @@ public class BlueThoothComService extends Service
       // ~30:P:A
       // P = Partialdruck (0..4) 1.0 .. 1.4
       // A = Setpoint bei (0,1,2,3,4) = (0,5,15,20,25)
-      kdoString = String.format("~%x:%x:%x", ProjectConst.SPX_SET_SETUP_SETPOINT, pressure, auto);
+      kdoString = String.format( "~%x:%x:%x", ProjectConst.SPX_SET_SETUP_SETPOINT, pressure, auto );
       if( BuildConfig.DEBUG )
       {
-        debugString = String.format("OLD-FIRMWARE <~%x:P%x:A%x>", ProjectConst.SPX_SET_SETUP_SETPOINT, pressure, auto);
-        Log.d(TAG, "writeAutoSetpoint: sending <" + debugString + ">");
+        debugString = String.format( "OLD-FIRMWARE <~%x:P%x:A%x>", ProjectConst.SPX_SET_SETUP_SETPOINT, pressure, auto );
+        Log.d( TAG, "writeAutoSetpoint: sending <" + debugString + ">" );
       }
     }
     else
@@ -841,14 +842,14 @@ public class BlueThoothComService extends Service
       // ~30:A:P
       // A = Setpoint bei (0,1,2,3,4) = (0,5,15,20,25)
       // P = Partialdruck (0..4) 1.0 .. 1.4
-      kdoString = String.format("~%x:%x:%x", ProjectConst.SPX_SET_SETUP_SETPOINT, auto, pressure);
+      kdoString = String.format( "~%x:%x:%x", ProjectConst.SPX_SET_SETUP_SETPOINT, auto, pressure );
       if( BuildConfig.DEBUG )
       {
-        debugString = String.format("NEWER-FIRMWARE <~%x:A%x:P%x>", ProjectConst.SPX_SET_SETUP_SETPOINT, auto, pressure);
-        Log.d(TAG, "writeAutoSetpoint: sending <" + debugString + ">");
+        debugString = String.format( "NEWER-FIRMWARE <~%x:A%x:P%x>", ProjectConst.SPX_SET_SETUP_SETPOINT, auto, pressure );
+        Log.d( TAG, "writeAutoSetpoint: sending <" + debugString + ">" );
       }
     }
-    this.writeSPXMsgToDevice(kdoString);
+    this.writeSPXMsgToDevice( kdoString );
   }
 
   /**
@@ -865,16 +866,17 @@ public class BlueThoothComService extends Service
    * @param deepSt   Deppsstop Enable?
    * @param dynGr    Dyn gradients enable?
    * @param lastStop last stop 3 oder 6 Meter?
+   *
    * @throws FirmwareNotSupportetException
    */
-  public void writeDecoPrefs(SPX42Config cf, int lowG, int highG, int deepSt, int dynGr, int lastStop) throws FirmwareNotSupportetException
+  public void writeDecoPrefs( SPX42Config cf, int lowG, int highG, int deepSt, int dynGr, int lastStop ) throws FirmwareNotSupportetException
   {
     String kdoString;
     //
-    if( !cf.isFirmwareSupported() )
+    if( ! cf.isFirmwareSupported() )
     {
-      Log.e(TAG, "firmware not supportet for write settings!");
-      throw new FirmwareNotSupportetException("write deco prefs");
+      Log.e( TAG, "firmware not supportet for write settings!" );
+      throw new FirmwareNotSupportetException( "write deco prefs" );
     }
     if( cf.isOldParamSorting() )
     {
@@ -885,10 +887,10 @@ public class BlueThoothComService extends Service
       // DY = Dynamische gradienten 0->off 1->on
       // DS = Deepstops 0=> enabled, 1=>disabled
       // kdoString = String.format( "~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_DEKO, highG, lowG, ( ( lastStop == 1 ) ? 0 : 1 ), dynGr, deepSt );
-      kdoString = String.format("~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_DEKO, highG, lowG, lastStop, dynGr, deepSt);
+      kdoString = String.format( "~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_DEKO, highG, lowG, lastStop, dynGr, deepSt );
       if( BuildConfig.DEBUG )
       {
-        Log.d(TAG, "writeDecoPrefs: sending <OLDER-FIRMWARE <" + kdoString + ">>");
+        Log.d( TAG, "writeDecoPrefs: sending <OLDER-FIRMWARE <" + kdoString + ">>" );
       }
     }
     else
@@ -899,13 +901,13 @@ public class BlueThoothComService extends Service
       // DS=Deepstops (0/1)
       // DY=Dynamische Gradienten (0/1)
       // LS=Last Decostop (0=3 Meter/1=6 Meter)
-      kdoString = String.format("~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_DEKO, lowG, highG, deepSt, dynGr, lastStop);
+      kdoString = String.format( "~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_DEKO, lowG, highG, deepSt, dynGr, lastStop );
       if( BuildConfig.DEBUG )
       {
-        Log.d(TAG, "writeDecoPrefs: sending <NEWER-FIRMWARE <" + kdoString + ">>");
+        Log.d( TAG, "writeDecoPrefs: sending <NEWER-FIRMWARE <" + kdoString + ">>" );
       }
     }
-    this.writeSPXMsgToDevice(kdoString);
+    this.writeSPXMsgToDevice( kdoString );
   }
 
   /**
@@ -919,22 +921,23 @@ public class BlueThoothComService extends Service
    * @param cf
    * @param lumin
    * @param orient
+   *
    * @throws FirmwareNotSupportetException
    */
-  public void writeDisplayPrefs(SPX42Config cf, int lumin, int orient) throws FirmwareNotSupportetException
+  public void writeDisplayPrefs( SPX42Config cf, int lumin, int orient ) throws FirmwareNotSupportetException
   {
     String kdoString;
-    if( !cf.isFirmwareSupported() )
+    if( ! cf.isFirmwareSupported() )
     {
-      Log.e(TAG, "firmware not supportet for write settings!");
-      throw new FirmwareNotSupportetException("write display prefs");
+      Log.e( TAG, "firmware not supportet for write settings!" );
+      throw new FirmwareNotSupportetException( "write display prefs" );
     }
-    kdoString = String.format("~%x:%x:%x", ProjectConst.SPX_SET_SETUP_DISPLAYSETTINGS, lumin, orient);
+    kdoString = String.format( "~%x:%x:%x", ProjectConst.SPX_SET_SETUP_DISPLAYSETTINGS, lumin, orient );
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "writeDisplayPrefs: sending <" + kdoString + ">");
+      Log.d( TAG, "writeDisplayPrefs: sending <" + kdoString + ">" );
     }
-    this.writeSPXMsgToDevice(kdoString);
+    this.writeSPXMsgToDevice( kdoString );
   }
 
   /**
@@ -948,9 +951,10 @@ public class BlueThoothComService extends Service
    * @param cf
    * @param gasNr
    * @param gasParms
+   *
    * @throws FirmwareNotSupportetException
    */
-  public void writeGasSetup(SPX42Config cf, int gasNr, SPX42GasParms gasParms) throws FirmwareNotSupportetException
+  public void writeGasSetup( SPX42Config cf, int gasNr, SPX42GasParms gasParms ) throws FirmwareNotSupportetException
   {
     String kdoString;
     int    diluent;
@@ -967,10 +971,10 @@ public class BlueThoothComService extends Service
     {
       diluent = 0;
     }
-    if( !cf.isFirmwareSupported() )
+    if( ! cf.isFirmwareSupported() )
     {
-      Log.e(TAG, "firmware not supportet for write settings!");
-      throw new FirmwareNotSupportetException("write gas setup");
+      Log.e( TAG, "firmware not supportet for write settings!" );
+      throw new FirmwareNotSupportetException( "write gas setup" );
     }
     if( cf.isOldParamSorting() )
     {
@@ -982,10 +986,10 @@ public class BlueThoothComService extends Service
       // BO -> Bailoutgas? (3?)
       // DI -> Diluent ( 0, 1 oder 2 )
       // CU Current Gas (0 oder 1)
-      kdoString = String.format("~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_GASLIST, gasNr, gasParms.he, gasParms.n2, (gasParms.bo ? 3 : 0), diluent, (gasParms.isCurr ? 1 : 0));
+      kdoString = String.format( "~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_GASLIST, gasNr, gasParms.he, gasParms.n2, ( gasParms.bo ? 3 : 0 ), diluent, ( gasParms.isCurr ? 1 : 0 ) );
       if( BuildConfig.DEBUG )
       {
-        Log.d(TAG, "writeDecoPrefs: sending <OLDER-FIRMWARE <" + kdoString + ">>");
+        Log.d( TAG, "writeDecoPrefs: sending <OLDER-FIRMWARE <" + kdoString + ">>" );
       }
     }
     else
@@ -998,14 +1002,14 @@ public class BlueThoothComService extends Service
       // BO: Bailout (Werte 0,1 und 3 gefunden, 0 kein BO, 3 BO Wert 1 unbekannt?)
       // DI: Diluent 1 oder 2
       // CU: Current Gas
-      kdoString = String.format("~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_GASLIST, gasNr, gasParms.n2, gasParms.he, (gasParms.bo ? 1 : 0), diluent, (gasParms.isCurr ? 1 : 0));
+      kdoString = String.format( "~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_GASLIST, gasNr, gasParms.n2, gasParms.he, ( gasParms.bo ? 1 : 0 ), diluent, ( gasParms.isCurr ? 1 : 0 ) );
       if( BuildConfig.DEBUG )
       {
-        Log.d(TAG, "writeDecoPrefs: sending <NEWER-FIRMWARE <" + kdoString + ">>");
+        Log.d( TAG, "writeDecoPrefs: sending <NEWER-FIRMWARE <" + kdoString + ">>" );
       }
     }
     //
-    this.writeSPXMsgToDevice(kdoString);
+    this.writeSPXMsgToDevice( kdoString );
   }
 
   /**
@@ -1018,9 +1022,10 @@ public class BlueThoothComService extends Service
    *
    * @param cf
    * @param gasUpdates
+   *
    * @throws FirmwareNotSupportetException
    */
-  public void writeGasSetup(SPX42Config cf, Vector<GasUpdateEntity> gasUpdates) throws FirmwareNotSupportetException
+  public void writeGasSetup( SPX42Config cf, Vector< GasUpdateEntity > gasUpdates ) throws FirmwareNotSupportetException
   {
     String        kdoString = "";
     SPX42GasParms gasParms;
@@ -1031,15 +1036,15 @@ public class BlueThoothComService extends Service
       return;
     }
     //
-    if( !cf.isFirmwareSupported() )
+    if( ! cf.isFirmwareSupported() )
     {
-      Log.e(TAG, "firmware not supportet for write settings!");
-      throw new FirmwareNotSupportetException("write gas setup");
+      Log.e( TAG, "firmware not supportet for write settings!" );
+      throw new FirmwareNotSupportetException( "write gas setup" );
     }
     //
     // einen iterator für die Durchforstung des Vectors erzeugen
     //
-    Iterator<GasUpdateEntity> it = gasUpdates.iterator();
+    Iterator< GasUpdateEntity > it = gasUpdates.iterator();
     // und nun durchforste mal bitte
     while( it.hasNext() )
     {
@@ -1069,12 +1074,12 @@ public class BlueThoothComService extends Service
         // BO -> Bailoutgas? (3?)
         // DI -> Diluent ( 0, 1 oder 2 )
         // CU Current Gas (0 oder 1)
-        kdoString = String.format("~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_GASLIST, gasNr, gasParms.he, gasParms.n2, (gasParms.bo ? 1 : 0), diluent, (gasParms.isCurr ? 1 : 0));
+        kdoString = String.format( "~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_GASLIST, gasNr, gasParms.he, gasParms.n2, ( gasParms.bo ? 1 : 0 ), diluent, ( gasParms.isCurr ? 1 : 0 ) );
         if( BuildConfig.DEBUG )
         {
-          Log.d(TAG, "writeDecoPrefs: sending <OLDER-FIRMWARE <" + kdoString + ">>");
+          Log.d( TAG, "writeDecoPrefs: sending <OLDER-FIRMWARE <" + kdoString + ">>" );
         }
-        this.writeSPXMsgToDevice(kdoString);
+        this.writeSPXMsgToDevice( kdoString );
       }
       else
       {
@@ -1086,12 +1091,12 @@ public class BlueThoothComService extends Service
         // BO: Bailout (Werte 0,1 und 3 gefunden, 0 kein BO, 3 BO Wert 1 unbekannt?)
         // DI: Diluent 1 oder 2
         // CU: Current Gas
-        kdoString = String.format("~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_GASLIST, gasNr, gasParms.n2, gasParms.he, (gasParms.bo ? 1 : 0), diluent, (gasParms.isCurr ? 1 : 0));
+        kdoString = String.format( "~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_GASLIST, gasNr, gasParms.n2, gasParms.he, ( gasParms.bo ? 1 : 0 ), diluent, ( gasParms.isCurr ? 1 : 0 ) );
         if( BuildConfig.DEBUG )
         {
-          Log.d(TAG, "writeDecoPrefs: sending <NEWER-FIRMWARE <" + kdoString + ">>");
+          Log.d( TAG, "writeDecoPrefs: sending <NEWER-FIRMWARE <" + kdoString + ">>" );
         }
-        this.writeSPXMsgToDevice(kdoString);
+        this.writeSPXMsgToDevice( kdoString );
       }
     }
   }
@@ -1111,30 +1116,31 @@ public class BlueThoothComService extends Service
    * @param soundOn
    * @param logInterval
    * @param tempStick    bei neuerer Firmware Typ des Tempstick
+   *
    * @throws FirmwareNotSupportetException
    */
-  public void writeIndividualPrefs(SPX42Config cf, int sensorsOff, int pscrOff, int sensorsCount, int soundOn, int logInterval, int tempStick) throws FirmwareNotSupportetException
+  public void writeIndividualPrefs( SPX42Config cf, int sensorsOff, int pscrOff, int sensorsCount, int soundOn, int logInterval, int tempStick ) throws FirmwareNotSupportetException
   {
     String kdoString;
     //
-    if( !cf.isFirmwareSupported() )
+    if( ! cf.isFirmwareSupported() )
     {
-      Log.e(TAG, "firmware not supportet for write settings!");
-      throw new FirmwareNotSupportetException("write individual prefs");
+      Log.e( TAG, "firmware not supportet for write settings!" );
+      throw new FirmwareNotSupportetException( "write individual prefs" );
     }
     if( cf.hasSixValuesIndividual() )
     {
-      kdoString = String.format("~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_INDIVIDUAL, sensorsOff, pscrOff, sensorsCount, soundOn, logInterval, tempStick);
+      kdoString = String.format( "~%x:%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_INDIVIDUAL, sensorsOff, pscrOff, sensorsCount, soundOn, logInterval, tempStick );
     }
     else
     {
-      kdoString = String.format("~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_INDIVIDUAL, sensorsOff, pscrOff, sensorsCount, soundOn, logInterval);
+      kdoString = String.format( "~%x:%x:%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_INDIVIDUAL, sensorsOff, pscrOff, sensorsCount, soundOn, logInterval );
     }
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "writeIndividualPrefs: sending <" + kdoString + ">");
+      Log.d( TAG, "writeIndividualPrefs: sending <" + kdoString + ">" );
     }
-    this.writeSPXMsgToDevice(kdoString);
+    this.writeSPXMsgToDevice( kdoString );
   }
 
   /**
@@ -1147,9 +1153,9 @@ public class BlueThoothComService extends Service
    *
    * @param msg
    */
-  public synchronized void writeSPXMsgToDevice(String msg)
+  public synchronized void writeSPXMsgToDevice( String msg )
   {
-    this.writeToDevice(ProjectConst.STX + msg + ProjectConst.ETX);
+    this.writeToDevice( ProjectConst.STX + msg + ProjectConst.ETX );
   }
 
   /**
@@ -1162,11 +1168,11 @@ public class BlueThoothComService extends Service
    *
    * @param msg
    */
-  public synchronized void writeToDevice(String msg)
+  public synchronized void writeToDevice( String msg )
   {
     if( mConnectionState == ProjectConst.CONN_STATE_CONNECTED && mWriterThread != null )
     {
-      mWriterThread.writeToDevice(msg);
+      mWriterThread.writeToDevice( msg );
     }
   }
 
@@ -1182,23 +1188,24 @@ public class BlueThoothComService extends Service
    * @param isTempMetric
    * @param isDepthMetric
    * @param isFreshwater
+   *
    * @throws FirmwareNotSupportetException
    */
-  public void writeUnitPrefs(SPX42Config cf, int isTempMetric, int isDepthMetric, int isFreshwater) throws FirmwareNotSupportetException
+  public void writeUnitPrefs( SPX42Config cf, int isTempMetric, int isDepthMetric, int isFreshwater ) throws FirmwareNotSupportetException
   {
     String kdoString;
     //
-    if( !cf.isFirmwareSupported() )
+    if( ! cf.isFirmwareSupported() )
     {
-      Log.e(TAG, "firmware not supportet for write settings!");
-      throw new FirmwareNotSupportetException("write unit prefs");
+      Log.e( TAG, "firmware not supportet for write settings!" );
+      throw new FirmwareNotSupportetException( "write unit prefs" );
     }
-    kdoString = String.format("~%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_UNITS, isTempMetric, isDepthMetric, isFreshwater);
+    kdoString = String.format( "~%x:%x:%x:%x", ProjectConst.SPX_SET_SETUP_UNITS, isTempMetric, isDepthMetric, isFreshwater );
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "writeUnitPrefs: sending <" + kdoString + ">");
+      Log.d( TAG, "writeUnitPrefs: sending <" + kdoString + ">" );
     }
-    this.writeSPXMsgToDevice(kdoString);
+    this.writeSPXMsgToDevice( kdoString );
   }
 
   /**
@@ -1211,37 +1218,38 @@ public class BlueThoothComService extends Service
    *
    * @param cf
    * @param dTime
+   *
    * @throws FirmwareNotSupportetException
    */
-  public void writeDateTimeToDevice(SPX42Config cf, DateTime dTime) throws FirmwareNotSupportetException
+  public void writeDateTimeToDevice( SPX42Config cf, DateTime dTime ) throws FirmwareNotSupportetException
   {
     String kdoString;
     //
     //
-    if( !cf.isFirmwareSupported() )
+    if( ! cf.isFirmwareSupported() )
     {
-      Log.e(TAG, "firmware not supportet for write settings!");
-      throw new FirmwareNotSupportetException("write datetime to device");
+      Log.e( TAG, "firmware not supportet for write settings!" );
+      throw new FirmwareNotSupportetException( "write datetime to device" );
     }
     if( cf.canSetDateTime() )
     {
       //
       // Setze das Zeit und Datum als Kommandostring zusammen
       //
-      kdoString = String.format("%s~%x:%02x:%02x:%02x:%02x:%02x%s", ProjectConst.STX, ProjectConst.SPX_DATETIME, dTime.getHourOfDay(), dTime.getMinuteOfHour(), dTime.getDayOfMonth(), dTime.getMonthOfYear(), dTime.getYearOfCentury(), ProjectConst.ETX);
+      kdoString = String.format( "%s~%x:%02x:%02x:%02x:%02x:%02x%s", ProjectConst.STX, ProjectConst.SPX_DATETIME, dTime.getHourOfDay(), dTime.getMinuteOfHour(), dTime.getDayOfMonth(), dTime.getMonthOfYear(), dTime.getYearOfCentury(), ProjectConst.ETX );
       {
         if( BuildConfig.DEBUG )
         {
-          Log.d(TAG, "writeDateTimeToDevice()...send <" + kdoString + "> (DATETIME)");
+          Log.d( TAG, "writeDateTimeToDevice()...send <" + kdoString + "> (DATETIME)" );
         }
       }
-      this.writeToDevice(kdoString);
+      this.writeToDevice( kdoString );
     }
     else
     {
       if( BuildConfig.DEBUG )
       {
-        Log.d(TAG, "writeDateTimeToDevice()...Firmware not support <set datetime> yet");
+        Log.d( TAG, "writeDateTimeToDevice()...Firmware not support <set datetime> yet" );
       }
     }
   }
@@ -1256,15 +1264,15 @@ public class BlueThoothComService extends Service
    *
    * @param numberOnSPX
    */
-  public void askForLogDetail(int numberOnSPX)
+  public void askForLogDetail( int numberOnSPX )
   {
     String kdoString;
-    kdoString = String.format("~%x:%x", ProjectConst.SPX_GET_LOG_NUMBER, numberOnSPX);
+    kdoString = String.format( "~%x:%x", ProjectConst.SPX_GET_LOG_NUMBER, numberOnSPX );
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "askForLogDetail: sending <" + kdoString + ">");
+      Log.d( TAG, "askForLogDetail: sending <" + kdoString + ">" );
     }
-    this.writeSPXMsgToDevice(kdoString);
+    this.writeSPXMsgToDevice( kdoString );
   }
 
   /**
@@ -1291,7 +1299,7 @@ public class BlueThoothComService extends Service
   @SuppressLint( "NewApi" )
   private class ConnectThread extends Thread
   {
-    private final String TAGCON = ConnectThread.class.getSimpleName();
+    private final String          TAGCON = ConnectThread.class.getSimpleName();
     private final BluetoothSocket mmSocket;
     private final BluetoothDevice mmDevice;
 
@@ -1305,13 +1313,13 @@ public class BlueThoothComService extends Service
      *
      * @param device
      */
-    public ConnectThread(BluetoothDevice device)
+    public ConnectThread( BluetoothDevice device )
     {
       mmDevice = device;
       BluetoothSocket tmp = null;
       if( BuildConfig.DEBUG )
       {
-        Log.v(TAGCON, "ConnectThread()...");
+        Log.v( TAGCON, "ConnectThread()..." );
       }
       //
       // Einen Socket für das Gerät erzeugen
@@ -1326,14 +1334,14 @@ public class BlueThoothComService extends Service
           // dann verbinde!
           if( BuildConfig.DEBUG )
           {
-            Log.d(TAGCON, "device bonded/bonding, connecting...");
-            Log.d(TAGCON, "createRfCommSocketToServiceRecord(" + ProjectConst.SERIAL_DEVICE_UUID + ")");
+            Log.d( TAGCON, "device bonded/bonding, connecting..." );
+            Log.d( TAGCON, "createRfCommSocketToServiceRecord(" + ProjectConst.SERIAL_DEVICE_UUID + ")" );
           }
-          tmp = device.createRfcommSocketToServiceRecord(ProjectConst.SERIAL_DEVICE_UUID);
+          tmp = device.createRfcommSocketToServiceRecord( ProjectConst.SERIAL_DEVICE_UUID );
         }
         else
         {
-          Log.w(TAGCON, "device NOT bonded...");
+          Log.w( TAGCON, "device NOT bonded..." );
           if( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT )
           {
             //
@@ -1341,32 +1349,32 @@ public class BlueThoothComService extends Service
             //
             if( MainActivity.aliasManager != null )
             {
-              String devicePin = MainActivity.aliasManager.getPINForMac(device.getAddress());
+              String devicePin = MainActivity.aliasManager.getPINForMac( device.getAddress() );
               if( devicePin != null )
               {
                 if( BuildConfig.DEBUG )
                 {
-                  Log.d(TAGCON, String.format("device pin from databese is <%s>", devicePin));
+                  Log.d( TAGCON, String.format( "device pin from databese is <%s>", devicePin ) );
                 }
                 // Das Gerät automatisch paaren, PIN Speichern,
                 // passiert in SPX42ConnectionFragment via Broadcast Reciver, via BluetoothDevice.ACTION_PAIRING_REQUEST
                 // verbinde!
                 if( BuildConfig.DEBUG )
                 {
-                  Log.d(TAGCON, "createRfCommSocketToServiceRecord(" + ProjectConst.SERIAL_DEVICE_UUID + ")");
+                  Log.d( TAGCON, "createRfCommSocketToServiceRecord(" + ProjectConst.SERIAL_DEVICE_UUID + ")" );
                 }
-                tmp = device.createRfcommSocketToServiceRecord(ProjectConst.SERIAL_DEVICE_UUID);
+                tmp = device.createRfcommSocketToServiceRecord( ProjectConst.SERIAL_DEVICE_UUID );
               }
               else
               {
                 // keine PIN in der DB => der Weg über die Meldung zum User
                 if( BuildConfig.DEBUG )
                 {
-                  Log.d(TAGCON, "device pairing request: database has no pin for device...");
+                  Log.d( TAGCON, "device pairing request: database has no pin for device..." );
                 }
                 tmp = null;
-                BtServiceMessage msg = new BtServiceMessage(ProjectConst.MESSAGE_CONNECT_NOTBOUND, device);
-                sendMessageToApp(msg);
+                BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECT_NOTBOUND, device );
+                sendMessageToApp( msg );
               }
             }
             else
@@ -1377,10 +1385,10 @@ public class BlueThoothComService extends Service
               //
               if( BuildConfig.DEBUG )
               {
-                Log.d(TAGCON, "device NOT bonded send message...");
+                Log.d( TAGCON, "device NOT bonded send message..." );
               }
-              BtServiceMessage msg = new BtServiceMessage(ProjectConst.MESSAGE_CONNECT_NOTBOUND);
-              sendMessageToApp(msg);
+              BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECT_NOTBOUND );
+              sendMessageToApp( msg );
             }
           }
           else
@@ -1391,16 +1399,16 @@ public class BlueThoothComService extends Service
             //
             if( BuildConfig.DEBUG )
             {
-              Log.d(TAGCON, "device NOT bonded send message...");
+              Log.d( TAGCON, "device NOT bonded send message..." );
             }
-            BtServiceMessage msg = new BtServiceMessage(ProjectConst.MESSAGE_CONNECT_NOTBOUND);
-            sendMessageToApp(msg);
+            BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_CONNECT_NOTBOUND );
+            sendMessageToApp( msg );
           }
         }
       }
       catch( IOException e )
       {
-        Log.e(TAGCON, "create() failed", e);
+        Log.e( TAGCON, "create() failed", e );
       }
       mmSocket = tmp;
     }
@@ -1426,12 +1434,12 @@ public class BlueThoothComService extends Service
       {
         if( BuildConfig.DEBUG )
         {
-          Log.e(TAG, "not an open Socket exist!");
+          Log.e( TAG, "not an open Socket exist!" );
         }
       }
       catch( IOException e )
       {
-        Log.e(TAGCON, "close() of connect socket failed", e);
+        Log.e( TAGCON, "close() of connect socket failed", e );
       }
     }
 
@@ -1441,12 +1449,12 @@ public class BlueThoothComService extends Service
     @Override
     public void run()
     {
-      Log.i(TAGCON, "BEGIN mConnectThread");
-      setName("connect_thread");
+      Log.i( TAGCON, "BEGIN mConnectThread" );
+      setName( "connect_thread" );
       // Teste mal ob ein Adapter da ist
       if( null == mAdapter )
       {
-        Log.e(TAGCON, "not bt-adaper exist!");
+        Log.e( TAGCON, "not bt-adaper exist!" );
         return;
       }
       // immer discovering beenden, Verbindungsaufbau sonst schleppend
@@ -1456,7 +1464,7 @@ public class BlueThoothComService extends Service
         connectionFailed();
         if( BuildConfig.DEBUG )
         {
-          Log.e(TAG, "connection failed, Socket ist null");
+          Log.e( TAG, "connection failed, Socket ist null" );
         }
         return;
       }
@@ -1469,19 +1477,19 @@ public class BlueThoothComService extends Service
         //
         if( BuildConfig.DEBUG )
         {
-          Log.v(TAGCON, "Socket connecting (blocking)...");
+          Log.v( TAGCON, "Socket connecting (blocking)..." );
         }
-        setState(ProjectConst.CONN_STATE_CONNECTING);
+        setState( ProjectConst.CONN_STATE_CONNECTING );
         mmSocket.connect();
         if( BuildConfig.DEBUG )
         {
-          Log.v(TAGCON, "connected...");
+          Log.v( TAGCON, "connected..." );
         }
       }
       catch( NullPointerException ex )
       {
         connectionFailed();
-        Log.e(TAG, "connection failed, Socket ist null");
+        Log.e( TAG, "connection failed, Socket ist null" );
         return;
       }
       catch( IOException ex )
@@ -1494,7 +1502,7 @@ public class BlueThoothComService extends Service
         }
         catch( IOException e )
         {
-          Log.e(TAG, "unable to close() socket during connection failure", e);
+          Log.e( TAG, "unable to close() socket during connection failure", e );
         }
         return;
       }
@@ -1506,9 +1514,9 @@ public class BlueThoothComService extends Service
       // Start the connected thread
       if( BuildConfig.DEBUG )
       {
-        Log.d(TAGCON, "run connected()");
+        Log.d( TAGCON, "run connected()" );
       }
-      deviceConnected(mmSocket, mmDevice);
+      deviceConnected( mmSocket, mmDevice );
     }
   }
 
@@ -1545,14 +1553,14 @@ public class BlueThoothComService extends Service
      *
      * @param mHandler
      */
-    public void registerServiceHandler(Handler mHandler)
+    public void registerServiceHandler( Handler mHandler )
     {
-      Log.i(TAG, "Client register");
-      mClientHandler.add(mHandler);
+      Log.i( TAG, "Client register" );
+      mClientHandler.add( mHandler );
       // isRunning = true;
       timeToStopService = 0L;
       // gibt der Activity gleich den Status
-      setState(mConnectionState);
+      setState( mConnectionState );
     }
 
     /**
@@ -1564,14 +1572,14 @@ public class BlueThoothComService extends Service
      *
      * @param mHandler
      */
-    public void unregisterServiceHandler(Handler mHandler)
+    public void unregisterServiceHandler( Handler mHandler )
     {
       // if( mIsBusy ) return( null );
-      Log.i(TAG, "Client unregister");
-      mClientHandler.remove(mHandler);
+      Log.i( TAG, "Client unregister" );
+      mClientHandler.remove( mHandler );
       if( mClientHandler.isEmpty() )
       {
-        Log.i(TAG, "last Client ist removed...");
+        Log.i( TAG, "last Client ist removed..." );
         // isRunning = false;
         // zeit bis zum Ende des Service setzen
         timeToStopService = System.currentTimeMillis() + msToEndService;
@@ -1588,17 +1596,17 @@ public class BlueThoothComService extends Service
      * @param mHandler
      * @param isNowStop true wenn SOFORT beenden
      */
-    public void unregisterServiceHandler(Handler mHandler, boolean isNowStop)
+    public void unregisterServiceHandler( Handler mHandler, boolean isNowStop )
     {
       // if( mIsBusy ) return( null );
-      Log.i(TAG, "Client unregister");
-      mClientHandler.remove(mHandler);
+      Log.i( TAG, "Client unregister" );
+      mClientHandler.remove( mHandler );
       if( mClientHandler.isEmpty() )
       {
-        Log.i(TAG, "last Client ist removed...");
+        Log.i( TAG, "last Client ist removed..." );
         if( isNowStop )
         {
-          Log.i(TAG, "stopping service immediate...");
+          Log.i( TAG, "stopping service immediate..." );
           disconnect();
           stopSelf();
         }
@@ -1622,12 +1630,12 @@ public class BlueThoothComService extends Service
    */
   private class ReaderThread extends Thread
   {
-    private final String TAGREADER = ReaderThread.class.getSimpleName();
+    private final String          TAGREADER    = ReaderThread.class.getSimpleName();
     private final BluetoothSocket mmSocket;
     private final InputStream     mmInStream;
-    private final byte[]       buffer       = new byte[ 1024 ];
-    private final StringBuffer mInStrBuffer = new StringBuffer(1024);
-    private       Boolean      cancelThread = false;
+    private final byte[]          buffer       = new byte[1024];
+    private final StringBuffer    mInStrBuffer = new StringBuffer( 1024 );
+    private       Boolean         cancelThread = false;
 
     /**
      * Konstruktor des Threads
@@ -1639,11 +1647,11 @@ public class BlueThoothComService extends Service
      *
      * @param socket
      */
-    public ReaderThread(BluetoothSocket socket)
+    public ReaderThread( BluetoothSocket socket )
     {
       if( BuildConfig.DEBUG )
       {
-        Log.d(TAGREADER, "create ReaderThread");
+        Log.d( TAGREADER, "create ReaderThread" );
       }
       mmSocket = socket;
       InputStream tmpIn = null;
@@ -1655,7 +1663,7 @@ public class BlueThoothComService extends Service
       }
       catch( IOException e )
       {
-        Log.e(TAGREADER, "temp sockets not created", e);
+        Log.e( TAGREADER, "temp sockets not created", e );
       }
       mmInStream = tmpIn;
     }
@@ -1680,7 +1688,7 @@ public class BlueThoothComService extends Service
       }
       catch( IOException ex )
       {
-        Log.e(TAGREADER, "close() of connect socket failed", ex);
+        Log.e( TAGREADER, "close() of connect socket failed", ex );
       }
     }
 
@@ -1696,7 +1704,7 @@ public class BlueThoothComService extends Service
      * @param end
      * @param mInStrBuffer
      */
-    private void execLogentryCmd(int start, int end, StringBuffer mInStrBuffer)
+    private void execLogentryCmd( int start, int end, StringBuffer mInStrBuffer )
     {
       String   readMessage;
       int      lstart, lend;
@@ -1704,45 +1712,45 @@ public class BlueThoothComService extends Service
       //
       if( BuildConfig.DEBUG )
       {
-        Log.d(TAGREADER, "execLogentryCmd...");
+        Log.d( TAGREADER, "execLogentryCmd..." );
       }
-      lstart = mInStrBuffer.indexOf(ProjectConst.STX);
-      lend = mInStrBuffer.indexOf(ProjectConst.ETX);
-      if( lstart > -1 && lend > lstart )
+      lstart = mInStrBuffer.indexOf( ProjectConst.STX );
+      lend = mInStrBuffer.indexOf( ProjectConst.ETX );
+      if( lstart > - 1 && lend > lstart )
       {
         // ups, hier ist ein "normales" Kommando verpackt
         if( BuildConfig.DEBUG )
         {
-          Log.d(TAGREADER, "oops, normalCmd found.... change to execNormalCmd...");
+          Log.d( TAGREADER, "oops, normalCmd found.... change to execNormalCmd..." );
         }
         isLogentryMode = false;
-        execNormalCmd(lstart, lend, mInStrBuffer);
+        execNormalCmd( lstart, lend, mInStrBuffer );
         return;
       }
       // muss der anfang weg?
       if( start > 0 )
       {
         // das davor kann dann weg...
-        mInStrBuffer = mInStrBuffer.delete(0, start);
+        mInStrBuffer = mInStrBuffer.delete( 0, start );
         readMessage = mInStrBuffer.toString();
         // Indizies korrigieren
-        end = mInStrBuffer.indexOf(ProjectConst.FILLER, start + ProjectConst.FILLER.length());
+        end = mInStrBuffer.indexOf( ProjectConst.FILLER, start + ProjectConst.FILLER.length() );
         start = 0;
       }
       // lese das Ding ohne den Schmandzius der Füller
-      readMessage = mInStrBuffer.substring(ProjectConst.FILLER.length(), end);
+      readMessage = mInStrBuffer.substring( ProjectConst.FILLER.length(), end );
       // lösche das schon mal raus...
-      mInStrBuffer = mInStrBuffer.delete(0, end);
-      readMessage = readMessage.replaceAll(ProjectConst.FILLERCHAR, "");
+      mInStrBuffer = mInStrBuffer.delete( 0, end );
+      readMessage = readMessage.replaceAll( ProjectConst.FILLERCHAR, "" );
       // Splitte das auf in Felder
-      fields = fieldPatternTab.split(readMessage);
+      fields = fieldPatternTab.split( readMessage );
       // Sende an Activity
       if( BuildConfig.DEBUG )
       {
-        Log.d(TAGREADER, "Logline Recived <" + readMessage.substring(10).replaceAll("\t", " ") + "...>");
+        Log.d( TAGREADER, "Logline Recived <" + readMessage.substring( 10 ).replaceAll( "\t", " " ) + "...>" );
       }
-      BtServiceMessage msg = new BtServiceMessage(ProjectConst.MESSAGE_LOGENTRY_LINE, fields);
-      sendMessageToApp(msg);
+      BtServiceMessage msg = new BtServiceMessage( ProjectConst.MESSAGE_LOGENTRY_LINE, fields );
+      sendMessageToApp( msg );
     }
 
     /**
@@ -1757,7 +1765,7 @@ public class BlueThoothComService extends Service
      * @param end
      * @param mInStrBuffer
      */
-    private void execNormalCmd(int start, int end, StringBuffer mInStrBuffer)
+    private void execNormalCmd( int start, int end, StringBuffer mInStrBuffer )
     {
       String           readMessage;
       String[]         fields;
@@ -1765,53 +1773,53 @@ public class BlueThoothComService extends Service
       BtServiceMessage msg;
       if( BuildConfig.DEBUG )
       {
-        Log.d(TAGREADER, "execNormalCmd...");
+        Log.d( TAGREADER, "execNormalCmd..." );
       }
       // muss der anfang weg?
       if( start > 0 )
       {
         // das davor kann dann weg...
-        mInStrBuffer = mInStrBuffer.delete(0, start);
+        mInStrBuffer = mInStrBuffer.delete( 0, start );
         readMessage = mInStrBuffer.toString();
         // Indizies korrigieren
-        end = mInStrBuffer.indexOf(ProjectConst.ETX);
+        end = mInStrBuffer.indexOf( ProjectConst.ETX );
         start = 0;
       }
       // jetz beginnt der String immer bei 0, lese das Ding
-      readMessage = mInStrBuffer.substring(1, end);
+      readMessage = mInStrBuffer.substring( 1, end );
       // lösche das schon mal aus dem Puffer raus!
-      mInStrBuffer = mInStrBuffer.delete(0, end + 1);
+      mInStrBuffer = mInStrBuffer.delete( 0, end + 1 );
       if( BuildConfig.DEBUG )
       {
-        Log.d(TAGREADER, "normal Message Recived <" + readMessage + ">");
+        Log.d( TAGREADER, "normal Message Recived <" + readMessage + ">" );
       }
       // Trenne die Parameter voneinander, fields[0] ist dann das Kommando
-      fields = fieldPatternDp.split(readMessage);
+      fields = fieldPatternDp.split( readMessage );
       //
       //
       //
-      if( 0 == readMessage.indexOf(ProjectConst.IS_END_LOGLISTENTRY) )
+      if( 0 == readMessage.indexOf( ProjectConst.IS_END_LOGLISTENTRY ) )
       {
         // Logbucheinträge fertig gelesen
-        msg = new BtServiceMessage(ProjectConst.MESSAGE_DIRENTRY_END);
+        msg = new BtServiceMessage( ProjectConst.MESSAGE_DIRENTRY_END );
         if( BuildConfig.DEBUG )
         {
-          Log.v(TAGREADER, "SPX Logdir end readet!");
+          Log.v( TAGREADER, "SPX Logdir end readet!" );
         }
-        sendMessageToApp(msg);
+        sendMessageToApp( msg );
         return;
       }
       //
       // Messages für die Weiterverarbeitung präparieren
       //
-      fields[ 0 ] = fields[ 0 ].replaceFirst("~", "");
+      fields[0] = fields[0].replaceFirst( "~", "" );
       try
       {
-        command = Integer.parseInt(fields[ 0 ], 16);
+        command = Integer.parseInt( fields[0], 16 );
       }
       catch( NumberFormatException ex )
       {
-        Log.e(TAGREADER, "Convert String to Int (" + ex.getLocalizedMessage() + ")");
+        Log.e( TAGREADER, "Convert String to Int (" + ex.getLocalizedMessage() + ")" );
         return;
       }
       //
@@ -1821,85 +1829,85 @@ public class BlueThoothComService extends Service
       {
         case ProjectConst.SPX_MANUFACTURERS:
           // Sende Nachricht Gerätename empfangen!
-          connectedDeviceManufacturer = fields[ 1 ];
-          msg = new BtServiceMessage(ProjectConst.MESSAGE_MANUFACTURER_READ, new String(fields[ 1 ]));
-          sendMessageToApp(msg);
+          connectedDeviceManufacturer = fields[1];
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_MANUFACTURER_READ, new String( fields[1] ) );
+          sendMessageToApp( msg );
           if( BuildConfig.DEBUG )
           {
-            Log.d(TAGREADER, "SPX Devicename recived! <" + fields[ 1 ] + ">");
+            Log.d( TAGREADER, "SPX Devicename recived! <" + fields[1] + ">" );
           }
           break;
         case ProjectConst.SPX_ALIVE:
           // Ackuspannung übertragen
-          msg = new BtServiceMessage(ProjectConst.MESSAGE_SPXALIVE, new String(fields[ 1 ]));
-          sendMessageToApp(msg);
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_SPXALIVE, new String( fields[1] ) );
+          sendMessageToApp( msg );
           if( BuildConfig.DEBUG )
           {
-            Log.d(TAGREADER, "SPX is Alive, Acku value recived.");
+            Log.d( TAGREADER, "SPX is Alive, Acku value recived." );
           }
           break;
         case ProjectConst.SPX_APPLICATION_ID:
           // Sende Nachricht Firmwareversion empfangen!
-          msg = new BtServiceMessage(ProjectConst.MESSAGE_FWVERSION_READ, new String(fields[ 1 ]));
-          sendMessageToApp(msg);
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_FWVERSION_READ, new String( fields[1] ) );
+          sendMessageToApp( msg );
           if( BuildConfig.DEBUG )
           {
-            Log.d(TAGREADER, "Application ID (Firmware Version)  recived! <" + fields[ 1 ] + ">");
+            Log.d( TAGREADER, "Application ID (Firmware Version)  recived! <" + fields[1] + ">" );
           }
           break;
         case ProjectConst.SPX_SERIAL_NUMBER:
           // Sende Nachricht Seriennummer empfangen!
-          connectedDeviceSerialNumber = new String(fields[ 1 ]);
-          msg = new BtServiceMessage(ProjectConst.MESSAGE_SERIAL_READ, new String(fields[ 1 ]));
-          sendMessageToApp(msg);
+          connectedDeviceSerialNumber = new String( fields[1] );
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_SERIAL_READ, new String( fields[1] ) );
+          sendMessageToApp( msg );
           if( BuildConfig.DEBUG )
           {
-            Log.d(TAGREADER, "Serial Number recived! <" + fields[ 1 ] + ">");
+            Log.d( TAGREADER, "Serial Number recived! <" + fields[1] + ">" );
           }
           break;
         case ProjectConst.SPX_SET_SETUP_DEKO:
           // Quittung für Setze DECO
-          msg = new BtServiceMessage(ProjectConst.MESSAGE_DECO_ACK);
-          sendMessageToApp(msg);
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_DECO_ACK );
+          sendMessageToApp( msg );
           if( BuildConfig.DEBUG )
           {
-            Log.d(TAGREADER, "SPX_SET_SETUP_DEKO Acknoweledge recived");
+            Log.d( TAGREADER, "SPX_SET_SETUP_DEKO Acknoweledge recived" );
           }
           break;
         case ProjectConst.SPX_SET_SETUP_SETPOINT:
           // Quittung für Setzen der Auto-Setpointeinstelungen
-          msg = new BtServiceMessage(ProjectConst.MESSAGE_SETPOINT_ACK);
-          sendMessageToApp(msg);
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_SETPOINT_ACK );
+          sendMessageToApp( msg );
           if( BuildConfig.DEBUG )
           {
-            Log.d(TAGREADER, "SPX_SET_SETUP_SETPOINT Acknoweledge recived ");
+            Log.d( TAGREADER, "SPX_SET_SETUP_SETPOINT Acknoweledge recived " );
           }
           break;
         case ProjectConst.SPX_SET_SETUP_DISPLAYSETTINGS:
           // Quittung für Setzen der Displayeinstellungen
-          msg = new BtServiceMessage(ProjectConst.MESSAGE_DISPLAY_ACK);
-          sendMessageToApp(msg);
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_DISPLAY_ACK );
+          sendMessageToApp( msg );
           if( BuildConfig.DEBUG )
           {
-            Log.d(TAGREADER, "MESSAGE_DISPLAY_ACK recived ");
+            Log.d( TAGREADER, "MESSAGE_DISPLAY_ACK recived " );
           }
           break;
         case ProjectConst.SPX_SET_SETUP_UNITS:
           // Quittung für das Setzen der Masseinheiten
-          msg = new BtServiceMessage(ProjectConst.MESSAGE_UNITS_ACK);
-          sendMessageToApp(msg);
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_UNITS_ACK );
+          sendMessageToApp( msg );
           if( BuildConfig.DEBUG )
           {
-            Log.d(TAGREADER, "MESSAGE_UNITS_ACK recived ");
+            Log.d( TAGREADER, "MESSAGE_UNITS_ACK recived " );
           }
           break;
         case ProjectConst.SPX_SET_SETUP_INDIVIDUAL:
           // Quittung für Individualeinstellungen
-          msg = new BtServiceMessage(ProjectConst.MESSAGE_INDIVID_ACK);
-          sendMessageToApp(msg);
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_INDIVID_ACK );
+          sendMessageToApp( msg );
           if( BuildConfig.DEBUG )
           {
-            Log.d(TAGREADER, "MESSAGE_INDIVID_ACK recived ");
+            Log.d( TAGREADER, "MESSAGE_INDIVID_ACK recived " );
           }
           break;
         case ProjectConst.SPX_GET_SETUP_DEKO:
@@ -1909,11 +1917,11 @@ public class BlueThoothComService extends Service
           // D=Deepstops (0/1)
           // Y=Dynamische Gradienten (0/1)
           // C=Last Decostop (0=3 Meter/1=6 Meter)
-          msg = new BtServiceMessage(ProjectConst.MESSAGE_DECO_READ, new String[]{fields[ 1 ], fields[ 2 ], fields[ 3 ], fields[ 4 ], fields[ 5 ]});
-          sendMessageToApp(msg);
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_DECO_READ, new String[]{ fields[1], fields[2], fields[3], fields[4], fields[5] } );
+          sendMessageToApp( msg );
           if( BuildConfig.DEBUG )
           {
-            Log.d(TAGREADER, "MESSAGE_DECO_READ recived ");
+            Log.d( TAGREADER, "MESSAGE_DECO_READ recived " );
           }
           break;
         case ProjectConst.SPX_GET_SETUP_SETPOINT:
@@ -1921,11 +1929,11 @@ public class BlueThoothComService extends Service
           // ~35:A:P
           // A = Setpoint bei (0,1,2,3) = (0,5,15,20)
           // P = Partialdruck (0..4) 1.0 .. 1.4
-          msg = new BtServiceMessage(ProjectConst.MESSAGE_SETPOINT_READ, new String[]{fields[ 1 ], fields[ 2 ]});
-          sendMessageToApp(msg);
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_SETPOINT_READ, new String[]{ fields[1], fields[2] } );
+          sendMessageToApp( msg );
           if( BuildConfig.DEBUG )
           {
-            Log.d(TAGREADER, "Setpoint recived!");
+            Log.d( TAGREADER, "Setpoint recived!" );
           }
           break;
         case ProjectConst.SPX_GET_SETUP_DISPLAYSETTINGS:
@@ -1933,11 +1941,11 @@ public class BlueThoothComService extends Service
           // ~36:D:A
           // D= 0->10&, 1->50%, 2->100%
           // A= 0->Landscape 1->180Grad
-          msg = new BtServiceMessage(ProjectConst.MESSAGE_DISPLAY_READ, new String[]{fields[ 1 ], fields[ 2 ]});
-          sendMessageToApp(msg);
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_DISPLAY_READ, new String[]{ fields[1], fields[2] } );
+          sendMessageToApp( msg );
           if( BuildConfig.DEBUG )
           {
-            Log.d(TAGREADER, "Display settings recived!");
+            Log.d( TAGREADER, "Display settings recived!" );
           }
           break;
         case ProjectConst.SPX_GET_SETUP_UNITS:
@@ -1946,11 +1954,11 @@ public class BlueThoothComService extends Service
           // UD= Fahrenheit/Celsius => immer 0 in der Firmware 2.6.7.7_U
           // UL= 0=metrisch 1=imperial
           // UW= 0->Salzwasser 1->Süßwasser
-          msg = new BtServiceMessage(ProjectConst.MESSAGE_UNITS_READ, new String[]{fields[ 1 ], fields[ 2 ], fields[ 3 ]});
-          sendMessageToApp(msg);
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_UNITS_READ, new String[]{ fields[1], fields[2], fields[3] } );
+          sendMessageToApp( msg );
           if( BuildConfig.DEBUG )
           {
-            Log.d(TAGREADER, "Device Units recived!");
+            Log.d( TAGREADER, "Device Units recived!" );
           }
           break;
         case ProjectConst.SPX_GET_SETUP_INDIVIDUAL:
@@ -1964,27 +1972,27 @@ public class BlueThoothComService extends Service
           // TS: TempStick (bei neuerer Firmware)
           if( fields.length == 6 )
           {
-            msg = new BtServiceMessage(ProjectConst.MESSAGE_INDIVID_READ, new String[]{fields[ 1 ], fields[ 2 ], fields[ 3 ], fields[ 4 ], fields[ 5 ]});
-            sendMessageToApp(msg);
+            msg = new BtServiceMessage( ProjectConst.MESSAGE_INDIVID_READ, new String[]{ fields[1], fields[2], fields[3], fields[4], fields[5] } );
+            sendMessageToApp( msg );
             if( BuildConfig.DEBUG )
             {
-              Log.d(TAGREADER, "Device individual settings recived!");
+              Log.d( TAGREADER, "Device individual settings recived!" );
             }
           }
           else if( fields.length == 7 )
           {
-            msg = new BtServiceMessage(ProjectConst.MESSAGE_INDIVID_READ, new String[]{fields[ 1 ], fields[ 2 ], fields[ 3 ], fields[ 4 ], fields[ 5 ], fields[ 6 ]});
-            sendMessageToApp(msg);
+            msg = new BtServiceMessage( ProjectConst.MESSAGE_INDIVID_READ, new String[]{ fields[1], fields[2], fields[3], fields[4], fields[5], fields[6] } );
+            sendMessageToApp( msg );
             if( BuildConfig.DEBUG )
             {
-              Log.d(TAGREADER, "Device individual settings (incl TempStick) recived!");
+              Log.d( TAGREADER, "Device individual settings (incl TempStick) recived!" );
             }
           }
           else
           {
             if( BuildConfig.DEBUG )
             {
-              Log.d(TAGREADER, "no individual license...!");
+              Log.d( TAGREADER, "no individual license...!" );
             }
           }
           break;
@@ -1997,21 +2005,21 @@ public class BlueThoothComService extends Service
           // Bailout
           // AA Diluent 1 oder 2 oder keins
           // CG curent Gas
-          msg = new BtServiceMessage(ProjectConst.MESSAGE_GAS_READ, new String[]{fields[ 1 ], fields[ 2 ], fields[ 3 ], fields[ 4 ], fields[ 5 ], fields[ 6 ]});
-          sendMessageToApp(msg);
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_GAS_READ, new String[]{ fields[1], fields[2], fields[3], fields[4], fields[5], fields[6] } );
+          sendMessageToApp( msg );
           if( BuildConfig.DEBUG )
           {
-            Log.d(TAGREADER, "Gas setup recived!");
+            Log.d( TAGREADER, "Gas setup recived!" );
           }
           break;
         case ProjectConst.SPX_SET_SETUP_GASLIST:
           // Besaetigung fuer Gas setzen bekommen
           if( BuildConfig.DEBUG )
           {
-            Log.d(TAGREADER, "MESSAGE_GAS_ACK recived ");
+            Log.d( TAGREADER, "MESSAGE_GAS_ACK recived " );
           }
-          msg = new BtServiceMessage(ProjectConst.MESSAGE_GAS_ACK);
-          sendMessageToApp(msg);
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_GAS_ACK );
+          sendMessageToApp( msg );
           break;
         case ProjectConst.SPX_GET_LOG_INDEX:
           // Ein Logbuch Verzeichniseintrag gefunden
@@ -2022,56 +2030,56 @@ public class BlueThoothComService extends Service
           // MAX: letzter Eintrag
           if( BuildConfig.DEBUG )
           {
-            Log.d(TAGREADER, "MESSAGE_GET_LOG_INDEX recived ");
+            Log.d( TAGREADER, "MESSAGE_GET_LOG_INDEX recived " );
           }
-          msg = new BtServiceMessage(ProjectConst.MESSAGE_DIRENTRY_READ, new String[]{fields[ 1 ], fields[ 2 ], fields[ 3 ]});
-          sendMessageToApp(msg);
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_DIRENTRY_READ, new String[]{ fields[1], fields[2], fields[3] } );
+          sendMessageToApp( msg );
           //
           // war das der lezte Eintrag?
           //
-          if( fields[ 1 ].equals(fields[ 3 ]) )
+          if( fields[1].equals( fields[3] ) )
           {
             if( BuildConfig.DEBUG )
             {
-              Log.d(TAGREADER, "END OF DIRINDEX recived ");
+              Log.d( TAGREADER, "END OF DIRINDEX recived " );
             }
-            msg = new BtServiceMessage(ProjectConst.MESSAGE_DIRENTRY_END);
-            sendMessageToApp(msg);
+            msg = new BtServiceMessage( ProjectConst.MESSAGE_DIRENTRY_END );
+            sendMessageToApp( msg );
           }
           break;
         case ProjectConst.SPX_GET_LOG_NUMBER_SE:
-          if( 0 == fields[ 1 ].indexOf("1") )
+          if( 0 == fields[1].indexOf( "1" ) )
           {
             // Übertragung Logfile gestartet
             if( BuildConfig.DEBUG )
             {
-              Log.d(TAGREADER, "start of logfile recived ");
+              Log.d( TAGREADER, "start of logfile recived " );
             }
-            msg = new BtServiceMessage(ProjectConst.MESSAGE_LOGENTRY_START, new String(fields[ 2 ]));
-            sendMessageToApp(msg);
+            msg = new BtServiceMessage( ProjectConst.MESSAGE_LOGENTRY_START, new String( fields[2] ) );
+            sendMessageToApp( msg );
             isLogentryMode = true;
           }
-          else if( 0 == fields[ 1 ].indexOf("0") )
+          else if( 0 == fields[1].indexOf( "0" ) )
           {
             {
               // Übertragung beendet
               if( BuildConfig.DEBUG )
               {
-                Log.d(TAGREADER, "stop of logfile recived ");
+                Log.d( TAGREADER, "stop of logfile recived " );
               }
-              msg = new BtServiceMessage(ProjectConst.MESSAGE_LOGENTRY_STOP, new String(fields[ 2 ]));
-              sendMessageToApp(msg);
+              msg = new BtServiceMessage( ProjectConst.MESSAGE_LOGENTRY_STOP, new String( fields[2] ) );
+              sendMessageToApp( msg );
               isLogentryMode = false;
             }
           }
           break;
         case ProjectConst.SPX_GET_DEVICE_OFF:
           // SPX meldet, er geht aus dem Sync-Mode
-          msg = new BtServiceMessage(ProjectConst.MESSAGE_DISCONNECTED);
-          sendMessageToApp(msg);
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
+          sendMessageToApp( msg );
           if( BuildConfig.DEBUG )
           {
-            Log.d(TAGREADER, "SPX42 switch syncmode OFF! Connection will failure!");
+            Log.d( TAGREADER, "SPX42 switch syncmode OFF! Connection will failure!" );
           }
           break;
         case ProjectConst.SPX_LICENSE_STATE:
@@ -2079,16 +2087,16 @@ public class BlueThoothComService extends Service
           // <~45:LS:CE>
           // LS : License State 0=Nitrox,1=Normoxic Trimix,2=Full Trimix
           // CE : Custom Enabled 0= disabled, 1=enabled
-          connectedDeviceLicense = new String[]{fields[ 1 ], fields[ 2 ]};
-          msg = new BtServiceMessage(ProjectConst.MESSAGE_LICENSE_STATE_READ, connectedDeviceLicense);
-          sendMessageToApp(msg);
+          connectedDeviceLicense = new String[]{ fields[1], fields[2] };
+          msg = new BtServiceMessage( ProjectConst.MESSAGE_LICENSE_STATE_READ, connectedDeviceLicense );
+          sendMessageToApp( msg );
           if( BuildConfig.DEBUG )
           {
-            Log.d(TAGREADER, "SPX42 license state recived!");
+            Log.d( TAGREADER, "SPX42 license state recived!" );
           }
           break;
         default:
-          Log.w(TAGREADER, "unknown Messagetype recived <" + readMessage + ">");
+          Log.w( TAGREADER, "unknown Messagetype recived <" + readMessage + ">" );
       }
     }
 
@@ -2098,77 +2106,77 @@ public class BlueThoothComService extends Service
     @Override
     public void run()
     {
-      Log.i(TAGREADER, "BEGIN ReaderThread");
+      Log.i( TAGREADER, "BEGIN ReaderThread" );
       String  readMessage;
       int     bytes, start, end, lstart, lend;
       boolean logCmd, normalCmd;
       // den Inputstream solange lesen, wie die Verbindung besteht
       cancelThread = false;
-      while( !cancelThread )
+      while( ! cancelThread )
       {
         // lese von InputStream, maximal buffer.length bytes lesen
         try
         {
-          bytes = mmInStream.read(buffer);
-          if( bytes == -1 )
+          bytes = mmInStream.read( buffer );
+          if( bytes == - 1 )
           {
             // Verbindung beendet/verloren
             cancelThread = true;
-            Log.e(TAGREADER, "reader connection lost...");
+            Log.e( TAGREADER, "reader connection lost..." );
             connectionLost();
             cancel();
             break;
           }
-          readMessage = new String(buffer, 0, bytes);
+          readMessage = new String( buffer, 0, bytes );
         }
         catch( IOException e )
         {
           if( cancelThread )
           {
-            Log.i(TAGREADER, "while cancel thread: disconnected " + e.getLocalizedMessage());
+            Log.i( TAGREADER, "while cancel thread: disconnected " + e.getLocalizedMessage() );
           }
           else
           {
-            Log.e(TAGREADER, "disconnected " + e.getLocalizedMessage());
+            Log.e( TAGREADER, "disconnected " + e.getLocalizedMessage() );
           }
           connectionLost();
           cancel();
           break;
         }
-        readMessage = new String(buffer, 0, bytes);
+        readMessage = new String( buffer, 0, bytes );
         //
         // was mach ich jetzt mit dem empfangenen Zeuch?
         //
         // reicht der Platz noch?
-        if( (mInStrBuffer.capacity() + readMessage.length()) > ProjectConst.MAXINBUFFER )
+        if( ( mInStrBuffer.capacity() + readMessage.length() ) > ProjectConst.MAXINBUFFER )
         {
-          Log.e(TAGREADER, "INPUT BUFFER OVERFLOW!");
+          Log.e( TAGREADER, "INPUT BUFFER OVERFLOW!" );
           connectionLost();
           cancel();
           break;
         }
         // Die empfangene Nachricht an den Puffer anhängen
-        mInStrBuffer.append(readMessage);
+        mInStrBuffer.append( readMessage );
         // den Puffer in einen String überführen
         readMessage = mInStrBuffer.toString();
         // die Nachricht abarbeitern, solange komplette MSG da sind
-        start = mInStrBuffer.indexOf(ProjectConst.STX);
-        end = mInStrBuffer.indexOf(ProjectConst.ETX);
+        start = mInStrBuffer.indexOf( ProjectConst.STX );
+        end = mInStrBuffer.indexOf( ProjectConst.ETX );
         if( isLogentryMode )
         {
-          lstart = mInStrBuffer.indexOf(ProjectConst.FILLER);
-          lend = mInStrBuffer.indexOf(ProjectConst.FILLER, start + ProjectConst.FILLER.length());
+          lstart = mInStrBuffer.indexOf( ProjectConst.FILLER );
+          lend = mInStrBuffer.indexOf( ProjectConst.FILLER, start + ProjectConst.FILLER.length() );
         }
         else
         {
-          lstart = -1;
-          lend = -1;
+          lstart = - 1;
+          lend = - 1;
         }
         // solange etwas gefunden wird
-        while( ((start > -1) && (end > start)) || ((lstart > -1) && (lend > lstart)) )
+        while( ( ( start > - 1 ) && ( end > start ) ) || ( ( lstart > - 1 ) && ( lend > lstart ) ) )
         {
-          normalCmd = (start > -1) && (end > start);
-          logCmd = (lstart > -1) && (lend > lstart);
+          normalCmd = ( start > - 1 ) && ( end > start );
+          logCmd = ( lstart > - 1 ) && ( lend > lstart );
           // womit anfangen?
           // sind beide zu finden?
           if( normalCmd == true && logCmd == true )
@@ -2176,11 +2184,11 @@ public class BlueThoothComService extends Service
             // entscheidung, wer zuerst
             if( start < lstart )
             {
-              execNormalCmd(start, end, mInStrBuffer);
+              execNormalCmd( start, end, mInStrBuffer );
             }
             else
             {
-              execLogentryCmd(lstart, lend, mInStrBuffer);
+              execLogentryCmd( lstart, lend, mInStrBuffer );
             }
           }
           else
@@ -2188,28 +2196,28 @@ public class BlueThoothComService extends Service
             // nein, nur ein Typ. Welcher?
             if( normalCmd == true )
             {
-              execNormalCmd(start, end, mInStrBuffer);
+              execNormalCmd( start, end, mInStrBuffer );
             }
             else if( logCmd == true )
             {
-              execLogentryCmd(lstart, lend, mInStrBuffer);
+              execLogentryCmd( lstart, lend, mInStrBuffer );
             }
           }
-          start = mInStrBuffer.indexOf(ProjectConst.STX);
-          end = mInStrBuffer.indexOf(ProjectConst.ETX);
+          start = mInStrBuffer.indexOf( ProjectConst.STX );
+          end = mInStrBuffer.indexOf( ProjectConst.ETX );
           if( isLogentryMode )
           {
-            lstart = mInStrBuffer.indexOf(ProjectConst.FILLER);
-            lend = mInStrBuffer.indexOf(ProjectConst.FILLER, start + ProjectConst.FILLER.length());
+            lstart = mInStrBuffer.indexOf( ProjectConst.FILLER );
+            lend = mInStrBuffer.indexOf( ProjectConst.FILLER, start + ProjectConst.FILLER.length() );
           }
           else
           {
-            lstart = -1;
-            lend = -1;
+            lstart = - 1;
+            lend = - 1;
           }
         }
       }
-      Log.i(TAGREADER, "END ReaderThread");
+      Log.i( TAGREADER, "END ReaderThread" );
       connectionLost();
     }
   }
@@ -2224,11 +2232,11 @@ public class BlueThoothComService extends Service
    */
   private class WriterThread extends Thread
   {
-    private final String TAGWRITER = WriterThread.class.getSimpleName();
-    private final BluetoothSocket mmSocket;
-    private final OutputStream    mmOutStream;
-    private final ArrayList<String> writeList    = new ArrayList<String>();
-    private       Boolean           cancelThread = false;
+    private final String              TAGWRITER    = WriterThread.class.getSimpleName();
+    private final BluetoothSocket     mmSocket;
+    private final OutputStream        mmOutStream;
+    private final ArrayList< String > writeList    = new ArrayList< String >();
+    private       Boolean             cancelThread = false;
 
     /**
      * Konstruktor des Writer Thread
@@ -2240,11 +2248,11 @@ public class BlueThoothComService extends Service
      *
      * @param socket
      */
-    public WriterThread(BluetoothSocket socket)
+    public WriterThread( BluetoothSocket socket )
     {
       if( BuildConfig.DEBUG )
       {
-        Log.d(TAGWRITER, "create WriterThread");
+        Log.d( TAGWRITER, "create WriterThread" );
       }
       mmSocket = socket;
       OutputStream tmpOut = null;
@@ -2256,7 +2264,7 @@ public class BlueThoothComService extends Service
       }
       catch( IOException e )
       {
-        Log.e(TAGWRITER, "temp sockets not created", e);
+        Log.e( TAGWRITER, "temp sockets not created", e );
       }
       mmOutStream = tmpOut;
     }
@@ -2281,7 +2289,7 @@ public class BlueThoothComService extends Service
       }
       catch( IOException ex )
       {
-        Log.e(TAGWRITER, "close() of connect socket failed", ex);
+        Log.e( TAGWRITER, "close() of connect socket failed", ex );
       }
     }
 
@@ -2293,10 +2301,10 @@ public class BlueThoothComService extends Service
     {
       BtServiceMessage msg;
       //
-      Log.i(TAGWRITER, "BEGIN WriterThread");
+      Log.i( TAGWRITER, "BEGIN WriterThread" );
       // den Inputstram solange schreiben, wie die Verbindung besteht
       cancelThread = false;
-      while( !cancelThread )
+      while( ! cancelThread )
       {
         // syncronisiete Methode aufrufen, damit wait und notify machbar sind
         synchronized( this )
@@ -2305,7 +2313,7 @@ public class BlueThoothComService extends Service
           {
             try
             {
-              wait(15);
+              wait( 15 );
             }
             catch( InterruptedException ex )
             {
@@ -2319,29 +2327,29 @@ public class BlueThoothComService extends Service
               // Watchdog für Schreiben aktivieren
               writeWatchDog = ProjectConst.WATCHDOG_FOR_WRITEOPS;
               // den String für den Wachhund zwischenspeichern
-              sendStr = writeList.remove(0);
+              sendStr = writeList.remove( 0 );
               // also den String Eintrag in den Outstream...
-              mmOutStream.write(sendStr.getBytes());
+              mmOutStream.write( sendStr.getBytes() );
               // kommt das an, den Watchog wieder AUS
               sendStr = null;
-              writeWatchDog = -1;
+              writeWatchDog = - 1;
               // zwischen den Kommandos etwas warten, der SPX braucht etwas bis er wieder zuhört...
-              Thread.sleep(500);
+              Thread.sleep( 500 );
             }
             catch( IndexOutOfBoundsException ex )
             {
-              Log.e(TAG, "WriterThread IndexOutOfBoundsException: <" + ex.getLocalizedMessage() + ">");
-              msg = new BtServiceMessage(ProjectConst.MESSAGE_DISCONNECTED);
-              sendMessageToApp(msg);
+              Log.e( TAG, "WriterThread IndexOutOfBoundsException: <" + ex.getLocalizedMessage() + ">" );
+              msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
+              sendMessageToApp( msg );
               cancelThread = true;
               writeList.clear();
               return;
             }
             catch( IOException ex )
             {
-              Log.e(TAG, "WriterThread Exception: <" + ex.getLocalizedMessage() + ">");
-              msg = new BtServiceMessage(ProjectConst.MESSAGE_DISCONNECTED);
-              sendMessageToApp(msg);
+              Log.e( TAG, "WriterThread Exception: <" + ex.getLocalizedMessage() + ">" );
+              msg = new BtServiceMessage( ProjectConst.MESSAGE_DISCONNECTED );
+              sendMessageToApp( msg );
               cancelThread = true;
               writeList.clear();
               return;
@@ -2352,7 +2360,7 @@ public class BlueThoothComService extends Service
           }
         }
       }
-      Log.i(TAGWRITER, "END WriterThread");
+      Log.i( TAGWRITER, "END WriterThread" );
       connectionLost();
     }
 
@@ -2366,9 +2374,9 @@ public class BlueThoothComService extends Service
      *
      * @param msg
      */
-    public synchronized void writeToDevice(String msg)
+    public synchronized void writeToDevice( String msg )
     {
-      writeList.add(msg);
+      writeList.add( msg );
       notifyAll();
     }
   }

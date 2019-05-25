@@ -1,22 +1,22 @@
 apply plugin: 'com.android.application'
 android {
-    flavorDimensions "default"
-    compileSdkVersion 28
-    buildToolsVersion '28.0.3'
-    signingConfigs {
-        DirksKey {
-            storeFile file('C:\\localProg\\androidStudioWorkspace\\dirksPrivaterAndroidEntwicklerkey.key')
-            storePassword 'energie'
-            keyAlias 'android develpoment dirk marciniak'
-            keyPassword 'energie'
-        }
-        debug {
-            storeFile file('C:\\localProg\\androidStudioWorkspace\\dirksPrivaterAndroidEntwicklerkey.key')
-            keyAlias = 'android develpoment dirk marciniak'
-            storePassword 'energie'
-            keyPassword 'energie'
-        }
+  flavorDimensions "default"
+  compileSdkVersion 28
+  buildToolsVersion '28.0.3'
+  signingConfigs {
+    DirksKey {
+      storeFile file( 'C:\\localProg\\androidStudioWorkspace\\dirksPrivaterAndroidEntwicklerkey.key' )
+      storePassword 'energie'
+      keyAlias 'android develpoment dirk marciniak'
+      keyPassword 'energie'
     }
+    debug {
+      storeFile file( 'C:\\localProg\\androidStudioWorkspace\\dirksPrivaterAndroidEntwicklerkey.key' )
+      keyAlias = 'android develpoment dirk marciniak'
+      storePassword 'energie'
+      keyPassword 'energie'
+    }
+  }
   defaultConfig {
     applicationId "de.dmarcini.submatix.android4.full"
     minSdkVersion 23
@@ -37,21 +37,21 @@ android {
     release {
       ant.importBuild "utils\\versionsScript.xml"
       tasks.makeVersion
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+      proguardFiles getDefaultProguardFile( 'proguard-android.txt' ), 'proguard-rules.txt'
       signingConfig signingConfigs.DirksKey
       proguardFile 'C:/DATEN/androidStudioWorkspace/SubmatixBTAndroid4/app/utils/proguard-project.txt'
       versionNameSuffix '_release'
     }
   }
-    dependencies {
-      implementation fileTree(dir: 'lib', include: '*.jar')
-    }
-    lintOptions {
-        checkReleaseBuilds false
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
-        abortOnError false
-    }
+  dependencies {
+    implementation fileTree( dir: 'lib', include: '*.jar' )
+  }
+  lintOptions {
+    checkReleaseBuilds false
+    // Or, if you prefer, you can continue to check for errors in release builds,
+    // but continue the build even when errors are found:
+    abortOnError false
+  }
   productFlavors {
     Marshmallow {
       minSdkVersion 23
@@ -62,7 +62,7 @@ android {
       versionName '2.2'
       versionNameSuffix 'marshmallow'
     }
-      Pie {
+    Pie {
       applicationId 'de.dmarcini.submatix.android4.full'
       signingConfig signingConfigs.DirksKey
       targetSdkVersion 28
@@ -72,10 +72,10 @@ android {
       minSdkVersion 28
     }
   }
-    compileOptions {
-        sourceCompatibility '1.8'
-        targetCompatibility '1.8'
-    }
+  compileOptions {
+    sourceCompatibility '1.8'
+    targetCompatibility '1.8'
+  }
 }
 
 dependencies {
