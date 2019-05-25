@@ -1,8 +1,8 @@
 <resources>
 
-    <!--
-         displays > 600 dp und < 1024dp
-    -->
-    <dimen name="navigation_drawer_width">280dp</dimen>
+  <!--
+       displays > 600 dp und < 1024dp
+  -->
+  <dimen name = "navigation_drawer_width">280dp</dimen>
 
 </resources>

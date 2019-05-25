@@ -1,76 +1,90 @@
 apply plugin: 'com.android.application'
+println( "################ CONFIG PHASE SCRIPT #############################" )
+
 android {
-    flavorDimensions "default"
-    compileSdkVersion 25
-    buildToolsVersion '28.0.3'
-    signingConfigs {
-        DirksKey {
-            storeFile file('C:/DATEN/Entwicklung/dirksPrivaterAndroidEntwicklerkey.key')
-            storePassword 'energie'
-            keyAlias 'android develpoment dirk marciniak'
-            keyPassword 'energie'
-        }
+  flavorDimensions "default"
+  compileSdkVersion 28
+  buildToolsVersion '28.0.3'
+  signingConfigs {
+    DirksKey {
+      storeFile file( '../../dirksPrivaterAndroidEntwicklerkey.key' )
+      storePassword 'energie'
+      keyAlias 'android develpoment dirk marciniak'
+      keyPassword 'energie'
     }
+  }
   defaultConfig {
     applicationId "de.dmarcini.submatix.android4.full"
-    minSdkVersion 19
-    targetSdkVersion 25
+    minSdkVersion 23
+    targetSdkVersion 28
     signingConfig signingConfigs.DirksKey
-    versionCode 35
-    versionName '2.2'
+    versionCode 36
+    versionName '2.3'
     versionNameSuffix 'default'
   }
   buildTypes {
     debug {
-      ant.importBuild "utils\\versionsScript.xml"
-      tasks.makeVersion.execute()
       signingConfig signingConfigs.DirksKey
-      proguardFile 'C:/DATEN/androidStudioWorkspace/SubmatixBTAndroid4/app/utils/proguard-project.txt'
+      proguardFile 'app/utils/proguard-project.txt'
       versionNameSuffix '_debug'
+      renderscriptOptimLevel = 0
     }
     release {
-      ant.importBuild "utils\\versionsScript.xml"
-      tasks.makeVersion.execute()
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
       signingConfig signingConfigs.DirksKey
-      proguardFile 'C:/DATEN/androidStudioWorkspace/SubmatixBTAndroid4/app/utils/proguard-project.txt'
+      proguardFiles getDefaultProguardFile( 'proguard-android.txt' ), 'proguard-rules.txt'
+      proguardFile 'app/utils/proguard-project.txt'
       versionNameSuffix '_release'
+      minifyEnabled = true
+      renderscriptOptimLevel = 3
     }
   }
-    dependencies {
-      implementation fileTree(dir: 'lib', include: '*.jar')
-    }
-    lintOptions {
-        checkReleaseBuilds false
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
-        abortOnError false
-    }
+  dependencies {
+    implementation fileTree( dir: 'lib', include: '*.jar' )
+  }
+  lintOptions {
+    checkReleaseBuilds false
+    // Or, if you prefer, you can continue to check for errors in release builds,
+    // but continue the build even when errors are found:
+    abortOnError false
+  }
   productFlavors {
-    Lollipop {
-      minSdkVersion 22
+    Marshmallow {
+      minSdkVersion 23
       applicationId 'de.dmarcini.submatix.android4.full'
       signingConfig signingConfigs.DirksKey
-      targetSdkVersion 25
+      targetSdkVersion 28
       versionCode 35
-      versionName '2.2'
-      versionNameSuffix 'lollipop'
+      versionName '2.3'
+      versionNameSuffix 'marshmallow'
+      dimension = 'default'
     }
-    Kitkat {
+    Pie {
       applicationId 'de.dmarcini.submatix.android4.full'
       signingConfig signingConfigs.DirksKey
-      targetSdkVersion 25
+      targetSdkVersion 28
       versionCode 35
-      versionName '2.2'
-      versionNameSuffix 'kitkat'
-      minSdkVersion 19
+      versionName '2.3'
+      versionNameSuffix 'pie'
+      minSdkVersion 28
+      dimension = 'default'
     }
   }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
+  compileOptions {
+    sourceCompatibility '1.8'
+    targetCompatibility '1.8'
+  }
 }
 
 dependencies {
 }
+
+task bildCounter( dependsOn: build ) {
+  println( "################ BUILDCOUNTER SCRIPT START #############################" )
+  exec {
+    description 'counter zaehlen'
+    workingDir '.'
+    commandLine('python', 'utils/versionCounter.py')
+  }
+  println( "################ BUILDCOUNTER SCRIPT END #############################" )
+}
+

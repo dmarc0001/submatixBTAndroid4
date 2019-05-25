@@ -39,8 +39,8 @@ import de.dmarcini.submatix.android4.full.interfaces.IBtServiceListener;
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
  *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- *         <p/>
- *         Stand: 10.11.2013
+ * <p/>
+ * Stand: 10.11.2013
  */
 public class WorkInProgressFragment extends Fragment implements IBtServiceListener
 {
@@ -49,24 +49,24 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
   private             Activity runningActivity = null;
 
   @Override
-  public void onActivityCreated(Bundle bundle)
+  public void onActivityCreated( Bundle bundle )
   {
-    super.onActivityCreated(bundle);
+    super.onActivityCreated( bundle );
     runningActivity = getActivity();
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "onActivityCreated: ACTIVITY ATTACH");
+      Log.d( TAG, "onActivityCreated: ACTIVITY ATTACH" );
     }
   }
 
   @Override
-  public void onAttach(Activity activity)
+  public void onAttach( Activity activity )
   {
-    super.onAttach(activity);
+    super.onAttach( activity );
     runningActivity = activity;
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "onAttach: ATTACH");
+      Log.d( TAG, "onAttach: ATTACH" );
     }
   }
 
@@ -74,12 +74,12 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
    * Nach dem Erzeugen des Objektes noch Einstellungen....
    */
   @Override
-  public void onCreate(Bundle savedInstanceState)
+  public void onCreate( Bundle savedInstanceState )
   {
-    super.onCreate(savedInstanceState);
+    super.onCreate( savedInstanceState );
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "onCreate...");
+      Log.d( TAG, "onCreate..." );
     }
   }
 
@@ -87,20 +87,20 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
    * Wenn das View erzeugt wird (nach onCreate), noch ein paar Sachen erledigen
    */
   @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+  public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
   {
     View rootView;
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "onCreateView...");
+      Log.d( TAG, "onCreateView..." );
     }
     //
     // wenn kein Container vorhanden ist, dann gibts auch keinen View
     //
     if( container == null )
     {
-      Log.e(TAG, "onCreateView: container is NULL ...");
-      return (null);
+      Log.e( TAG, "onCreateView: container is NULL ..." );
+      return ( null );
     }
     //
     // wenn die laufende Activity eine AreaDetailActivity ist, dann gibts das View schon
@@ -116,13 +116,13 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
     //
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "makeConnectionView...");
+      Log.d( TAG, "makeConnectionView..." );
     }
     //
     // View aus Resource laden
     //
-    rootView = inflater.inflate(R.layout.fragment_in_progress, container, false);
-    return (rootView);
+    rootView = inflater.inflate( R.layout.fragment_in_progress, container, false );
+    return ( rootView );
   }
 
   @Override
@@ -137,16 +137,16 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
     super.onPause();
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "onPause...");
+      Log.d( TAG, "onPause..." );
     }
     //
     // die abgeleiteten Objekte führen das auch aus
     //
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "onPause: clear service listener for preferences fragment...");
+      Log.d( TAG, "onPause: clear service listener for preferences fragment..." );
     }
-    (( MainActivity ) runningActivity).removeServiceListener(this);
+    ( ( MainActivity ) runningActivity ).removeServiceListener( this );
   }
 
   /**
@@ -158,49 +158,49 @@ public class WorkInProgressFragment extends Fragment implements IBtServiceListen
     super.onResume();
     if( BuildConfig.DEBUG )
     {
-      Log.d(TAG, "onResume...");
+      Log.d( TAG, "onResume..." );
     }
-    (( MainActivity ) runningActivity).addServiceListener(this);
+    ( ( MainActivity ) runningActivity ).addServiceListener( this );
     // wenn zu diesem Zeitpunkt das Array noch nicht gefüllt ist, dann mach das nun
   }
 
   @Override
-  public void handleMessages(int what, BtServiceMessage msg)
+  public void handleMessages( int what, BtServiceMessage msg )
   {
   }
 
   @Override
-  public void msgConnecting(BtServiceMessage msg)
+  public void msgConnecting( BtServiceMessage msg )
   {
   }
 
   @Override
-  public void msgConnected(BtServiceMessage msg)
+  public void msgConnected( BtServiceMessage msg )
   {
   }
 
   @Override
-  public void msgDisconnected(BtServiceMessage msg)
+  public void msgDisconnected( BtServiceMessage msg )
   {
   }
 
   @Override
-  public void msgRecivedTick(BtServiceMessage msg)
+  public void msgRecivedTick( BtServiceMessage msg )
   {
   }
 
   @Override
-  public void msgRecivedAlive(BtServiceMessage msg)
+  public void msgRecivedAlive( BtServiceMessage msg )
   {
   }
 
   @Override
-  public void msgConnectError(BtServiceMessage msg)
+  public void msgConnectError( BtServiceMessage msg )
   {
   }
 
   @Override
-  public void msgReciveWriteTmeout(BtServiceMessage msg)
+  public void msgReciveWriteTmeout( BtServiceMessage msg )
   {
   }
 }

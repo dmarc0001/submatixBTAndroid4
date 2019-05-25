@@ -46,9 +46,9 @@ public class BtServiceMessage
    * Stand: 03.12.2013
    */ private BtServiceMessage()
   {
-    this.id = -1;
+    this.id = - 1;
     this.container = null;
-    this.timestamp = -1L;
+    this.timestamp = - 1L;
   }
 
   /**
@@ -60,7 +60,7 @@ public class BtServiceMessage
    *
    * @param id
    */
-  public BtServiceMessage(int id)
+  public BtServiceMessage( int id )
   {
     this.id = id;
     this.container = null;
@@ -77,7 +77,7 @@ public class BtServiceMessage
    * @param id
    * @param container
    */
-  public BtServiceMessage(int id, Object container)
+  public BtServiceMessage( int id, Object container )
   {
     this.id = id;
     this.container = container;
@@ -95,7 +95,7 @@ public class BtServiceMessage
    * @param container
    * @param time
    */
-  public BtServiceMessage(int id, Object container, long time)
+  public BtServiceMessage( int id, Object container, long time )
   {
     this.id = id;
     this.container = container;
@@ -113,7 +113,7 @@ public class BtServiceMessage
    */
   public int getId()
   {
-    return (id);
+    return ( id );
   }
 
   /**
@@ -127,7 +127,7 @@ public class BtServiceMessage
    */
   public Object getContainer()
   {
-    return (container);
+    return ( container );
   }
 
   /**
@@ -141,6 +141,6 @@ public class BtServiceMessage
    */
   public long getTimeStamp()
   {
-    return (timestamp);
+    return ( timestamp );
   }
 }

@@ -41,10 +41,10 @@ import de.dmarcini.submatix.android4.full.R;
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
  *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- *         <p/>
- *         Stand: 10.11.2013
+ * <p/>
+ * Stand: 10.11.2013
  */
-public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
+public class SPX42ReadLogListArrayAdapter extends ArrayAdapter< ReadLogItemObj >
 {
   @SuppressWarnings( "unused" )
   private static final String  TAG             = SPX42ReadLogListArrayAdapter.class.getSimpleName();
@@ -62,9 +62,9 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * @param textViewResourceId
    * @param themeId
    */
-  public SPX42ReadLogListArrayAdapter(Context context, int textViewResourceId, int themeId)
+  public SPX42ReadLogListArrayAdapter( Context context, int textViewResourceId, int themeId )
   {
-    super(context, textViewResourceId);
+    super( context, textViewResourceId );
     this.themeId = themeId;
   }
 
@@ -80,9 +80,9 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * @param textViewResourceId
    * @param themeId
    */
-  private SPX42ReadLogListArrayAdapter(Context context, int resource, int textViewResourceId, int themeId)
+  private SPX42ReadLogListArrayAdapter( Context context, int resource, int textViewResourceId, int themeId )
   {
-    super(context, resource, textViewResourceId);
+    super( context, resource, textViewResourceId );
     this.themeId = themeId;
   }
 
@@ -98,42 +98,42 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * @param objects
    * @param themeId
    */
-  private SPX42ReadLogListArrayAdapter(Context context, int textViewResourceId, List<ReadLogItemObj> objects, int themeId)
+  private SPX42ReadLogListArrayAdapter( Context context, int textViewResourceId, List< ReadLogItemObj > objects, int themeId )
   {
-    super(context, textViewResourceId, objects);
+    super( context, textViewResourceId, objects );
     this.themeId = themeId;
   }
 
   @Override
-  public View getView(int position, View convertView, ViewGroup parent)
+  public View getView( int position, View convertView, ViewGroup parent )
   {
     View           cView = convertView;
     ReadLogItemObj rlio;
     LayoutInflater mInflater;
     //
-    mInflater = (( Activity ) getContext()).getLayoutInflater();
-    rlio = getItem(position);
+    mInflater = ( ( Activity ) getContext() ).getLayoutInflater();
+    rlio = getItem( position );
     //
     // guck mal, ob es das View gibt
     //
     if( cView == null )
     {
-      cView = mInflater.inflate(R.layout.read_log_array_adapter_view, parent, false);
+      cView = mInflater.inflate( R.layout.read_log_array_adapter_view, parent, false );
     }
     //
     // verorte die Objekte
     //
-    ImageView ivSaved  = ( ImageView ) cView.findViewById(R.id.readLogListIconView);
-    ImageView ivMarked = ( ImageView ) cView.findViewById(R.id.readLogMarkedIconView);
-    TextView  tvName   = ( TextView ) cView.findViewById(R.id.readLogNameListTextView);
-    TextView  tvDetail = ( TextView ) cView.findViewById(R.id.readLogDetailsTextView);
+    ImageView ivSaved  = ( ImageView ) cView.findViewById( R.id.readLogListIconView );
+    ImageView ivMarked = ( ImageView ) cView.findViewById( R.id.readLogMarkedIconView );
+    TextView  tvName   = ( TextView ) cView.findViewById( R.id.readLogNameListTextView );
+    TextView  tvDetail = ( TextView ) cView.findViewById( R.id.readLogDetailsTextView );
     try
     {
       //
       // Beschriftung setzen
       //
-      tvName.setText(rlio.itemName);
-      tvDetail.setText(rlio.itemDetail);
+      tvName.setText( rlio.itemName );
+      tvDetail.setText( rlio.itemDetail );
       //
       // Icon setzen
       //
@@ -141,62 +141,62 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
       {
         if( showSavedStatus )
         {
-          ivSaved.setImageResource(R.drawable.saved_log);
+          ivSaved.setImageResource( R.drawable.saved_log );
         }
         else
         {
-          ivSaved.setImageResource(R.drawable.unsaved_log);
+          ivSaved.setImageResource( R.drawable.unsaved_log );
         }
         if( themeId == R.style.AppDarkTheme )
         {
-          tvDetail.setTextColor(cView.getResources().getColor(R.color.logReadDark_savedColor));
+          tvDetail.setTextColor( cView.getResources().getColor( R.color.logReadDark_savedColor ) );
         }
         else
         {
-          tvDetail.setTextColor(cView.getResources().getColor(R.color.logReadLight_savedColor));
+          tvDetail.setTextColor( cView.getResources().getColor( R.color.logReadLight_savedColor ) );
         }
       }
       else
       {
-        ivSaved.setImageResource(R.drawable.unsaved_log);
+        ivSaved.setImageResource( R.drawable.unsaved_log );
         if( themeId == R.style.AppDarkTheme )
         {
-          tvDetail.setTextColor(cView.getResources().getColor(R.color.logReadDark_notSavedColor));
+          tvDetail.setTextColor( cView.getResources().getColor( R.color.logReadDark_notSavedColor ) );
         }
         else
         {
-          tvDetail.setTextColor(cView.getResources().getColor(R.color.logReadLight_notSavedColor));
+          tvDetail.setTextColor( cView.getResources().getColor( R.color.logReadLight_notSavedColor ) );
         }
       }
       if( rlio.isMarked )
       {
         if( themeId == R.style.AppDarkTheme )
         {
-          ivMarked.setImageResource(R.drawable.circle_full_yellow);
+          ivMarked.setImageResource( R.drawable.circle_full_yellow );
         }
         else
         {
-          ivMarked.setImageResource(R.drawable.circle_full_green);
+          ivMarked.setImageResource( R.drawable.circle_full_green );
         }
       }
       else
       {
         if( themeId == R.style.AppDarkTheme )
         {
-          ivMarked.setImageResource(R.drawable.circle_empty_yellow);
+          ivMarked.setImageResource( R.drawable.circle_empty_yellow );
         }
         else
         {
-          ivMarked.setImageResource(R.drawable.circle_empty_green);
+          ivMarked.setImageResource( R.drawable.circle_empty_green );
         }
       }
     }
     catch( NullPointerException ex )
     {
-      Log.e(TAG, "NullPointer Exeption while generate LisListAdapter View");
+      Log.e( TAG, "NullPointer Exeption while generate LisListAdapter View" );
       // TODO: MACHWAS
     }
-    return (cView);
+    return ( cView );
   }
 
   /**
@@ -208,15 +208,16 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * Stand: 06.08.2013
    *
    * @param position
+   *
    * @return ist der Eintrag als gesichert markiert
    */
-  public boolean isSaved(int position)
+  public boolean isSaved( int position )
   {
     if( position >= getCount() )
     {
-      return (false);
+      return ( false );
     }
-    return (getItem(position).isSaved);
+    return ( getItem( position ).isSaved );
   }
 
   /**
@@ -230,16 +231,16 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * @param position
    * @param isSaved
    */
-  public void setSaved(int position, boolean isSaved)
+  public void setSaved( int position, boolean isSaved )
   {
     if( position >= getCount() )
     {
       return;
     }
-    getItem(position).isSaved = isSaved;
-    if( !isSaved )
+    getItem( position ).isSaved = isSaved;
+    if( ! isSaved )
     {
-      getItem(position).dbId = -1;
+      getItem( position ).dbId = - 1;
     }
   }
 
@@ -255,14 +256,14 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * @param isSaved
    * @param dbId
    */
-  public void setSaved(int position, boolean isSaved, int dbId)
+  public void setSaved( int position, boolean isSaved, int dbId )
   {
     if( position >= getCount() )
     {
       return;
     }
-    getItem(position).isSaved = isSaved;
-    getItem(position).dbId = dbId;
+    getItem( position ).isSaved = isSaved;
+    getItem( position ).dbId = dbId;
   }
 
   /**
@@ -274,15 +275,16 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * Stand: 06.08.2013
    *
    * @param position
+   *
    * @return Name des Eintrages
    */
-  public String getName(int position)
+  public String getName( int position )
   {
     if( position >= getCount() )
     {
-      return (null);
+      return ( null );
     }
-    return (getItem(position).itemName);
+    return ( getItem( position ).itemName );
   }
 
   /**
@@ -294,15 +296,16 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * Stand: 06.08.2013
    *
    * @param position
+   *
    * @return die NMummer des Eintrages
    */
-  public int getNumberOnSPX(int position)
+  public int getNumberOnSPX( int position )
   {
     if( position >= getCount() )
     {
-      return (-1);
+      return ( - 1 );
     }
-    return (getItem(position).numberOnSPX);
+    return ( getItem( position ).numberOnSPX );
   }
 
   /**
@@ -314,15 +317,16 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * Stand: 06.08.2013
    *
    * @param position
+   *
    * @return Dateiname auf dem SPX
    */
-  public String getNameOnSPX(int position)
+  public String getNameOnSPX( int position )
   {
     if( position >= getCount() )
     {
-      return (null);
+      return ( null );
     }
-    return (getItem(position).itemNameOnSPX);
+    return ( getItem( position ).itemNameOnSPX );
   }
 
   /**
@@ -336,15 +340,15 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * @param position
    * @param marked
    */
-  public void setMarked(int position, boolean marked)
+  public void setMarked( int position, boolean marked )
   {
     if( position >= getCount() )
     {
       return;
     }
-    if( getItem(position) instanceof ReadLogItemObj )
+    if( getItem( position ) instanceof ReadLogItemObj )
     {
-      getItem(position).isMarked = marked;
+      getItem( position ).isMarked = marked;
     }
   }
 
@@ -357,19 +361,20 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    * Stand: 06.08.2013
    *
    * @param position
+   *
    * @return markiert oder nicht
    */
-  public boolean getMarked(int position)
+  public boolean getMarked( int position )
   {
     if( position >= getCount() )
     {
-      return (false);
+      return ( false );
     }
-    if( getItem(position) instanceof ReadLogItemObj )
+    if( getItem( position ) instanceof ReadLogItemObj )
     {
-      return (getItem(position).isMarked);
+      return ( getItem( position ).isMarked );
     }
-    return (false);
+    return ( false );
   }
 
   /**
@@ -382,18 +387,18 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
    *
    * @return Vector mit Nummern
    */
-  public Vector<Integer> getMarkedItems()
+  public Vector< Integer > getMarkedItems()
   {
-    Vector<Integer> lst = new Vector<Integer>();
+    Vector< Integer > lst = new Vector< Integer >();
     //
     for( int i = 0; i < getCount(); i++ )
     {
-      if( getItem(i).isMarked )
+      if( getItem( i ).isMarked )
       {
-        lst.add(i);
+        lst.add( i );
       }
     }
-    return (lst);
+    return ( lst );
   }
 
   /**
@@ -410,12 +415,12 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
     int count = 0;
     for( int i = 0; i < getCount(); i++ )
     {
-      if( getItem(i).isMarked )
+      if( getItem( i ).isMarked )
       {
         count++;
       }
     }
-    return (count);
+    return ( count );
   }
 
   /**
@@ -429,7 +434,7 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
   {
     for( int i = 0; i < getCount(); i++ )
     {
-      setMarked(i, false);
+      setMarked( i, false );
     }
   }
 
@@ -444,7 +449,7 @@ public class SPX42ReadLogListArrayAdapter extends ArrayAdapter<ReadLogItemObj>
   /**
    * @param showSavedStatus das zu setzende Objekt showSavedStatus
    */
-  public void setShowSavedStatus(boolean showSavedStatus)
+  public void setShowSavedStatus( boolean showSavedStatus )
   {
     this.showSavedStatus = showSavedStatus;
   }

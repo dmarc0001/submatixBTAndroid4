@@ -42,16 +42,16 @@ import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
  *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- *         <p>
- *         Stand: 10.11.2013
+ * <p>
+ * Stand: 10.11.2013
  */
 public class AreYouSureToDeleteFragment extends DialogFragment
 {
-  private static final String TAG = AreYouSureToDeleteFragment.class.getSimpleName();
-  private View rootView;
-  private String                msg       = "?";
+  private static final String                TAG       = AreYouSureToDeleteFragment.class.getSimpleName();
+  private              View                  rootView;
+  private              String                msg       = "?";
   // Use this instance of the interface to deliver action events
-  private INoticeDialogListener mListener = null;
+  private              INoticeDialogListener mListener = null;
 
   @SuppressWarnings( "unused" )
   private AreYouSureToDeleteFragment()
@@ -67,7 +67,7 @@ public class AreYouSureToDeleteFragment extends DialogFragment
    *
    * @param msg
    */
-  public AreYouSureToDeleteFragment(String msg)
+  public AreYouSureToDeleteFragment( String msg )
   {
     super();
     this.msg = msg;
@@ -75,9 +75,9 @@ public class AreYouSureToDeleteFragment extends DialogFragment
 
   // Überschreibe onAttach für meine Zwecke mit dem Listener
   @Override
-  public void onAttach(Activity activity)
+  public void onAttach( Activity activity )
   {
-    super.onAttach(activity);
+    super.onAttach( activity );
     // Implementiert die Activity den Listener?
     try
     {
@@ -87,51 +87,51 @@ public class AreYouSureToDeleteFragment extends DialogFragment
     catch( ClassCastException ex )
     {
       // Die activity implementiert den Listener nicht, werfe eine Exception
-      throw new ClassCastException(activity.toString() + " must implement INoticeDialogListener");
+      throw new ClassCastException( activity.toString() + " must implement INoticeDialogListener" );
     }
   }
 
   @Override
-  public Dialog onCreateDialog(Bundle savedInstanceState)
+  public Dialog onCreateDialog( Bundle savedInstanceState )
   {
     //
     // Benutze die Builderklasse zum erstellen des Dialogs
-    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+    AlertDialog.Builder builder = new AlertDialog.Builder( getActivity() );
     // Get the layout inflater
     LayoutInflater inflater = getActivity().getLayoutInflater();
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    rootView = inflater.inflate(R.layout.delete_are_you_sure_dialog_fragment, null);
+    rootView = inflater.inflate( R.layout.delete_are_you_sure_dialog_fragment, null );
     //
     // die Message einbringen
     //
-    TextView tv = ( TextView ) rootView.findViewById(R.id.AreYouSureToDeleteMsgTextView);
-    tv.setText(msg);
+    TextView tv = ( TextView ) rootView.findViewById( R.id.AreYouSureToDeleteMsgTextView );
+    tv.setText( msg );
     //
     // jetzt dem Builder das View übergeben
     //
-    builder.setView(rootView);
+    builder.setView( rootView );
     // Buttons erzeugen
-    builder.setPositiveButton(R.string.dialog_delete_button, new DialogInterface.OnClickListener()
+    builder.setPositiveButton( R.string.dialog_delete_button, new DialogInterface.OnClickListener()
     {
       @Override
-      public void onClick(DialogInterface dialog, int id)
+      public void onClick( DialogInterface dialog, int id )
       {
         // Alles OK
-        mListener.onDialogPositiveClick(AreYouSureToDeleteFragment.this);
+        mListener.onDialogPositiveClick( AreYouSureToDeleteFragment.this );
       }
-    });
-    builder.setNegativeButton(R.string.dialog_cancel_button, new DialogInterface.OnClickListener()
+    } );
+    builder.setNegativeButton( R.string.dialog_cancel_button, new DialogInterface.OnClickListener()
     {
       @Override
-      public void onClick(DialogInterface dialog, int id)
+      public void onClick( DialogInterface dialog, int id )
       {
         // Abbruch!
-        mListener.onDialogNegativeClick(AreYouSureToDeleteFragment.this);
+        mListener.onDialogNegativeClick( AreYouSureToDeleteFragment.this );
       }
-    });
+    } );
     // Create the AlertDialog object and return it
-    return (builder.create());
+    return ( builder.create() );
   }
 
   /**
@@ -143,19 +143,19 @@ public class AreYouSureToDeleteFragment extends DialogFragment
    *
    * @param _msg
    */
-  public void setMessage(String _msg)
+  public void setMessage( String _msg )
   {
     msg = _msg;
   }
 
   // Überschreibe show fürs debugging
   @Override
-  public void show(FragmentManager manager, String tag)
+  public void show( FragmentManager manager, String tag )
   {
-    super.show(manager, tag);
+    super.show( manager, tag );
     if( BuildConfig.DEBUG )
     {
-      Log.v(TAG, "show(manager," + tag + ")...");
+      Log.v( TAG, "show(manager," + tag + ")..." );
     }
   }
 }

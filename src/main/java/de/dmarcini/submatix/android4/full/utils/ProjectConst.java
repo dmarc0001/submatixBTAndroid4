@@ -33,8 +33,8 @@ import java.util.UUID;
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.utils
  *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- *         <p/>
- *         Stand: 10.11.2013
+ * <p/>
+ * Stand: 10.11.2013
  */
 //@formatter:off
 @SuppressWarnings( "javadoc" )
@@ -50,10 +50,10 @@ public final class ProjectConst
   public static final String MANUFACTNAME = "Dirk Marciniak";
   public static final String MANUFACTMAIL = "dirk@submatix.com";
   public static final String MANUFACTHOME = "http://www.submatix.com";
-  public static final String MANUFACTVERS = "2.2beta";
-  public static final String GENYEAR = "2017";
-  public static final String GENMONTH = "03";
-  public static final String GENDAY = "21";
+  public static final String MANUFACTVERS = "2.3";
+  public static final String GENYEAR = "2019";
+  public static final String GENMONTH = "05";
+  public static final String GENDAY = "25";
   public static final boolean CHECK_PHYSICAL_BT = true;
   // ANDROID: Unique UUID für allgemeine (well known) Serielle Schnittstelle
   public static final UUID SERIAL_DEVICE_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");

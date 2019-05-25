@@ -46,18 +46,18 @@ import de.dmarcini.submatix.android4.full.utils.DeviceSelectArrayAdapterWithPics
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
  *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- *         <p>
- *         Stand: 10.11.2013
+ * <p>
+ * Stand: 10.11.2013
  */
 public class SelectDeviceDialogFragment extends DialogFragment
 {
-  private static final String TAG = SelectDeviceDialogFragment.class.getSimpleName();
-  private View rootView;
-  private Vector<Pair<Integer, String>> devices          = null;
-  private String                        selectedDevice   = null;
-  private int                           selectedDeviceId = -1;
+  private static final String                            TAG              = SelectDeviceDialogFragment.class.getSimpleName();
+  private              View                              rootView;
+  private              Vector< Pair< Integer, String > > devices          = null;
+  private              String                            selectedDevice   = null;
+  private              int                               selectedDeviceId = - 1;
   // Use this instance of the interface to deliver action events
-  private INoticeDialogListener         mListener        = null;
+  private              INoticeDialogListener             mListener        = null;
 
   /**
    * Gib die selektiere Geräteid zurück
@@ -70,7 +70,7 @@ public class SelectDeviceDialogFragment extends DialogFragment
    */
   public int getSelectedDeviceId()
   {
-    return (selectedDeviceId);
+    return ( selectedDeviceId );
   }
 
   /**
@@ -85,14 +85,14 @@ public class SelectDeviceDialogFragment extends DialogFragment
    */
   public String getSelectedDeviceName()
   {
-    return (selectedDevice);
+    return ( selectedDevice );
   }
 
   // Überschreibe onAttach für meine Zwecke mit dem Listener
   @Override
-  public void onAttach(Activity activity)
+  public void onAttach( Activity activity )
   {
-    super.onAttach(activity);
+    super.onAttach( activity );
     // Implementiert die Activity den Listener?
     try
     {
@@ -102,58 +102,58 @@ public class SelectDeviceDialogFragment extends DialogFragment
     catch( ClassCastException ex )
     {
       // Die activity implementiert den Listener nicht, werfe eine Exception
-      throw new ClassCastException(activity.toString() + " must implement INoticeDialogListener");
+      throw new ClassCastException( activity.toString() + " must implement INoticeDialogListener" );
     }
   }
 
   @Override
-  public Dialog onCreateDialog(Bundle savedInstanceState)
+  public Dialog onCreateDialog( Bundle savedInstanceState )
   {
     //
     // Benutze die Builderklasse zum erstellen des Dialogs
-    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+    AlertDialog.Builder builder = new AlertDialog.Builder( getActivity() );
     // Get the layout inflater
     LayoutInflater inflater = getActivity().getLayoutInflater();
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    rootView = inflater.inflate(R.layout.device_select_dialog_fragment, null);
+    rootView = inflater.inflate( R.layout.device_select_dialog_fragment, null );
     //
     // die vorhandenen Devices einfügen, natürlich
     //
-    Spinner                          deviceSpinner  = ( Spinner ) rootView.findViewById(R.id.deviceSelectSpinner);
-    DeviceSelectArrayAdapterWithPics devicesAdapter = new DeviceSelectArrayAdapterWithPics(getActivity(), 0, devices);
-    deviceSpinner.setAdapter(devicesAdapter);
+    Spinner                          deviceSpinner  = ( Spinner ) rootView.findViewById( R.id.deviceSelectSpinner );
+    DeviceSelectArrayAdapterWithPics devicesAdapter = new DeviceSelectArrayAdapterWithPics( getActivity(), 0, devices );
+    deviceSpinner.setAdapter( devicesAdapter );
     //
     // jetzt dem Builder das View übergeben
     //
-    builder.setView(rootView);
+    builder.setView( rootView );
     // Buttons erzeugen
-    builder.setPositiveButton(R.string.dialog_device_select_button, new DialogInterface.OnClickListener()
+    builder.setPositiveButton( R.string.dialog_device_select_button, new DialogInterface.OnClickListener()
     {
       @SuppressWarnings( "unchecked" )
       @Override
-      public void onClick(DialogInterface dialog, int id)
+      public void onClick( DialogInterface dialog, int id )
       {
         // was ist ausgewählt?
-        Spinner deviceSpinner = ( Spinner ) rootView.findViewById(R.id.deviceSelectSpinner);
-        selectedDevice = (( Pair<Integer, String> ) deviceSpinner.getSelectedItem()).second;
-        selectedDeviceId = (( Pair<Integer, String> ) deviceSpinner.getSelectedItem()).first;
-        mListener.onDialogPositiveClick(SelectDeviceDialogFragment.this);
+        Spinner deviceSpinner = ( Spinner ) rootView.findViewById( R.id.deviceSelectSpinner );
+        selectedDevice = ( ( Pair< Integer, String > ) deviceSpinner.getSelectedItem() ).second;
+        selectedDeviceId = ( ( Pair< Integer, String > ) deviceSpinner.getSelectedItem() ).first;
+        mListener.onDialogPositiveClick( SelectDeviceDialogFragment.this );
       }
-    });
-    builder.setNegativeButton(R.string.dialog_cancel_button, new DialogInterface.OnClickListener()
+    } );
+    builder.setNegativeButton( R.string.dialog_cancel_button, new DialogInterface.OnClickListener()
     {
       @Override
-      public void onClick(DialogInterface dialog, int id)
+      public void onClick( DialogInterface dialog, int id )
       {
         // Abbruch!
         selectedDevice = null;
-        selectedDeviceId = -1;
-        mListener.onDialogNegativeClick(SelectDeviceDialogFragment.this);
+        selectedDeviceId = - 1;
+        mListener.onDialogNegativeClick( SelectDeviceDialogFragment.this );
       }
-    });
+    } );
     // Create the AlertDialog object and return it
-    return (builder.create());
+    return ( builder.create() );
   }
 
   /**
@@ -166,19 +166,19 @@ public class SelectDeviceDialogFragment extends DialogFragment
    *
    * @param devices
    */
-  public void setDeviceList(Vector<Pair<Integer, String>> devices)
+  public void setDeviceList( Vector< Pair< Integer, String > > devices )
   {
     this.devices = devices;
   }
 
   // Überschreibe show fürs debugging
   @Override
-  public void show(FragmentManager manager, String tag)
+  public void show( FragmentManager manager, String tag )
   {
-    super.show(manager, tag);
+    super.show( manager, tag );
     if( BuildConfig.DEBUG )
     {
-      Log.v(TAG, "show(manager," + tag + ")...");
+      Log.v( TAG, "show(manager," + tag + ")..." );
     }
   }
 }

@@ -30,38 +30,39 @@ import java.util.Map;
 import de.dmarcini.submatix.android4.full.R;
 
 /**
- * Objekt zum Erzeugen der Liteinträge in der AreaListActivity
+ * Objekt zum Erzeugen der Listeinträge in der AreaListActivity
  * <p>
  * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.content
  *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- *         <p>
- *         Stand: 17.12.2012
+ * <p>
+ * Stand: 17.12.2012
  */
 @SuppressWarnings( "javadoc" )
 public class ContentSwitcher
 {
-  public static final String                TAG          = ContentSwitcher.class.getSimpleName();
-  public static       List<ProgItem>        progItems    = new ArrayList<ProgItem>();
-  private static      Map<String, ProgItem> progItemsMap = new HashMap<String, ProgItem>();
+  public static final String                  TAG          = ContentSwitcher.class.getSimpleName();
+  public static       List< ProgItem >        progItems    = new ArrayList< ProgItem >();
+  private static      Map< String, ProgItem > progItemsMap = new HashMap< String, ProgItem >();
 
   static
   {
-    addItem(new ProgItem("1", "dummy 1", true, true));
+    addItem( new ProgItem( "1", "dummy 1", true, true ) );
   }
 
   /**
    * Einträge für den Switcher eintragen
    *
    * @param item
+   *
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * <p>
    * Stand: 17.12.2012
    */
-  public static void addItem(ProgItem item)
+  public static void addItem( ProgItem item )
   {
-    progItems.add(item);
-    progItemsMap.put(item.sId, item);
+    progItems.add( item );
+    progItemsMap.put( item.sId, item );
   }
 
   /**
@@ -85,14 +86,15 @@ public class ContentSwitcher
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.content
    *
    * @param showId
+   *
    * @return Programmeintrag
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
    * <p>
    * Stand: 07.01.2013
    */
-  public static ProgItem getProgItemForId(int showId)
+  public static ProgItem getProgItemForId( int showId )
   {
-    return (progItemsMap.get(String.format("%d", showId)));
+    return ( progItemsMap.get( String.format( "%d", showId ) ) );
   }
 
   /**
@@ -105,9 +107,9 @@ public class ContentSwitcher
    * <p>
    * Stand: 31.01.2013
    */
-  public static List<ProgItem> getProgramItemsList()
+  public static List< ProgItem > getProgramItemsList()
   {
-    return (progItems);
+    return ( progItems );
   }
 
   /**
@@ -116,19 +118,19 @@ public class ContentSwitcher
    * Project: SubmatixBTLoggerAndroid_4 Package: de.dmarcini.submatix.android4.content
    *
    * @author Dirk Marciniak (dirk_marciniak@arcor.de)
-   *         <p>
-   *         Stand: 17.12.2012
+   * <p>
+   * Stand: 17.12.2012
    */
   public static class ProgItem
   {
-    public static final String TAG = ProgItem.class.getSimpleName();
-    public String  sId;
-    public String  content;
-    public boolean workOffline;
-    public boolean isDummy;
-    public int     nId;
-    public int     resIdOffline;
-    public int     resIdOnline;
+    public static final String  TAG = ProgItem.class.getSimpleName();
+    public              String  sId;
+    public              String  content;
+    public              boolean workOffline;
+    public              boolean isDummy;
+    public              int     nId;
+    public              int     resIdOffline;
+    public              int     resIdOnline;
 
     /**
      * Einen Programmlisteneintrag erzeugen
@@ -136,11 +138,12 @@ public class ContentSwitcher
      * @param id
      * @param content
      * @param workOffline
+     *
      * @author Dirk Marciniak (dirk_marciniak@arcor.de)
      * <p>
      * Stand: 17.12.2012
      */
-    public ProgItem(String id, String content, boolean workOffline, boolean isDummy)
+    public ProgItem( String id, String content, boolean workOffline, boolean isDummy )
     {
       this.sId = id;
       this.content = content;
@@ -150,12 +153,12 @@ public class ContentSwitcher
       this.resIdOnline = R.drawable.placeholder;
       try
       {
-        this.nId = Integer.parseInt(id);
+        this.nId = Integer.parseInt( id );
       }
       catch( NumberFormatException ex )
       {
-        this.nId = -1;
-        Log.e(TAG, "Number format Exception while scanning id <" + id + ">, " + ex.getLocalizedMessage());
+        this.nId = - 1;
+        Log.e( TAG, "Number format Exception while scanning id <" + id + ">, " + ex.getLocalizedMessage() );
       }
     }
 
@@ -165,13 +168,14 @@ public class ContentSwitcher
      * @param id
      * @param content
      * @param workOffline
+     *
      * @author Dirk Marciniak (dirk_marciniak@arcor.de)
      * <p>
      * Stand: 17.12.2012
      */
-    public ProgItem(int id, String content, boolean workOffline, boolean isDummy)
+    public ProgItem( int id, String content, boolean workOffline, boolean isDummy )
     {
-      this.sId = String.format("%d", id);
+      this.sId = String.format( "%d", id );
       this.nId = id;
       this.content = content;
       this.workOffline = workOffline;
@@ -190,13 +194,14 @@ public class ContentSwitcher
      * @param resIdOnline
      * @param content
      * @param workOffline
+     *
      * @author Dirk Marciniak (dirk_marciniak@arcor.de)
      * <p>
      * Stand: 23.12.2012
      */
-    public ProgItem(int id, int resIdOffline, int resIdOnline, String content, boolean workOffline, boolean isDummy)
+    public ProgItem( int id, int resIdOffline, int resIdOnline, String content, boolean workOffline, boolean isDummy )
     {
-      this.sId = String.format("%d", id);
+      this.sId = String.format( "%d", id );
       this.nId = id;
       this.content = content;
       this.workOffline = workOffline;

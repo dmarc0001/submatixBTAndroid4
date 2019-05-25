@@ -45,20 +45,19 @@ import de.dmarcini.submatix.android4.full.interfaces.INoticeDialogListener;
  * Project: SubmatixBTLoggerAndroid Package: de.dmarcini.submatix.android4.gui
  *
  * @author Dirk Marciniak (dirk_marciniak@arcor.de)
- *         <p>
- *         Stand: 10.11.2013
+ * <p>
+ * Stand: 10.11.2013
  */
 public class EditAliasDialogFragment extends DialogFragment
 {
-  private static final String TAG = EditAliasDialogFragment.class.getSimpleName();
-  private View rootView;
-  private String                deviceName = null;
-  private String                aliasName  = null;
-  private String                macAddr    = null;
-  private String                devicePin  = null;
+  private static final String                TAG        = EditAliasDialogFragment.class.getSimpleName();
+  private              View                  rootView;
+  private              String                deviceName = null;
+  private              String                aliasName  = null;
+  private              String                macAddr    = null;
+  private              String                devicePin  = null;
   // Use this instance of the interface to deliver action events
-  private INoticeDialogListener mListener  = null;
-  private boolean               apiCanPair = false;
+  private              INoticeDialogListener mListener  = null;
 
   /**
    * Der Default-Konstruktor ist gesperrt
@@ -72,7 +71,7 @@ public class EditAliasDialogFragment extends DialogFragment
    */
   public EditAliasDialogFragment() throws Exception
   {
-    throw new Exception("use NOT this constructor!");
+    throw new Exception( "use NOT this constructor!" );
   }
 
   /**
@@ -87,7 +86,7 @@ public class EditAliasDialogFragment extends DialogFragment
    * @param alias  Welcher Gerätealias (alt)
    * @param mac    Welche Geräte-MAC
    */
-  public EditAliasDialogFragment(String device, String alias, String mac)
+  public EditAliasDialogFragment( String device, String alias, String mac )
   {
     super();
     this.aliasName = alias;
@@ -108,7 +107,7 @@ public class EditAliasDialogFragment extends DialogFragment
    * @param mac    Welche Geräte-MAC
    * @param oldPin Welche alte PIN war da?
    */
-  public EditAliasDialogFragment(String device, String alias, String mac, String oldPin)
+  public EditAliasDialogFragment( String device, String alias, String mac, String oldPin )
   {
     super();
     this.aliasName = alias;
@@ -118,82 +117,57 @@ public class EditAliasDialogFragment extends DialogFragment
   }
 
   @Override
-  public Dialog onCreateDialog(Bundle savedInstanceState)
+  public Dialog onCreateDialog( Bundle savedInstanceState )
   {
-    //
-    if( (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) &&
-        (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.M))
-    {
-      apiCanPair = true;
-    }
-    else
-    {
-      apiCanPair = false;
-    }
     // Benutze die Builderklasse zum erstellen des Dialogs
-    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+    AlertDialog.Builder builder = new AlertDialog.Builder( getActivity() );
     // Get the layout inflater
     LayoutInflater inflater = getActivity().getLayoutInflater();
     // Inflate and set the layout for the dialog
     // Pass null as the parent view because its going in the dialog layout
-    rootView = inflater.inflate(R.layout.fragment_dialog_alias_edit, ( ViewGroup ) null);
+    rootView = inflater.inflate( R.layout.fragment_dialog_alias_edit, ( ViewGroup ) null );
     //
     // die Texte einfügen, natürlich
     //
-    TextView tv = ( TextView ) rootView.findViewById(R.id.aliasEditDialogDeviceTextView);
-    tv.setText(deviceName);
+    TextView tv = ( TextView ) rootView.findViewById( R.id.aliasEditDialogDeviceTextView );
+    tv.setText( deviceName );
     // das wird ein editierbarer Text!
-    EditText ed = ( EditText ) rootView.findViewById(R.id.aliasEditDialogAliasEditTextView);
-    ed.setText(aliasName, TextView.BufferType.EDITABLE);
+    EditText ed = ( EditText ) rootView.findViewById( R.id.aliasEditDialogAliasEditTextView );
+    ed.setText( aliasName, TextView.BufferType.EDITABLE );
     ed.selectAll();
-    //
-    // ud, wenn Android ab 4.4 läuft
-    //
-    if( apiCanPair )
-    {
-      EditText edPin = ( EditText ) rootView.findViewById(R.id.aliasEditDialogPINEditTextView);
-      edPin.setVisibility(View.VISIBLE);
-      edPin.setText(this.devicePin);
-    }
     //
     // jetzt dem Builder das View übergeben
     //
-    builder.setView(rootView);
+    builder.setView( rootView );
     // Buttons erzeugen
-    builder.setPositiveButton(R.string.dialog_save_button, new DialogInterface.OnClickListener()
+    builder.setPositiveButton( R.string.dialog_save_button, new DialogInterface.OnClickListener()
     {
       @Override
-      public void onClick(DialogInterface dialog, int id)
+      public void onClick( DialogInterface dialog, int id )
       {
         EditText ed;
         // Gib in der App bescheid, ich will es so!
-        ed = ( EditText ) rootView.findViewById(R.id.aliasEditDialogAliasEditTextView);
+        ed = ( EditText ) rootView.findViewById( R.id.aliasEditDialogAliasEditTextView );
         aliasName = ed.getText().toString();
-        if( apiCanPair )
-        {
-          // bei Android ab 4.4
-          EditText edPin = ( EditText ) rootView.findViewById(R.id.aliasEditDialogPINEditTextView);
-          devicePin = edPin.getText().toString();
-        }
-        mListener.onDialogPositiveClick(EditAliasDialogFragment.this);
+        mListener.onDialogPositiveClick( EditAliasDialogFragment.this );
       }
-    });
-    builder.setNegativeButton(R.string.dialog_cancel_button, new DialogInterface.OnClickListener()
+    } );
+    builder.setNegativeButton( R.string.dialog_cancel_button, new DialogInterface.OnClickListener()
     {
       @Override
-      public void onClick(DialogInterface dialog, int id)
+      public void onClick( DialogInterface dialog, int id )
       {
         // Abbruch!
-        mListener.onDialogNegativeClick(EditAliasDialogFragment.this);
+        mListener.onDialogNegativeClick( EditAliasDialogFragment.this );
       }
-    });
+    } );
     // Create the AlertDialog object and return it
-    return (builder.create());
+    return ( builder.create() );
   }
 
   // Überschreibe onAttach für meine Zwecke mit dem Listener
   @Override
-  public void onAttach(Context ctx)
+  public void onAttach( Context ctx )
   {
     super.onAttach( ctx );
     // Implementiert die Activity den Listener?
@@ -205,18 +179,18 @@ public class EditAliasDialogFragment extends DialogFragment
     catch( ClassCastException ex )
     {
       // Die activity implementiert den Listener nicht, werfe eine Exception
-      throw new ClassCastException( getActivity().toString() + " must implement INoticeDialogListener");
+      throw new ClassCastException( getActivity().toString() + " must implement INoticeDialogListener" );
     }
   }
 
   // Überschreibe show fürs debugging
   @Override
-  public void show(FragmentManager manager, String tag)
+  public void show( FragmentManager manager, String tag )
   {
-    super.show(manager, tag);
+    super.show( manager, tag );
     if( BuildConfig.DEBUG )
     {
-      Log.v(TAG, "show(manager,tag)...");
+      Log.v( TAG, "show(manager,tag)..." );
     }
   }
 
@@ -232,7 +206,7 @@ public class EditAliasDialogFragment extends DialogFragment
    */
   public String getDeviceName()
   {
-    return (deviceName);
+    return ( deviceName );
   }
 
   /**
@@ -246,7 +220,7 @@ public class EditAliasDialogFragment extends DialogFragment
    */
   public String getPin()
   {
-    return (devicePin);
+    return ( devicePin );
   }
 
   /**
@@ -261,7 +235,7 @@ public class EditAliasDialogFragment extends DialogFragment
    */
   public String getAliasName()
   {
-    return (aliasName);
+    return ( aliasName );
   }
 
   /**
@@ -276,6 +250,6 @@ public class EditAliasDialogFragment extends DialogFragment
    */
   public String getMac()
   {
-    return (macAddr);
+    return ( macAddr );
   }
 }

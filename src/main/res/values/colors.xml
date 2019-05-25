@@ -1,77 +1,77 @@
 <resources>
   <!-- DARK Thema -->
-  <color name="preferenceCategoryDark.textColor">#00ff00</color>
-  <color name="preferenceCategoryDark.backgroundColor">#37373E</color>
-  <color name="preferenceDark.backgroundColor">#2a2a2a</color>
-  <color name="connectFragmentDark.spinnerText">#408FFF</color>
-  <color name="connectFragmentDark.spinnerBackgroundColor">#2e2e2e</color>
-  <color name="connectToastDark.backgroundColor">#C6D6F7</color>
-  <color name="connectToastDark.textColor">#057AFF</color>  
-  <color name="logReadDark.notSavedColor">#F5F576</color>
-  <color name="logReadDark.savedColor">#9DFF85</color>
-  <color name="navigatorDark.backgroundColor">#80444543</color>
-  <color name="navigatorDark.markerColor">#888A86</color>
-  <color name="navigatorDark.inactiveTextColor">#BABABA</color>
-  <color name="navigatorDark.activeTextColor">#FFD1D1</color>
-  
+  <color name = "preferenceCategoryDark.textColor">#00ff00</color>
+  <color name = "preferenceCategoryDark.backgroundColor">#37373E</color>
+  <color name = "preferenceDark.backgroundColor">#2a2a2a</color>
+  <color name = "connectFragmentDark.spinnerText">#408FFF</color>
+  <color name = "connectFragmentDark.spinnerBackgroundColor">#2e2e2e</color>
+  <color name = "connectToastDark.backgroundColor">#C6D6F7</color>
+  <color name = "connectToastDark.textColor">#057AFF</color>
+  <color name = "logReadDark.notSavedColor">#F5F576</color>
+  <color name = "logReadDark.savedColor">#9DFF85</color>
+  <color name = "navigatorDark.backgroundColor">#80444543</color>
+  <color name = "navigatorDark.markerColor">#888A86</color>
+  <color name = "navigatorDark.inactiveTextColor">#BABABA</color>
+  <color name = "navigatorDark.activeTextColor">#FFD1D1</color>
+
   <!-- Light Thema -->
-  <color name="preferenceCategoryLight.textColor">#0554FF</color>
-  <color name="preferenceCategoryLight.backgroundColor">#DFDFFF</color>
-  <color name="preferenceLight.backgroundColor">#F2F2FF</color>
-  <color name="connectFragmentLight.spinnerText">#0600B3</color>
-  <color name="connectFragmentLight.spinnerBackgroundColor">#e6e5ed</color>
-  <color name="connectToastLight.backgroundColor">#CAF7FC</color>
-  <color name="connectToastLight.textColor">#009E1D</color>  
-  <color name="logReadLight.notSavedColor">#85853D</color>
-  <color name="logReadLight.savedColor">#187501</color>
-  <color name="navigatorLight.backgroundColor">#80FEFFFC</color>
-  <color name="navigatorLight.markerColor">#D1D1D1</color>
-  <color name="navigatorLight.inactiveTextColor">#474747</color>
-  <color name="navigatorLight.activeTextColor">#000000</color>
-  
-  
+  <color name = "preferenceCategoryLight.textColor">#0554FF</color>
+  <color name = "preferenceCategoryLight.backgroundColor">#DFDFFF</color>
+  <color name = "preferenceLight.backgroundColor">#F2F2FF</color>
+  <color name = "connectFragmentLight.spinnerText">#0600B3</color>
+  <color name = "connectFragmentLight.spinnerBackgroundColor">#e6e5ed</color>
+  <color name = "connectToastLight.backgroundColor">#CAF7FC</color>
+  <color name = "connectToastLight.textColor">#009E1D</color>
+  <color name = "logReadLight.notSavedColor">#85853D</color>
+  <color name = "logReadLight.savedColor">#187501</color>
+  <color name = "navigatorLight.backgroundColor">#80FEFFFC</color>
+  <color name = "navigatorLight.markerColor">#D1D1D1</color>
+  <color name = "navigatorLight.inactiveTextColor">#474747</color>
+  <color name = "navigatorLight.activeTextColor">#000000</color>
+
+
   <!-- uni colors -->
-  <color name="connectFragment.disconnectText">#C41823</color>
-  <color name="connectFragment.connectingText">#DBA444</color>
-  <color name="connectFragment.connectText">#1B9617</color>
-  <color name="connectToastAlert.backgroundColor">#C584D1</color>
-  <color name="connectToastAlert.textColor">#FC1100</color>
-  <color name="aboutHeadlineColor">#6720B3</color>
-  <color name="exportDeviceButton.textColor">#1B9617</color>
-  <color name="exportLogsButton.textColor">#0554FF</color>
-  <color name="exportDeleteButton.textColor">#E60000</color>
-  <color name="areYopuSureDialogHeaderColor">#CC0000</color>
-  <color name="areYourSureDialogMsgColor">#FF3300</color>
-  <color name="licenseEnabled">#009900</color>
-  <color name="licenseDisabled">#FF0066</color>
-  <color name="acku_good_value">#197519</color>
-  <color name="acku_mid_value">#E6B800</color>
-  <color name="acku_low_value">#FF0000</color>
-  
+  <color name = "connectFragment.disconnectText">#C41823</color>
+  <color name = "connectFragment.connectingText">#DBA444</color>
+  <color name = "connectFragment.connectText">#1B9617</color>
+  <color name = "connectToastAlert.backgroundColor">#C584D1</color>
+  <color name = "connectToastAlert.textColor">#FC1100</color>
+  <color name = "aboutHeadlineColor">#6720B3</color>
+  <color name = "exportDeviceButton.textColor">#1B9617</color>
+  <color name = "exportLogsButton.textColor">#0554FF</color>
+  <color name = "exportDeleteButton.textColor">#E60000</color>
+  <color name = "areYopuSureDialogHeaderColor">#CC0000</color>
+  <color name = "areYourSureDialogMsgColor">#FF3300</color>
+  <color name = "licenseEnabled">#009900</color>
+  <color name = "licenseDisabled">#FF0066</color>
+  <color name = "acku_good_value">#197519</color>
+  <color name = "acku_mid_value">#E6B800</color>
+  <color name = "acku_low_value">#FF0000</color>
+
   <!-- Grafik-Color LIGHT -->
-  <color name="spxGraphBackcolorLight">#F2F2FF</color>
-  <color name="spxGraphDepthfillLight">#849FF0</color>
-  <color name="spxGraphDepthborderLight">#000280</color>
-  <color name="spxGraphOuterZoombarLight">#CAFAE8</color>
-  <color name="spxGraphInnerZoombarLight">#0F8056</color>
-  <color name="spxGraphPpo2LineLight">#F000EC</color>
-  <color name="spxGraphPpo2ScaleLight">#540053</color>
-  <color name="spxGraphDepthscaleLight">#000280</color>
-  <color name="spxGraphTimelineLight">#093D00</color>
-  <color name="spxGraphTemperatureLineLight">#F50004</color>
-  <color name="spxGraphTemperatureScaleLight">#8F1315</color>
-  
+  <color name = "spxGraphBackcolorLight">#F2F2FF</color>
+  <color name = "spxGraphDepthfillLight">#849FF0</color>
+  <color name = "spxGraphDepthborderLight">#000280</color>
+  <color name = "spxGraphOuterZoombarLight">#CAFAE8</color>
+  <color name = "spxGraphInnerZoombarLight">#0F8056</color>
+  <color name = "spxGraphPpo2LineLight">#F000EC</color>
+  <color name = "spxGraphPpo2ScaleLight">#540053</color>
+  <color name = "spxGraphDepthscaleLight">#000280</color>
+  <color name = "spxGraphTimelineLight">#093D00</color>
+  <color name = "spxGraphTemperatureLineLight">#F50004</color>
+  <color name = "spxGraphTemperatureScaleLight">#8F1315</color>
+
   <!-- Grafik-Color DARK -->
-  <color name="spxGraphBackcolorDark">#16171A</color>
-  <color name="spxGraphDepthfillDark">#194B96</color>
-  <color name="spxGraphDepthborderDark">#B6DAFF</color>
-  <color name="spxGraphOuterZoombarDark">#002400</color>
-  <color name="spxGraphInnerZoombarDark">#B8B800</color>
-  <color name="spxGraphPpo2LineDark">#8533FF</color>
-  <color name="spxGraphPpo2ScaleDark">#9D5CFF</color>
-  <color name="spxGraphDepthscaleDark">#B2B3D9</color>
-  <color name="spxGraphTimelineDark">#CCFF33</color>
-  <color name="spxGraphTemperatureLineDark">#E60E0E</color>
-  <color name="spxGraphTemperatureScaleDark">#FF1010</color>
-  
+  <color name = "spxGraphBackcolorDark">#16171A</color>
+  <color name = "spxGraphDepthfillDark">#194B96</color>
+  <color name = "spxGraphDepthborderDark">#B6DAFF</color>
+  <color name = "spxGraphOuterZoombarDark">#002400</color>
+  <color name = "spxGraphInnerZoombarDark">#B8B800</color>
+  <color name = "spxGraphPpo2LineDark">#8533FF</color>
+  <color name = "spxGraphPpo2ScaleDark">#9D5CFF</color>
+  <color name = "spxGraphDepthscaleDark">#B2B3D9</color>
+  <color name = "spxGraphTimelineDark">#CCFF33</color>
+  <color name = "spxGraphTemperatureLineDark">#E60E0E</color>
+  <color name = "spxGraphTemperatureScaleDark">#FF1010</color>
+
 </resources>
