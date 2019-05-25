@@ -43,11 +43,11 @@ import de.dmarcini.submatix.android4.full.gui.MainActivity;
  */
 public class BuildVersion
 {
-  private static final long buildNumber = 4473L;
+  private static final long buildNumber = 4486L;
   /**
    * Kennzeichnung für eine Version
    */
-  private static final long buildDate = 1558469666677L;
+  private static final long buildDate = 1558803602000L;
   private static final String buildNumberString = String.format(Locale.ENGLISH, "%d", buildNumber);
 
   /**
