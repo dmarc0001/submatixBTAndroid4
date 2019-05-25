@@ -47,8 +47,8 @@ public class BuildVersion
   /**
    * Kennzeichnung für eine Version
    */
-  private static final String buildNumberString = String.format(Locale.ENGLISH, "%d", buildNumber);
   private static final long buildDate = 1558469666677L;
+  private static final String buildNumberString = String.format(Locale.ENGLISH, "%d", buildNumber);
 
   /**
    * Gib die Buildnummer zurück

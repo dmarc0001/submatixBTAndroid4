@@ -1,19 +1,15 @@
 apply plugin: 'com.android.application'
+println( "################ CONFIG PHASE SCRIPT #############################" )
+
 android {
   flavorDimensions "default"
   compileSdkVersion 28
   buildToolsVersion '28.0.3'
   signingConfigs {
     DirksKey {
-      storeFile file( 'C:\\localProg\\androidStudioWorkspace\\dirksPrivaterAndroidEntwicklerkey.key' )
+      storeFile file( '../../dirksPrivaterAndroidEntwicklerkey.key' )
       storePassword 'energie'
       keyAlias 'android develpoment dirk marciniak'
-      keyPassword 'energie'
-    }
-    debug {
-      storeFile file( 'C:\\localProg\\androidStudioWorkspace\\dirksPrivaterAndroidEntwicklerkey.key' )
-      keyAlias = 'android develpoment dirk marciniak'
-      storePassword 'energie'
       keyPassword 'energie'
     }
   }
@@ -28,19 +24,18 @@ android {
   }
   buildTypes {
     debug {
-      ant.importBuild "utils\\versionsScript.xml"
-      tasks.makeVersion
       signingConfig signingConfigs.DirksKey
-      proguardFile 'C:/DATEN/androidStudioWorkspace/SubmatixBTAndroid4/app/utils/proguard-project.txt'
+      proguardFile 'app/utils/proguard-project.txt'
       versionNameSuffix '_debug'
+      renderscriptOptimLevel = 0
     }
     release {
-      ant.importBuild "utils\\versionsScript.xml"
-      tasks.makeVersion
-      proguardFiles getDefaultProguardFile( 'proguard-android.txt' ), 'proguard-rules.txt'
       signingConfig signingConfigs.DirksKey
-      proguardFile 'C:/DATEN/androidStudioWorkspace/SubmatixBTAndroid4/app/utils/proguard-project.txt'
+      proguardFiles getDefaultProguardFile( 'proguard-android.txt' ), 'proguard-rules.txt'
+      proguardFile 'app/utils/proguard-project.txt'
       versionNameSuffix '_release'
+      minifyEnabled = true
+      renderscriptOptimLevel = 3
     }
   }
   dependencies {
@@ -59,17 +54,19 @@ android {
       signingConfig signingConfigs.DirksKey
       targetSdkVersion 28
       versionCode 35
-      versionName '2.2'
+      versionName '2.3'
       versionNameSuffix 'marshmallow'
+      dimension = 'default'
     }
     Pie {
       applicationId 'de.dmarcini.submatix.android4.full'
       signingConfig signingConfigs.DirksKey
       targetSdkVersion 28
       versionCode 35
-      versionName '2.2'
-      versionNameSuffix 'kitkat'
+      versionName '2.3'
+      versionNameSuffix 'pie'
       minSdkVersion 28
+      dimension = 'default'
     }
   }
   compileOptions {
@@ -80,3 +77,14 @@ android {
 
 dependencies {
 }
+
+task bildCounter( dependsOn: build ) {
+  println( "################ BUILDCOUNTER SCRIPT START #############################" )
+  exec {
+    description 'counter zaehlen'
+    workingDir '.'
+    commandLine('python', 'utils/versionCounter.py')
+  }
+  println( "################ BUILDCOUNTER SCRIPT END #############################" )
+}
+
